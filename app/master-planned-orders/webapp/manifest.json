@@ -105,12 +105,45 @@
           "target": [
             "TargetMain"
           ]
+        },
+        {
+          "name": "order",
+          "pattern": "order/{order}",
+          "target": [
+            "order"
+          ]
+        },
+        {
+          "name": "master",
+          "pattern": "master/{master}",
+          "target": [
+            "master"
+          ]
+        },
+        {
+          "name": "combined",
+          "pattern": "combined/{combined}",
+          "target": [
+            "combined"
+          ]
         }
       ],
       "targets": {
         "TargetMain": {
-          "id": "Main",
+          "id": "main",
           "name": "Main"
+        },
+        "order": {
+          "id": "order",
+          "name": "Order"
+        },
+        "master": {
+          "id": "master",
+          "name": "Master"
+        },
+        "combined": {
+          "id": "combined",
+          "name": "Combined"
         }
       }
     },

@@ -10,7 +10,7 @@
 >
     <!-- xmlns:smartTable="sap.ui.comp.smarttable" -->
     <Page
-        id="page"
+        id="main"
         showFooter="false"
         showHeader="false"
         title="{i18n>title}"
@@ -60,29 +60,58 @@
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
-                <smartTable:SmartTable
-                    id="LineItemsSmartTable"
-                    smartFilterId="idSmartFilter"
-                    tableType="Table"
-                    enableExport="true"
-                    beforeExport="onBeforeExport"
-                    useVariantManagement="true"
-                    useTablePersonalisation="true"
-                    header="Line Items"
-                    showRowCount="true"
-                    persistencyKey="SmartTableAnalytical_Explored"
-                    enableAutoBinding="true"
-                    class="sapUiResponsiveContentPadding"
-                    enableAutoColumnWidth="true"
-                    editTogglable="true"
-                >
-                    <smartTable:layoutData>
-                        <FlexItemData
-                            growFactor="1"
-                            baseSize="0%"
-                        />
-                    </smartTable:layoutData>
-                </smartTable:SmartTable>
+                <layout:VerticalLayout width="100%">
+                    <IconTabHeader
+                        mode="Inline"
+                        select="onIconTabSelect"
+                        selectedKey="{view>/selectedTab}"
+                    >
+                        <items>
+                            <IconTabFilter
+                                key="combined"
+                                text="Combined"
+                                count="12"
+                            />
+                            <IconTabFilter
+                                key="master"
+                                text="Master"
+                                count="119"
+                            />
+                            <IconTabFilter
+                                key="order"
+                                text="Order"
+                                count="999"
+                            />
+                        </items>
+                    </IconTabHeader>
+                    <smartTable:SmartTable
+                        id="idSmartTable"
+                        smartFilterId="idSmartFilter"
+                        tableType="Table"
+                        enableExport="true"
+                        beforeExport="onBeforeExport"
+                        useVariantManagement="true"
+                        useTablePersonalisation="true"
+                        header="Line Items"
+                        showRowCount="true"
+                        persistencyKey="SmartTableAnalytical_Explored"
+                        enableAutoBinding="true"
+                        class="sapUiResponsiveContentPadding"
+                        enableAutoColumnWidth="true"
+                        editTogglable="true"
+                    >
+                        <smartTable:layoutData>
+                            <FlexItemData
+                                growFactor="1"
+                                baseSize="0%"
+                            />
+                        </smartTable:layoutData>
+                    </smartTable:SmartTable>
+                    <Button
+                        press="goToDetail"
+                        text="GoToDetail {view>/selectedTab}"
+                    />
+                </layout:VerticalLayout>
             </f:content>
         </f:DynamicPage>
     </Page>

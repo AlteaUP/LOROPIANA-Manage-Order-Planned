@@ -1,0 +1,14 @@
+<mvc:View
+    controllerName="master.planned.orders.fashion.masterplannedorders.controller.Combined"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Page
+        id="combined"
+        title="{i18n>title}"
+        showNavButton="true"
+        navButtonPress="onNavBack"
+    >
+        <Text text="Combined {detail>/orderId}" />
+    </Page>
+</mvc:View>
