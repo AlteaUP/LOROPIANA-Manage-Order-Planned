@@ -1,0 +1,89 @@
+<mvc:View
+    controllerName="master.planned.orders.fashion.masterplannedorders.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:smartfilterbar="sap.ui.comp.smartfilterbar"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+>
+    <!-- xmlns:smartTable="sap.ui.comp.smarttable" -->
+    <Page
+        id="page"
+        showFooter="false"
+        showHeader="false"
+        title="{i18n>title}"
+    >
+        <f:DynamicPage
+            headerExpanded="true"
+            toggleHeaderOnTitleClick="true"
+            fitContent="true"
+        >
+            <f:title>
+                <f:DynamicPageTitle>
+                    <f:heading>
+                        <Title
+                            text="Manage Master Production Orders - Fashion"
+                        />
+                    </f:heading>
+                    <f:actions>
+                        <Button
+                            text="Job Over"
+                            type="Transparent"
+                            press="toggleAreaPriority"
+                        />
+                        <Button
+                            icon="sap-icon://action"
+                            type="Transparent"
+                        />
+                    </f:actions>
+                </f:DynamicPageTitle>
+            </f:title>
+            <!-- DynamicPage Header -->
+            <f:header>
+                <f:DynamicPageHeader pinnable="true">
+                    <layout:HorizontalLayout allowWrapping="true">
+                        <layout:HorizontalLayout>
+                            <smartfilterbar:SmartFilterBar
+                                id="idSmartFilter"
+                                basicSearchFieldName="searchField"
+                                clear="removeFilter"
+                                enableBasicSearch="false"
+                                class="sapUiSizeCompact"
+                                showClearOnFB="true"
+                                search="onSearch"
+                                useToolbar="false"
+                            />
+                        </layout:HorizontalLayout>
+                    </layout:HorizontalLayout>
+                </f:DynamicPageHeader>
+            </f:header>
+            <f:content>
+                <smartTable:SmartTable
+                    id="LineItemsSmartTable"
+                    smartFilterId="idSmartFilter"
+                    tableType="Table"
+                    enableExport="true"
+                    beforeExport="onBeforeExport"
+                    useVariantManagement="true"
+                    useTablePersonalisation="true"
+                    header="Line Items"
+                    showRowCount="true"
+                    persistencyKey="SmartTableAnalytical_Explored"
+                    enableAutoBinding="true"
+                    class="sapUiResponsiveContentPadding"
+                    enableAutoColumnWidth="true"
+                    editTogglable="true"
+                >
+                    <smartTable:layoutData>
+                        <FlexItemData
+                            growFactor="1"
+                            baseSize="0%"
+                        />
+                    </smartTable:layoutData>
+                </smartTable:SmartTable>
+            </f:content>
+        </f:DynamicPage>
+    </Page>
+</mvc:View>
