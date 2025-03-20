@@ -1,0 +1,110 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "planned.order.plannedorder",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:fpm",
+      "version": "1.16.4",
+      "toolsId": "31cffdd1-370c-485b-96a1-24ccba1c7e77"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/api/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.134.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.core": {},
+        "sap.fe.macros": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "planned.order.plannedorder.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": []
+    },
+    "routing": {
+      "config": {},
+      "routes": [
+        {
+          "name": "ZC_RFM_ManageCombinedPlndOrderMain",
+          "pattern": ":?query:",
+          "target": "ZC_RFM_ManageCombinedPlndOrderMain"
+        }
+      ],
+      "targets": {
+        "ZC_RFM_ManageCombinedPlndOrderMain": {
+          "type": "Component",
+          "id": "ZC_RFM_ManageCombinedPlndOrderMain",
+          "name": "sap.fe.core.fpm",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/ZC_RFM_ManageCombinedPlndOrder",
+              "viewName": "planned.order.plannedorder.ext.main.Main"
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {}
+}
