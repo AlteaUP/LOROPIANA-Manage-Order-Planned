@@ -45,7 +45,7 @@
           "password": ""
         }
       },
-      "cds_ui_rfm_mng_mstrplndord": {
+      "planned_order": {
         "kind": "odata",
         "model": "srv/external/planned-order",
         "credentials": {

@@ -5,11 +5,11 @@ const plannedOrderUtils = require("./utils/planned-order");
 module.exports = class PlannedOrderService extends cds.ApplicationService {
   async init() {
     console.log('*** init plannedOrder')
-    const plannedOrder = await cds.connect.to("cds_ui_rfm_mng_mstrplndord");
+    const plannedOrder = await cds.connect.to("planned_order");
     console.log({ plannedOrder })
     // Get the original entity definition from the on-premise service. Because it's been extended, it will contain
     // the added fields from the extension aspect
-    const originalEntity = plannedOrder.model.definitions["cds_ui_rfm_mng_mstrplndord.C_RFM_ManageMfgOrder"];
+    const originalEntity = plannedOrder.model.definitions["planned_order.C_RFM_ManageMfgOrder"];
     console.log({ originalEntity })
     // Extract the added fields from the extension aspect
 

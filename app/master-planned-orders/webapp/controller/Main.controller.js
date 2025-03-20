@@ -9,7 +9,7 @@ sap.ui.define([
             smartFilter.setModel(this.getOwnerComponent().getModel());
 
             this.getView().setModel(new sap.ui.model.json.JSONModel({
-                selectedTab: "order"
+                selectedTab: "master"
             }), 'view');
         },
         onIconTabSelect: function (oEvent) {
@@ -18,12 +18,8 @@ sap.ui.define([
             const key = oEvent.getParameter('key');
             // smartTable.setEntitySet(key);
             // smartTable.rebindTable();
-
-
         },
-        onNavBack: function () {
-            window.history.back();
-        },
+        onNavBack: function () { window.history.back(); },
         goToDetail: function () {
             const oRouter = this.getOwnerComponent().getRouter();
             const key = this.getView().getModel('view').getProperty('/selectedTab');

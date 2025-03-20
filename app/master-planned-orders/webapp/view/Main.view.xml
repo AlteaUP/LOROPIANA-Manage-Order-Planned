@@ -18,6 +18,7 @@
         <f:DynamicPage
             headerExpanded="true"
             toggleHeaderOnTitleClick="true"
+            class="contentNoPadding"
             fitContent="true"
         >
             <f:title>
@@ -43,70 +44,117 @@
             <!-- DynamicPage Header -->
             <f:header>
                 <f:DynamicPageHeader pinnable="true">
-                    <layout:HorizontalLayout allowWrapping="true">
-                        <layout:HorizontalLayout>
-                            <smartfilterbar:SmartFilterBar
-                                id="idSmartFilter"
-                                basicSearchFieldName="searchField"
-                                clear="removeFilter"
-                                enableBasicSearch="false"
-                                class="sapUiSizeCompact"
-                                showClearOnFB="true"
-                                search="onSearch"
-                                useToolbar="false"
-                            />
-                        </layout:HorizontalLayout>
-                    </layout:HorizontalLayout>
+                    <smartfilterbar:SmartFilterBar
+                        id="idSmartFilter"
+                        basicSearchFieldName="searchField"
+                        clear="removeFilter"
+                        enableBasicSearch="false"
+                        class="sapUiSizeCompact"
+                        showClearOnFB="true"
+                        search="onSearch"
+                        useToolbar="false"
+                    />
                 </f:DynamicPageHeader>
             </f:header>
             <f:content>
                 <layout:VerticalLayout width="100%">
-                    <IconTabHeader
-                        mode="Inline"
-                        select="onIconTabSelect"
+                    <!-- class="sapUiResponsiveContentPadding" -->
+                    <IconTabBar
+                        id="idIconTabBarNoIcons"
+                        expanded="{device>/isNoPhone}"
+                        select="onTabSelect"
                         selectedKey="{view>/selectedTab}"
                     >
                         <items>
                             <IconTabFilter
+                                text="Combined ({view>/combinedCount})"
                                 key="combined"
-                                text="Combined"
-                                count="12"
-                            />
+                            >
+                                <smartTable:SmartTable
+                                    entitySet="ZC_RFM_ManageCombinedMfgOrder"
+                                    id="idSmartTableCombined"
+                                    smartFilterId="idSmartFilter"
+                                    tableType="Table"
+                                    enableExport="true"
+                                    beforeExport="onBeforeExport"
+                                    useVariantManagement="true"
+                                    useTablePersonalisation="true"
+                                    header="Line Items"
+                                    showRowCount="true"
+                                    persistencyKey="SmartTableAnalytical_Explored"
+                                    enableAutoBinding="true"
+                                    class="sapUiResponsiveContentPadding"
+                                    enableAutoColumnWidth="true"
+                                    editTogglable="true"
+                                >
+                                    <smartTable:layoutData>
+                                        <FlexItemData
+                                            growFactor="1"
+                                            baseSize="0%"
+                                        />
+                                    </smartTable:layoutData>
+                                </smartTable:SmartTable>
+                            </IconTabFilter>
                             <IconTabFilter
+                                text="Master ({view>/masterCount})"
                                 key="master"
-                                text="Master"
-                                count="119"
-                            />
+                            >
+                                <smartTable:SmartTable
+                                    entitySet="ZC_RFM_ManageMasterMfgOrder"
+                                    id="idSmartTableMaster"
+                                    smartFilterId="idSmartFilter"
+                                    tableType="Table"
+                                    enableExport="true"
+                                    beforeExport="onBeforeExport"
+                                    useVariantManagement="true"
+                                    useTablePersonalisation="true"
+                                    header="Line Items"
+                                    showRowCount="true"
+                                    persistencyKey="SmartTableAnalytical_Explored"
+                                    enableAutoBinding="true"
+                                    class="sapUiResponsiveContentPadding"
+                                    enableAutoColumnWidth="true"
+                                    editTogglable="true"
+                                >
+                                    <smartTable:layoutData>
+                                        <FlexItemData
+                                            growFactor="1"
+                                            baseSize="0%"
+                                        />
+                                    </smartTable:layoutData>
+                                </smartTable:SmartTable>
+                            </IconTabFilter>
                             <IconTabFilter
+                                text="Order ({view>/orderCount})"
                                 key="order"
-                                text="Order"
-                                count="999"
-                            />
+                            >
+                                <smartTable:SmartTable
+                                    entitySet="ZC_RFM_ManageMfgOrder"
+                                    id="idSmartTableOrder"
+                                    smartFilterId="idSmartFilter"
+                                    tableType="Table"
+                                    enableExport="true"
+                                    beforeExport="onBeforeExport"
+                                    useVariantManagement="true"
+                                    useTablePersonalisation="true"
+                                    header="Line Items"
+                                    showRowCount="true"
+                                    persistencyKey="SmartTableAnalytical_Explored"
+                                    enableAutoBinding="true"
+                                    class="sapUiResponsiveContentPadding"
+                                    enableAutoColumnWidth="true"
+                                    editTogglable="true"
+                                >
+                                    <smartTable:layoutData>
+                                        <FlexItemData
+                                            growFactor="1"
+                                            baseSize="0%"
+                                        />
+                                    </smartTable:layoutData>
+                                </smartTable:SmartTable>
+                            </IconTabFilter>
                         </items>
-                    </IconTabHeader>
-                    <smartTable:SmartTable
-                        id="idSmartTable"
-                        smartFilterId="idSmartFilter"
-                        tableType="Table"
-                        enableExport="true"
-                        beforeExport="onBeforeExport"
-                        useVariantManagement="true"
-                        useTablePersonalisation="true"
-                        header="Line Items"
-                        showRowCount="true"
-                        persistencyKey="SmartTableAnalytical_Explored"
-                        enableAutoBinding="true"
-                        class="sapUiResponsiveContentPadding"
-                        enableAutoColumnWidth="true"
-                        editTogglable="true"
-                    >
-                        <smartTable:layoutData>
-                            <FlexItemData
-                                growFactor="1"
-                                baseSize="0%"
-                            />
-                        </smartTable:layoutData>
-                    </smartTable:SmartTable>
+                    </IconTabBar>
                     <Button
                         press="goToDetail"
                         text="GoToDetail {view>/selectedTab}"

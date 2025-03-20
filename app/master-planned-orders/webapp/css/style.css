@@ -1,1 +1,7 @@
 /* Enter your custom styles here */
+
+/* secondo div dopo il primo div */
+
+.contentNoPadding>div>div:nth-child(2)>div {
+  padding: 0 !important;
+}
