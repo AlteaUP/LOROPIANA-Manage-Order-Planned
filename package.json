@@ -25,7 +25,8 @@
     "watch-master-planned-orders": "cds watch --open master-planned-orders/webapp/index.html?sap-ui-xx-viewCache=false",
     "undeploy": "cf undeploy cap --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-plannedorder": "cds watch --open plannedorder/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "cov2ap": {
@@ -49,7 +50,7 @@
         "kind": "odata",
         "model": "srv/external/planned-order",
         "credentials": {
-          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/UI_RFM_MNG_MSTRPRODNORD",
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/UI_RFM_MNG_MSTRPLNDORD",
           "authentication": "BasicAuthentication",
           "username": "laspatas",
           "password": "Sap1234567890!!!",
@@ -57,5 +58,8 @@
         }
       }
     }
-  }
+  },
+  "sapux": [
+    "app/plannedorder"
+  ]
 }

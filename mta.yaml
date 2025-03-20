@@ -55,9 +55,23 @@ modules:
       - masterplannedordersfashionmasterplannedorders.zip
       name: masterplannedordersfashionmasterplannedorders
       target-path: app//
+    - artifacts:
+      - masterplannedorderplannedorder.zip
+      name: masterplannedorderplannedorder
+      target-path: app//
 - name: masterplannedordersfashionmasterplannedorders
   type: html5
   path: app/master-planned-orders
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: masterplannedorderplannedorder
+  type: html5
+  path: app/plannedorder
   build-parameters:
     build-result: dist
     builder: custom
