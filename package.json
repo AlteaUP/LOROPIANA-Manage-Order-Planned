@@ -26,7 +26,8 @@
     "undeploy": "cf undeploy cap --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-    "watch-plannedorder": "cds watch --open plannedorder/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-plannedorder": "cds watch --open plannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-plannedordertest": "cds watch --open plannedordertest/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "cov2ap": {
@@ -56,11 +57,23 @@
           "password": "Sap1234567890!!!",
           "sap-client": "300"
         }
+      },
+      "test": {
+        "kind": "odata",
+        "model": "srv/external/test",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:800/sap/opu/odata4/sap/ztest_combordercomplist/srvd_a2x/sap/ztest_combordercomplist/0001",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
       }
     }
   },
   "sapux": [
     "app/plannedorder",
-    "app/plannedorder"
+    "app/plannedorder",
+    "app/plannedordertest"
   ]
 }

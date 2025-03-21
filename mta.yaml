@@ -63,6 +63,10 @@ modules:
       - plannedorderplannedorder.zip
       name: plannedorderplannedorder
       target-path: app//
+    - artifacts:
+      - plannedordertestplannedordertest.zip
+      name: plannedordertestplannedordertest
+      target-path: app//
 - name: masterplannedordersfashionmasterplannedorders
   type: html5
   path: app/master-planned-orders
@@ -86,6 +90,16 @@ modules:
 - name: plannedorderplannedorder
   type: html5
   path: app/plannedorder
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: plannedordertestplannedordertest
+  type: html5
+  path: app/plannedordertest
   build-parameters:
     build-result: dist
     builder: custom
