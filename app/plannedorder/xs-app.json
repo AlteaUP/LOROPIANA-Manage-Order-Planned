@@ -3,16 +3,9 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/api/(.*)$",
-      "target": "/api/$1",
+      "source": "^/odata/(.*)$",
+      "target": "/odata/$1",
       "destination": "plannedorder",
-      "authenticationType": "xsuaa",
-      "csrfProtection": false
-    },
-    {
-      "source": "^/test/(.*)$",
-      "target": "/test/$1",
-      "destination": "test",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },

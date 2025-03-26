@@ -7,7 +7,7 @@ sap.ui.define(['sap/fe/test/TemplatePage'], function(TemplatePage) {
     };
 
     return new TemplatePage(
-        'planned.order.plannedorder::ZC_RFM_ManageCombinedPlndOrderMain',
+        'plannedorder.plannedorder::ZZ1_CombinedPlnOrdersAPIMain',
         CustomPageDefinitions
     );
 });

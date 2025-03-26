@@ -1,22 +1,22 @@
 ## Application Details
 |               |
 | ------------- |
-|**Generation Date and Time**<br>Thu Mar 20 2025 18:49:10 GMT+0100 (Central European Standard Time)|
+|**Generation Date and Time**<br>Wed Mar 26 2025 12:04:27 GMT+0100 (Central European Standard Time)|
 |**App Generator**<br>@sap/generator-fiori-elements|
 |**App Generator Version**<br>1.16.4|
 |**Generation Platform**<br>Visual Studio Code|
 |**Template Used**<br>Custom Page V4|
 |**Service Type**<br>Local Cap|
-|**Service URL**<br>http://localhost:4004/api/|
+|**Service URL**<br>http://localhost:4004/odata/v4/main/|
 |**Module Name**<br>plannedorder|
 |**Application Title**<br>Manage Master Production Orders - Fashion|
-|**Namespace**<br>planned.order|
+|**Namespace**<br>plannedorder|
 |**UI5 Theme**<br>sap_horizon|
 |**UI5 Version**<br>1.134.0|
 |**Enable Code Assist Libraries**<br>False|
 |**Enable TypeScript**<br>False|
 |**Add Eslint configuration**<br>False|
-|**Main Entity**<br>ZC_RFM_ManageCombinedPlndOrder|
+|**Main Entity**<br>ZZ1_CombinedPlnOrdersAPI|
 
 ## plannedorder
 

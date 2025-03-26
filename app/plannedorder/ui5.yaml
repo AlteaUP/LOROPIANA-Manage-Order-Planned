@@ -2,7 +2,7 @@
 
 specVersion: "3.1"
 metadata:
-  name: planned.order.plannedorder
+  name: plannedorder.plannedorder
 type: application
 server:
   customMiddleware:

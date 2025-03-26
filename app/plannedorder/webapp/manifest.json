@@ -1,7 +1,7 @@
 {
   "_version": "1.65.0",
   "sap.app": {
-    "id": "planned.order.plannedorder",
+    "id": "plannedorder.plannedorder",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,19 +13,11 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:fpm",
       "version": "1.16.4",
-      "toolsId": "31cffdd1-370c-485b-96a1-24ccba1c7e77"
+      "toolsId": "1dfe252c-585a-45d4-b404-0ecc6284baf6"
     },
     "dataSources": {
       "mainService": {
-        "uri": "/api/",
-        "type": "OData",
-        "settings": {
-          "annotations": [],
-          "odataVersion": "4.0"
-        }
-      },
-      "test": {
-        "uri": "/test/",
+        "uri": "/odata/v4/main/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -58,8 +50,7 @@
         "sap.m": {},
         "sap.ui.core": {},
         "sap.fe.core": {},
-        "sap.fe.macros": {},
-        "sap.fe.templates": {}
+        "sap.fe.macros": {}
       }
     },
     "contentDensities": {
@@ -70,20 +61,11 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "planned.order.plannedorder.i18n.i18n"
+          "bundleName": "plannedorder.plannedorder.i18n.i18n"
         }
       },
       "": {
         "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
-        }
-      },
-      "test": {
-        "dataSource": "test",
         "preload": true,
         "settings": {
           "operationMode": "Server",
@@ -103,31 +85,22 @@
       "config": {},
       "routes": [
         {
-          "name": "ZC_RFM_ManageCombinedPlndOrderMain",
+          "name": "ZZ1_CombinedPlnOrdersAPIMain",
           "pattern": ":?query:",
-          "target": "ZC_RFM_ManageCombinedPlndOrderMain"
+          "target": "ZZ1_CombinedPlnOrdersAPIMain"
         }
       ],
       "targets": {
-        "ZC_RFM_ManageCombinedPlndOrderMain": {
+        "ZZ1_CombinedPlnOrdersAPIMain": {
           "type": "Component",
-          "id": "ZC_RFM_ManageCombinedPlndOrderMain",
+          "id": "ZZ1_CombinedPlnOrdersAPIMain",
           "name": "sap.fe.core.fpm",
           "options": {
             "settings": {
               "navigation": {},
-              "contextPath": "/ZC_RFM_ManageCombinedPlndOrder",
-              "viewName": "planned.order.plannedorder.ext.main.Main"
+              "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
+              "viewName": "plannedorder.plannedorder.ext.main.Main"
             }
-          }
-        }
-      }
-    },
-    "extends": {
-      "extensions": {
-        "sap.ui.controllerExtensions": {
-          "sap.fe.templates.ObjectPage.ObjectPageController": {
-            "controllerName": "planned.order.plannedorder.ext.controller.Detail"
           }
         }
       }

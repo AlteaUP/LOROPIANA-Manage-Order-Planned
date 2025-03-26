@@ -1,21 +1,21 @@
 sap.ui.require(
     [
         'sap/fe/test/JourneyRunner',
-        'planned/order/plannedorder/test/integration/FirstJourney',
-		'planned/order/plannedorder/test/integration/pages/ZC_RFM_ManageCombinedPlndOrderMain'
+        'plannedorder/plannedorder/test/integration/FirstJourney',
+		'plannedorder/plannedorder/test/integration/pages/ZZ1_CombinedPlnOrdersAPIMain'
     ],
-    function(JourneyRunner, opaJourney, ZC_RFM_ManageCombinedPlndOrderMain) {
+    function(JourneyRunner, opaJourney, ZZ1_CombinedPlnOrdersAPIMain) {
         'use strict';
         var JourneyRunner = new JourneyRunner({
             // start index.html in web folder
-            launchUrl: sap.ui.require.toUrl('planned/order/plannedorder') + '/index.html'
+            launchUrl: sap.ui.require.toUrl('plannedorder/plannedorder') + '/index.html'
         });
 
        
         JourneyRunner.run(
             {
                 pages: { 
-					onTheZC_RFM_ManageCombinedPlndOrderMain: ZC_RFM_ManageCombinedPlndOrderMain
+					onTheZZ1_CombinedPlnOrdersAPIMain: ZZ1_CombinedPlnOrdersAPIMain
                 }
             },
             opaJourney.run

@@ -48,7 +48,7 @@
         }
       },
       "planned_order": {
-        "kind": "odata",
+        "kind": "odata-v2",
         "model": "srv/external/planned-order",
         "credentials": {
           "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/UI_RFM_MNG_MSTRPLNDORD",
@@ -58,11 +58,33 @@
           "sap-client": "300"
         }
       },
-      "test": {
-        "kind": "odata",
-        "model": "srv/external/test",
+      "ZZ1_COMBINEDPLNORDERSAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_COMBINEDPLNORDERSAPI_CDS",
         "credentials": {
-          "url": "http://lpappsvi.lp.corp:800/sap/opu/odata4/sap/ztest_combordercomplist/srvd_a2x/sap/ztest_combordercomplist/0001",
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_COMBINEDPLNORDERSAPI_CDS",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
+      },
+      "ZZ1_MASTERPLANNEDORDERAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MASTERPLANNEDORDERAPI_CDS",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MASTERPLANNEDORDERAPI_CDS",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
+      },
+      "ZZ1_PLANNEDORDERSAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_PLANNEDORDERSAPI_CDS",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_PLANNEDORDERSAPI_CDS",
           "authentication": "BasicAuthentication",
           "username": "laspatas",
           "password": "Sap1234567890!!!",
@@ -72,8 +94,6 @@
     }
   },
   "sapux": [
-    "app/plannedorder",
-    "app/plannedorder",
-    "app/plannedordertest"
+    "app/plannedorder"
   ]
 }
