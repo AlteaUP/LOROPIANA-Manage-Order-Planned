@@ -1,5 +1,6 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:macros="sap.fe.macros">
-	<VBox core:require="{ handler: 'plannedorder/plannedorder/ext/fragment/MasterPlannedOrder'}">
-		<Button text="MasterPlannedOrder" press="handler.onPress" />
-	</VBox>
+    <VBox core:require="{ handler: 'plannedorder/plannedorder/ext/fragment/MasterPlannedOrder'}">
+        <Button text="MasterPlannedOrder" press="handler.onPress"/>
+        <macros:Table id="Table" metaPath="to_ZZ1_PlannedOrderMaster/@com.sap.vocabularies.UI.v1.LineItem#tableMacro" header="Master Planned Order"/>
+    </VBox>
 </core:FragmentDefinition>

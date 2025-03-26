@@ -180,3 +180,13 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     RequirementQuantityInBaseUnit @Common.Label: 'RequirementQuantityInBaseUnit'
 };
+annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrderMaster with @(
+    UI.LineItem #tableMacro : [
+    ]
+);
+
+annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
+    UI.LineItem #tableMacro : [
+    ]
+);
+
