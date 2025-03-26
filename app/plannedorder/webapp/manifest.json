@@ -128,7 +128,21 @@
             "settings": {
               "navigation": {},
               "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
-              "sectionLayout": "Tabs"
+              "sectionLayout": "Page",
+              "content": {
+                "body": {
+                  "sections": {
+                    "MasterPlannedOrder": {
+                      "template": "plannedorder.plannedorder.ext.fragment.MasterPlannedOrder",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "GeneralInfo"
+                      },
+                      "title": "Master Planned Order"
+                    }
+                  }
+                }
+              }
             }
           }
         }
