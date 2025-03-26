@@ -139,6 +139,22 @@
                         "anchor": "GeneralInfo"
                       },
                       "title": "Master Planned Order"
+                    },
+                    "PlannedOrder": {
+                      "template": "plannedorder.plannedorder.ext.fragment.PlannedOrder",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "MasterPlannedOrder"
+                      },
+                      "title": "Planned Order"
+                    },
+                    "Component": {
+                      "template": "plannedorder.plannedorder.ext.fragment.Component",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "PlannedOrder"
+                      },
+                      "title": "Component"
                     }
                   }
                 }
