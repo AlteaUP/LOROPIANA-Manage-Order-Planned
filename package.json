@@ -94,6 +94,7 @@
     }
   },
   "sapux": [
+    "app/plannedorder",
     "app/plannedorder"
   ]
 }
