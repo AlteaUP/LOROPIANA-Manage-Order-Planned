@@ -190,3 +190,13 @@ annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
     ]
 );
 
+annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
+    UI.LineItem #tableMacro : [
+    ]
+);
+
+annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
+    UI.LineItem #tableMacro : [
+    ]
+);
+

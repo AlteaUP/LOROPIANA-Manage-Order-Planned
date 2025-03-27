@@ -11,17 +11,24 @@
         title="{i18n>MainTitle}"
     >
         <content>
-            <macros:FilterBar
-                id="FilterBar"
-                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro"
-            />
-            <macros:Table
-                id="Table"
-                rowPress=".onRowPress"
-                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
-                filterBar="FilterBar"
-                header="Combined"
-            />
+            <VBox id="VBox">
+                <macros:FilterBar
+                    id="FilterBar"
+                    metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro"
+                />
+                <macros:Table
+                    id="TableCombined"
+                    rowPress=".onRowPress"
+                    metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
+                    filterBar="FilterBar"
+                    header="Combined"
+                />
+
+                <Button
+                    id="asd"
+                    text="asd"
+                />
+            </VBox>
         </content>
     </Page>
 </mvc:View>
