@@ -1,7 +1,7 @@
 {
-  "name": "plannedorder",
+  "name": "project1",
   "version": "0.0.1",
-  "description": "Manage Master Production Orders - Fashion",
+  "description": "An SAP Fiori application.",
   "keywords": [
     "ui5",
     "openui5",

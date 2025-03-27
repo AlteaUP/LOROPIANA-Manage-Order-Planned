@@ -1,7 +1,7 @@
 {
   "_version": "1.65.0",
   "sap.app": {
-    "id": "plannedorder.plannedorder",
+    "id": "project1",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:fpm",
       "version": "1.16.4",
-      "toolsId": "9eebf59b-ec5e-4965-8e78-9616be4c7be8"
+      "toolsId": "591725be-1a13-48d3-a4a0-0dfe1d171aca"
     },
     "dataSources": {
       "mainService": {
@@ -45,7 +45,7 @@
   "sap.ui5": {
     "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.134.0",
+      "minUI5Version": "1.134.1",
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
@@ -62,7 +62,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "plannedorder.plannedorder.i18n.i18n"
+          "bundleName": "project1.i18n.i18n"
         }
       },
       "": {
@@ -88,9 +88,7 @@
         {
           "name": "ZZ1_CombinedPlnOrdersAPIMain",
           "pattern": ":?query:",
-          "target": [
-            "ZZ1_CombinedPlnOrdersAPIMain"
-          ]
+          "target": "ZZ1_CombinedPlnOrdersAPIMain"
         },
         {
           "name": "ZZ1_CombinedPlnOrdersAPIObjectPage",
@@ -113,7 +111,7 @@
                 }
               },
               "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
-              "viewName": "plannedorder.plannedorder.ext.main.Main"
+              "viewName": "project1.ext.main.Main"
             }
           }
         },
@@ -124,31 +122,8 @@
           "options": {
             "settings": {
               "navigation": {},
-              "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
-              "content": {
-                "body": {
-                  "sections": {
-                    "MasterPlannedOrder": {
-                      "template": "plannedorder.plannedorder.ext.fragment.MasterPlannedOrder",
-                      "position": {
-                        "placement": "After",
-                        "anchor": "GeneralInfo"
-                      },
-                      "title": "Master Planned Order (custom)"
-                    }
-                  }
-                }
-              }
+              "contextPath": "/ZZ1_CombinedPlnOrdersAPI"
             }
-          }
-        }
-      }
-    },
-    "extends": {
-      "extensions": {
-        "sap.ui.controllerExtensions": {
-          "sap.fe.templates.ObjectPage.ObjectPageController": {
-            "controllerName": "plannedorder.plannedorder.ext.controller.Combined"
           }
         }
       }

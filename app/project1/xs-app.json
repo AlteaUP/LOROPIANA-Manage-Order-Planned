@@ -5,7 +5,7 @@
     {
       "source": "^/odata/(.*)$",
       "target": "/odata/$1",
-      "destination": "planndeorder",
+      "destination": "asd",
       "authenticationType": "xsuaa",
       "csrfProtection": false
     },

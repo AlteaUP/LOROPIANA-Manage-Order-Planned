@@ -27,7 +27,11 @@
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
     "watch-plannedorder": "cds watch --open plannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
-    "watch-plannedordertest": "cds watch --open plannedordertest/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-plannedordertest": "cds watch --open plannedordertest/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-combinedplannedorder": "cds watch --open combinedplannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-test": "cds watch --open test/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-test1": "cds watch --open test1/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "cov2ap": {
@@ -94,7 +98,12 @@
     }
   },
   "sapux": [
-    "app/plannedorder",
-    "app/plannedorder"
+    "app/test",
+    "app/test1",
+    "app/project1",
+    "app/project1",
+    "app/project1",
+    "app/project1",
+    "app/project1"
   ]
 }

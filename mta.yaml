@@ -71,6 +71,22 @@ modules:
       - plannedorder.zip
       name: plannedorder
       target-path: app//
+    - artifacts:
+      - combinedplannedordercombinedplannedorder.zip
+      name: combinedplannedordercombinedplannedorder
+      target-path: app//
+    - artifacts:
+      - testtest.zip
+      name: testtest
+      target-path: app//
+    - artifacts:
+      - test1test1.zip
+      name: test1test1
+      target-path: app//
+    - artifacts:
+      - project1.zip
+      name: project1
+      target-path: app//
 - name: masterplannedordersfashionmasterplannedorders
   type: html5
   path: app/master-planned-orders
@@ -114,6 +130,46 @@ modules:
 - name: plannedorder
   type: html5
   path: app/plannedorder
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: combinedplannedordercombinedplannedorder
+  type: html5
+  path: app/combinedplannedorder
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: testtest
+  type: html5
+  path: app/test
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: test1test1
+  type: html5
+  path: app/test1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: project1
+  type: html5
+  path: app/project1
   build-parameters:
     build-result: dist
     builder: custom

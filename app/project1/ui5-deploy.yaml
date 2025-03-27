@@ -2,7 +2,7 @@
 
 specVersion: "3.1"
 metadata:
-  name: plannedorder.plannedorder
+  name: project1
 type: application
 resources:
   configuration:
@@ -21,6 +21,6 @@ builder:
     - name: ui5-task-zipper
       afterTask: generateCachebusterInfo
       configuration:
-        archiveName: plannedorderplannedorder
+        archiveName: project1
         additionalFiles:
           - xs-app.json

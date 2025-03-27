@@ -34,12 +34,47 @@
 <EntityType Name="ZZ1_CombinedPlnOrdersAPIType" sap:label="Combined Planned Orders API" sap:content-version="1">
 <Key>
 <PropertyRef Name="CplndOrd"/>
+<PropertyRef Name="CrossPlantConfigurableProduct"/>
 </Key>
 <Property Name="CplndOrd" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
+<Property Name="CrossPlantConfigurableProduct" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Cross-plant CP" sap:quickinfo="Cross-Plant Configurable Product"/>
+<Property Name="PlannedOrderType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planned Order Type"/>
+<Property Name="PlannedOrderCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planned Order Category"/>
+<Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="LastChangeDate"/>
+<Property Name="MRPPlant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planning Plant"/>
+<Property Name="MRPArea" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Area"/>
+<Property Name="MRPController" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Controller"/>
+<Property Name="MaterialProcurementCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Procurement Category" sap:quickinfo="Material Procurement Category"/>
+<Property Name="MaterialProcurementType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Procurement Type" sap:quickinfo="Material Procurement Type"/>
+<Property Name="StorageLocation" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location"/>
+<Property Name="BillOfOperationsType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOO Type" sap:quickinfo="Bill of Operations Type"/>
+<Property Name="BillOfOperations" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Bill of Operations" sap:quickinfo="Bill of Operations ID"/>
+<Property Name="BillOfOperationsGroup" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOO Group" sap:quickinfo="Bill of Operations Group"/>
+<Property Name="BillOfOperationsVariant" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOO Variant" sap:quickinfo="Bill of Operations Variant"/>
+<Property Name="BillOfMaterialVariant" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Alternative BOM"/>
+<Property Name="BillOfMaterialVariantUsage" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOM Usage"/>
+<Property Name="BillOfMaterialStatus" Type="Edm.String" MaxLength="2" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="BOM Status" sap:quickinfo="Bill of Material Status"/>
+<Property Name="BillOfMaterialVersion" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOM Version"/>
+<Property Name="ProductionPlant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Production Plant"/>
+<Property Name="ProductionSupervisor" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Production Supervisor"/>
+<Property Name="ProductionVersion" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Production Version"/>
+<Property Name="PlndOrderPlannedStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="PlndOrderPlannedStartDate"/>
+<Property Name="PlndOrderPlannedEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="PlndOrderPlannedEndDate"/>
+<Property Name="PlannedOrderOpeningDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="PlannedOrderOpeningDate"/>
+<Property Name="PlndOrderTotalCmtmtDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="PlndOrderTotalCmtmtDate"/>
+<Property Name="ProductionStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="ProductionStartDate"/>
+<Property Name="ProductionEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="ProductionEndDate"/>
+<Property Name="PlndOrderBaseToEntryQtyNmrtr" Type="Edm.Decimal" Precision="5" Scale="0" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderBaseToEntryQtyNmrtr"/>
+<Property Name="PlndOrderBaseToEntryQtyDnmntr" Type="Edm.Decimal" Precision="5" Scale="0" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderBaseToEntryQtyDnmntr"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
 <Property Name="PlannedTotalQtyInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlannedTotalQtyInBaseUnit"/>
 <Property Name="RequirementQuantityInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequirementQuantityInBaseUnit"/>
 <Property Name="QuantityWithdrawnInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="QuantityWithdrawnInBaseUnit"/>
+<Property Name="PlndOrderCommittedQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderCommittedQty"/>
+<Property Name="ProductSeason" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Season"/>
+<Property Name="ProductCollection" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Collection" sap:quickinfo="Fashion Collection"/>
+<Property Name="ProductSeasonYear" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Season Year"/>
+<Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
 <NavigationProperty Name="to_ZZ1_CombinPlannedOrdersCom" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" FromRole="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" ToRole="ToRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrders" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_14452F1BDEBB4D010D6E121B05303A09" FromRole="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09" ToRole="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 <NavigationProperty Name="to_ZZ1_PLOCAPACITYCORD" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_245A91E238A4802D70CDD492A235572E" FromRole="FromRole_assoc_245A91E238A4802D70CDD492A235572E" ToRole="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>

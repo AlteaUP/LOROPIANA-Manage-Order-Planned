@@ -1,4 +1,4 @@
-/* checksum : 35d6d2b2d8c45e7fb8252370bb6e728f */
+/* checksum : 9e4b6eddd78d0afa93f534d3b0edb9b6 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -18,6 +18,130 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.label : 'Combined Plnd. Order'
   @sap.quickinfo : 'Combined Master Planned Order'
   key CplndOrd : String(12) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Cross-plant CP'
+  @sap.quickinfo : 'Cross-Plant Configurable Product'
+  key CrossPlantConfigurableProduct : String(40) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Planned Order Type'
+  PlannedOrderType : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Planned Order Category'
+  PlannedOrderCategory : String(1);
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'LastChangeDate'
+  LastChangeDate : Date;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Planning Plant'
+  MRPPlant : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'MRP Area'
+  MRPArea : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'MRP Controller'
+  MRPController : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Procurement Category'
+  @sap.quickinfo : 'Material Procurement Category'
+  MaterialProcurementCategory : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Procurement Type'
+  @sap.quickinfo : 'Material Procurement Type'
+  MaterialProcurementType : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Storage Location'
+  StorageLocation : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO Type'
+  @sap.quickinfo : 'Bill of Operations Type'
+  BillOfOperationsType : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Bill of Operations'
+  @sap.quickinfo : 'Bill of Operations ID'
+  BillOfOperations : String(8);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO Group'
+  @sap.quickinfo : 'Bill of Operations Group'
+  BillOfOperationsGroup : String(8);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO Variant'
+  @sap.quickinfo : 'Bill of Operations Variant'
+  BillOfOperationsVariant : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Alternative BOM'
+  BillOfMaterialVariant : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOM Usage'
+  BillOfMaterialVariantUsage : String(1);
+  @sap.display.format : 'NonNegative'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOM Status'
+  @sap.quickinfo : 'Bill of Material Status'
+  BillOfMaterialStatus : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOM Version'
+  BillOfMaterialVersion : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Production Plant'
+  ProductionPlant : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Production Supervisor'
+  ProductionSupervisor : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Production Version'
+  ProductionVersion : String(4);
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'PlndOrderPlannedStartDate'
+  PlndOrderPlannedStartDate : Date;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'PlndOrderPlannedEndDate'
+  PlndOrderPlannedEndDate : Date;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'PlannedOrderOpeningDate'
+  PlannedOrderOpeningDate : Date;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'PlndOrderTotalCmtmtDate'
+  PlndOrderTotalCmtmtDate : Date;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'ProductionStartDate'
+  ProductionStartDate : Date;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'ProductionEndDate'
+  ProductionEndDate : Date;
+  @sap.required.in.filter : 'false'
+  @sap.unit : 'BaseUnit'
+  @sap.label : 'PlndOrderBaseToEntryQtyNmrtr'
+  PlndOrderBaseToEntryQtyNmrtr : Decimal(5, 0);
+  @sap.required.in.filter : 'false'
+  @sap.unit : 'BaseUnit'
+  @sap.label : 'PlndOrderBaseToEntryQtyDnmntr'
+  PlndOrderBaseToEntryQtyDnmntr : Decimal(5, 0);
   @sap.required.in.filter : 'false'
   @sap.label : 'Base Unit of Measure'
   @sap.semantics : 'unit-of-measure'
@@ -34,6 +158,28 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.unit : 'BaseUnit'
   @sap.label : 'QuantityWithdrawnInBaseUnit'
   QuantityWithdrawnInBaseUnit : Decimal(13, 3);
+  @sap.required.in.filter : 'false'
+  @sap.unit : 'BaseUnit'
+  @sap.label : 'PlndOrderCommittedQty'
+  PlndOrderCommittedQty : Decimal(13, 3);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Season'
+  ProductSeason : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Collection'
+  @sap.quickinfo : 'Fashion Collection'
+  ProductCollection : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Season Year'
+  ProductSeasonYear : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Theme'
+  @sap.quickinfo : 'Fashion Theme'
+  ProductTheme : String(10);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_PLOCAPACITYCORD : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
