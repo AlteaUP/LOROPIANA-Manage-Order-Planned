@@ -28,15 +28,15 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type: 'UI.DataField',
             Value: BaseUnit,
-        },
+        }
     ],
-    UI.Facets                                  : [
-        {
-            $Type : 'UI.ReferenceFacet',
-            Label : 'General Info',
-            ID    : 'GeneralInfo',
-            Target: '@UI.Identification',
-        },
+    UI.Facets                                  : [{
+        $Type : 'UI.ReferenceFacet',
+        Label : 'General Info',
+        ID    : 'GeneralInfo',
+        Target: '@UI.Identification',
+    },
+
     ],
     UI.FieldGroup #Formsections                : {
         $Type: 'UI.FieldGroupType',
@@ -44,24 +44,24 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     },
     UI.Identification                          : [
         {
-            $Type : 'UI.DataField',
-            Value : BaseUnit,
+            $Type: 'UI.DataField',
+            Value: BaseUnit,
         },
         {
-            $Type : 'UI.DataField',
-            Value : CplndOrd,
+            $Type: 'UI.DataField',
+            Value: CplndOrd,
         },
         {
-            $Type : 'UI.DataField',
-            Value : PlannedTotalQtyInBaseUnit,
+            $Type: 'UI.DataField',
+            Value: PlannedTotalQtyInBaseUnit,
         },
         {
-            $Type : 'UI.DataField',
-            Value : QuantityWithdrawnInBaseUnit,
+            $Type: 'UI.DataField',
+            Value: QuantityWithdrawnInBaseUnit,
         },
         {
-            $Type : 'UI.DataField',
-            Value : RequirementQuantityInBaseUnit,
+            $Type: 'UI.DataField',
+            Value: RequirementQuantityInBaseUnit,
         },
     ],
     UI.HeaderFacets                            : [
@@ -146,57 +146,21 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         Value: RequirementQuantityInBaseUnit,
         Title: 'RequirementQuantityInBaseUnit',
     },
-    Communication.Contact #contact : {
-        $Type : 'Communication.ContactType',
-        fn : CplndOrd,
+    Communication.Contact #contact             : {
+        $Type: 'Communication.ContactType',
+        fn   : CplndOrd,
     },
-    Communication.Contact #contact1 : {
-        $Type : 'Communication.ContactType',
-        fn : BaseUnit,
+    Communication.Contact #contact1            : {
+        $Type: 'Communication.ContactType',
+        fn   : BaseUnit,
     },
-    UI.FieldGroup #Form1 : {
-        $Type : 'UI.FieldGroupType',
-        Data : [
-        ],
+    UI.FieldGroup #Form1                       : {
+        $Type: 'UI.FieldGroupType',
+        Data : [],
     },
 );
 
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    BaseUnit @Common.Label: 'BaseUnit'
-};
-
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    CplndOrd @Common.Label: 'CplndOrd'
-};
-
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    PlannedTotalQtyInBaseUnit @Common.Label: 'PlannedTotalQtyInBaseUnit'
-};
-
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    QuantityWithdrawnInBaseUnit @Common.Label: 'QuantityWithdrawnInBaseUnit'
-};
-
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    RequirementQuantityInBaseUnit @Common.Label: 'RequirementQuantityInBaseUnit'
-};
-annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrderMaster with @(
-    UI.LineItem #tableMacro : [
-    ]
-);
-
-annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
-    UI.LineItem #tableMacro : [
-    ]
-);
-
-annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
-    UI.LineItem #tableMacro : [
-    ]
-);
-
-annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
-    UI.LineItem #tableMacro : [
-    ]
-);
-
+annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders with @(UI.LineItem #MasterPlannedOrder: [{
+    $Type: 'UI.DataField',
+    Value: CplndOrd,
+}]);

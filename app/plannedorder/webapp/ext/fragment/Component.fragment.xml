@@ -1,6 +1,21 @@
-<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:macros="sap.fe.macros">
-    <VBox core:require="{ handler: 'plannedorder/plannedorder/ext/fragment/Component'}">
-        <Button text="Component" press="handler.onPress"/>
-        <macros:Table id="Table" metaPath="to_ZZ1_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#tableMacro" header="Component"/>
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:macros="sap.fe.macros"
+>
+    <VBox
+        id="VBoxComponent"
+        core:require="{ handler: 'plannedorder/plannedorder/ext/fragment/Component'}"
+    >
+        <Button
+            id="ButtonComponent"
+            text="Component"
+            press="handler.onPress"
+        />
+        <macros:Table
+            id="TableComponent"
+            metaPath="to_ZZ1_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
+            header="Component"
+        />
     </VBox>
 </core:FragmentDefinition>

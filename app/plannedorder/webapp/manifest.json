@@ -95,10 +95,7 @@
         {
           "name": "ZZ1_CombinedPlnOrdersAPIObjectPage",
           "pattern": "ZZ1_CombinedPlnOrdersAPI({ZZ1_CombinedPlnOrdersAPIKey}):?query:",
-          "target": [
-            "ZZ1_CombinedPlnOrdersAPIMain",
-            "ZZ1_CombinedPlnOrdersAPIObjectPage"
-          ]
+          "target": "ZZ1_CombinedPlnOrdersAPIObjectPage"
         }
       ],
       "targets": {
@@ -128,7 +125,6 @@
             "settings": {
               "navigation": {},
               "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
-              "sectionLayout": "Page",
               "content": {
                 "body": {
                   "sections": {
@@ -138,23 +134,7 @@
                         "placement": "After",
                         "anchor": "GeneralInfo"
                       },
-                      "title": "Master Planned Order"
-                    },
-                    "PlannedOrder": {
-                      "template": "plannedorder.plannedorder.ext.fragment.PlannedOrder",
-                      "position": {
-                        "placement": "After",
-                        "anchor": "MasterPlannedOrder"
-                      },
-                      "title": "Planned Order"
-                    },
-                    "Component": {
-                      "template": "plannedorder.plannedorder.ext.fragment.Component",
-                      "position": {
-                        "placement": "After",
-                        "anchor": "PlannedOrder"
-                      },
-                      "title": "Component"
+                      "title": "Master Planned Order (custom)"
                     }
                   }
                 }
@@ -169,9 +149,6 @@
         "sap.ui.controllerExtensions": {
           "sap.fe.templates.ObjectPage.ObjectPageController": {
             "controllerName": "plannedorder.plannedorder.ext.controller.Combined"
-          },
-          "sap.fe.templates.ObjectPage.ObjectPageController#plannedorder.plannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage": {
-            "controllerName": "plannedorder.plannedorder.ext.controller.ExtCombined"
           }
         }
       }

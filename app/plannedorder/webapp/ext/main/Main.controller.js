@@ -40,15 +40,15 @@ sap.ui.define(
             //  onExit: function() {
             //
             //  }
-            onRowPress: async function (oEvent) {
-                const bindingContext = oEvent.getParameter('bindingContext');
-                const CplndOrd = bindingContext.getProperty('CplndOrd')
-                if (!CplndOrd) return sap.m.MessageBox.error('No CplndOrd found');
+            // onRowPress: async function (oEvent) {
+            //     const bindingContext = oEvent.getParameter('bindingContext');
+            //     const CplndOrd = bindingContext.getProperty('CplndOrd')
+            //     if (!CplndOrd) return sap.m.MessageBox.error('No CplndOrd found');
 
-                await this.getExtensionAPI().getRouting().navigateToRoute('ZZ1_CombinedPlnOrdersAPIObjectPage', {
-                    ZZ1_CombinedPlnOrdersAPIKey: CplndOrd
-                });
-            }
+            //     await this.getExtensionAPI().getRouting().navigateToRoute('ZZ1_CombinedPlnOrdersAPIObjectPage', {
+            //         ZZ1_CombinedPlnOrdersAPIKey: CplndOrd
+            //     });
+            // }
         });
     }
 );
