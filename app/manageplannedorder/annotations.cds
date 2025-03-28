@@ -280,3 +280,88 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
     ]
 );
 
+annotate service.ZZ1_MasterPlannedOrderAPI with @(
+    UI.LineItem #tableMacro : [
+        {
+            $Type : 'UI.DataField',
+            Value : CplndOrd,
+            Label : 'CplndOrd',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : FshMplndOrd,
+            Label : 'FshMplndOrd',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : BaseUnit,
+            Label : 'BaseUnit',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : PlannedTotalQtyInBaseUnit,
+            Label : 'PlannedTotalQtyInBaseUnit',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : QuantityWithdrawnInBaseUnit,
+            Label : 'QuantityWithdrawnInBaseUnit',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : RequirementQuantityInBaseUnit,
+            Label : 'RequirementQuantityInBaseUnit',
+        },
+    ]
+);
+
+annotate service.ZZ1_PlannedOrdersAPI with @(
+    UI.LineItem #tableMacro : [
+        {
+            $Type : 'UI.DataField',
+            Value : ID,
+            Label : 'ID',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CplndOrd,
+            Label : 'CplndOrd',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : PlannedOrder,
+            Label : 'PlannedOrder',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Product,
+            Label : 'Product',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductionPlant,
+            Label : 'ProductionPlant',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductSeason,
+            Label : 'ProductSeason',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductSeasonYear,
+            Label : 'ProductSeasonYear',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductTheme,
+            Label : 'ProductTheme',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : StorageLocation,
+            Label : 'StorageLocation',
+        },
+    ]
+);
+
