@@ -31,6 +31,40 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Value : PlannedOrderOpeningDate,
             Label : 'PlannedOrderOpeningDate',
         },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductCollection,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductSeason,
+            Label : 'ProductSeason',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductSeasonYear,
+            Label : 'ProductSeasonYear',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductTheme,
+            Label : 'ProductTheme',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : PlndOrderCommittedQty,
+            Label : 'PlndOrderCommittedQty',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : PlndOrderTotalCmtmtDate,
+            Label : 'PlndOrderTotalCmtmtDate',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : RequirementQuantityInBaseUnit,
+            Label : 'RequirementQuantityInBaseUnit',
+        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
@@ -276,6 +310,26 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
             $Type : 'UI.DataField',
             Value : WorkCenterType,
             Label : 'WorkCenterType',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : WorkCenterText,
+            Label : 'WorkCenterText',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : WorkCenter,
+            Label : 'WorkCenter',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Plant,
+            Label : 'Plant',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CapacityRequirementUnit,
+            Label : 'CapacityRequirementUnit',
         },
     ]
 );

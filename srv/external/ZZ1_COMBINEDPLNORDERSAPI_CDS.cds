@@ -1,9 +1,496 @@
-/* checksum : 9e4b6eddd78d0afa93f534d3b0edb9b6 */
+/* checksum : 8b672d28df10d8a6c9bdae682ac39fba */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
 @sap.supported.formats : 'atom json xlsx'
 service ZZ1_COMBINEDPLNORDERSAPI_CDS {};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.addressable : 'false'
+@sap.content.version : '1'
+@sap.label : 'Address'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Address {
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Address Number'
+  key AddressID : String(10) not null;
+  @sap.label : 'Address UUID'
+  @sap.quickinfo : 'UUID Used in the Address'
+  AddressUUID : UUID;
+  @sap.label : 'c/o'
+  @sap.quickinfo : 'c/o name'
+  CareOfName : String(40);
+  @sap.label : 'Street 5'
+  AdditionalStreetSuffixName : String(40);
+  @sap.label : 'Language Key'
+  CorrespondenceLanguage : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Comm. Method'
+  @sap.quickinfo : 'Communication Method (Key) (Business Address Services)'
+  PrfrdCommMediumType : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'PO Box'
+  POBox : String(10);
+  @sap.label : 'PO Box w/o No.'
+  @sap.quickinfo : 'Flag: PO Box Without Number'
+  POBoxIsWithoutNumber : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'PO Box Postal Code'
+  POBoxPostalCode : String(10);
+  @sap.label : 'PO Box Lobby'
+  POBoxLobbyName : String(40);
+  @sap.label : 'PO Box City'
+  @sap.quickinfo : 'PO Box city'
+  POBoxDeviatingCityName : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'PO Box Region'
+  @sap.quickinfo : 'Region for PO Box (Country/Region, State, Province, ...)'
+  POBoxDeviatingRegion : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'PO Box Ctry/Region'
+  @sap.quickinfo : 'PO Box of Country/Region'
+  POBoxDeviatingCountry : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Delvry Serv Type'
+  @sap.quickinfo : 'Type of Delivery Service'
+  DeliveryServiceTypeCode : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Delivery Service No.'
+  @sap.quickinfo : 'Number of Delivery Service'
+  DeliveryServiceNumber : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Time Zone'
+  @sap.quickinfo : 'Address Time Zone'
+  AddressTimeZone : String(6);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Test stat./City file'
+  @sap.quickinfo : 'City file test status'
+  CityFileTestStatus : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Undeliverable'
+  @sap.quickinfo : 'Street Address Undeliverable Flag'
+  AddressStreetUnusable : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Undeliverable'
+  @sap.quickinfo : 'PO Box Address Undeliverable Flag'
+  AddressPostBoxUnusable : String(4);
+  @sap.label : 'Full Name'
+  @sap.quickinfo : 'Full name of a party (Bus. Partner, Org. Unit, Doc. address)'
+  FullName : String(80);
+  @sap.label : 'City'
+  CityName : String(40);
+  @sap.label : 'District'
+  District : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'City Code'
+  @sap.quickinfo : 'City code for city/street file'
+  CityCode : String(12);
+  @sap.label : 'Different City'
+  @sap.quickinfo : 'City (different from postal city)'
+  HomeCityName : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Postal Code'
+  @sap.quickinfo : 'City postal code'
+  PostalCode : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Company Postal Code'
+  @sap.quickinfo : 'Company Postal Code (for Large Customers)'
+  CompanyPostalCode : String(10);
+  @sap.label : 'Street'
+  StreetName : String(60);
+  @sap.label : 'Street 2'
+  StreetPrefixName : String(40);
+  @sap.label : 'Street 3'
+  AdditionalStreetPrefixName : String(40);
+  @sap.label : 'Street 4'
+  StreetSuffixName : String(40);
+  @sap.label : 'House Number'
+  HouseNumber : String(10);
+  @sap.label : 'Supplement'
+  @sap.quickinfo : 'House number supplement'
+  HouseNumberSupplementText : String(10);
+  @sap.label : 'Building Code'
+  @sap.quickinfo : 'Building (Number or Code)'
+  Building : String(20);
+  @sap.label : 'Floor'
+  @sap.quickinfo : 'Floor in building'
+  Floor : String(10);
+  @sap.label : 'Room Number'
+  @sap.quickinfo : 'Room or Apartment Number'
+  RoomNumber : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Country/Region Key'
+  Country : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Region'
+  @sap.quickinfo : 'Region (State, Province, County)'
+  Region : String(3);
+  @sap.label : 'County'
+  County : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'County code'
+  @sap.quickinfo : 'County code for county'
+  CountyCode : String(8);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Township code'
+  @sap.quickinfo : 'Township code for Township'
+  TownshipCode : String(8);
+  @sap.label : 'Township'
+  TownshipName : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Title Key'
+  @sap.quickinfo : 'Form-of-Address Key'
+  FormOfAddress : String(4);
+  @sap.label : 'Name'
+  @sap.quickinfo : 'Name 1'
+  BusinessPartnerName1 : String(40);
+  @sap.label : 'Name 2'
+  BusinessPartnerName2 : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Address Version'
+  @sap.quickinfo : 'Version ID for International Addresses'
+  Nation : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Telephone'
+  @sap.quickinfo : 'First Telephone No.: Dialing Code + Number'
+  PhoneNumber : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Fax'
+  @sap.quickinfo : 'First Fax No.: Area Code + Number'
+  FaxNumber : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Search Term 1'
+  SearchTerm1 : String(20);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Search Term 2'
+  SearchTerm2 : String(20);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Street'
+  @sap.quickinfo : 'Street Name in Uppercase for Search Help'
+  StreetSearch : String(25);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'City'
+  @sap.quickinfo : 'City name in Uppercase for Search Help'
+  CitySearch : String(25);
+  @sap.label : 'Name 3'
+  BusinessPartnerName3 : String(40);
+  @sap.label : 'Name 4'
+  BusinessPartnerName4 : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Tax Jurisdiction'
+  TaxJurisdiction : String(15);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Transportation Zone'
+  @sap.quickinfo : 'Transportation zone to or from which the goods are delivered'
+  TransportZone : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'City Code'
+  @sap.quickinfo : 'City PO box code (City file)'
+  AddressCityPostBoxCode : String(12);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Person Number'
+  Person : String(10);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'Customer'
+@sap.value.list : 'true'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Customer_VH {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'BPCustomerName'
+  @sap.label : 'Customer'
+  @sap.quickinfo : 'Customer Number'
+  key Customer : String(10) not null;
+  @sap.label : 'Customer Name 1'
+  @sap.quickinfo : 'Name 1'
+  OrganizationBPName1 : String(35);
+  @sap.label : 'Business Partner Name 1'
+  @sap.quickinfo : 'Name 1'
+  BusinessPartnerName1 : String(40);
+  @sap.label : 'Customer Name 2'
+  @sap.quickinfo : 'Name 2'
+  OrganizationBPName2 : String(35);
+  @sap.label : 'Business Partner Name 2'
+  @sap.quickinfo : 'Name 2'
+  BusinessPartnerName2 : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Country/Region'
+  @sap.quickinfo : 'Country/Region Key'
+  Country : String(3);
+  @sap.label : 'City'
+  CityName : String(35);
+  @sap.label : 'Business Partner Address City'
+  @sap.quickinfo : 'City'
+  BPAddrCityName : String(40);
+  @sap.label : 'Street'
+  @sap.quickinfo : 'Street and House Number'
+  StreetName : String(35);
+  @sap.label : 'Business Partner Address Street'
+  @sap.quickinfo : 'Street'
+  BPAddrStreetName : String(60);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Postal Code'
+  PostalCode : String(10);
+  @sap.label : 'Customer Name'
+  @sap.quickinfo : 'Name of Customer'
+  CustomerName : String(80);
+  @sap.label : 'Business Partner Customer Name'
+  @sap.quickinfo : 'Customer Name'
+  BPCustomerName : String(81);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Account group'
+  @sap.quickinfo : 'Customer Account Group'
+  CustomerAccountGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Authorization'
+  @sap.quickinfo : 'Authorization Group'
+  AuthorizationGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Purpose Complete Flag'
+  @sap.quickinfo : 'Business Purpose Completed Flag'
+  IsBusinessPurposeCompleted : String(1);
+  @sap.label : 'Competitors'
+  @sap.quickinfo : 'Indicator: Competitor'
+  IsCompetitor : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner'
+  @sap.quickinfo : 'Business Partner Number'
+  BusinessPartner : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner Type'
+  BusinessPartnerType : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Ctrlr. Set'
+  @sap.quickinfo : 'BP: Data Controller Set Flag'
+  DataControllerSet : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController1 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController2 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController3 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController4 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController5 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController6 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController7 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController8 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController9 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController10 : String(30);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'Plant'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'PlantName'
+  @sap.label : 'Plant'
+  key Plant : String(4) not null;
+  @sap.label : 'Plant Name'
+  PlantName : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Valuation Area'
+  ValuationArea : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Customer No Plant'
+  @sap.quickinfo : 'Customer Number of Plant'
+  @sap.value.list : 'standard'
+  PlantCustomer : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sppl. No. Plnt'
+  @sap.quickinfo : 'Supplier Number of Plant'
+  @sap.value.list : 'standard'
+  PlantSupplier : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Factory Calendar'
+  @sap.quickinfo : 'Factory calendar key'
+  FactoryCalendar : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Purch. Organization'
+  @sap.quickinfo : 'Purchasing Organization'
+  DefaultPurchasingOrganization : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sls Organization ICB'
+  @sap.quickinfo : 'Sales Organization for Intercompany Billing'
+  SalesOrganization : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Address'
+  AddressID : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Plant Cat.'
+  @sap.quickinfo : 'Plant category'
+  PlantCategory : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Distrib.Channel'
+  @sap.quickinfo : 'Distribution Channel for Intercompany billing'
+  DistributionChannel : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Interco. Billing Div'
+  @sap.quickinfo : 'Division for Intercompany Billing'
+  Division : String(2);
+  @sap.label : 'Language Key'
+  Language : String(2);
+  @sap.label : 'Archiving Flag'
+  @sap.quickinfo : 'Central archiving marker for master record'
+  IsMarkedForArchiving : Boolean;
+  to_Address : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Address {  };
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'Supplier'
+@sap.value.list : 'true'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VH {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'BPSupplierName'
+  @sap.label : 'Supplier'
+  @sap.quickinfo : 'Account Number of Supplier'
+  key Supplier : String(10) not null;
+  @sap.label : 'Supplier Name1'
+  @sap.quickinfo : 'Supplier Name'
+  SupplierName : String(35);
+  @sap.label : 'Business Partner Name1'
+  BusinessPartnerName1 : String(40);
+  @sap.label : 'Business Partner Supplier Name'
+  @sap.quickinfo : 'Supplier Name'
+  BPSupplierName : String(81);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Authorization'
+  @sap.quickinfo : 'Authorization Group'
+  AuthorizationGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Account group'
+  @sap.quickinfo : 'Vendor account group'
+  SupplierAccountGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Purpose Completed'
+  @sap.quickinfo : 'Business Purpose Completed Flag'
+  IsBusinessPurposeCompleted : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner'
+  @sap.quickinfo : 'Business Partner Number'
+  BusinessPartner : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner Type'
+  BusinessPartnerType : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Ctrlr. Set'
+  @sap.quickinfo : 'BP: Data Controller Set Flag'
+  DataControllerSet : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController1 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController2 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController3 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController4 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController5 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController6 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController7 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController8 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController9 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController10 : String(30);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'Work Center By Semantic Key'
+@sap.value.list : 'true'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_WrkCtrBySemanticKeyStdVH {
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Plant'
+  key Plant : String(4) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'WorkCenter_Text'
+  @sap.label : 'Work Center'
+  key WorkCenter : String(8) not null;
+  @sap.label : 'Work Center Text'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  WorkCenter_Text : String(40);
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Object ID'
+  @sap.quickinfo : 'Object ID of the resource'
+  WorkCenterInternalID : String(8);
+};
 
 @cds.external : true
 @cds.persistence.skip : true
@@ -348,5 +835,20 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.unit : 'CapacityRequirementUnit'
   @sap.label : 'RemainingCapReqOpSegTrdwnDurn'
   RemainingCapReqOpSegTrdwnDurn : Double;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Work Center'
+  @sap.value.list : 'standard'
+  WorkCenter : String(8);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Work Center Text'
+  WorkCenterText : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.text : 'to_Plant/PlantName'
+  @sap.label : 'Plant'
+  @sap.value.list : 'standard'
+  Plant : String(4);
+  to_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {  };
 };
 

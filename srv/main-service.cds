@@ -13,8 +13,11 @@ service MainService {
   entity ZZ1_CombinedPlnOrdersAPI   as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,
+      // master planned orders
       to_ZZ1_MasterPlannedOrders : Composition of many ZZ1_MasterPlannedOrders on CplndOrd = $self.CplndOrd,
+      // componenti
       to_CombinPlannedOrdersCom  : Composition of many ZZ1_CombinPlannedOrdersCom on CplndOrd = $self.CplndOrd,
+      // capacità
       to_PLOCAPACITYCORD         : Composition of many ZZ1_PLOCAPACITYCORD on CplndOrd = $self.CplndOrd,
     };
   // Combined Planned Order - End
