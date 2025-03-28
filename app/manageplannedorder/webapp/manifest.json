@@ -1,7 +1,7 @@
 {
   "_version": "1.65.0",
   "sap.app": {
-    "id": "project1",
+    "id": "manageplannedorder.manageplannedorder",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:fpm",
       "version": "1.16.4",
-      "toolsId": "591725be-1a13-48d3-a4a0-0dfe1d171aca"
+      "toolsId": "8090b97d-1921-45ec-930a-9a86cbce716d"
     },
     "dataSources": {
       "mainService": {
@@ -62,7 +62,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "project1.i18n.i18n"
+          "bundleName": "manageplannedorder.manageplannedorder.i18n.i18n"
         }
       },
       "": {
@@ -111,7 +111,7 @@
                 }
               },
               "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
-              "viewName": "project1.ext.main.Main"
+              "viewName": "manageplannedorder.manageplannedorder.ext.main.Main"
             }
           }
         },
@@ -122,7 +122,8 @@
           "options": {
             "settings": {
               "navigation": {},
-              "contextPath": "/ZZ1_CombinedPlnOrdersAPI"
+              "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
+              "showRelatedApps": false
             }
           }
         }

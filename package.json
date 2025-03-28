@@ -31,7 +31,8 @@
     "watch-combinedplannedorder": "cds watch --open combinedplannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-test": "cds watch --open test/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-test1": "cds watch --open test1/webapp/index.html?sap-ui-xx-viewCache=false",
-    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-manageplannedorder": "cds watch --open manageplannedorder/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "cov2ap": {
@@ -104,6 +105,7 @@
     "app/project1",
     "app/project1",
     "app/project1",
-    "app/project1"
+    "app/project1",
+    "app/manageplannedorder"
   ]
 }

@@ -87,6 +87,10 @@ modules:
       - project1.zip
       name: project1
       target-path: app//
+    - artifacts:
+      - manageplannedordermanageplannedorder.zip
+      name: manageplannedordermanageplannedorder
+      target-path: app//
 - name: masterplannedordersfashionmasterplannedorders
   type: html5
   path: app/master-planned-orders
@@ -170,6 +174,16 @@ modules:
 - name: project1
   type: html5
   path: app/project1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: manageplannedordermanageplannedorder
+  type: html5
+  path: app/manageplannedorder
   build-parameters:
     build-result: dist
     builder: custom
