@@ -1,15 +1,9 @@
-sap.ui.define([
-    // "sap/m/MessageToast",
-    // "sap/ui/core/library"
-], function (/*MessageToast, coreLibrary*/) {
+sap.ui.define([], function () {
     'use strict';
-
     return {
         doAssegnaPezze: function (oEvent) {
-            // retrieve binding information
-            const obj = oEvent.getObject()
-            const path = oEvent.getPath()
-            // retrieve the selected item icon
+            const id = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_CombinPlannedOrdersCom::LineItem::componenti-innerTable'
+            const path = this._view.byId(id).getSelectedItem().getBindingContext().getPath()
             if (!this._fragmentAssegnaPezze) {
                 this._fragmentAssegnaPezze = this.loadFragment({
                     id: "fragmentAssegnaPezze",
@@ -20,12 +14,8 @@ sap.ui.define([
 
             this._fragmentAssegnaPezze.then(function (dialog) {
                 dialog.bindElement(path);
-                debugger;
-                // dialog.setModel(new sap.ui.model.JSONModel, "jsonModel");
                 dialog.open();
             });
-
-            // MessageToast.show("Custom handler invoked.");
         }
     };
 });

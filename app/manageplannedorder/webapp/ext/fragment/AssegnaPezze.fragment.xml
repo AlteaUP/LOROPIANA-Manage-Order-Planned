@@ -2,6 +2,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:form="sap.ui.layout.form"
+    xmlns:macros="sap.fe.macros"
 >
     <Dialog
         id="_IDGenDialog1234"
@@ -10,7 +11,7 @@
         type="Message"
         state="Information"
         icon="sap-icon://ai"
-        title="Assegna Pezze {selected>/CplndOrd}"
+        title="Assegna Pezze {CplndOrd}"
     >
         <content>
             <form:SimpleForm
@@ -33,85 +34,36 @@
                 />
                 <Input
                     id="_IDGenInputCplndOrd"
-                    value="{selected>/CplndOrd}"
+                    value="{CplndOrd}"
                     enabled="false"
                 />
-                <Label
-                    id="_formCrossPlantConfigurableProduct"
-                    text="CrossPlantConfigurableProduct"
-                />
-                <Input
-                    id="_IDGenInputCrossPlantConfigurableProduct"
-                    value="{selected>/CrossPlantConfigurableProduct}"
-                    enabled="false"
-                />
-                <Label
-                    id="_formPlannedOrderOpeningDate"
-                    text="PlannedOrderOpeningDate"
-                />
-                <Input
-                    id="_IDGenInputPlannedOrderOpeningDate"
-                    value="{selected>/PlannedOrderOpeningDate}"
-                    enabled="false"
-                />
-                <Label
-                    id="_formPlndOrderCommittedQty"
-                    text="PlndOrderCommittedQty"
-                />
-                <Input
-                    id="_IDGenInputPlndOrderCommittedQty"
-                    value="{selected>/PlndOrderCommittedQty}"
-                    enabled="false"
-                />
-                <Label
-                    id="_formPlndOrderPlannedEndDate"
-                    text="PlndOrderPlannedEndDate"
-                />
-                <Input
-                    id="_IDGenInputPlndOrderPlannedEndDate"
-                    value="{selected>/PlndOrderPlannedEndDate}"
-                    enabled="false"
-                />
-                <Label
-                    id="_formPlndOrderPlannedStartDate"
-                    text="PlndOrderPlannedStartDate"
-                />
-                <Input
-                    id="_IDGenInputPlndOrderPlannedStartDate"
-                    value="{selected>/PlndOrderPlannedStartDate}"
-                    enabled="false"
-                />
-                <Label
-                    id="_formProductionPlant"
-                    text="ProductionPlant"
-                />
-                <Input
-                    id="_IDGenInputProductionPlant"
-                    value="{selected>/ProductionPlant}"
-                    enabled="false"
-                />
-                <Label id="btns" />
 
-                <!-- <Button
-                    type="Accept"
-                    text="Assegna"
-                    id="btn-assign"
-                    press="onAssign"
+                <Label
+                    id="_formMaterial"
+                    text="Material"
                 />
-                <Button
-                    type="Reject"
-                    text="Disassegna"
-                    id="btn-cancel"
-                    press="onCancel"
-                /> -->
+                <Input
+                    id="_IDGenInputMaterial"
+                    value="{Material}"
+                    enabled="false"
+                />
+
+                <Label
+                    id="_formPlant"
+                    text="Plant"
+                />
+                <Input
+                    id="_IDGenInputPlant"
+                    value="{Plant}"
+                    enabled="false"
+                />
             </form:SimpleForm>
             <!-- Stock Table -->
-            <!-- <macros:Table
+            <macros:Table
                 id="TableStock"
-                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
-                filterBar="FilterBar"
+                metaPath="/ZZ1_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#stock"
                 header="Stocks"
-            /> -->
+            />
         </content>
         <buttons>
             <Button

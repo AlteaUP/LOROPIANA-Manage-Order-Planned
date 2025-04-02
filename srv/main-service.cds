@@ -4,28 +4,29 @@ using {ZZ1_PLANNEDORDERSAPI_CDS} from './external/ZZ1_PLANNEDORDERSAPI_CDS';
 using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS';
 
 service MainService {
-  // Stock - Start
-  entity ZZ1_CombPlnOrdersStock     as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock;
-  entity ZZ1_CombPlnOrdersStockAPI  as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI;
-  // Stock - End
 
-  // Combined Planned Order - Start
-  // Associations
-  entity ZZ1_MasterPlannedOrders    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
+  // MASTER PLANNED ORDER
+  entity ZZ1_MasterPlannedOrders   as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
+
+  // COMPONENTS
+  entity ZZ1_CombinPlannedOrdersCom {
+    key CplndOrd        : String(12) not null;
+    key Material        : String(40) not null;
+    key Plant           : String(4) not null;
+    key StorageLocation : String(4) not null;
+
+        to_Stock        : Composition of many ZZ1_CombPlnOrdersStock
+                            on  Material = $self.Material
+                            and Plant    = $self.Plant
+                            and CplndOrd = $self.CplndOrd
+  };
 
 
-  entity ZZ1_CombinPlannedOrdersCom as
-    projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
-      *,
-      _Stock : Association to many ZZ1_CombPlnOrdersStock
-                 on  Material = $self.Material
-                 and Plant    = $self.Plant
-      };
+  // CAPACITY
+  entity ZZ1_PLOCAPACITYCORD       as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
-  entity ZZ1_PLOCAPACITYCORD        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
-
-  // Entity
-  entity ZZ1_CombinedPlnOrdersAPI   as
+  // COMBINED PLANNED ORDER
+  entity ZZ1_CombinedPlnOrdersAPI  as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,
       // master planned orders
@@ -41,9 +42,13 @@ service MainService {
   // Combined Planned Order - End
 
   // Master Planned Order - Start
-  entity ZZ1_MasterPlannedOrderAPI  as projection on ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPI;
+  entity ZZ1_MasterPlannedOrderAPI as projection on ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPI;
   // Master Planned Order - End
   // Planned Orders - Start
-  entity ZZ1_PlannedOrdersAPI       as projection on ZZ1_PLANNEDORDERSAPI_CDS.ZZ1_PlannedOrdersAPI;
+  entity ZZ1_PlannedOrdersAPI      as projection on ZZ1_PLANNEDORDERSAPI_CDS.ZZ1_PlannedOrdersAPI;
+  // Stock - Start
+  entity ZZ1_CombPlnOrdersStock    as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock;
+  entity ZZ1_CombPlnOrdersStockAPI as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI;
+// Stock - End
 
 }

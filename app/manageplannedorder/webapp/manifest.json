@@ -94,6 +94,11 @@
           "name": "ZZ1_CombinedPlnOrdersAPIObjectPage",
           "pattern": "ZZ1_CombinedPlnOrdersAPI({ZZ1_CombinedPlnOrdersAPIKey}):?query:",
           "target": "ZZ1_CombinedPlnOrdersAPIObjectPage"
+        },
+        {
+          "name": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage",
+          "pattern": "ZZ1_CombinedPlnOrdersAPI({ZZ1_CombinedPlnOrdersAPIKey})/to_CombinPlannedOrdersCom({to_CombinPlannedOrdersComKey}):?query:",
+          "target": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage"
         }
       ],
       "targets": {
@@ -121,7 +126,13 @@
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
-              "navigation": {},
+              "navigation": {
+                "to_CombinPlannedOrdersCom": {
+                  "detail": {
+                    "route": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage"
+                  }
+                }
+              },
               "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
               "showRelatedApps": false,
               "controlConfiguration": {
@@ -151,8 +162,35 @@
                       "text": "Change Work Cener"
                     }
                   }
+                },
+                "to_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#componenti": {
+                  "actions": {
+                    "AssegnaPezze": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.AssegnaPezze.doAssegnaPezze",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Assegna Pezze"
+                    }
+                  },
+                  "tableSettings": {
+                    "selectAll": false,
+                    "selectionLimit": 1,
+                    "selectionMode": "Single"
+                  }
                 }
               }
+            }
+          }
+        },
+        "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage": {
+          "type": "Component",
+          "id": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom"
             }
           }
         }

@@ -100,7 +100,7 @@
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS",
         "credentials": {
-          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_PLANNEDORDERSAPI_CDS",
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_COMBPLNORDERSSTOCKAPI_CDS",
           "authentication": "BasicAuthentication",
           "username": "laspatas",
           "password": "Sap1234567890!!!",
