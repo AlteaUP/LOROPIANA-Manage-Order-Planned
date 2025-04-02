@@ -176,7 +176,24 @@ annotate service.ZZ1_MasterPlannedOrders with @(
             Value : RequirementQuantityInBaseUnit,
             Label : 'RequirementQuantityInBaseUnit',
         },
-    ]
+    ],
+    UI.LineItem #blabla : [
+        {
+            $Type : 'UI.DataField',
+            Value : CplndOrd,
+            Label : 'CplndOrd',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : FshMplndOrd,
+            Label : 'FshMplndOrd',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : QuantityWithdrawnInBaseUnit,
+            Label : 'QuantityWithdrawnInBaseUnit',
+        },
+    ],
 );
 
 annotate service.ZZ1_CombinPlannedOrdersCom with @(

@@ -229,6 +229,7 @@
 <Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
 <NavigationProperty Name="to_ZZ1_CombinPlannedOrdersCom" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" FromRole="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" ToRole="ToRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrders" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_14452F1BDEBB4D010D6E121B05303A09" FromRole="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09" ToRole="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
+<NavigationProperty Name="to_ZZ1_PlannedOrdersCompChar" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" FromRole="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" ToRole="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
 <NavigationProperty Name="to_ZZ1_PLOCAPACITYCORD" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_245A91E238A4802D70CDD492A235572E" FromRole="FromRole_assoc_245A91E238A4802D70CDD492A235572E" ToRole="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 </EntityType>
 <EntityType Name="ZZ1_CombinPlannedOrdersComType" sap:label="Combined Planned Orders Com" sap:content-version="1">
@@ -242,6 +243,16 @@
 <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Material" sap:quickinfo="Material Number"/>
 <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
 <Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location"/>
+<Property Name="MatlCompRequirementDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="MatlCompRequirementDate"/>
+<Property Name="BOMItem" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="BOM Item" sap:quickinfo="Bill of Material Item"/>
+<Property Name="BOMItemDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Item Text" sap:quickinfo="BOM Item Text (Line 1)"/>
+<Property Name="BillOfMaterialCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOM Category" sap:quickinfo="Bill of Material Category Code"/>
+<Property Name="MRPController" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Controller"/>
+<Property Name="PlantName" Type="Edm.String" MaxLength="30" sap:required-in-filter="false" sap:label="Plant Name"/>
+<Property Name="MRPControllerName" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="MRP Controller Name"/>
+<Property Name="ProductCharacteristic1" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Color" sap:quickinfo="Characteristic Value for Colors of Variants"/>
+<Property Name="ProductCharacteristic2" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Main Size" sap:quickinfo="Characteristic Value for Main Sizes of Variants"/>
+<Property Name="ProductCharacteristic3" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Second Size" sap:quickinfo="Characteristic Value for Second Size for Variants"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
 <Property Name="AvailableQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="AvailableQuantity"/>
 <Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
@@ -258,6 +269,53 @@
 <Property Name="RequirementQuantityInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequirementQuantityInBaseUnit"/>
 <Property Name="QuantityWithdrawnInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="QuantityWithdrawnInBaseUnit"/>
 <Property Name="CplndOrd" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
+</EntityType>
+<EntityType Name="ZZ1_PlannedOrdersCompCharType" sap:label="Planned Order Component Characteristic" sap:content-version="1">
+<Key>
+<PropertyRef Name="Material"/>
+<PropertyRef Name="Plant"/>
+<PropertyRef Name="StorageLocation"/>
+<PropertyRef Name="Batch"/>
+<PropertyRef Name="Supplier"/>
+<PropertyRef Name="SDDocument"/>
+<PropertyRef Name="SDDocumentItem"/>
+<PropertyRef Name="WBSElementInternalID"/>
+<PropertyRef Name="Customer"/>
+<PropertyRef Name="SpecialStockIdfgStockOwner"/>
+<PropertyRef Name="InventoryStockType"/>
+<PropertyRef Name="InventorySpecialStockType"/>
+<PropertyRef Name="MaterialBaseUnit"/>
+<PropertyRef Name="CostEstimate"/>
+<PropertyRef Name="ResourceID"/>
+</Key>
+<Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Stock Material" sap:quickinfo="Material in Respect of Which Stock is Managed"/>
+<Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
+<Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location"/>
+<Property Name="Batch" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Batch SID" sap:quickinfo="Batch Number (Stock Identifier)"/>
+<Property Name="Supplier" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Supplier SID" sap:quickinfo="Supplier for Special Stock"/>
+<Property Name="SDDocument" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Sales order" sap:quickinfo="Sales order number of valuated sales order stock"/>
+<Property Name="SDDocumentItem" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="Sales order item" sap:quickinfo="Sales Order Item of Valuated Sales Order Stock"/>
+<Property Name="WBSElementInternalID" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="WBS Internal ID" sap:quickinfo="WBS Element"/>
+<Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Customer SID" sap:quickinfo="Customer for Special Stock"/>
+<Property Name="SpecialStockIdfgStockOwner" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Add. Supplier for Special Stock"/>
+<Property Name="InventoryStockType" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Stock Type" sap:quickinfo="Stock Type of Goods Movement (Stock Identifier)"/>
+<Property Name="InventorySpecialStockType" Type="Edm.String" Nullable="false" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Special Stock Type"/>
+<Property Name="MaterialBaseUnit" Type="Edm.String" Nullable="false" MaxLength="3" sap:required-in-filter="false" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+<Property Name="CostEstimate" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="ProdCostEst.No." sap:quickinfo="Cost Estimate Number - Product Costing"/>
+<Property Name="ResourceID" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Resource Name" sap:quickinfo="Resource Name (Stock Identifier)"/>
+<Property Name="CompanyCode" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Company Code"/>
+<Property Name="MatlWrhsStkQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlWrhsStkQtyInMatlBaseUnit"/>
+<Property Name="MatlCnsmpnQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlCnsmpnQtyInMatlBaseUnit"/>
+<Property Name="MatlStkIncrQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlStkIncrQtyInMatlBaseUnit"/>
+<Property Name="MatlStkDecrQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlStkDecrQtyInMatlBaseUnit"/>
+<Property Name="choice" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="choice"/>
+<Property Name="dye_lot" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="dye_lot"/>
+<Property Name="GROSS_LENGHT" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="GROSS_LENGHT"/>
+<Property Name="NET_HEIGHT" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="NET_HEIGHT"/>
+<Property Name="DEROGA" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="DEROGA"/>
+<Property Name="PDF_RATING_ID" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="PDF_RATING_ID"/>
+<Property Name="SERIALE_MATRICOLA" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="SERIALE_MATRICOLA"/>
+<Property Name="ALTEZZA_STANDARD" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="ALTEZZA_STANDARD"/>
 </EntityType>
 <EntityType Name="ZZ1_PLOCAPACITYCORDType" sap:label="Capacity Aggregation by Combined PLO" sap:content-version="1">
 <Key>
@@ -296,6 +354,10 @@
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrdersType" Multiplicity="*" Role="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 </Association>
+<Association Name="assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" sap:content-version="1">
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompCharType" Multiplicity="*" Role="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
+</Association>
 <Association Name="assoc_245A91E238A4802D70CDD492A235572E" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" Multiplicity="*" Role="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>
@@ -333,7 +395,12 @@
 <EntitySet Name="ZZ1_CombinedPlnOrdersAPI" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_CombinPlannedOrdersCom" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersComType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_MasterPlannedOrders" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrdersType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+<EntitySet Name="ZZ1_PlannedOrdersCompChar" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompCharType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PLOCAPACITYCORD" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+<AssociationSet Name="assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_CombinedPlnOrdersAPI" Role="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
+<End EntitySet="ZZ1_PlannedOrdersCompChar" Role="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
+</AssociationSet>
 <AssociationSet Name="assoc_5EE603DEC0F8465795632EF8E749E027" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_5EE603DEC0F8465795632EF8E749E027" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
 <End EntitySet="ZZ1_PLOCAPACITYCORD" Role="FromRole_assoc_5EE603DEC0F8465795632EF8E749E027"/>
 <End EntitySet="I_Plant" Role="ToRole_assoc_5EE603DEC0F8465795632EF8E749E027"/>
@@ -528,6 +595,14 @@
 </Record>
 <Record>
 <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ZZ1_PLOCAPACITYCORD"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ZZ1_PlannedOrdersCompChar"/>
 <PropertyValue Property="InsertRestrictions">
 <Record>
 <PropertyValue Property="Insertable" Bool="false"/>

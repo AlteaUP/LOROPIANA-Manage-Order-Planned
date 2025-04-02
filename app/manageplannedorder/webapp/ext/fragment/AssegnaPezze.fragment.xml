@@ -1,0 +1,125 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="_IDGenDialog1234"
+        stretch="true"
+        resizable="false"
+        type="Message"
+        state="Information"
+        icon="sap-icon://ai"
+        title="Assegna Pezze {selected>/CplndOrd}"
+    >
+        <content>
+            <form:SimpleForm
+                id="_IDGenSimpleForm1234"
+                editable="true"
+                layout="ColumnLayout"
+                labelSpanL="12"
+                labelSpanM="12"
+                labelSpanS="12"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsL="2"
+                columnsM="2"
+                columnsXL="2"
+            >
+                <Label
+                    id="_formCplndOrd"
+                    text="CplndOrd"
+                />
+                <Input
+                    id="_IDGenInputCplndOrd"
+                    value="{selected>/CplndOrd}"
+                    enabled="false"
+                />
+                <Label
+                    id="_formCrossPlantConfigurableProduct"
+                    text="CrossPlantConfigurableProduct"
+                />
+                <Input
+                    id="_IDGenInputCrossPlantConfigurableProduct"
+                    value="{selected>/CrossPlantConfigurableProduct}"
+                    enabled="false"
+                />
+                <Label
+                    id="_formPlannedOrderOpeningDate"
+                    text="PlannedOrderOpeningDate"
+                />
+                <Input
+                    id="_IDGenInputPlannedOrderOpeningDate"
+                    value="{selected>/PlannedOrderOpeningDate}"
+                    enabled="false"
+                />
+                <Label
+                    id="_formPlndOrderCommittedQty"
+                    text="PlndOrderCommittedQty"
+                />
+                <Input
+                    id="_IDGenInputPlndOrderCommittedQty"
+                    value="{selected>/PlndOrderCommittedQty}"
+                    enabled="false"
+                />
+                <Label
+                    id="_formPlndOrderPlannedEndDate"
+                    text="PlndOrderPlannedEndDate"
+                />
+                <Input
+                    id="_IDGenInputPlndOrderPlannedEndDate"
+                    value="{selected>/PlndOrderPlannedEndDate}"
+                    enabled="false"
+                />
+                <Label
+                    id="_formPlndOrderPlannedStartDate"
+                    text="PlndOrderPlannedStartDate"
+                />
+                <Input
+                    id="_IDGenInputPlndOrderPlannedStartDate"
+                    value="{selected>/PlndOrderPlannedStartDate}"
+                    enabled="false"
+                />
+                <Label
+                    id="_formProductionPlant"
+                    text="ProductionPlant"
+                />
+                <Input
+                    id="_IDGenInputProductionPlant"
+                    value="{selected>/ProductionPlant}"
+                    enabled="false"
+                />
+                <Label id="btns" />
+
+                <!-- <Button
+                    type="Accept"
+                    text="Assegna"
+                    id="btn-assign"
+                    press="onAssign"
+                />
+                <Button
+                    type="Reject"
+                    text="Disassegna"
+                    id="btn-cancel"
+                    press="onCancel"
+                /> -->
+            </form:SimpleForm>
+            <!-- Stock Table -->
+            <!-- <macros:Table
+                id="TableStock"
+                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
+                filterBar="FilterBar"
+                header="Stocks"
+            /> -->
+        </content>
+        <buttons>
+            <Button
+                id="_IDGenBtnCancel"
+                text="Annulla"
+                type="Reject"
+                press="onCancel"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

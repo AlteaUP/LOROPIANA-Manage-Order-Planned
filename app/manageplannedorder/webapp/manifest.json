@@ -123,7 +123,36 @@
             "settings": {
               "navigation": {},
               "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
-              "showRelatedApps": false
+              "showRelatedApps": false,
+              "controlConfiguration": {
+                "to_ZZ1_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#Components": {
+                  "actions": {
+                    "AssegnaPezze": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.AssegnaPezze.doAssegnaPezze",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Assegna Pezze"
+                    }
+                  },
+                  "tableSettings": {
+                    "selectAll": false,
+                    "selectionLimit": 1,
+                    "selectionMode": "Single"
+                  }
+                },
+                "to_ZZ1_PLOCAPACITYCORD/@com.sap.vocabularies.UI.v1.LineItem#Capacity": {
+                  "actions": {
+                    "ChangeWorkCenter": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ChangeWorkCenter.doChangeWorkCenter",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Change Work Cener"
+                    }
+                  }
+                }
+              }
             }
           }
         }
