@@ -20,6 +20,7 @@ sap.ui.define([
 
             this._fragmentAssegnaPezze.then(function (dialog) {
                 dialog.bindElement(path);
+                debugger;
                 // dialog.setModel(new sap.ui.model.JSONModel, "jsonModel");
                 dialog.open();
             });

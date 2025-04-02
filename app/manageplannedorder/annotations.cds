@@ -103,6 +103,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             ID : 'Capacity',
             Target : 'to_ZZ1_PLOCAPACITYCORD/@UI.LineItem#Capacity',
         },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Components_1',
+            ID : 'Components_1',
+            Target : 'to_ZZ1_CombinPlannedOrdersCom/@UI.LineItem#Components_1',
+        },
     ],
     UI.FieldGroup #GeneralInfo : {
         $Type : 'UI.FieldGroupType',
@@ -130,6 +136,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         ],
     },
     UI.DeleteHidden : true,
+    UI.FieldGroup #o : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+        ],
+    },
 );
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
@@ -243,7 +254,19 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Value : WithdrawnQuantity,
             Label : 'WithdrawnQuantity',
         },
-    ]
+    ],
+    UI.LineItem #Components_1 : [
+        {
+            $Type : 'UI.DataField',
+            Value : Material,
+            Label : 'Material',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Plant,
+            Label : 'Plant',
+        },
+    ],
 );
 
 annotate service.ZZ1_PLOCAPACITYCORD with @(

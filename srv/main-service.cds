@@ -1,12 +1,27 @@
 using {ZZ1_COMBINEDPLNORDERSAPI_CDS} from './external/ZZ1_COMBINEDPLNORDERSAPI_CDS';
 using {ZZ1_MASTERPLANNEDORDERAPI_CDS} from './external/ZZ1_MASTERPLANNEDORDERAPI_CDS';
 using {ZZ1_PLANNEDORDERSAPI_CDS} from './external/ZZ1_PLANNEDORDERSAPI_CDS';
+using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS';
 
 service MainService {
+  // Stock - Start
+  entity ZZ1_CombPlnOrdersStock     as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock;
+  entity ZZ1_CombPlnOrdersStockAPI  as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI;
+  // Stock - End
+
   // Combined Planned Order - Start
   // Associations
   entity ZZ1_MasterPlannedOrders    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
-  entity ZZ1_CombinPlannedOrdersCom as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom;
+
+
+  entity ZZ1_CombinPlannedOrdersCom as
+    projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
+      *,
+      _Stock : Association to many ZZ1_CombPlnOrdersStock
+                 on  Material = $self.Material
+                 and Plant    = $self.Plant
+      };
+
   entity ZZ1_PLOCAPACITYCORD        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
   // Entity
@@ -14,12 +29,15 @@ service MainService {
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,
       // master planned orders
-      to_ZZ1_MasterPlannedOrders : Composition of many ZZ1_MasterPlannedOrders on CplndOrd = $self.CplndOrd,
+      to_ZZ1_MasterPlannedOrders : Composition of many ZZ1_MasterPlannedOrders
+                                     on CplndOrd = $self.CplndOrd,
       // componenti
-      to_CombinPlannedOrdersCom  : Composition of many ZZ1_CombinPlannedOrdersCom on CplndOrd = $self.CplndOrd,
+      to_CombinPlannedOrdersCom  : Composition of many ZZ1_CombinPlannedOrdersCom
+                                     on CplndOrd = $self.CplndOrd,
       // capacità
-      to_PLOCAPACITYCORD         : Composition of many ZZ1_PLOCAPACITYCORD on CplndOrd = $self.CplndOrd,
-    };
+      to_PLOCAPACITYCORD         : Composition of many ZZ1_PLOCAPACITYCORD
+                                     on CplndOrd = $self.CplndOrd,
+                                   };
   // Combined Planned Order - End
 
   // Master Planned Order - Start
@@ -27,5 +45,5 @@ service MainService {
   // Master Planned Order - End
   // Planned Orders - Start
   entity ZZ1_PlannedOrdersAPI       as projection on ZZ1_PLANNEDORDERSAPI_CDS.ZZ1_PlannedOrdersAPI;
-// Planned Orders - End
+
 }

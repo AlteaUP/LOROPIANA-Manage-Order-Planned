@@ -17,9 +17,15 @@ module.exports = class MainService extends cds.ApplicationService {
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
 
+
+    // this.on("*", "ZZ1_CombinPlannedOrdersCom/_Stock", async (req) => {
+    //   return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);
+    // })
+
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD", async (req) => {
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
+
     // ZZ1_CombinedPlnOrdersAPI - End
 
     // ZZ1_MASTERPLANNEDORDERAPI - Start
@@ -35,5 +41,15 @@ module.exports = class MainService extends cds.ApplicationService {
       return ZZ1_PLANNEDORDERSAPI_CDS.run(req.query);
     })
     // ZZ1_PLANNEDORDERSAPI - End
+
+    // ZZ1_COMBPLNORDERSSTOCKAPI - Start
+    const ZZ1_COMBPLNORDERSSTOCKAPI_CDS = await cds.connect.to("ZZ1_COMBPLNORDERSSTOCKAPI_CDS");
+    this.on("*", "ZZ1_CombPlnOrdersStockAPI", async (req) => {
+      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);
+    });
+    this.on("*", "ZZ1_CombPlnOrdersStock", async (req) => {
+      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);
+    });
+    // ZZ1_COMBPLNORDERSSTOCKAPI - End
   }
 };

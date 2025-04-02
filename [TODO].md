@@ -28,3 +28,4 @@ Selezione multipla + action per conversione
 cds import srv/external/ZZ1_COMBINEDPLNORDERSAPI_CDS.edmx --from edmx --as cds --force
 cds import srv/external/ZZ1_MASTERPLANNEDORDERAPI_CDS.edmx --from edmx --as cds --force
 cds import srv/external/ZZ1_PLANNEDORDERSAPI_CDS.edmx --from edmx --as cds --force
+cds import srv/external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS.edmx --from edmx --as cds --force
