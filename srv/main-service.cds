@@ -10,15 +10,14 @@ service MainService {
 
   // COMPONENTS
   entity ZZ1_CombinPlannedOrdersCom {
-    key CplndOrd        : String(12) not null;
-    key Material        : String(40) not null;
-    key Plant           : String(4) not null;
-    key StorageLocation : String(4) not null;
-
-        to_Stock        : Composition of many ZZ1_CombPlnOrdersStock
-                            on  Material = $self.Material
-                            and Plant    = $self.Plant
-                            and CplndOrd = $self.CplndOrd
+    key CplndOrd                  : String(12) not null;
+    key Material                  : String(40) not null;
+    key Plant                     : String(4) not null;
+    key StorageLocation           : String(4) not null;
+        to_ZZ1_CombPlnOrdersStock : Composition of many ZZ1_CombPlnOrdersStock
+                                      on  Material = $self.Material
+                                      and Plant    = $self.Plant
+                                      and CplndOrd = $self.CplndOrd
   };
 
 

@@ -440,7 +440,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.ReferenceFacet',
             Label : 'Stock',
             ID : 'Stock',
-            Target : 'to_Stock/@UI.LineItem#Stock',
+            Target : 'to_ZZ1_CombPlnOrdersStock/@UI.LineItem#Stock',
         },
     ],
     UI.LineItem #stock : [
@@ -450,6 +450,48 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Label : 'Material',
         }
     ],
+    UI.HeaderFacets : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'General Info',
+            ID : 'GeneralInfo',
+            Target : '@UI.FieldGroup#GeneralInfo',
+        },
+    ],
+    UI.FieldGroup #GeneralInfo : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : CplndOrd,
+                Label : 'CplndOrd',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : Material,
+                Label : 'Material',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : Plant,
+                Label : 'Plant',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : StorageLocation,
+                Label : 'StorageLocation',
+            },
+        ],
+    },
+    UI.HeaderInfo : {
+        Title : {
+            $Type : 'UI.DataField',
+            Value : Material,
+        },
+        TypeName : '',
+        TypeNamePlural : '',
+        Initials : Material,
+    },
 );
 
 
@@ -460,6 +502,50 @@ annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
 
 annotate service.ZZ1_CombPlnOrdersStock with @(
     UI.LineItem #Stock : [
+        {
+            $Type : 'UI.DataField',
+            Value : Batch,
+            Label : 'Batch',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Material,
+            Label : 'Material',
+        },
+                {
+            $Type : 'UI.DataField',
+            Value : Plant,
+            Label : 'Plant',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : StorageLocation,
+            Label : 'StorageLocation',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Supplier,
+            Label : 'Supplier',
+        },{
+            $Type : 'UI.DataField',
+            Value : SDDocument,
+            Label : 'SDDocument',
+        },{
+            $Type : 'UI.DataField',
+            Value : SDDocumentItem,
+            Label : 'SDDocumentItem',
+        },{
+            $Type : 'UI.DataField',
+            Value : WBSElementInternalID,
+            Label : 'WBSElementInternalID',
+        },{
+            $Type : 'UI.DataField',
+            Value : Customer,
+            Label : 'Customer',
+        },{
+            $Type : 'UI.DataField',
+            Value : SpecialStockIdfgStockOwner,
+            Label : 'SpecialStockIdfgStockOwner',
+        },
     ]
 );
-

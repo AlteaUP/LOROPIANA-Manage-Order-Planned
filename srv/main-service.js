@@ -2,7 +2,7 @@ const cds = require("@sap/cds");
 
 module.exports = class MainService extends cds.ApplicationService {
   async init() {
-    console.log('*** init ZZ1_COMBINEDPLNORDERSAPI_CDS')
+    // console.log('*** init ZZ1_COMBINEDPLNORDERSAPI_CDS')
     const ZZ1_COMBINEDPLNORDERSAPI_CDS = await cds.connect.to("ZZ1_COMBINEDPLNORDERSAPI_CDS");
     const ZZ1_MASTERPLANNEDORDERAPI_CDS = await cds.connect.to("ZZ1_MASTERPLANNEDORDERAPI_CDS");
     const ZZ1_COMBPLNORDERSSTOCKAPI_CDS = await cds.connect.to("ZZ1_COMBPLNORDERSSTOCKAPI_CDS");
@@ -25,16 +25,24 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
-      console.log('**********')
-      let where = req.query.SELECT.from.ref[0].where
+      let from, where;
+      from = "ZZ1_CombPlnOrdersStockAPI"
+      where = req.query.SELECT.from.ref[0].where
       where = where.slice(0, 3)
-      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from("ZZ1_CombPlnOrdersStockAPI").where(where));
+      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where));
     });
-    this.on("*", "to_CombinPlannedOrdersCom/to_stock", async (req) => {
-      console.log('*111111111111111111 *********')
-      debugger;
-      let where = req.query.SELECT.from.ref[0].where
-      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from("ZZ1_CombPlnOrdersStock").where(where));
+
+    this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom/to_ZZ1_CombPlnOrdersStock", async (req) => {
+      let from = {
+        ref: [
+          {
+            id: "ZZ1_CombPlnOrdersStockAPI",
+            where: req.query.SELECT.from.ref[1].where
+          },
+          req.query.SELECT.from.ref[2]
+        ]
+      }
+      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from));
     });
     // ZZ1_CombinedPlnOrdersAPI - End
     // ZZ1_MASTERPLANNEDORDERAPI - Start

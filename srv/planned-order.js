@@ -4,13 +4,13 @@ const plannedOrderUtils = require("./utils/planned-order");
 
 module.exports = class PlannedOrderService extends cds.ApplicationService {
   async init() {
-    console.log('*** init plannedOrder')
+    // console.log('*** init plannedOrder')
     const plannedOrder = await cds.connect.to("planned_order");
-    console.log({ plannedOrder })
+    // console.log({ plannedOrder })
     // Get the original entity definition from the on-premise service. Because it's been extended, it will contain
     // the added fields from the extension aspect
     const originalEntity = plannedOrder.model.definitions["planned_order.C_RFM_ManageMfgOrder"];
-    console.log({ originalEntity })
+    // console.log({ originalEntity })
     // Extract the added fields from the extension aspect
 
     let excludeFields = [];
@@ -19,7 +19,7 @@ module.exports = class PlannedOrderService extends cds.ApplicationService {
         cds.model.definitions["api.ExtensionAspect"].elements
       );
     }
-    console.log({ excludeFields })
+    // console.log({ excludeFields })
     // Create a list of valid fields, which is all original fields minus excluded fields.
     let validFields = [];
     if (originalEntity) {
@@ -27,7 +27,7 @@ module.exports = class PlannedOrderService extends cds.ApplicationService {
         (field) => !excludeFields.includes(field)
       );
     }
-    console.log({ validFields })
+    // console.log({ validFields })
     /**
      * Handles the "READ" event for the "PlannedOrder" entity.
      *
@@ -36,7 +36,7 @@ module.exports = class PlannedOrderService extends cds.ApplicationService {
      * @returns {Promise<Object>} The result of executing the query.
      */
     this.on("READ", "C_RFM_ManageMfgOrder", async (req) => {
-      console.log('*** READ plannedOrder')
+      // console.log('*** READ plannedOrder')
       // Clone the original query and remove the extension fields
       let modifiedQuery = fixExtension(req.query, excludeFields, validFields);
 

@@ -190,8 +190,71 @@
           "options": {
             "settings": {
               "navigation": {},
-              "contextPath": "/ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom"
+              "contextPath": "/ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom",
+              "controlConfiguration": {
+                "to_Stock/@com.sap.vocabularies.UI.v1.LineItem#Stock": {
+                  "tableSettings": {
+                    "selectAll": true,
+                    "selectionMode": "Multi"
+                  },
+                  "actions": {
+                    "ComponentAssegnaPezze": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doAssegnaPezze",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Assegna Pezze"
+                    },
+                    "DisassegnaPezze": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doDisassignPezze",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Disassegna Pezze",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "ComponentAssegnaPezze"
+                      }
+                    },
+                    "WhereUsed": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doWhereUsed",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Where Used",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "DisassegnaPezze"
+                      }
+                    }
+                  }
+                },
+                "to_ZZ1_CombPlnOrdersStock/@com.sap.vocabularies.UI.v1.LineItem#Stock": {
+                  "tableSettings": {
+                    "selectAll": true,
+                    "selectionMode": "Multi"
+                  },
+                  "actions": {
+                    "AssegnaPezze": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doAssegnaPezze",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Assegna"
+                    }
+                  }
+                }
+              }
             }
+          }
+        }
+      }
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ObjectPage.ObjectPageController#manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage": {
+            "controllerName": "manageplannedorder.manageplannedorder.ext.controller.Pezzet"
           }
         }
       }

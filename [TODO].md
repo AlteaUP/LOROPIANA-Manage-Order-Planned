@@ -14,6 +14,33 @@ Selezione multipla + action per conversione
   --> Action disassegna pezze --> Lo stesso ma impostando la quantity a 0
   --> Action Where used
 
+____STOCK_____
+
+// Quantities
+@Semantics.quantity.unitOfMeasure: 'MaterialBaseUnit'
+@DefaultAggregation : #SUM
+cast(sum(MatlStkChangeQtyInBaseUnit) as nsdm_stock_qty preserving type)                                                                         as MatlWrhsStkQtyInMatlBaseUnit,
+@Semantics.quantity.unitOfMeasure: 'MaterialBaseUnit'
+@DefaultAggregation : #SUM
+cast(sum(MatlCnsmpnQtyInMatlBaseUnit) as nsdm_consumption_qty preserving type)                                                                  as MatlCnsmpnQtyInMatlBaseUnit,
+@Semantics.quantity.unitOfMeasure: 'MaterialBaseUnit'
+@DefaultAggregation : #SUM
+cast(sum(case when  MatlStkChangeQtyInBaseUnit > 0 then MatlStkChangeQtyInBaseUnit else 0 end) as nsdm_stock_increase_qty preserving type)      as MatlStkIncrQtyInMatlBaseUnit,
+@Semantics.quantity.unitOfMeasure: 'MaterialBaseUnit'
+@DefaultAggregation : #SUM
+cast(sum(case when  MatlStkChangeQtyInBaseUnit < 0 then abs(MatlStkChangeQtyInBaseUnit) else 0 end) as nsdm_stock_decrease_qty preserving type) as MatlStkDecrQtyInMatlBaseUnit,
+
+
+
+o	Assegnato produttivo totale usare la cds ZZ1_I_ARUN_BDBSSUMQTY_CDS facendo la somma qtà accedendo per plant materiale batch storage location
+
+nsdm_stock_qty        --> Unrestricted      -- Stock
+nsdm_consumption_qty  --> AssQuantityigned  -- Stock
+
+nsdm_stock_increase_qty --> CAMPO CALCOLATO -- 
+nsdm_stock_decrease_qty --> CAMPO CALCOLATO -- 
+
+
 
 
 

@@ -2,7 +2,7 @@ sap.ui.define(
     [
         'sap/fe/core/PageController'
     ],
-    function(PageController) {
+    function (PageController) {
         'use strict';
 
         return PageController.extend('manageplannedorder.manageplannedorder.ext.main.Main', {

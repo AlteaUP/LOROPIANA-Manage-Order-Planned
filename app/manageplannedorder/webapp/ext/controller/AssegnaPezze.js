@@ -11,11 +11,14 @@ sap.ui.define([], function () {
                     controller: this
                 });
             }
-
+            debugger
             this._fragmentAssegnaPezze.then(function (dialog) {
                 dialog.bindElement(path);
                 dialog.open();
             });
+        },
+        doAssign: function () {
+            console.log("doAssign");
         }
     };
 });

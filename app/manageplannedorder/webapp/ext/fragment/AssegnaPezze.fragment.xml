@@ -61,7 +61,7 @@
             <!-- Stock Table -->
             <macros:Table
                 id="TableStock"
-                metaPath="/ZZ1_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#stock"
+                metaPath="/ZZ1_CombinPlannedOrdersCom/to_Stock/@com.sap.vocabularies.UI.v1.LineItem#Stock"
                 header="Stocks"
             />
         </content>
