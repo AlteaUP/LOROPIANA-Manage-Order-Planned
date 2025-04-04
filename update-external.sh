@@ -17,8 +17,6 @@ for edmx_file in $all_edmx_files; do
   
   # Run the update command
   echo "Updating $edmx_file to $output_file..."
-  dotnet ef dbcontext scaffold "$edmx_file" Microsoft.EntityFrameworkCore.SqlServer -o srv/external --context-dir srv/external --force
-  
 done
 echo "Update process completed."
 echo "All .edmx files have been processed."
