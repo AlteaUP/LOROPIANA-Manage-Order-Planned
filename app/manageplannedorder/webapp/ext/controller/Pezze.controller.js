@@ -1,10 +1,11 @@
 sap.ui.define([
+    'sap/fe/core/PageController',
     "sap/m/MessageToast",
     "sap/ui/model/json/JSONModel"
-], function (MessageToast, JSONModel) {
+], function (PageController, MessageToast, JSONModel) {
     'use strict';
 
-    return {
+    return PageController.extend('manageplannedorder.manageplannedorder.ext.controller.Pezze', {
 
         doAssign: function (oEvent) {
             MessageToast.show("Custom handler invoked.");
@@ -22,5 +23,5 @@ sap.ui.define([
             dialog.close();
             // dialog.destroy();
         }
-    };
+    })
 });

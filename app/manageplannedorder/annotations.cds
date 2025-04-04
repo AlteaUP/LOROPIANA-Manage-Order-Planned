@@ -5,16 +5,53 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         ProductCollection,
         ProductionPlant,
     ],
+    UI.DataPoint #radialChart : { 
+        Value : committed_percent,
+        Criticality: committed_criticality,
+    },
+    UI.Chart #radialChart : {
+        Title : 'committed_percent',
+        Description : 'committed_percent',
+        ChartType : #Donut,
+        
+        Measures : [committed_percent],
+        MeasureAttributes : [{
+                $Type : 'UI.ChartMeasureAttributeType',
+                Measure : committed_percent,
+                Role : #Axis1,
+                DataPoint : '@UI.DataPoint#radialChart',
+        }]
+    },
     UI.LineItem #tableMacro : [
         {
             $Type : 'UI.DataField',
+            Value : ProductSeasonYear,
+            Label : 'Season Year',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductSeason,
+            Label : 'Season',
+        },
+        {
+            $Type : 'UI.DataField',
             Value : CplndOrd,
-            Label : 'CplndOrd',
+            Label : 'Combined Planned Order',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CrossPlantConfigurableProduct,
+            Label : 'Cross Plant Configurable Product',
+        },
+        {
+            $Type : 'UI.DataFieldForAnnotation',
+            Target : '@UI.Chart#radialChart',
+            Label   : 'Overall Conversion Status',
         },
         {
             $Type : 'UI.DataField',
             Value : PlannedTotalQtyInBaseUnit,
-            Label : 'PlannedTotalQtyInBaseUnit',
+            Label : 'Planned Total Qty In Base Unit',
         },
         {
             $Type : 'UI.DataField',
@@ -34,16 +71,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type : 'UI.DataField',
             Value : ProductCollection,
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : ProductSeason,
-            Label : 'ProductSeason',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : ProductSeasonYear,
-            Label : 'ProductSeasonYear',
         },
         {
             $Type : 'UI.DataField',
@@ -89,7 +116,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.ReferenceFacet',
             Label : 'Master Planned Order',
             ID : 'MasterPlannedOrder',
-            Target : 'to_ZZ1_MasterPlannedOrders/@UI.LineItem#MasterPlannedOrder',
+            Target : 'to_ZZ1_MasterPlannedOrders/@UI.SelectionPresentationVariant#MasterPlannedOrder',
         },
         
         {
@@ -100,7 +127,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {
             $Type : 'UI.ReferenceFacet',
-            Label : 'componenti',
+            Label : 'Component',
             ID : 'componenti1',
             Target : 'to_CombinPlannedOrdersCom/@UI.LineItem#componenti',
         },
@@ -136,6 +163,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         $Type : 'UI.FieldGroupType',
         Data : [
         ],
+    },
+    UI.DataPoint #PlndOrderCommittedQty : {
+        Value : PlndOrderCommittedQty,
+        Visualization : #Progress,
+        TargetValue : 100,
     },
 );
 
@@ -220,6 +252,20 @@ annotate service.ZZ1_MasterPlannedOrders with @(
             Label : 'FshMplndOrd',
         },
     ],
+    UI.SelectionPresentationVariant #MasterPlannedOrder : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#MasterPlannedOrder',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+    },
 );
 
 
@@ -441,7 +487,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Label : 'Stock',
             ID : 'Stock',
             Target : 'to_ZZ1_CombPlnOrdersStock/@UI.LineItem#Stock',
-        },
+        }
     ],
     UI.LineItem #stock : [
         {
@@ -453,9 +499,24 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     UI.HeaderFacets : [
         {
             $Type : 'UI.ReferenceFacet',
-            Label : 'General Info',
+            ID : 'CplndOrd',
+            Target : '@UI.DataPoint#CplndOrd',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'Material',
+            Target : '@UI.DataPoint#Material',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'Plant',
+            Target : '@UI.DataPoint#Plant',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
             ID : 'GeneralInfo',
             Target : '@UI.FieldGroup#GeneralInfo',
+            Label : 'Quantity',
         },
     ],
     UI.FieldGroup #GeneralInfo : {
@@ -463,23 +524,23 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Value : CplndOrd,
-                Label : 'CplndOrd',
+                Value : AvailableQuantity,
+                Label : 'Available Quantity',
             },
             {
                 $Type : 'UI.DataField',
-                Value : Material,
-                Label : 'Material',
+                Value : RequiredQuantity,
+                Label : 'Required Quantity',
             },
             {
                 $Type : 'UI.DataField',
-                Value : Plant,
-                Label : 'Plant',
+                Value : WithdrawnQuantity,
+                Label : 'Withdrawn Quantity',
             },
             {
                 $Type : 'UI.DataField',
-                Value : StorageLocation,
-                Label : 'StorageLocation',
+                Value : BaseUnit,
+                Label : 'Base Unit',
             },
         ],
     },
@@ -492,12 +553,29 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         TypeNamePlural : '',
         Initials : Material,
     },
+    UI.DataPoint #CplndOrd : {
+        $Type : 'UI.DataPointType',
+        Value : CplndOrd,
+        Title : 'CplndOrd',
+    },
+    UI.DataPoint #Material : {
+        $Type : 'UI.DataPointType',
+        Value : Material,
+        Title : 'Material',
+    },
+    UI.DataPoint #Plant : {
+        $Type : 'UI.DataPointType',
+        Value : Plant,
+        Title : 'Plant',
+    },
 );
 
 
 annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
     UI.LineItem #componenti : [
-    ]
+    ],
+    UI.LineItem #Stocks : [
+    ],
 );
 
 annotate service.ZZ1_CombPlnOrdersStock with @(
@@ -520,32 +598,61 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
         {
             $Type : 'UI.DataField',
             Value : StorageLocation,
-            Label : 'StorageLocation',
+            Label : 'Storage Location',
         },
         {
+
             $Type : 'UI.DataField',
-            Value : Supplier,
-            Label : 'Supplier',
-        },{
+            Value : StorageLocationStock,
+            Label : 'Storage Location Stock',
+        },
+        {
+
             $Type : 'UI.DataField',
-            Value : SDDocument,
-            Label : 'SDDocument',
-        },{
+            Value : MaterialBaseUnit,
+            Label : 'Base Unit',
+        },
+        {
+
             $Type : 'UI.DataField',
-            Value : SDDocumentItem,
-            Label : 'SDDocumentItem',
-        },{
+            Value : dye_lot,
+            Label : 'Dye Lot',
+        },
+        {
+
             $Type : 'UI.DataField',
-            Value : WBSElementInternalID,
-            Label : 'WBSElementInternalID',
-        },{
+            Value : choice,
+            Label : 'Choise',
+        },
+        {
+
             $Type : 'UI.DataField',
-            Value : Customer,
-            Label : 'Customer',
-        },{
+            Value : TotalProdAllQty,
+            Label: 'Total Product All Qty'
+        },
+        {
+
             $Type : 'UI.DataField',
-            Value : SpecialStockIdfgStockOwner,
-            Label : 'SpecialStockIdfgStockOwner',
+            Value : TotalPlanAllQty,
+            Label: 'Total Planned All Qty'
+        },
+        {
+
+            $Type : 'UI.DataField',
+            Value : CombPlanAllQty,
+            Label: 'Comb Plan All Qty'
+        },
+        {
+
+            $Type : 'UI.DataField',
+            Value : AvaibilityQty,
+            Label: 'Avaibility Qty'
+        },
+        {
+
+            $Type : 'UI.DataField',
+            Value : TotalInDelQty,
+            Label: 'Total In Del Qty',
         },
     ]
 );

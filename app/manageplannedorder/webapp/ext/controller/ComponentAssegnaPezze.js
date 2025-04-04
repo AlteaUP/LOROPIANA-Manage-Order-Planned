@@ -15,14 +15,14 @@ sap.ui.define([
                 _selectedItems.push(oObj)
             }
             const model = new JSONModel()
-            console.log("Selected Items", obj.Material)
-            model.setData({ ...obj, Material: 'antani', selectedItems: _selectedItems })
+            console.log("Selected Items", obj)
+            model.setData({ ...obj, selectedItems: _selectedItems })
 
             if (!this._fragmentPezze) {
                 this._fragmentPezze = this.loadFragment({
                     id: "fragmentPezze",
                     name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
-                    controller: "manageplannedorder.manageplannedorder.ext.controller.Pezze"
+                    controller: this._controller
                 });
             }
 

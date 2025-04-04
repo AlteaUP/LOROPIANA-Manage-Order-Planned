@@ -34,181 +34,60 @@
                 layout="ColumnLayout"
             >
                 <Label
-                    text="AvailableQuantity"
-                    id="labelAvailableQuantity"
-                />
-                <Input
-                    value="{/AvailableQuantity}"
-                    enabled="false"
-                    id="inputAvailableQuantity"
-                />
-                <Label
-                    text="BOMItem"
-                    id="labelBOMItem"
-                />
-                <Input
-                    value="{/BOMItem}"
-                    enabled="false"
-                    id="inputBOMItem"
-                />
-                <Label
-                    text="BOMItemDescription"
-                    id="labelBOMItemDescription"
-                />
-                <Input
-                    value="{/BOMItemDescription}"
-                    enabled="false"
-                    id="inputBOMItemDescription"
-                />
-                <Label
-                    text="BaseUnit"
-                    id="labelBaseUnit"
-                />
-                <Input
-                    value="{/BaseUnit}"
-                    enabled="false"
-                    id="inputBaseUnit"
-                />
-                <Label
-                    text="BillOfMaterialCategory"
-                    id="labelBillOfMaterialCategory"
-                />
-                <Input
-                    value="{/BillOfMaterialCategory}"
-                    enabled="false"
-                    id="inputBillOfMaterialCategory"
-                />
-                <Label
-                    text="CplndOrd"
+                    text="Cplnd Ord"
                     id="labelCplndOrd"
                 />
-                <Input
-                    value="{/CplndOrd}"
-                    enabled="false"
+                <Text
+                    text="{/CplndOrd}"
                     id="inputCplndOrd"
                 />
-                <Label
-                    text="MRPController"
-                    id="labelMRPController"
-                />
-                <Input
-                    value="{/MRPController}"
-                    enabled="false"
-                    id="inputMRPController"
-                />
-                <Label
-                    text="MRPControllerName"
-                    id="labelMRPControllerName"
-                />
-                <Input
-                    value="{/MRPControllerName}"
-                    enabled="false"
-                    id="inputMRPControllerName"
-                />
+
                 <Label
                     text="Material"
                     id="labelMaterial"
                 />
-                <Input
-                    value="{/Material}"
-                    enabled="false"
+                <Text
+                    text="{/Material}"
                     id="inputMaterial"
                 />
                 <Label
-                    text="MatlCompRequirementDate"
-                    id="labelMatlCompRequirementDate"
+                    text="Available Quantity"
+                    id="labelAvailableQuantity"
                 />
-                <Input
-                    value="{/MatlCompRequirementDate}"
-                    enabled="false"
-                    id="inputMatlCompRequirementDate"
-                />
-                <Label
-                    text="Plant"
-                    id="labelPlant"
-                />
-                <Input
-                    value="{/Plant}"
-                    enabled="false"
-                    id="inputPlant"
+                <Text
+                    text="{/AvailableQuantity}"
+                    id="inputAvailableQuantity"
                 />
                 <Label
-                    text="PlantName"
-                    id="labelPlantName"
-                />
-                <Input
-                    value="{/PlantName}"
-                    enabled="false"
-                    id="inputPlantName"
-                />
-                <Label
-                    text="ProductCharacteristic1"
-                    id="labelProductCharacteristic1"
-                />
-                <Input
-                    value="{/ProductCharacteristic1}"
-                    enabled="false"
-                    id="inputProductCharacteristic1"
-                />
-                <Label
-                    text="ProductCharacteristic2"
-                    id="labelProductCharacteristic2"
-                />
-                <Input
-                    value="{/ProductCharacteristic2}"
-                    enabled="false"
-                    id="inputProductCharacteristic2"
-                />
-                <Label
-                    text="ProductCharacteristic3"
-                    id="labelProductCharacteristic3"
-                />
-                <Input
-                    value="{/ProductCharacteristic3}"
-                    enabled="false"
-                    id="inputProductCharacteristic3"
-                />
-                <Label
-                    text="RequiredQuantity"
+                    text="Required Quantity"
                     id="labelRequiredQuantity"
                 />
-                <Input
-                    value="{/RequiredQuantity}"
-                    enabled="false"
+                <Text
+                    text="{/RequiredQuantity}"
                     id="inputRequiredQuantity"
                 />
                 <Label
-                    text="StorageLocation"
-                    id="labelStorageLocation"
-                />
-                <Input
-                    value="{/StorageLocation}"
-                    enabled="false"
-                    id="inputStorageLocation"
-                />
-                <Label
-                    text="TotalAllocQty"
-                    id="labelTotalAllocQty"
-                />
-                <Input
-                    value="{/TotalAllocQty}"
-                    enabled="false"
-                    id="inputTotalAllocQty"
-                />
-                <Label
-                    text="WithdrawnQuantity"
+                    text="Withdrawn Quantity"
                     id="labelWithdrawnQuantity"
                 />
-                <Input
-                    value="{/WithdrawnQuantity}"
-                    enabled="false"
+                <Text
+                    text="{/WithdrawnQuantity}"
                     id="inputWithdrawnQuantity"
+                />
+                <Label
+                    text="Base Unit"
+                    id="labelBaseUnit"
+                />
+                <Text
+                    text="{/BaseUnit}"
+                    id="inputBaseUnit"
                 />
             </form:SimpleForm>
 
             <Table
                 items="{/selectedItems}"
                 id="selectedItemsTable"
+                mode="MultiSelect"
             >
                 <columns>
                     <Column id="columnBatch">
@@ -226,31 +105,33 @@
                     <Column id="columnStorageLocation">
                         <Text
                             id="textStorageLocation"
-                            text="StorageLocation"
+                            text="Storage Location"
                         />
                     </Column>
-                    <Column id="columnMatlCnsmpnQtyInMatlBaseUnit">
-                        <Text
-                            id="textMatlCnsmpnQtyInMatlBaseUnit"
-                            text="MatlCnsmpnQtyInMatlBaseUnit"
-                        />
-                    </Column>
-                    <Column id="columnMatlStkDecrQtyInMatlBaseUnit">
-                        <Text
-                            id="textMatlStkDecrQtyInMatlBaseUnit"
-                            text="MatlStkDecrQtyInMatlBaseUnit"
-                        />
-                    </Column>
-                    <Column id="columnMatlStkIncrQtyInMatlBaseUnit">
-                        <Text
-                            id="textMatlStkIncrQtyInMatlBaseUnit"
-                            text="MatlStkIncrQtyInMatlBaseUnit"
-                        />
-                    </Column>
+
                     <Column id="columnMatlWrhsStkQtyInMatlBaseUnit">
                         <Text
                             id="textMatlWrhsStkQtyInMatlBaseUnit"
-                            text="MatlWrhsStkQtyInMatlBaseUnit"
+                            text="Storage Location Stock"
+                        />
+                    </Column>
+                    <Column id="columnCombPlanAllQty">
+                        <Text
+                            id="textCombPlanAllQty"
+                            text="Comb Plan All Qty"
+                        />
+                    </Column>
+
+                    <Column id="columnCustomQty">
+                        <Text
+                            id="textCustomQty"
+                            text="Quantity to Assign"
+                        />
+                    </Column>
+                    <Column id="columnTotalPlanAllQty">
+                        <Text
+                            id="textTotalPlanAllQty"
+                            text="Total Plan All Qty"
                         />
                     </Column>
                 </columns>
@@ -269,25 +150,22 @@
                                 id="valueStorageLocation"
                                 text="{StorageLocation}"
                             />
-                            <Input
-                                type="Number"
-                                id="valueMatlCnsmpnQtyInMatlBaseUnit"
-                                value="{MatlCnsmpnQtyInMatlBaseUnit}"
-                            />
-                            <Input
-                                type="Number"
-                                id="valueMatlStkDecrQtyInMatlBaseUnit"
-                                value="{MatlStkDecrQtyInMatlBaseUnit}"
-                            />
-                            <Input
-                                type="Number"
-                                id="valueMatlStkIncrQtyInMatlBaseUnit"
-                                value="{MatlStkIncrQtyInMatlBaseUnit}"
-                            />
-                            <Input
-                                type="Number"
+                            <Text
                                 id="valueMatlWrhsStkQtyInMatlBaseUnit"
-                                value="{MatlWrhsStkQtyInMatlBaseUnit}"
+                                text="{StorageLocationStock}"
+                            />
+                            <Text
+                                id="valueTotalPlanAllQty"
+                                text="{TotalPlanAllQty}"
+                            />
+                            <Text
+                                id="valueCombPlanAllQty"
+                                text="{CombPlanAllQty}"
+                            />
+
+                            <StepInput
+                                id="customQty"
+                                value="{CustomQty}"
                             />
                         </cells>
                     </ColumnListItem>
@@ -306,7 +184,7 @@
                 id="_IDGenBtnCancelPezze"
                 text="Chiudi"
                 type="Back"
-                press=".onCloseDialog"
+                press="onCloseDialog"
             />
             <!-- core:require="{ handler: 'manageplannedorder/manageplannedorder/ext/controller/Pezze'}" -->
         </buttons>

@@ -6,48 +6,67 @@ using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI
 service MainService {
 
   // MASTER PLANNED ORDER
-  entity ZZ1_MasterPlannedOrders   as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
+  entity ZZ1_MasterPlannedOrders    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
 
   // COMPONENTS
-  entity ZZ1_CombinPlannedOrdersCom {
-    key CplndOrd                  : String(12) not null;
-    key Material                  : String(40) not null;
-    key Plant                     : String(4) not null;
-    key StorageLocation           : String(4) not null;
-        to_ZZ1_CombPlnOrdersStock : Composition of many ZZ1_CombPlnOrdersStock
-                                      on  Material = $self.Material
-                                      and Plant    = $self.Plant
-                                      and CplndOrd = $self.CplndOrd
-  };
+  entity ZZ1_CombinPlannedOrdersCom as
+    projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
+      *,
+      to_ZZ1_CombPlnOrdersStock : Composition of many ZZ1_CombPlnOrdersStock
+                                    on  Material = $self.Material
+                                    and Plant    = $self.Plant
+                                    and CplndOrd = $self.CplndOrd
+      };
 
 
   // CAPACITY
-  entity ZZ1_PLOCAPACITYCORD       as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
+  entity ZZ1_PLOCAPACITYCORD        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
   // COMBINED PLANNED ORDER
-  entity ZZ1_CombinedPlnOrdersAPI  as
+  entity ZZ1_CombinedPlnOrdersAPI   as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,
+      null as committed_criticality : String(20),
+      null as committed_percent     : Integer,
       // master planned orders
-      to_ZZ1_MasterPlannedOrders : Composition of many ZZ1_MasterPlannedOrders
-                                     on CplndOrd = $self.CplndOrd,
+      to_ZZ1_MasterPlannedOrders    : Composition of many ZZ1_MasterPlannedOrders
+                                        on CplndOrd = $self.CplndOrd,
       // componenti
-      to_CombinPlannedOrdersCom  : Composition of many ZZ1_CombinPlannedOrdersCom
-                                     on CplndOrd = $self.CplndOrd,
+      to_CombinPlannedOrdersCom     : Composition of many ZZ1_CombinPlannedOrdersCom
+                                        on CplndOrd = $self.CplndOrd,
+      // null as combinplannedorderscomcount,
       // capacità
-      to_PLOCAPACITYCORD         : Composition of many ZZ1_PLOCAPACITYCORD
-                                     on CplndOrd = $self.CplndOrd,
-                                   };
+      to_PLOCAPACITYCORD            : Composition of many ZZ1_PLOCAPACITYCORD
+                                        on CplndOrd = $self.CplndOrd,
+                                      // null as plocapacitycordcount
+                                      };
+
+  // add count of master
   // Combined Planned Order - End
 
   // Master Planned Order - Start
-  entity ZZ1_MasterPlannedOrderAPI as projection on ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPI;
+  entity ZZ1_MasterPlannedOrderAPI  as projection on ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPI;
   // Master Planned Order - End
   // Planned Orders - Start
-  entity ZZ1_PlannedOrdersAPI      as projection on ZZ1_PLANNEDORDERSAPI_CDS.ZZ1_PlannedOrdersAPI;
+  entity ZZ1_PlannedOrdersAPI       as projection on ZZ1_PLANNEDORDERSAPI_CDS.ZZ1_PlannedOrdersAPI;
+
   // Stock - Start
-  entity ZZ1_CombPlnOrdersStock    as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock;
-  entity ZZ1_CombPlnOrdersStockAPI as projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI;
+  entity ZZ1_CombPlnOrdersStock     as
+    projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
+      *,
+      null as StorageLocationStock : String(20),
+      null as CustomQty            : String(20),
+      null as TotalProdAllQty      : String(20), // ZZ1_I_ARUN_BDBSSUMQTY_CDS (PLANT, MATERIAL, STORAGELOCATION, BATCH)
+      null as TotalPlanAllQty      : String(20), // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
+      null as CombPlanAllQty       : String(20), // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per FSH_MPLO_ORD = planned combined order werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
+      null as AvaibilityQty        : String(20), // REQUIREDQUANTITY - TotalProdAllQty - CombPlanAllQty
+      null as TotalInDelQty        : String(20), // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
+    };
+
+  entity ZZ1_CombPlnOrdersStockAPI  as
+    projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
+      *
+    };
 // Stock - End
 
 }

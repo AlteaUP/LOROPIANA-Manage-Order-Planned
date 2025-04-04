@@ -1,0 +1,38 @@
+{
+  "cds": {
+    "requires": {
+      "ZZ1_COMBINEDPLNORDERSAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_COMBINEDPLNORDERSAPI_CDS"
+      },
+      "ZZ1_COMBPLNORDERSSTOCKAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS"
+      },
+      "ZZ1_MASTERPLANNEDORDERAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MASTERPLANNEDORDERAPI_CDS"
+      },
+      "ZZ1_PLANNEDORDERSAPI_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_PLANNEDORDERSAPI_CDS"
+      },
+      "planned_order": {
+        "kind": "odata-v2",
+        "model": "srv/external/planned-order"
+      },
+      "ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS"
+      },
+      "ZZ1_I_SUMQTYDELIVERY_T_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_I_SUMQTYDELIVERY_T_CDS"
+      },
+      "ZZ1_MFP_ASSIGNMENT_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MFP_ASSIGNMENT_CDS"
+      }
+    }
+  }
+}
