@@ -177,16 +177,14 @@
                 id="_IDGenBtnAssegnaPezze"
                 text="Assegna"
                 type="Accept"
-                press=".doAssign"
+                press="doAssign"
             />
-            <!-- core:require="{ handler: 'manageplannedorder/manageplannedorder/ext/controller/Pezze'}" -->
             <Button
                 id="_IDGenBtnCancelPezze"
                 text="Chiudi"
                 type="Back"
                 press="onCloseDialog"
             />
-            <!-- core:require="{ handler: 'manageplannedorder/manageplannedorder/ext/controller/Pezze'}" -->
         </buttons>
     </Dialog>
 </core:FragmentDefinition>

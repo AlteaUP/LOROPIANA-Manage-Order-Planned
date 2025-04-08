@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "cds-serve",
+    "dev": "cds watch",
     "watch-master-planned-orders": "cds watch --open master-planned-orders/webapp/index.html?sap-ui-xx-viewCache=false",
     "undeploy": "cf undeploy cap --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",

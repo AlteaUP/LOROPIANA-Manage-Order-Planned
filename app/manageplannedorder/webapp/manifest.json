@@ -258,7 +258,7 @@
     "extends": {
       "extensions": {
         "sap.ui.controllerExtensions": {
-          "sap.fe.templates.ObjectPage.ObjectPageController": {
+          "sap.fe.templates.ObjectPage.ObjectPageController#manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage": {
             "controllerName": "manageplannedorder.manageplannedorder.ext.controller.Pezze"
           }
         }
