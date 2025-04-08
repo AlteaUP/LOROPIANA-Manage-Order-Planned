@@ -52,18 +52,27 @@ sap.ui.define([
 
         },
         doDisassignPezze: function (oEvent) {
-            const oOwnComponent = this._controller.getOwnerComponent();
-            const oModel = oOwnComponent.getModel();
+            // const oOwnComponent = this._controller.getOwnerComponent();
+            // const oModel = oOwnComponent.getModel();
+            var URL = this._controller._mainService.sServiceUrl;
             this._controller.showMessageConfirm("disassemble").then(() => {
                 MessageToast.show("Do Disassemble invoked.");
                 debugger;
-                oModel.delete("/ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage('" + this.getBindingContext().getObject().ZZ1_CombPlnOrdersStock + "')", {
-                    success: function (oData) {
-                        MessageToast.show("Disassemble successful");
-                        // oOwnComponent.getRouter().navTo("RoutePlannedOrder");
+                // @ts-ignore
+                $.ajax({
+                    url: URL + "/disassemble",
+                    type: "POST",
+                    data: JSON.stringify({ ZZ1_CombPlnOrdersStock: "" }),
+                    //data: dataToSend,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log("Success", data);
+                        MessageToast.show("Disassemble invoked.");
                     },
-                    error: function (oError) {
-                        MessageToast.show("Disassemble failed");
+                    error: function (error) {
+                        console.log("Error", error);
+                        MessageToast.show("Error Disassemble.");
                     }
                 });
             }
