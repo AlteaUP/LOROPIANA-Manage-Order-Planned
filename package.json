@@ -107,6 +107,39 @@
           "password": "Sap1234567890!!!",
           "sap-client": "300"
         }
+      },
+      "ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
+      },
+      "ZZ1_MFP_ASSIGNMENT_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MFP_ASSIGNMENT_CDS",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_ASSIGNMENT_CDS",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
+      },
+      "ZZ1_I_SUMQTYDELIVERY_T_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_I_SUMQTYDELIVERY_T_CDS",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_I_SUMQTYDELIVERY_T_CDS",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
       }
     }
   },

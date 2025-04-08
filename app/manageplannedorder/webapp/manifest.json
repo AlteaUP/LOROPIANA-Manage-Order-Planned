@@ -168,15 +168,6 @@
                   }
                 },
                 "to_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#componenti": {
-                  "actions": {
-                    "AssegnaPezze": {
-                      "press": "manageplannedorder.manageplannedorder.ext.controller.AssegnaPezze.doAssegnaPezze",
-                      "visible": true,
-                      "enabled": true,
-                      "requiresSelection": true,
-                      "text": "Assegna Pezze"
-                    }
-                  },
                   "tableSettings": {
                     "selectAll": false,
                     "selectionLimit": 1,
