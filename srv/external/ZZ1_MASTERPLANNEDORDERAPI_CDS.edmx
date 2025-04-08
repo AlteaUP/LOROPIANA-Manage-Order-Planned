@@ -227,18 +227,18 @@
 <Property Name="TW_CollvBillingIsSupported" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Consolidated Invoic." sap:quickinfo="Consolidated Invoicing for Taiwan"/>
 <Property Name="AlternativePayeeIsAllowed" Type="Edm.Boolean" sap:label="Alt.payer in doc?" sap:quickinfo="Indicator: Is an alternative payer allowed in document?"/>
 <Property Name="FreeDefinedAttribute01" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Attribute 1"/>
-<Property Name="FreeDefinedAttribute02" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Attribute 2"/>
-<Property Name="FreeDefinedAttribute03" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Attribute 3"/>
-<Property Name="FreeDefinedAttribute04" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Attribute 4"/>
+<Property Name="FreeDefinedAttribute02" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Commercial Category"/>
+<Property Name="FreeDefinedAttribute03" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Main BusinessType" sap:quickinfo="Attribute 3 - Main BusType"/>
+<Property Name="FreeDefinedAttribute04" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="SubChannel"/>
 <Property Name="FreeDefinedAttribute05" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Attribute 5"/>
 <Property Name="FreeDefinedAttribute06" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Attribute 6"/>
 <Property Name="FreeDefinedAttribute07" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Attribute 7"/>
-<Property Name="FreeDefinedAttribute08" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Attribute 8"/>
-<Property Name="FreeDefinedAttribute09" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Attribute 9"/>
-<Property Name="FreeDefinedAttribute10" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Attribute 10"/>
+<Property Name="FreeDefinedAttribute08" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Commercial Area"/>
+<Property Name="FreeDefinedAttribute09" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Like For Like Flag" sap:quickinfo="L4L Flag"/>
+<Property Name="FreeDefinedAttribute10" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Sell-Out Currency"/>
 <Property Name="PaymentReason" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Payment Reason"/>
 <Property Name="CustomerConditionGroup1" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="RTW category" sap:quickinfo="Customer condition group 1 - RTW category"/>
-<Property Name="CustomerConditionGroup2" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Condition group 2" sap:quickinfo="Customer condition group 2"/>
+<Property Name="CustomerConditionGroup2" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="MTM Category" sap:quickinfo="Customer condition group 2 - MTM Category"/>
 <Property Name="CustomerConditionGroup3" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Condition group 3" sap:quickinfo="Customer condition group 3"/>
 <Property Name="CustomerConditionGroup4" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Condition group 4" sap:quickinfo="Customer condition group 4"/>
 <Property Name="CustomerConditionGroup5" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Condition group 5" sap:quickinfo="Customer condition group 5"/>

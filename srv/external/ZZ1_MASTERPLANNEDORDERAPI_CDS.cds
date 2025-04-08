@@ -1,4 +1,4 @@
-/* checksum : 7066e5b2066f8575f6662c8d7021d6a5 */
+/* checksum : 0303415e3a43c9325c1ab2813b40b029 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -634,13 +634,14 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.I_Customer {
   @sap.label : 'Attribute 1'
   FreeDefinedAttribute01 : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Attribute 2'
+  @sap.label : 'Commercial Category'
   FreeDefinedAttribute02 : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Attribute 3'
+  @sap.label : 'Main BusinessType'
+  @sap.quickinfo : 'Attribute 3 - Main BusType'
   FreeDefinedAttribute03 : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Attribute 4'
+  @sap.label : 'SubChannel'
   FreeDefinedAttribute04 : String(2);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Attribute 5'
@@ -652,13 +653,14 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.I_Customer {
   @sap.label : 'Attribute 7'
   FreeDefinedAttribute07 : String(3);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Attribute 8'
+  @sap.label : 'Commercial Area'
   FreeDefinedAttribute08 : String(3);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Attribute 9'
+  @sap.label : 'Like For Like Flag'
+  @sap.quickinfo : 'L4L Flag'
   FreeDefinedAttribute09 : String(3);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Attribute 10'
+  @sap.label : 'Sell-Out Currency'
   FreeDefinedAttribute10 : String(3);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Payment Reason'
@@ -668,8 +670,8 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.I_Customer {
   @sap.quickinfo : 'Customer condition group 1 - RTW category'
   CustomerConditionGroup1 : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Condition group 2'
-  @sap.quickinfo : 'Customer condition group 2'
+  @sap.label : 'MTM Category'
+  @sap.quickinfo : 'Customer condition group 2 - MTM Category'
   CustomerConditionGroup2 : String(2);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Condition group 3'

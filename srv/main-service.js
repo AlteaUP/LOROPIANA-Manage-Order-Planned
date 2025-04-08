@@ -5,8 +5,11 @@ module.exports = class MainService extends cds.ApplicationService {
     // console.log('*** init ZZ1_COMBINEDPLNORDERSAPI_CDS')
     const ZZ1_COMBINEDPLNORDERSAPI_CDS = await cds.connect.to("ZZ1_COMBINEDPLNORDERSAPI_CDS");
     const ZZ1_MASTERPLANNEDORDERAPI_CDS = await cds.connect.to("ZZ1_MASTERPLANNEDORDERAPI_CDS");
-    const ZZ1_COMBPLNORDERSSTOCKAPI_CDS = await cds.connect.to("ZZ1_COMBPLNORDERSSTOCKAPI_CDS");
     const ZZ1_PLANNEDORDERSAPI_CDS = await cds.connect.to("ZZ1_PLANNEDORDERSAPI_CDS");
+
+
+    const ZZ1_COMBPLNORDERSSTOCKAPI_CDS = await cds.connect.to("ZZ1_COMBPLNORDERSSTOCKAPI_CDS");
+
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
@@ -50,7 +53,7 @@ module.exports = class MainService extends cds.ApplicationService {
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
       where = req.query.SELECT.from.ref[0].where
-      where = where.slice(0, 3)
+      // where = where.slice(0, 3)
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
       return res;
     });
@@ -69,8 +72,6 @@ module.exports = class MainService extends cds.ApplicationService {
       if (!Array.isArray(res)) {
         return res;
       }
-
-      debugger;
 
       return res.map(item => {
         console.log(parseInt(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3))

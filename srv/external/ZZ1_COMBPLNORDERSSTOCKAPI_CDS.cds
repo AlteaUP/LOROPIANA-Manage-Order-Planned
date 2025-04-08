@@ -1,4 +1,4 @@
-/* checksum : e4445439100b2431026d78de1ec9eb3d */
+/* checksum : e606aff44a697d772a3c3daa2cf0d314 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -144,6 +144,11 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   key CplndOrd : String(12) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
+  @sap.label : 'Cross-plant CP'
+  @sap.quickinfo : 'Cross-Plant Configurable Product'
+  key CrossPlantConfigurableProduct : String(40) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
   @sap.label : 'Material'
   @sap.quickinfo : 'Material Number'
   key Material : String(40) not null;
@@ -155,6 +160,11 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Storage Location'
   key StorageLocation : String(4) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Batch'
+  @sap.quickinfo : 'Batch Number'
+  key Batch : String(10) not null;
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
   @sap.label : 'MatlCompRequirementDate'
@@ -202,19 +212,19 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'AvailableQuantity'
-  AvailableQuantity : Decimal(15, 3);
+  AvailableQuantity : Decimal(16, 3);
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'WithdrawnQuantity'
-  WithdrawnQuantity : Decimal(13, 3);
+  WithdrawnQuantity : Decimal(14, 3);
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'RequiredQuantity'
-  RequiredQuantity : Decimal(13, 3);
+  RequiredQuantity : Decimal(14, 3);
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'TotalAllocQty'
-  TotalAllocQty : Decimal(13, 3);
+  TotalAllocQty : Decimal(14, 3);
   to_ZZ1_CombPlnOrdersStock : Association to many ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {  };
 };
 

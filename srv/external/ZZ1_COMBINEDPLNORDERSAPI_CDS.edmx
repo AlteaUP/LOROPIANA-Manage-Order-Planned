@@ -148,6 +148,22 @@
 <Property Name="IsMarkedForArchiving" Type="Edm.Boolean" sap:label="Archiving Flag" sap:quickinfo="Central archiving marker for master record"/>
 <NavigationProperty Name="to_Address" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_6038730FDB68BB23A236C4E6A537C470" FromRole="FromRole_assoc_6038730FDB68BB23A236C4E6A537C470" ToRole="ToRole_assoc_6038730FDB68BB23A236C4E6A537C470"/>
 </EntityType>
+<EntityType Name="I_StorageLocationType" sap:label="Storage Location" sap:content-version="1">
+<Key>
+<PropertyRef Name="Plant"/>
+<PropertyRef Name="StorageLocation"/>
+</Key>
+<Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:text="to_Plant/PlantName" sap:label="Plant" sap:value-list="standard"/>
+<Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:text="StorageLocationName" sap:label="Storage Location"/>
+<Property Name="StorageLocationName" Type="Edm.String" MaxLength="16" sap:label="Storage Loc. Name" sap:quickinfo="Storage Location Name"/>
+<Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Organization"/>
+<Property Name="DistributionChannel" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Distribution Channel"/>
+<Property Name="Division" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Division"/>
+<Property Name="IsStorLocAuthznCheckActive" Type="Edm.Boolean" sap:label="Authorization check" sap:quickinfo="Storage location authorization for goods movements active"/>
+<Property Name="HandlingUnitIsRequired" Type="Edm.Boolean" sap:label="HU reqmnt" sap:quickinfo="Handling unit requirement"/>
+<Property Name="ConfigDeprecationCode" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Validity" sap:quickinfo="Deprecated Entries"/>
+<NavigationProperty Name="to_Plant" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_BE5383DAFB653A11C6A17794652A43B0" FromRole="FromRole_assoc_BE5383DAFB653A11C6A17794652A43B0" ToRole="ToRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
+</EntityType>
 <EntityType Name="I_Supplier_VHType" sap:label="Supplier" sap:value-list="true" sap:content-version="1">
 <Key>
 <PropertyRef Name="Supplier"/>
@@ -235,14 +251,18 @@
 <EntityType Name="ZZ1_CombinPlannedOrdersComType" sap:label="Combined Planned Orders Com" sap:content-version="1">
 <Key>
 <PropertyRef Name="CplndOrd"/>
+<PropertyRef Name="CrossPlantConfigurableProduct"/>
 <PropertyRef Name="Material"/>
 <PropertyRef Name="Plant"/>
 <PropertyRef Name="StorageLocation"/>
+<PropertyRef Name="Batch"/>
 </Key>
 <Property Name="CplndOrd" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
+<Property Name="CrossPlantConfigurableProduct" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Cross-plant CP" sap:quickinfo="Cross-Plant Configurable Product"/>
 <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Material" sap:quickinfo="Material Number"/>
 <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
-<Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location"/>
+<Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:text="to_StorageLocation/StorageLocationName" sap:label="Storage Location" sap:value-list="standard"/>
+<Property Name="Batch" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Batch" sap:quickinfo="Batch Number"/>
 <Property Name="MatlCompRequirementDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="MatlCompRequirementDate"/>
 <Property Name="BOMItem" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="BOM Item" sap:quickinfo="Bill of Material Item"/>
 <Property Name="BOMItemDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Item Text" sap:quickinfo="BOM Item Text (Line 1)"/>
@@ -254,10 +274,11 @@
 <Property Name="ProductCharacteristic2" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Main Size" sap:quickinfo="Characteristic Value for Main Sizes of Variants"/>
 <Property Name="ProductCharacteristic3" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Second Size" sap:quickinfo="Characteristic Value for Second Size for Variants"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
-<Property Name="AvailableQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="AvailableQuantity"/>
-<Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
-<Property Name="RequiredQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequiredQuantity"/>
-<Property Name="TotalAllocQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="TotalAllocQty"/>
+<Property Name="AvailableQuantity" Type="Edm.Decimal" Precision="16" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="AvailableQuantity"/>
+<Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
+<Property Name="RequiredQuantity" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequiredQuantity"/>
+<Property Name="TotalAllocQty" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="TotalAllocQty"/>
+<NavigationProperty Name="to_StorageLocation" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0A5BF57D4E55588B2FA395AF34CAEADA" FromRole="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA" ToRole="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
 </EntityType>
 <EntityType Name="ZZ1_MasterPlannedOrdersType" sap:label="Master Planned Orders" sap:content-version="1">
 <Key>
@@ -362,6 +383,32 @@
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" Multiplicity="*" Role="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 </Association>
+<Association Name="assoc_0A5BF57D4E55588B2FA395AF34CAEADA" sap:content-version="1">
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersComType" Multiplicity="1" Role="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType" Multiplicity="0..1" Role="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
+<ReferentialConstraint>
+<Principal Role="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA">
+<PropertyRef Name="StorageLocation"/>
+<PropertyRef Name="Plant"/>
+</Principal>
+<Dependent Role="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA">
+<PropertyRef Name="StorageLocation"/>
+<PropertyRef Name="Plant"/>
+</Dependent>
+</ReferentialConstraint>
+</Association>
+<Association Name="assoc_BE5383DAFB653A11C6A17794652A43B0" sap:content-version="1">
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType" Multiplicity="1" Role="FromRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType" Multiplicity="1" Role="ToRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
+<ReferentialConstraint>
+<Principal Role="ToRole_assoc_BE5383DAFB653A11C6A17794652A43B0">
+<PropertyRef Name="Plant"/>
+</Principal>
+<Dependent Role="FromRole_assoc_BE5383DAFB653A11C6A17794652A43B0">
+<PropertyRef Name="Plant"/>
+</Dependent>
+</ReferentialConstraint>
+</Association>
 <Association Name="assoc_5EE603DEC0F8465795632EF8E749E027" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" Multiplicity="1" Role="FromRole_assoc_5EE603DEC0F8465795632EF8E749E027"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType" Multiplicity="1" Role="ToRole_assoc_5EE603DEC0F8465795632EF8E749E027"/>
@@ -390,6 +437,7 @@
 <EntitySet Name="I_Address" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_AddressType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
 <EntitySet Name="I_Customer_VH" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Customer_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="I_Plant" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+<EntitySet Name="I_StorageLocation" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="I_Supplier_VH" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="I_WrkCtrBySemanticKeyStdVH" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_WrkCtrBySemanticKeyStdVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="ZZ1_CombinedPlnOrdersAPI" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
@@ -400,6 +448,14 @@
 <AssociationSet Name="assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
 <End EntitySet="ZZ1_CombinedPlnOrdersAPI" Role="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
 <End EntitySet="ZZ1_PlannedOrdersCompChar" Role="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
+</AssociationSet>
+<AssociationSet Name="assoc_0A5BF57D4E55588B2FA395AF34CAEADA" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0A5BF57D4E55588B2FA395AF34CAEADA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_CombinPlannedOrdersCom" Role="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
+<End EntitySet="I_StorageLocation" Role="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
+</AssociationSet>
+<AssociationSet Name="assoc_BE5383DAFB653A11C6A17794652A43B0" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_BE5383DAFB653A11C6A17794652A43B0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="I_StorageLocation" Role="FromRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
+<End EntitySet="I_Plant" Role="ToRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
 </AssociationSet>
 <AssociationSet Name="assoc_5EE603DEC0F8465795632EF8E749E027" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_5EE603DEC0F8465795632EF8E749E027" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
 <End EntitySet="ZZ1_PLOCAPACITYCORD" Role="FromRole_assoc_5EE603DEC0F8465795632EF8E749E027"/>
@@ -505,6 +561,50 @@
 </Record>
 </Annotation>
 </Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType/Plant">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Plant"/>
+<PropertyValue Property="CollectionPath" String="I_Plant"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="Plant"/>
+<PropertyValue Property="ValueListProperty" String="Plant"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PlantName"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersComType/StorageLocation">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Storage Location"/>
+<PropertyValue Property="CollectionPath" String="I_StorageLocation"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="Plant"/>
+<PropertyValue Property="ValueListProperty" String="Plant"/>
+</Record>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="StorageLocation"/>
+<PropertyValue Property="ValueListProperty" String="StorageLocation"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="StorageLocationName"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType/WorkCenter">
 <Annotation Term="Common.ValueList">
 <Record>
@@ -561,6 +661,42 @@
 <Collection>
 <Record>
 <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Address"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_COMBINEDPLNORDERSAPI_CDS_Entities/I_StorageLocation">
+<Annotation Term="Capabilities.NavigationRestrictions">
+<Record>
+<PropertyValue Property="RestrictedProperties">
+<Collection>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_Plant"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_COMBINEDPLNORDERSAPI_CDS_Entities/ZZ1_CombinPlannedOrdersCom">
+<Annotation Term="Capabilities.NavigationRestrictions">
+<Record>
+<PropertyValue Property="RestrictedProperties">
+<Collection>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_StorageLocation"/>
 <PropertyValue Property="InsertRestrictions">
 <Record>
 <PropertyValue Property="Insertable" Bool="false"/>
@@ -636,6 +772,13 @@
 <Annotation Term="Common.SAPObjectNodeType">
 <Record>
 <PropertyValue Property="Name" String="Plant"/>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType">
+<Annotation Term="Common.SAPObjectNodeType">
+<Record>
+<PropertyValue Property="Name" String="StorageLocation"/>
 </Record>
 </Annotation>
 </Annotations>

@@ -12,6 +12,29 @@ echo "Starting update process..."
 
 # Loop through each edmx file
 for edmx_file in $all_edmx_files; do
+
+  # Update the file .edmx downloading the latest version
+  # the curl is 
+  # curl --request GET \
+  # --url 'http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/<odata>/$metadata' \
+  # --header 'Authorization: Basic bGFzcGF0YXM6U2FwMTIzNDU2Nzg5MCEhIQ=='
+  # replace odata with the name of the odata service
+  # For example, if the edmx file is named ZZ1_CombPlnOrdersStockAPI_CDS.edmx, the odata service name is ZZ1_CombPlnOrdersStockAPI_CDS
+
+  # url="http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/${edmx_file%.*}/$metadata"
+
+  # curl --request GET \
+  # --url "$url" \
+  # --header 'Authorization: Basic bGFzcGF0YXM6U2FwMTIzNDU2Nzg5MCEhIQ==' \
+  # -o "$edmx_file"
+  # # Check if the curl command was successful
+  # if [[ $? -ne 0 ]]; then
+  #   echo "Failed to download $edmx_file. Please check the URL and your network connection."
+  #   continue
+  # fi
+
+  # echo "Downloaded $edmx_file successfully."
+
   # exec cds import "srv/external/*.edmx" --from edmx --as cds --force
   $(cds import "$edmx_file" --from edmx --as cds --force)
   

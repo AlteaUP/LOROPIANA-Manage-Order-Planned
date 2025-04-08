@@ -1,4 +1,4 @@
-/* checksum : 6a92e14bcbc296e521292684a167283c */
+/* checksum : 8f8d9004d5c735ac9dd1d881c2458a8a */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -384,6 +384,49 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
+@sap.label : 'Storage Location'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'to_Plant/PlantName'
+  @sap.label : 'Plant'
+  @sap.value.list : 'standard'
+  key Plant : String(4) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'StorageLocationName'
+  @sap.label : 'Storage Location'
+  key StorageLocation : String(4) not null;
+  @sap.label : 'Storage Loc. Name'
+  @sap.quickinfo : 'Storage Location Name'
+  StorageLocationName : String(16);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sales Organization'
+  SalesOrganization : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Distribution Channel'
+  DistributionChannel : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Division'
+  Division : String(2);
+  @sap.label : 'Authorization check'
+  @sap.quickinfo : 'Storage location authorization for goods movements active'
+  IsStorLocAuthznCheckActive : Boolean;
+  @sap.label : 'HU reqmnt'
+  @sap.quickinfo : 'Handling unit requirement'
+  HandlingUnitIsRequired : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Validity'
+  @sap.quickinfo : 'Deprecated Entries'
+  ConfigDeprecationCode : String(1);
+  to_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {  };
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
 @sap.label : 'Supplier'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VH {
@@ -688,6 +731,11 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   key CplndOrd : String(12) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
+  @sap.label : 'Cross-plant CP'
+  @sap.quickinfo : 'Cross-Plant Configurable Product'
+  key CrossPlantConfigurableProduct : String(40) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
   @sap.label : 'Material'
   @sap.quickinfo : 'Material Number'
   key Material : String(40) not null;
@@ -697,8 +745,15 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   key Plant : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
+  @sap.text : 'to_StorageLocation/StorageLocationName'
   @sap.label : 'Storage Location'
+  @sap.value.list : 'standard'
   key StorageLocation : String(4) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Batch'
+  @sap.quickinfo : 'Batch Number'
+  key Batch : String(10) not null;
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
   @sap.label : 'MatlCompRequirementDate'
@@ -746,19 +801,20 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'AvailableQuantity'
-  AvailableQuantity : Decimal(15, 3);
+  AvailableQuantity : Decimal(16, 3);
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'WithdrawnQuantity'
-  WithdrawnQuantity : Decimal(13, 3);
+  WithdrawnQuantity : Decimal(14, 3);
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'RequiredQuantity'
-  RequiredQuantity : Decimal(13, 3);
+  RequiredQuantity : Decimal(14, 3);
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'TotalAllocQty'
-  TotalAllocQty : Decimal(13, 3);
+  TotalAllocQty : Decimal(14, 3);
+  to_StorageLocation : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {  };
 };
 
 @cds.external : true

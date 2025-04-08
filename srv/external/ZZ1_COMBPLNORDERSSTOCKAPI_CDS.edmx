@@ -81,14 +81,18 @@
 <EntityType Name="ZZ1_CombPlnOrdersStockAPIType" sap:label="Combined Planned Orders Stock API" sap:content-version="1">
 <Key>
 <PropertyRef Name="CplndOrd"/>
+<PropertyRef Name="CrossPlantConfigurableProduct"/>
 <PropertyRef Name="Material"/>
 <PropertyRef Name="Plant"/>
 <PropertyRef Name="StorageLocation"/>
+<PropertyRef Name="Batch"/>
 </Key>
 <Property Name="CplndOrd" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
+<Property Name="CrossPlantConfigurableProduct" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Cross-plant CP" sap:quickinfo="Cross-Plant Configurable Product"/>
 <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Material" sap:quickinfo="Material Number"/>
 <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
 <Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location"/>
+<Property Name="Batch" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Batch" sap:quickinfo="Batch Number"/>
 <Property Name="MatlCompRequirementDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="MatlCompRequirementDate"/>
 <Property Name="BOMItem" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="BOM Item" sap:quickinfo="Bill of Material Item"/>
 <Property Name="BOMItemDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Item Text" sap:quickinfo="BOM Item Text (Line 1)"/>
@@ -100,10 +104,10 @@
 <Property Name="ProductCharacteristic2" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Main Size" sap:quickinfo="Characteristic Value for Main Sizes of Variants"/>
 <Property Name="ProductCharacteristic3" Type="Edm.String" MaxLength="18" sap:required-in-filter="false" sap:label="Second Size" sap:quickinfo="Characteristic Value for Second Size for Variants"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
-<Property Name="AvailableQuantity" Type="Edm.Decimal" Precision="15" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="AvailableQuantity"/>
-<Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
-<Property Name="RequiredQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequiredQuantity"/>
-<Property Name="TotalAllocQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="TotalAllocQty"/>
+<Property Name="AvailableQuantity" Type="Edm.Decimal" Precision="16" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="AvailableQuantity"/>
+<Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
+<Property Name="RequiredQuantity" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequiredQuantity"/>
+<Property Name="TotalAllocQty" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="TotalAllocQty"/>
 <NavigationProperty Name="to_ZZ1_CombPlnOrdersStock" Relationship="ZZ1_COMBPLNORDERSSTOCKAPI_CDS.assoc_D849BEF3EA1D621CBBBB905E9A13C008" FromRole="FromRole_assoc_D849BEF3EA1D621CBBBB905E9A13C008" ToRole="ToRole_assoc_D849BEF3EA1D621CBBBB905E9A13C008"/>
 </EntityType>
 <Association Name="assoc_D849BEF3EA1D621CBBBB905E9A13C008" sap:content-version="1">
