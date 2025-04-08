@@ -67,3 +67,16 @@ cds import srv/external/REQUIREDQUANTITY.edmx --from edmx --as cds --force
 cds import srv/external/ZZ1_I_SUMQTYDELIVERY_T.edmx --from edmx --as cds --force
 
 touch ZZ1_I_ARUN_BDBSSUMQTY_CDS.edmx ZZ1_MFP_ASSIGNMENT.edmx ZZ1_MFP_ASSIGNMENT.edmx REQUIREDQUANTITY.edmx ZZ1_I_SUMQTYDELIVERY_T.edmx
+
+
+dettaglio stock --> 
+
+
+Where used
+
+--> Material
+--> Plant
+--> Planned Combined Order !== da quello analizzato
+
+
+-------> Planned, Material, Plant, Somma di ttte le avaibility quantity

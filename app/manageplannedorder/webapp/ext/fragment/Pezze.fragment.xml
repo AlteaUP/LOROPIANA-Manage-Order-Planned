@@ -160,12 +160,9 @@
                                 id="valueCombPlanAllQty"
                                 text="{CombPlanAllQty}"
                             />
-                            <StepInput
+                            <Input
                                 id="customQty"
                                 value="{CustomQty}"
-                                step="1"
-                                min="0"
-                                max="{path: 'AvaibilityQty', formatter: '.formatAvailableQty'}"
                             />
                         </cells>
                     </ColumnListItem>
@@ -178,18 +175,6 @@
                 text="Assegna"
                 type="Accept"
                 press="doAssign"
-            />
-            <Button
-                id="_IDGenBtnDisassegnaPezze"
-                text="Disassegna"
-                type="Negative"
-                press="doDisassemble"
-            />
-            <Button
-                id="_IDGenBtnWhereUsed"
-                text="Where Used"
-                type="Emphasized"
-                press="doWhereUsed"
             />
             <Button
                 id="_IDGenBtnCancelPezze"

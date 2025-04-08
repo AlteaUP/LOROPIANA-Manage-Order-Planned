@@ -67,6 +67,10 @@ service MainService {
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
       *
     };
+
+
+  action assemble(ZZ1_CombPlnOrdersStock : String)    returns Boolean;
+  action disassemble(ZZ1_CombPlnOrdersStock : String) returns Boolean;
 // Stock - End
 
 }

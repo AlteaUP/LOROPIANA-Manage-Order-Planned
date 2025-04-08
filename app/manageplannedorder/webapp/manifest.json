@@ -236,7 +236,29 @@
                       "visible": true,
                       "enabled": true,
                       "requiresSelection": true,
-                      "text": "Assegna/Disassegna"
+                      "text": "Assegna"
+                    },
+                    "Disassegna": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doDisassignPezze",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "Disassegna",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "AssegnaPezze"
+                      }
+                    },
+                    "WhereUsed": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doWhereUsed",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "Where Used",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "Disassegna"
+                      }
                     }
                   }
                 }

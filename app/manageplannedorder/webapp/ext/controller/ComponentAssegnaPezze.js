@@ -1,9 +1,27 @@
 sap.ui.define([
-    "sap/ui/model/json/JSONModel"
-], function (JSONModel) {
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast",
+    "sap/m/MessageBox"
+], function (JSONModel, MessageToast, MessageBox) {
     'use strict';
 
     return {
+        showMessageConfirm: function (action) {
+            // capitalize the first letter of the action
+            action = action.charAt(0).toUpperCase() + action.slice(1);
+            return new Promise((res, rej) => MessageBox.confirm(
+                "Are you sure you want to " + action + "?",
+                {
+                    title: "Confirmation",
+                    onClose: function (oAction) {
+                        if (oAction === MessageBox.Action.OK)
+                            res();
+                        else
+                            rej();
+                    }
+                }
+            ));
+        },
         doAssegnaPezze: function (oEvent) {
             const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
             const obj = this.getBindingContext().getObject()
@@ -34,7 +52,24 @@ sap.ui.define([
 
         },
         doDisassignPezze: function (oEvent) {
-            sap.m.MessageToast.show("Custom handler invoked. [DISASSIGN]");
+            const oOwnComponent = this._controller.getOwnerComponent();
+            const oModel = oOwnComponent.getModel();
+            this._controller.showMessageConfirm("disassemble").then(() => {
+                MessageToast.show("Do Disassemble invoked.");
+                debugger;
+                oModel.delete("/ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage('" + this.getBindingContext().getObject().ZZ1_CombPlnOrdersStock + "')", {
+                    success: function (oData) {
+                        MessageToast.show("Disassemble successful");
+                        // oOwnComponent.getRouter().navTo("RoutePlannedOrder");
+                    },
+                    error: function (oError) {
+                        MessageToast.show("Disassemble failed");
+                    }
+                });
+            }
+            ).catch(() => {
+                MessageToast.show("Do Disassemble cancelled.");
+            });
         },
         doWhereUsed: function (oEvent) {
             sap.m.MessageToast.show("Custom handler invoked. [WHERE USED]");

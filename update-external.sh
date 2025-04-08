@@ -35,8 +35,15 @@ for edmx_file in $all_edmx_files; do
 
   # echo "Downloaded $edmx_file successfully."
 
-  # exec cds import "srv/external/*.edmx" --from edmx --as cds --force
-  $(cds import "$edmx_file" --from edmx --as cds --force)
+  # Execute the CDS import command
+  echo "Importing $edmx_file ..."
+  echo "cds import $edmx_file --from edmx --as cds --force"
+  cds import "$edmx_file" --from edmx --as cds --force
+  if [[ $? -ne 0 ]]; then
+    echo "Failed to import $edmx_file. Please check the file and try again."
+    continue
+  fi
+  echo "Imported $edmx_file successfully."
   
   # Run the update command
   echo "Updating $edmx_file to $output_file..."

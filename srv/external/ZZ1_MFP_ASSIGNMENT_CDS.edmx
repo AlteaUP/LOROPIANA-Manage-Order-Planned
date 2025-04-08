@@ -116,6 +116,7 @@
 </Key>
 <Property Name="SAP_UUID" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
 <Property Name="WERKS" Type="Edm.String" MaxLength="4" sap:label="Text of length 4" sap:heading="" sap:quickinfo=""/>
+<Property Name="LGORT" Type="Edm.String" MaxLength="20" sap:label="Text of length 20" sap:heading="" sap:quickinfo=""/>
 <Property Name="FSH_MPLO_ORD" Type="Edm.String" MaxLength="12" sap:label="Text of length 12" sap:heading="" sap:quickinfo=""/>
 <Property Name="BAGNI" Type="Edm.String" MaxLength="45" sap:label="Text of length 45" sap:heading="" sap:quickinfo=""/>
 <Property Name="MATNR" Type="Edm.String" MaxLength="40" sap:label="Text of length 40" sap:heading="" sap:quickinfo=""/>
@@ -280,6 +281,7 @@
 </AssociationSet>
 <FunctionImport Name="ZZ1_MFP_ASSIGNMENTSap_upsert" ReturnType="ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENTType" EntitySet="ZZ1_MFP_ASSIGNMENT" m:HttpMethod="POST">
 <Parameter Name="WERKS" Type="Edm.String" Mode="In" MaxLength="4" sap:label="Text of length 4"/>
+<Parameter Name="LGORT" Type="Edm.String" Mode="In" MaxLength="20" sap:label="Text of length 20"/>
 <Parameter Name="FSH_MPLO_ORD" Type="Edm.String" Mode="In" MaxLength="12" sap:label="Text of length 12"/>
 <Parameter Name="BAGNI" Type="Edm.String" Mode="In" MaxLength="45" sap:label="Text of length 45"/>
 <Parameter Name="MATNR" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Text of length 40"/>
@@ -426,6 +428,9 @@
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENTType/FSH_MPLO_ORD">
 <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
 </Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENTType/LGORT">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENTType/MATNR">
 <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
 </Annotations>
@@ -549,6 +554,7 @@
 <PropertyPath>MATNR</PropertyPath>
 <PropertyPath>BAGNI</PropertyPath>
 <PropertyPath>FSH_MPLO_ORD</PropertyPath>
+<PropertyPath>LGORT</PropertyPath>
 <PropertyPath>WERKS</PropertyPath>
 </Collection>
 </Annotation>

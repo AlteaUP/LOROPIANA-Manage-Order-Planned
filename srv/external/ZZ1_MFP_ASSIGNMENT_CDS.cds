@@ -1,4 +1,4 @@
-/* checksum : ac677195f48df45144f876edbef1a0a7 */
+/* checksum : 36cc5fd5044338821f720191d7d17d22 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -241,6 +241,10 @@ entity ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
   @sap.heading : ''
   @sap.quickinfo : ''
   WERKS : String(4);
+  @sap.label : 'Text of length 20'
+  @sap.heading : ''
+  @sap.quickinfo : ''
+  LGORT : String(20);
   @sap.label : 'Text of length 12'
   @sap.heading : ''
   @sap.quickinfo : ''
@@ -345,6 +349,8 @@ entity ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
 action ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENTSap_upsert(
   @sap.label : 'Text of length 4'
   WERKS : String(4),
+  @sap.label : 'Text of length 20'
+  LGORT : String(20),
   @sap.label : 'Text of length 12'
   FSH_MPLO_ORD : String(12),
   @sap.label : 'Text of length 45'

@@ -13,10 +13,8 @@ sap.ui.define([
                 {
                     title: "Confirmation",
                     onClose: function (oAction) {
-                        if (oAction === MessageBox.Action.OK)
-                            res();
-                        else
-                            rej();
+                        if (oAction === MessageBox.Action.OK) res();
+                        else rej();
                     }
                 }
             ));
@@ -24,21 +22,11 @@ sap.ui.define([
         doAssign: function (oEvent) {
             this.showMessageConfirm("assign").then(() => {
                 MessageToast.show("Do Assign invoked.");
+
             }
             ).catch(() => {
                 MessageToast.show("Do Assign cancelled.");
             });
-        },
-        doDisassemble: function (oEvent) {
-            this.showMessageConfirm("disassemble").then(() => {
-                MessageToast.show("Do Disassemble invoked.");
-            }
-            ).catch(() => {
-                MessageToast.show("Do Disassemble cancelled.");
-            });
-        },
-        doWhereUsed: function (oEvent) {
-            MessageToast.show("Do Where Used invoked.");
         },
         onCloseDialog: function (oEvent) {
             const dialog = oEvent.getSource().getParent();
@@ -46,6 +34,9 @@ sap.ui.define([
             // dialog.destroy();
         },
         formatAvailableQty: function (sValue) {
+            if (!sValue) {
+                return 0
+            }
             return parseInt(sValue)
         },
         formatCustomQty: function (sValue) {

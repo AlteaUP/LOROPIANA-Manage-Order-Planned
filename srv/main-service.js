@@ -95,7 +95,7 @@ module.exports = class MainService extends cds.ApplicationService {
         let TotalPlanAllQty = 0;
         try {
           // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-          const resTotalPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ WERKS: Plant, MATNR: Material, CHARG: Batch }));
+          const resTotalPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
           // console.log({ Plant, Material, StorageLocation, Batch, resTotalPlanAllQty })
           TotalPlanAllQty += resTotalPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
         } catch (e) {
@@ -104,7 +104,7 @@ module.exports = class MainService extends cds.ApplicationService {
         let CombPlanAllQty = 0;
         try {
           // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per FSH_MPLO_ORD = planned combined order werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-          const resCombPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ FSH_MPLO_ORD: PlannedCombinedOrder, WERKS: Plant, MATNR: Material, CHARG: Batch }));
+          const resCombPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ FSH_MPLO_ORD: PlannedCombinedOrder, WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
           // console.log({
           //   PlannedCombinedOrder,
           //   Material,
@@ -169,5 +169,11 @@ module.exports = class MainService extends cds.ApplicationService {
       return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);
     });
     // ZZ1_COMBPLNORDERSSTOCKAPI - End
+    this.on("disassemble", async (req) => {
+      debugger;
+    });
+    this.on("assemble", async (req) => {
+      debugger;
+    });
   }
 };
