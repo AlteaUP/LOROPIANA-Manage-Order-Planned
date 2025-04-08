@@ -19,9 +19,9 @@
             />
             <form:SimpleForm
                 id="SimpleFormPezze"
+                columnsM="2"
                 columnsL="3"
-                columnsM="3"
-                columnsXL="3"
+                columnsXL="4"
                 emptySpanL="0"
                 emptySpanM="0"
                 emptySpanXL="0"
@@ -34,60 +34,50 @@
                 layout="ColumnLayout"
             >
                 <Label
-                    text="Cplnd Ord"
                     id="labelCplndOrd"
+                    text="Cplnd Ord"
                 />
                 <Text
-                    text="{/CplndOrd}"
                     id="inputCplndOrd"
+                    text="{/CplndOrd}"
                 />
-
                 <Label
-                    text="Material"
                     id="labelMaterial"
+                    text="Material"
                 />
                 <Text
-                    text="{/Material}"
                     id="inputMaterial"
+                    text="{/Material}"
                 />
                 <Label
-                    text="Available Quantity"
-                    id="labelAvailableQuantity"
-                />
-                <Text
-                    text="{/AvailableQuantity}"
-                    id="inputAvailableQuantity"
-                />
-                <Label
-                    text="Required Quantity"
                     id="labelRequiredQuantity"
+                    text="Required Quantity"
                 />
                 <Text
-                    text="{/RequiredQuantity}"
                     id="inputRequiredQuantity"
+                    text="{/RequiredQuantity}"
                 />
                 <Label
-                    text="Withdrawn Quantity"
                     id="labelWithdrawnQuantity"
+                    text="Withdrawn Quantity"
                 />
                 <Text
-                    text="{/WithdrawnQuantity}"
                     id="inputWithdrawnQuantity"
+                    text="{/WithdrawnQuantity}"
                 />
                 <Label
-                    text="Base Unit"
                     id="labelBaseUnit"
+                    text="Base Unit"
                 />
                 <Text
-                    text="{/BaseUnit}"
                     id="inputBaseUnit"
+                    text="{/BaseUnit}"
                 />
             </form:SimpleForm>
 
             <Table
-                items="{/selectedItems}"
                 id="selectedItemsTable"
-                mode="MultiSelect"
+                items="{/selectedItems}"
             >
                 <columns>
                     <Column id="columnBatch">
@@ -108,11 +98,16 @@
                             text="Storage Location"
                         />
                     </Column>
-
                     <Column id="columnMatlWrhsStkQtyInMatlBaseUnit">
                         <Text
                             id="textMatlWrhsStkQtyInMatlBaseUnit"
                             text="Storage Location Stock"
+                        />
+                    </Column>
+                    <Column id="columnAvailableQuantity">
+                        <Text
+                            id="textAvailableQuantity"
+                            text="Available Quantity"
                         />
                     </Column>
                     <Column id="columnCombPlanAllQty">
@@ -121,7 +116,6 @@
                             text="Comb Plan All Qty"
                         />
                     </Column>
-
                     <Column id="columnCustomQty">
                         <Text
                             id="textCustomQty"
@@ -155,6 +149,10 @@
                                 text="{StorageLocationStock}"
                             />
                             <Text
+                                id="valueAvailableQuantity"
+                                text="{AvaibilityQty}"
+                            />
+                            <Text
                                 id="valueTotalPlanAllQty"
                                 text="{TotalPlanAllQty}"
                             />
@@ -162,10 +160,12 @@
                                 id="valueCombPlanAllQty"
                                 text="{CombPlanAllQty}"
                             />
-
                             <StepInput
                                 id="customQty"
                                 value="{CustomQty}"
+                                step="1"
+                                min="0"
+                                max="{path: 'AvaibilityQty', formatter: '.formatAvailableQty'}"
                             />
                         </cells>
                     </ColumnListItem>
@@ -178,6 +178,18 @@
                 text="Assegna"
                 type="Accept"
                 press="doAssign"
+            />
+            <Button
+                id="_IDGenBtnDisassegnaPezze"
+                text="Disassegna"
+                type="Negative"
+                press="doDisassemble"
+            />
+            <Button
+                id="_IDGenBtnWhereUsed"
+                text="Where Used"
+                type="Emphasized"
+                press="doWhereUsed"
             />
             <Button
                 id="_IDGenBtnCancelPezze"

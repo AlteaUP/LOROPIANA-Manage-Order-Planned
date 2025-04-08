@@ -236,7 +236,7 @@
                       "visible": true,
                       "enabled": true,
                       "requiresSelection": true,
-                      "text": "Assegna"
+                      "text": "Assegna/Disassegna"
                     }
                   }
                 }
