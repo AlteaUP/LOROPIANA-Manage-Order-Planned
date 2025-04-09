@@ -2,6 +2,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:form="sap.ui.layout.form"
+    xmlns:macros="sap.fe.macros"
 >
     <Dialog
         id="_IDGenDialogPezze"
@@ -39,7 +40,7 @@
                 />
                 <Text
                     id="inputCplndOrd"
-                    text="{/CplndOrd}"
+                    text="{selected>/CplndOrd}"
                 />
                 <Label
                     id="labelMaterial"
@@ -47,7 +48,7 @@
                 />
                 <Text
                     id="inputMaterial"
-                    text="{/Material}"
+                    text="{selected>/Material}"
                 />
                 <Label
                     id="labelRequiredQuantity"
@@ -55,7 +56,7 @@
                 />
                 <Text
                     id="inputRequiredQuantity"
-                    text="{/RequiredQuantity}"
+                    text="{selected>/RequiredQuantity}"
                 />
                 <Label
                     id="labelWithdrawnQuantity"
@@ -63,7 +64,7 @@
                 />
                 <Text
                     id="inputWithdrawnQuantity"
-                    text="{/WithdrawnQuantity}"
+                    text="{selected>/WithdrawnQuantity}"
                 />
                 <Label
                     id="labelBaseUnit"
@@ -71,13 +72,16 @@
                 />
                 <Text
                     id="inputBaseUnit"
-                    text="{/BaseUnit}"
+                    text="{selected>/BaseUnit}"
                 />
             </form:SimpleForm>
 
             <Table
                 id="selectedItemsTable"
-                items="{/selectedItems}"
+                items="{ 
+                    path: '/ZZ1_MFP_ASSIGNMENT',
+                    parameters : {$$updateGroupId : 'CreatePezzeBatch'}
+                }"
             >
                 <columns>
                     <Column id="columnBatch">
@@ -98,34 +102,34 @@
                             text="Storage Location"
                         />
                     </Column>
-                    <Column id="columnMatlWrhsStkQtyInMatlBaseUnit">
+                    <!-- <Column id="columnMatlWrhsStkQtyInMatlBaseUnit">
                         <Text
                             id="textMatlWrhsStkQtyInMatlBaseUnit"
                             text="Storage Location Stock"
                         />
-                    </Column>
+                    </Column> -->
                     <Column id="columnAvailableQuantity">
                         <Text
                             id="textAvailableQuantity"
                             text="Available Quantity"
                         />
                     </Column>
-                    <Column id="columnCombPlanAllQty">
+                    <!-- <Column id="columnCombPlanAllQty">
                         <Text
                             id="textCombPlanAllQty"
                             text="Comb Plan All Qty"
-                        />
-                    </Column>
-                    <Column id="columnCustomQty">
-                        <Text
-                            id="textCustomQty"
-                            text="Quantity to Assign"
                         />
                     </Column>
                     <Column id="columnTotalPlanAllQty">
                         <Text
                             id="textTotalPlanAllQty"
                             text="Total Plan All Qty"
+                        />
+                    </Column> -->
+                    <Column id="columnCustomQty">
+                        <Text
+                            id="textCustomQty"
+                            text="Quantity to Assign"
                         />
                     </Column>
                 </columns>
@@ -134,40 +138,46 @@
                         <cells>
                             <ObjectIdentifier
                                 id="valueBatch"
-                                title="{Batch}"
+                                title="{CHARG}"
                             />
                             <Text
                                 id="valueMaterial"
-                                text="{Material}"
+                                text="{MATNR}"
                             />
                             <Text
                                 id="valueStorageLocation"
-                                text="{StorageLocation}"
+                                text="{LGORT}"
                             />
-                            <Text
+                            <!-- <Text
                                 id="valueMatlWrhsStkQtyInMatlBaseUnit"
                                 text="{StorageLocationStock}"
-                            />
+                            /> -->
                             <Text
                                 id="valueAvailableQuantity"
                                 text="{AvaibilityQty}"
                             />
-                            <Text
+                            <!-- <Text
                                 id="valueTotalPlanAllQty"
                                 text="{TotalPlanAllQty}"
                             />
                             <Text
                                 id="valueCombPlanAllQty"
                                 text="{CombPlanAllQty}"
-                            />
+                            /> -->
                             <Input
                                 id="customQty"
-                                value="{CustomQty}"
+                                value="{QTA_ASS_V}"
                             />
                         </cells>
                     </ColumnListItem>
                 </items>
             </Table>
+            <!-- <macros:Table
+                id="TableAssegnaPezze"
+                metaPath="@com.sap.vocabularies.UI.v1.LineItem#tableAssignment"
+                contextPath="/ZZ1_MFP_ASSIGNMENT"
+                header="Pezze"
+            /> -->
         </content>
         <buttons>
             <Button

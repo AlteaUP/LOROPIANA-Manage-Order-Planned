@@ -374,38 +374,23 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
     ]
 );
 
-annotate service.ZZ1_MasterPlannedOrderAPI with @(
-    UI.LineItem #tableMacro : [
+annotate service.ZZ1_MFP_ASSIGNMENT with @(
+    UI.LineItem #tableAssignment : [
         {
             $Type : 'UI.DataField',
-            Value : CplndOrd,
-            Label : 'CplndOrd',
+            Value : MATNR,
+            Label : 'Material',
         },
         {
             $Type : 'UI.DataField',
-            Value : FshMplndOrd,
-            Label : 'FshMplndOrd',
+            Value : FSH_MPLO_ORD,
+            Label : 'Master Planned Order',
         },
         {
             $Type : 'UI.DataField',
-            Value : BaseUnit,
-            Label : 'BaseUnit',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : PlannedTotalQtyInBaseUnit,
-            Label : 'PlannedTotalQtyInBaseUnit',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : QuantityWithdrawnInBaseUnit,
-            Label : 'QuantityWithdrawnInBaseUnit',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : RequirementQuantityInBaseUnit,
-            Label : 'RequirementQuantityInBaseUnit',
-        },
+            Value : LGORT,
+            Label : 'LGORT',
+        }
     ]
 );
 

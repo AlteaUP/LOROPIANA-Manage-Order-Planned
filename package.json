@@ -122,6 +122,8 @@
       "ZZ1_MFP_ASSIGNMENT_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_MFP_ASSIGNMENT_CDS",
+        "csrf": true,
+        "csrfInBatch": true,
         "credentials": {
           "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_ASSIGNMENT_CDS",
           "authentication": "BasicAuthentication",

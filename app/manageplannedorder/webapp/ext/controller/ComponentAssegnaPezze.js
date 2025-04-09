@@ -1,3 +1,5 @@
+
+
 sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
@@ -25,8 +27,8 @@ sap.ui.define([
         doAssegnaPezze: function (oEvent) {
             const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
             const obj = this.getBindingContext().getObject()
-            const path = this.getBindingContext().getPath()
             const selectedItems = this._view.byId(id).getSelectedItems()
+            const oModel = this._controller.getOwnerComponent().getModel()
             const _selectedItems = []
             for (let i = 0; i < selectedItems.length; i++) {
                 const oObj = selectedItems[i].getBindingContext().getObject()
@@ -45,11 +47,41 @@ sap.ui.define([
             }
 
             this._fragmentPezze.then(function (dialog) {
-                // dialog.bindElement(path);
-                dialog.setModel(model);
-                dialog.open();
-            });
+                // dialog.bindElement(`/ZZ1_MFP_ASSIGNMENT/(SAP_UUID='${obj.SAP_UUID}')`);
+                dialog.setModel(model, 'selected');
+                dialog.setModel(oModel)
+                const tabella = dialog.getContent().at(-1);
+                const binding = tabella.getBinding('items');
+                binding.resetChanges()
+                _selectedItems.forEach((item) => {
+                    binding.create({
+                        "SAP_UUID": crypto.randomUUID(), // "",//"00505699-bc7f-1fe0-80fd-bde5ce682408",
+                        "WERKS": item.Plant, //"PF10",
+                        "LGORT": item.StorageLocation,//"H1RP"
+                        "FSH_MPLO_ORD": obj.CplndOrd, //"25",
+                        "BAGNI": item.dye_lot || "antani",//item.dye_lot,//"A0",
+                        "MATNR": item.Material,//"1000360",
+                        "CHARG": item.Batch,//"1000360",
+                        "Bagno": item.dye_lot,//"A1",
+                        "QTA_ASS_V": 0,
+                        "QTA_ASS_U": "",
+                        "QTA_ASS_U_Text": "",
+                        "FABB_TOT_V": item.AvaibilityQty || 0, // "",
+                        "FABB_TOT_U": "",
+                        "FABB_TOT_U_Text": "",
+                        "COPERTURA": 0,
+                        "SORT": 0,
+                        "SAP_CreatedDateTime": new Date(), // "",
+                        "SAP_CreatedByUser": "LASPATAS",//this._controller.getCurrentUser(),
+                        "SAP_CreatedByUser_Text": "",
+                        "SAP_LastChangedDateTime": new Date(), // "",
+                        "SAP_LastChangedByUser": "LASPATAS",
+                        "SAP_LastChangedByUser_Text": ""
+                    });
+                });
 
+                dialog.open();
+            }.bind(this));
         },
         doDisassignPezze: function (oEvent) {
             // const oOwnComponent = this._controller.getOwnerComponent();
@@ -57,12 +89,11 @@ sap.ui.define([
             var URL = this._controller._mainService.sServiceUrl;
             this._controller.showMessageConfirm("disassemble").then(() => {
                 MessageToast.show("Do Disassemble invoked.");
-                debugger;
                 // @ts-ignore
                 $.ajax({
                     url: URL + "/disassemble",
                     type: "POST",
-                    data: JSON.stringify({ ZZ1_CombPlnOrdersStock: "" }),
+                    data: JSON.stringify({}),
                     //data: dataToSend,
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
