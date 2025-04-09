@@ -1,10 +1,9 @@
-
-
 sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
-    "sap/m/MessageBox"
-], function (JSONModel, MessageToast, MessageBox) {
+    "sap/m/MessageBox",
+    "sap/ui/core/BusyIndicator"
+], function (JSONModel, MessageToast, MessageBox, BusyIndicator) {
     'use strict';
 
     return {
@@ -35,7 +34,6 @@ sap.ui.define([
                 _selectedItems.push(oObj)
             }
             const model = new JSONModel()
-            console.log("Selected Items", obj)
             model.setData({ ...obj, selectedItems: _selectedItems })
 
             if (!this._fragmentPezze) {
@@ -51,30 +49,65 @@ sap.ui.define([
                 dialog.setModel(model, 'selected');
                 dialog.setModel(oModel)
                 const tabella = dialog.getContent().at(-1);
+                // { 
+                //     path: '/ZZ1_MFP_ASSIGNMENT',
+                //     parameters : { $$updateGroupId : 'CreatePezzeBatch' }
+                // }
+                tabella.bindAggregation('items', {
+                    path: '/ZZ1_MFP_ASSIGNMENT',
+                    filters: [
+                        new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+                        new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
+                    ],
+                    template: new sap.m.ColumnListItem({
+                        cells: [
+                            new sap.m.ObjectIdentifier({
+                                title: "{CHARG}"
+                            }),
+                            new sap.m.Text({
+                                text: "{MATNR}"
+                            }),
+                            new sap.m.Text({
+                                text: "{LGORT}"
+                            }),
+                            new sap.m.Text({
+                                text: "{AvaibilityQty}"
+                            }),
+                            new sap.m.Input({
+                                value: "{QTA_ASS_V}"
+                            })
+                        ]
+                    }),
+                    templateShareable: true,
+                    parameters: { $$updateGroupId: 'CreatePezzeBatch' },
+                });
+
                 const binding = tabella.getBinding('items');
                 binding.resetChanges()
+
                 _selectedItems.forEach((item) => {
+
                     binding.create({
-                        "SAP_UUID": crypto.randomUUID(), // "",//"00505699-bc7f-1fe0-80fd-bde5ce682408",
-                        "WERKS": item.Plant, //"PF10",
-                        "LGORT": item.StorageLocation,//"H1RP"
-                        "FSH_MPLO_ORD": obj.CplndOrd, //"25",
-                        "BAGNI": item.dye_lot || "antani",//item.dye_lot,//"A0",
-                        "MATNR": item.Material,//"1000360",
-                        "CHARG": item.Batch,//"1000360",
-                        "Bagno": item.dye_lot,//"A1",
+                        "SAP_UUID": crypto.randomUUID(),
+                        "WERKS": item.Plant,
+                        "LGORT": item.StorageLocation,
+                        "FSH_MPLO_ORD": obj.CplndOrd,
+                        "BAGNI": item.dye_lot || "antani",
+                        "MATNR": item.Material,
+                        "CHARG": item.Batch,
+                        "Bagno": item.dye_lot,
                         "QTA_ASS_V": 0,
                         "QTA_ASS_U": "",
                         "QTA_ASS_U_Text": "",
-                        "FABB_TOT_V": item.AvaibilityQty || 0, // "",
+                        "FABB_TOT_V": item.AvaibilityQty || 0,
                         "FABB_TOT_U": "",
                         "FABB_TOT_U_Text": "",
                         "COPERTURA": 0,
                         "SORT": 0,
-                        "SAP_CreatedDateTime": new Date(), // "",
-                        "SAP_CreatedByUser": "LASPATAS",//this._controller.getCurrentUser(),
+                        "SAP_CreatedDateTime": new Date(),
+                        "SAP_CreatedByUser": "LASPATAS",
                         "SAP_CreatedByUser_Text": "",
-                        "SAP_LastChangedDateTime": new Date(), // "",
+                        "SAP_LastChangedDateTime": new Date(),
                         "SAP_LastChangedByUser": "LASPATAS",
                         "SAP_LastChangedByUser_Text": ""
                     });
@@ -83,33 +116,46 @@ sap.ui.define([
                 dialog.open();
             }.bind(this));
         },
-        doDisassignPezze: function (oEvent) {
-            // const oOwnComponent = this._controller.getOwnerComponent();
-            // const oModel = oOwnComponent.getModel();
-            var URL = this._controller._mainService.sServiceUrl;
-            this._controller.showMessageConfirm("disassemble").then(() => {
-                MessageToast.show("Do Disassemble invoked.");
-                // @ts-ignore
-                $.ajax({
-                    url: URL + "/disassemble",
-                    type: "POST",
-                    data: JSON.stringify({}),
-                    //data: dataToSend,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        console.log("Success", data);
-                        MessageToast.show("Disassemble invoked.");
-                    },
-                    error: function (error) {
-                        console.log("Error", error);
-                        MessageToast.show("Error Disassemble.");
-                    }
-                });
+        doDisassignPezze: async function (oEvent) {
+            const obj = this.getBindingContext().getObject()
+            const oModel = this._controller.getOwnerComponent().getModel();
+
+            const oList = oModel.bindList("/ZZ1_MFP_ASSIGNMENT");
+            const filterCombined = new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd)
+            const filterMatnr = new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
+            oList.filter([filterCombined, filterMatnr]);
+
+            BusyIndicator.show(0);
+
+            const pContexts = await oList.requestContexts(0, 20)
+            const aContexts = pContexts.map(oContext => oContext)
+
+            if (!aContexts.length) {
+                MessageToast.show("No items to disassemble.");
+                BusyIndicator.hide(0);
+                return;
             }
-            ).catch(() => {
-                MessageToast.show("Do Disassemble cancelled.");
+
+            try {
+                await this._controller.showMessageConfirm(`disassemble (${aContexts.length})`)
+            } catch (error) {
+                MessageToast.show("Disassemble cancelled.");
+                BusyIndicator.hide(0);
+                return;
+            }
+
+            const sGroupId = 'DisassemblePezzeBatch';
+            aContexts.forEach(function (oContext) {
+                oContext.delete(sGroupId)
             });
+
+            const oData = await oModel.submitBatch(sGroupId)
+            BusyIndicator.hide(0);
+            if (!oData)
+                MessageToast.show("Disassemble completed successfully.");
+            else
+                MessageToast.show("Disassemble failed.");
+
         },
         doWhereUsed: function (oEvent) {
             sap.m.MessageToast.show("Custom handler invoked. [WHERE USED]");

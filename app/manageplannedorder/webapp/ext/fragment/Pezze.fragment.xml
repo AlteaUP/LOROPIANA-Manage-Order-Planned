@@ -75,14 +75,7 @@
                     text="{selected>/BaseUnit}"
                 />
             </form:SimpleForm>
-
-            <Table
-                id="selectedItemsTable"
-                items="{ 
-                    path: '/ZZ1_MFP_ASSIGNMENT',
-                    parameters : {$$updateGroupId : 'CreatePezzeBatch'}
-                }"
-            >
+            <Table id="selectedItemsTable">
                 <columns>
                     <Column id="columnBatch">
                         <Text
@@ -102,30 +95,12 @@
                             text="Storage Location"
                         />
                     </Column>
-                    <!-- <Column id="columnMatlWrhsStkQtyInMatlBaseUnit">
-                        <Text
-                            id="textMatlWrhsStkQtyInMatlBaseUnit"
-                            text="Storage Location Stock"
-                        />
-                    </Column> -->
                     <Column id="columnAvailableQuantity">
                         <Text
                             id="textAvailableQuantity"
                             text="Available Quantity"
                         />
                     </Column>
-                    <!-- <Column id="columnCombPlanAllQty">
-                        <Text
-                            id="textCombPlanAllQty"
-                            text="Comb Plan All Qty"
-                        />
-                    </Column>
-                    <Column id="columnTotalPlanAllQty">
-                        <Text
-                            id="textTotalPlanAllQty"
-                            text="Total Plan All Qty"
-                        />
-                    </Column> -->
                     <Column id="columnCustomQty">
                         <Text
                             id="textCustomQty"
@@ -133,51 +108,7 @@
                         />
                     </Column>
                 </columns>
-                <items>
-                    <ColumnListItem id="selectedItemsTableItem">
-                        <cells>
-                            <ObjectIdentifier
-                                id="valueBatch"
-                                title="{CHARG}"
-                            />
-                            <Text
-                                id="valueMaterial"
-                                text="{MATNR}"
-                            />
-                            <Text
-                                id="valueStorageLocation"
-                                text="{LGORT}"
-                            />
-                            <!-- <Text
-                                id="valueMatlWrhsStkQtyInMatlBaseUnit"
-                                text="{StorageLocationStock}"
-                            /> -->
-                            <Text
-                                id="valueAvailableQuantity"
-                                text="{AvaibilityQty}"
-                            />
-                            <!-- <Text
-                                id="valueTotalPlanAllQty"
-                                text="{TotalPlanAllQty}"
-                            />
-                            <Text
-                                id="valueCombPlanAllQty"
-                                text="{CombPlanAllQty}"
-                            /> -->
-                            <Input
-                                id="customQty"
-                                value="{QTA_ASS_V}"
-                            />
-                        </cells>
-                    </ColumnListItem>
-                </items>
             </Table>
-            <!-- <macros:Table
-                id="TableAssegnaPezze"
-                metaPath="@com.sap.vocabularies.UI.v1.LineItem#tableAssignment"
-                contextPath="/ZZ1_MFP_ASSIGNMENT"
-                header="Pezze"
-            /> -->
         </content>
         <buttons>
             <Button
