@@ -80,3 +80,23 @@ Where used
 
 
 -------> Planned, Material, Plant, Somma di ttte le avaibility quantity
+
+
+
+
+
+
+
+
+
+
+
+
+Nella tabella principale dei combined bisogna aprire un popup con la lista dei combined selezionati
+In testa alla lista ci deve essere il tipo ordine (Input)
+Sotto una tabella che riporta i record selezionati.
+
+Al click sul button presente nel footer verrà richiamta la --> ConvertPLO
+
+
+

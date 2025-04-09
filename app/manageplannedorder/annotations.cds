@@ -91,7 +91,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : RequirementQuantityInBaseUnit,
             Label : 'RequirementQuantityInBaseUnit',
-        },
+        }
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
@@ -169,6 +169,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         Visualization : #Progress,
         TargetValue : 100,
     },
+    UI.LineItem #tableMacro1 : [
+    ],
 );
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {

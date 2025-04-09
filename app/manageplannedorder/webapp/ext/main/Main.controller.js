@@ -40,6 +40,32 @@ sap.ui.define(
             //  onExit: function() {
             //
             //  }
+            pressFragment: function (e) {
+                // const oModel = this.getOwnerComponent().getModel();
+                // const oList = oModel.bindList("/ConvertPLO");
+
+                // const sGroupId = 'ConvertPLO';
+                // oList.changeParameters({
+                //     $$updateGroupId: sGroupId
+                // });
+
+                // const oTable = this.getView().byId('TableCombined')
+                // const aSelectedContext = oTable.getSelectedContexts()
+
+                // aSelectedContext.forEach(context => {
+                //     const contextData = context.getObject();
+                //     console.log(contextData);
+                // });
+
+                // oModel.submitBatch(sGroupId).then(() => {
+                //     MessageToast.show("Do Assemble completed.");
+                //     sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze').close();
+                //     oTableBinding.refresh(true);
+                // }).catch((oError) => {
+                //     MessageToast.show("Do Assemble error.");
+                //     console.error("Error", oError);
+                // });
+            }
         });
     }
 );

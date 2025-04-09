@@ -2,7 +2,6 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:form="sap.ui.layout.form"
-    xmlns:macros="sap.fe.macros"
 >
     <Dialog
         id="_IDGenDialogPezze"

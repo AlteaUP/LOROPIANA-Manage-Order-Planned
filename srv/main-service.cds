@@ -1,9 +1,10 @@
-using {Records} from './types/types';
+// using {Records} from './types/types';
 using {ZZ1_COMBINEDPLNORDERSAPI_CDS} from './external/ZZ1_COMBINEDPLNORDERSAPI_CDS';
 using {ZZ1_MASTERPLANNEDORDERAPI_CDS} from './external/ZZ1_MASTERPLANNEDORDERAPI_CDS';
 using {ZZ1_PLANNEDORDERSAPI_CDS} from './external/ZZ1_PLANNEDORDERSAPI_CDS';
 using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS';
 using {ZZ1_MFP_ASSIGNMENT_CDS} from './external/ZZ1_MFP_ASSIGNMENT_CDS';
+using {ZMPF_ASS_BATCH_SRV} from './external/ZMPF_ASS_BATCH_SRV';
 
 service MainService {
 
@@ -74,8 +75,10 @@ service MainService {
   @sap.deletable: 'true'
   entity ZZ1_MFP_ASSIGNMENT         as projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT;
 
-// action assemble(Records : Records)                  returns Boolean;
-// action disassemble(ZZ1_CombPlnOrdersStock : String) returns Boolean;
+  entity ConvertPLO                 as projection on ZMPF_ASS_BATCH_SRV.ConvertPLO;
+  // action assemble(Records : Records)                  returns Boolean;
+  // action disassemble(ZZ1_CombPlnOrdersStock : String) returns Boolean;
+  action fragment() returns Boolean;
 // Stock - End
 
 }

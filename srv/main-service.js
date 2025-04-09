@@ -1,4 +1,5 @@
 const cds = require("@sap/cds");
+const { action } = require("@sap/cds/lib/core/classes");
 
 module.exports = class MainService extends cds.ApplicationService {
   async init() {
@@ -14,6 +15,8 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZZ1_MFP_ASSIGNMENT_CDS = await cds.connect.to("ZZ1_MFP_ASSIGNMENT_CDS");
     // ZZ1_I_SUMQTYDELIVERY_T_CDS
     const ZZ1_I_SUMQTYDELIVERY_T_CDS = await cds.connect.to("ZZ1_I_SUMQTYDELIVERY_T_CDS");
+
+    const ZMPF_ASS_BATCH_SRV = await cds.connect.to('ZMPF_ASS_BATCH_SRV');
 
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
@@ -188,6 +191,13 @@ module.exports = class MainService extends cds.ApplicationService {
 
     this.on("*", "ZZ1_MFP_ASSIGNMENT", async (req) => {
       return await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
+    });
+    this.on("*", "ConvertPLO", async (req) => {
+      return await ZMPF_ASS_BATCH_SRV.run(req.query);
+    });
+
+    this.on('myNewAction', async (req) => {
+      return true; // or any appropriate response
     });
   }
 };
