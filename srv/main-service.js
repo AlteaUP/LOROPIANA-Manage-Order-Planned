@@ -67,6 +67,7 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom/to_ZZ1_CombPlnOrdersStock", async (req) => {
+      // 1. Get base stock data
       let from = {
         ref: [
           {
@@ -75,86 +76,118 @@ module.exports = class MainService extends cds.ApplicationService {
           },
           req.query.SELECT.from.ref[2]
         ]
-      }
-      const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from));
+      };
+      const stockData = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from));
+      if (!Array.isArray(stockData) || stockData.length === 0) return stockData;
 
-      if (!Array.isArray(res)) return res;
+      const PlannedCombinedOrder = req.params.at(-1).CplndOrd;
 
-      const aReturn = []
-      const PlannedCombinedOrder = req.params.at(-1).CplndOrd
+      // 2. Extract all unique combinations for batch queries
+      const materialPlantBatchLocations = stockData.map(item => ({
+        Plant: item.Plant,
+        Material: item.Material,
+        StorageLocation: item.StorageLocation,
+        Batch: item.Batch
+      }));
 
-      // cumulare i totali senza batch (materiale plant)
+      // 3. Batch query for TotalProdAllQty
+      const prodAllQtyPromise = ZZ1_I_ARUN_BDBSSUMQTY_CDS.run(
+        SELECT.from('ZZ1_I_ARUN_BDBSSUMQTY_CDS')
+          .where({
+            Plant: { in: stockData.map(i => i.Plant) },
+            Material: { in: stockData.map(i => i.Material) }
+          })
+      );
 
-      for (let i = 0; i < res.length; i++) {
-        const item = res[i];
-        // const { Plant, Material, StorageLocation, Batch } = item;
-        let TotalProdAllQty = 0;
-        try {
-          // ZZ1_I_ARUN_BDBSSUMQTY_CDS (PLANT, MATERIAL, STORAGELOCATION, BATCH)
-          // const resTotalProdAllQty = await ZZ1_I_ARUN_BDBSSUMQTY_CDS.run(SELECT.from('ZZ1_I_ARUN_BDBSSUMQTY_CDS').where({ Plant, Material, StorageLocation, Batch }));
-          // console.log({ Plant, Material, StorageLocation, Batch, resTotalProdAllQty })
-          // TotalProdAllQty += resTotalProdAllQty.reduce((sum, item) => sum + parseFloat(item.TotalAllocQty), 0);
-        } catch (error) {
-          console.log('Error in resTotalProdAllQty', error);
-        }
-        let TotalPlanAllQty = 0;
-        try {
-          // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-          // const resTotalPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
-          // console.log({ Plant, Material, StorageLocation, Batch, resTotalPlanAllQty })
-          // TotalPlanAllQty += resTotalPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
-        } catch (e) {
-          console.log('Error in resTotalPlanAllQty', e)
-        }
-        let CombPlanAllQty = 0;
-        try {
-          // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per FSH_MPLO_ORD = planned combined order werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-          // const resCombPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ FSH_MPLO_ORD: PlannedCombinedOrder, WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
-          // console.log({
-          //   PlannedCombinedOrder,
-          //   Material,
-          //   StorageLocation,
-          //   Batch,
-          //   resCombPlanAllQty
-          // })
-          // CombPlanAllQty = resCombPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
-        } catch (error) {
-          console.log('Error in resCombPlanAllQty', error)
-        }
-        // StorageLocationStock - TotalProdAllQty - CombPlanAllQty
+      // 4. Batch query for TotalPlanAllQty
+      const planAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
 
+      // 5. Batch query for CombPlanAllQty with the specific planned order
+      const combPlanAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            FSH_MPLO_ORD: PlannedCombinedOrder,
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
 
-        // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
-        let TotalDeliveryQty = 0;
-        try {
-          // const resTotalDeliveryQty = await ZZ1_I_SUMQTYDELIVERY_T_CDS.run(SELECT.from('ZZ1_I_SUMQTYDELIVERY_T').where({ Material: Material, StorLoc: StorageLocation, Batch: Batch }));
-          // console.log({
-          //   Material,
-          //   StorLoc: StorageLocation,
-          //   Batch,
-          //   resTotalDeliveryQty
-          // })
-          // TotalDeliveryQty += resTotalDeliveryQty.reduce((sum, item) => sum + parseFloat(item.TotDeliveryQty), 0);
-        } catch (error) {
-          console.log('Error in resTotalDeliveryQty', error);
-        }
+      // 6. Batch query for TotalDeliveryQty
+      const deliveryQtyPromise = ZZ1_I_SUMQTYDELIVERY_T_CDS.run(
+        SELECT.from('ZZ1_I_SUMQTYDELIVERY_T')
+          .where({
+            Material: { in: stockData.map(i => i.Material) },
+            StorLoc: { in: stockData.map(i => i.StorageLocation) }
+          })
+      );
 
-        let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) - parseFloat(TotalProdAllQty) - parseFloat(TotalPlanAllQty) - parseFloat(TotalDeliveryQty)).toFixed(3).toString();
-        if (AvaibilityQty < 0) AvaibilityQty = 0;
+      // 7. Execute all queries in parallel
+      const [prodAllQtyData, planAllQtyData, combPlanAllQtyData, deliveryQtyData] =
+        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise]);
 
-        aReturn.push({
+      // 8. Create lookup maps for faster association
+      const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
+      const planAllQtyMap = createLookupMap(planAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
+
+      // 9. Process results with maps instead of additional queries
+      return stockData.map(item => {
+        const { Plant, Material, StorageLocation, Batch } = item;
+        const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+
+        const prodItems = prodAllQtyMap[key] || [];
+        const planItems = planAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+        const combPlanItems = combPlanAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+        const deliveryItems = deliveryQtyMap[`${Material}|${StorageLocation}|${Batch}`] || [];
+
+        const TotalProdAllQty = sumValues(prodItems, 'TotalAllocQty');
+        const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
+        const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+        const TotalDeliveryQty = sumValues(deliveryItems, 'TotDeliveryQty');
+
+        let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) -
+          TotalProdAllQty - TotalPlanAllQty - TotalDeliveryQty).toFixed(3).toString();
+        if (AvaibilityQty < 0) AvaibilityQty = "0.000";
+
+        return {
           ...item,
-          StorageLocationStock: parseInt(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
+          StorageLocationStock: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
           TotalProdAllQty: TotalProdAllQty.toFixed(3).toString(),
           TotalPlanAllQty: TotalPlanAllQty.toFixed(3).toString(),
           CombPlanAllQty: CombPlanAllQty.toFixed(3).toString(),
-          AvaibilityQty: AvaibilityQty,
+          AvaibilityQty,
           TotalInDelQty: TotalDeliveryQty.toFixed(3).toString(),
-          CustomQty: parseInt(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
-        })
-      }
-      return aReturn;
+          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
+        };
+      });
     });
+
+    // Helper functions
+    function createLookupMap(data, ...keys) {
+      const map = {};
+      if (!Array.isArray(data)) return map;
+
+      data.forEach(item => {
+        const keyValues = keys.map(k => item[k]);
+        const key = keyValues.join('|');
+        if (!map[key]) map[key] = [];
+        map[key].push(item);
+      });
+      return map;
+    }
+
+    function sumValues(items, propertyName) {
+      if (!Array.isArray(items)) return 0;
+      return items.reduce((sum, item) => sum + parseFloat(item[propertyName] || 0), 0);
+    }
+
     // ZZ1_CombinedPlnOrdersAPI - End
     // ZZ1_MASTERPLANNEDORDERAPI - Start
     this.on("*", "ZZ1_MasterPlannedOrderAPI", async (req) => {
