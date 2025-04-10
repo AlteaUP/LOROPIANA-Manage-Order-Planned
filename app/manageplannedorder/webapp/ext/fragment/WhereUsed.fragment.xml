@@ -68,6 +68,12 @@
                             text="Storage Location"
                         />
                     </Column>
+                    <Column id="columnQtyWhereUsed">
+                        <Text
+                            id="textQtyWhereUsed"
+                            text="Available Quantity"
+                        />
+                    </Column>
                 </columns>
             </Table>
         </content>

@@ -208,6 +208,9 @@ sap.ui.define([
                             }),
                             new sap.m.Text({
                                 text: "{StorageLocation}"
+                            }), ,
+                            new sap.m.Text({
+                                text: "{AvailableQuantity}"
                             }),
                         ]
                     }),
