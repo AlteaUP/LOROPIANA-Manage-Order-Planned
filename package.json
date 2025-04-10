@@ -147,7 +147,7 @@
         "kind": "odata-v2",
         "model": "srv/external/ZMPF_ASS_BATCH_SRV",
         "credentials": {
-          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZMPF_ASS_BATCH_SRV",
+          "url": "/sap/opu/odata4/sap/zmpf_ass_batch_bnd/srvd_a2x/sap/zmpf_ass_batch_srv/0001/",
           "authentication": "BasicAuthentication",
           "username": "laspatas",
           "password": "Sap1234567890!!!",

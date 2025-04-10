@@ -1,0 +1,178 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="_IDGenDialogConversion"
+        stretch="true"
+        resizable="false"
+        type="Message"
+        state="Information"
+        icon="sap-icon://ai"
+        title="Assegna Conversion"
+    >
+        <content>
+            <Text
+                id="_IDGenTextConversion"
+                text="Assegna Conversion"
+            />
+            <form:SimpleForm
+                id="SimpleFormConversion"
+                columnsM="2"
+                columnsL="3"
+                columnsXL="4"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanXL="0"
+                labelSpanL="12"
+                labelSpanM="12"
+                labelSpanXL="12"
+                visible="true"
+                editable="false"
+                singleContainerFullSize="false"
+                layout="ColumnLayout"
+            >
+                <Label
+                    id="labelTypeOrder"
+                    text="Type Order"
+                />
+                <Text
+                    id="inputTypeOrder"
+                    text="{selected>/TypeOrder}"
+                />
+            </form:SimpleForm>
+
+            <Table id="selectedItemsTableCombined">
+                <columns>
+                    <!-- <Column id="columnProductSeasonYear">
+                        <Text
+                            id="columnProductSeasonYearText"
+                            text="Season Year"
+                        />
+                    </Column>
+                    <Column id="columnProductSeason">
+                        <Text
+                            id="columnProductSeasonText"
+                            text="Season"
+                        />
+                    </Column>
+                    <Column id="columnCplndOrd">
+                        <Text
+                            id="columnCplndOrdText"
+                            text="Combined Planned Order"
+                        />
+                    </Column>
+                    <Column id="columnCrossPlantConfigurableProduct">
+                        <Text
+                            id="columnCrossPlantConfigurableProductText"
+                            text="Cross Plant Configurable Product"
+                        />
+                    </Column>
+                    <Column id="columnOverallConversionStatus">
+                        <Text
+                            id="columnOverallConversionStatusText"
+                            text="Overall Conversion Status"
+                        />
+                    </Column>
+                    <Column id="columnPlannedTotalQtyInBaseUnit">
+                        <Text
+                            id="columnPlannedTotalQtyInBaseUnitText"
+                            text="Planned Total Qty In Base Unit"
+                        />
+                    </Column>
+                    <Column id="columnPlndOrderPlannedStartDate">
+                        <Text
+                            id="columnPlndOrderPlannedStartDateText"
+                            text="Planned Start Date"
+                        />
+                    </Column>
+                    <Column id="columnPlndOrderPlannedEndDate">
+                        <Text
+                            id="columnPlndOrderPlannedEndDateText"
+                            text="Planned End Date"
+                        />
+                    </Column>
+                    <Column id="columnPlannedOrderOpeningDate">
+                        <Text
+                            id="columnPlannedOrderOpeningDateText"
+                            text="Planned Order Opening Date"
+                        />
+                    </Column>
+                    <Column id="columnProductCollection">
+                        <Text
+                            id="columnProductCollectionText"
+                            text="Product Collection"
+                        />
+                    </Column>
+                    <Column id="columnProductTheme">
+                        <Text
+                            id="columnProductThemeText"
+                            text="Product Theme"
+                        />
+                    </Column>
+                    <Column id="columnPlndOrderCommittedQty">
+                        <Text
+                            id="columnPlndOrderCommittedQtyText"
+                            text="Planned Order Committed Qty"
+                        />
+                    </Column>
+                    <Column id="columnPlndOrderTotalCmtmtDate">
+                        <Text
+                            id="columnPlndOrderTotalCmtmtDateText"
+                            text="Planned Order Total Commitment Date"
+                        />
+                    </Column>
+                    <Column id="columnRequirementQuantityInBaseUnit">
+                        <Text
+                            id="columnRequirementQuantityInBaseUnitText"
+                            text="Requirement Quantity In Base Unit"
+                        />
+                    </Column> -->
+                    <!-- FSH_CPLND_ORD
+                    AUART
+                    TOT_QTY
+                    UNIT -->
+                    <Column id="columnPlannedOrder">
+                        <Text
+                            id="columnPlannedOrderText"
+                            text="Planned Order"
+                        />
+                    </Column>
+                    <Column id="columnOrderType">
+                        <Text
+                            id="columnOrderTypeText"
+                            text="Order Type"
+                        />
+                    </Column>
+                    <Column id="columnPlannedOrderQty">
+                        <Text
+                            id="columnPlannedOrderQtyText"
+                            text="Planned Order Qty"
+                        />
+                    </Column>
+                    <Column id="columnPlannedOrderUnit">
+                        <Text
+                            id="columnPlannedOrderUnitText"
+                            text="Planned Order Unit"
+                        />
+                    </Column>
+                </columns>
+            </Table>
+        </content>
+        <buttons>
+            <Button
+                id="_IDGenBtnConversion"
+                text="Converti"
+                type="Accept"
+                press="doConvert"
+            />
+            <Button
+                id="_IDGenBtnCancelConversion"
+                text="Chiudi"
+                type="Back"
+                press="onCloseDialog"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>
