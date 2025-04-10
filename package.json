@@ -142,6 +142,17 @@
           "password": "Sap1234567890!!!",
           "sap-client": "300"
         }
+      },
+      "ZMPF_ASS_BATCH_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZMPF_ASS_BATCH_SRV",
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZMPF_ASS_BATCH_SRV",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
       }
     }
   },
