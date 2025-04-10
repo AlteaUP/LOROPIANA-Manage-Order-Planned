@@ -56,6 +56,7 @@ sap.ui.define(
 
                     const filters = []
                     _selectedItems.forEach((item) => {
+                        if (!item) return;
                         const filter = new Filter("FSH_CPLND_ORD", FilterOperator.EQ, item.CplndOrd)
                         filters.push(filter)
                     })

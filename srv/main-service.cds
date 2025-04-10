@@ -25,6 +25,7 @@ service MainService {
   // CAPACITY
   entity ZZ1_PLOCAPACITYCORD        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
+
   // COMBINED PLANNED ORDER
   entity ZZ1_CombinedPlnOrdersAPI   as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {

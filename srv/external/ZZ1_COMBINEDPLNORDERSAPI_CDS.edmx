@@ -652,7 +652,7 @@
 </Annotation>
 </Annotations>
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_COMBINEDPLNORDERSAPI_CDS_Entities">
-<Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+  <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>>
 </Annotations>
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_COMBINEDPLNORDERSAPI_CDS_Entities/I_Plant">
 <Annotation Term="Capabilities.NavigationRestrictions">
