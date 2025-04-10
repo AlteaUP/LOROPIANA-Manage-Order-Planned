@@ -104,7 +104,7 @@ sap.ui.define(
             doConvert: function (oEvent) {
                 const oModel = this.getOwnerComponent().getModel();
                 const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
-                const oTableBinding = oTable.getBinding("items");
+                // const oTableBinding = oTable.getBinding("items");
                 this.showMessageConfirm("convert").then(function () {
                     MessageToast.show("Do Convert invoked.");
                     oModel.submitBatch("CreateConvertPLO").then(() => {

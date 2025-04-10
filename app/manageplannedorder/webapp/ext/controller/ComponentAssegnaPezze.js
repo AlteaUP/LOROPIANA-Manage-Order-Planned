@@ -159,6 +159,95 @@ sap.ui.define([
         },
         doWhereUsed: function (oEvent) {
             sap.m.MessageToast.show("Custom handler invoked. [WHERE USED]");
+            const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
+            const obj = this.getBindingContext().getObject()
+            const selectedItems = this._view.byId(id).getSelectedItems()
+            const oModel = this._controller.getOwnerComponent().getModel()
+            const _selectedItems = []
+            for (let i = 0; i < selectedItems.length; i++) {
+                const oObj = selectedItems[i].getBindingContext().getObject()
+                _selectedItems.push(oObj)
+            }
+            const model = new JSONModel()
+            model.setData({ ...obj, selectedItems: _selectedItems })
+
+            if (!this._fragmentPezze) {
+                this._fragmentPezze = this.loadFragment({
+                    id: "fragmentPezze",
+                    name: "manageplannedorder.manageplannedorder.ext.fragment.WhereUsed",
+                    controller: this._controller
+                });
+            }
+
+            this._fragmentPezze.then(function (dialog) {
+                // dialog.bindElement(`/ZZ1_MFP_ASSIGNMENT/(SAP_UUID='${obj.SAP_UUID}')`);
+                dialog.setModel(model, 'selected');
+                dialog.setModel(oModel)
+                const tabella = dialog.getContent().at(-1);
+                // { 
+                //     path: '/ZZ1_MFP_ASSIGNMENT',
+                //     parameters : { $$updateGroupId : 'CreatePezzeBatch' }
+                // }
+                tabella.bindAggregation('items', {
+                    path: '/ZZ1_CombPlnOrdersStockAPI',
+                    filters: [
+                        new sap.ui.model.Filter("CplndOrd", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+                        new sap.ui.model.Filter("Material", sap.ui.model.FilterOperator.EQ, obj.Material),
+                        new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, obj.Plant),
+                    ],
+                    template: new sap.m.ColumnListItem({
+                        cells: [
+                            new sap.m.ObjectIdentifier({
+                                title: "{CplndOrd}"
+                            }),
+                            new sap.m.Text({
+                                text: "{Material}"
+                            }),
+                            new sap.m.Text({
+                                text: "{Plant}"
+                            }),
+                            new sap.m.Text({
+                                text: "{StorageLocation}"
+                            }),
+                        ]
+                    }),
+                    templateShareable: true,
+                    parameters: { $$updateGroupId: 'CreatePezzeBatch' },
+                });
+
+                const binding = tabella.getBinding('items');
+                binding.resetChanges()
+
+                _selectedItems.forEach((item) => {
+
+                    binding.create({
+                        "SAP_UUID": crypto.randomUUID(),
+                        "WERKS": item.Plant,
+                        "LGORT": item.StorageLocation,
+                        "FSH_MPLO_ORD": obj.CplndOrd,
+                        "BAGNI": item.dye_lot || "antani",
+                        "MATNR": item.Material,
+                        "CHARG": item.Batch,
+                        "Bagno": item.dye_lot,
+                        "QTA_ASS_V": 0,
+                        "QTA_ASS_U": "",
+                        "QTA_ASS_U_Text": "",
+                        "FABB_TOT_V": item.AvaibilityQty || 0,
+                        "FABB_TOT_U": "",
+                        "FABB_TOT_U_Text": "",
+                        "COPERTURA": 0,
+                        "SORT": 0,
+                        "SAP_CreatedDateTime": new Date(),
+                        "SAP_CreatedByUser": "LASPATAS",
+                        "SAP_CreatedByUser_Text": "",
+                        "SAP_LastChangedDateTime": new Date(),
+                        "SAP_LastChangedByUser": "LASPATAS",
+                        "SAP_LastChangedByUser_Text": ""
+                    });
+                });
+
+                dialog.open();
+            }.bind(this));
         },
         onCloseDialog: function (oEvent) {
             const dialog = oEvent.getSource().getParent();
