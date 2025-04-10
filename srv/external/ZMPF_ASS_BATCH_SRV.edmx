@@ -53,7 +53,7 @@
 </Key>
 <Property Name="FSH_CPLND_ORD" Type="Edm.String" Nullable="false" MaxLength="12"/>
 <Property Name="AUART" Type="Edm.String" Nullable="false" MaxLength="4"/>
-<Property Name="TOT_QTY" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3"/>
+<Property Name="TOT_QTY" Type="Edm.String" Nullable="false" MaxLength="20"/>
 <Property Name="UNIT" Type="Edm.String" Nullable="false" MaxLength="3"/>
 </EntityType>
 <EntityContainer Name="Container">
@@ -72,8 +72,9 @@
 </Annotations>
 <Annotations Target="SAP__self.ConvertPLOType/TOT_QTY">
 <Annotation Term="SAP__common.Label" String="Quantità totale ordine"/>
-<Annotation Term="SAP__common.Heading" String="Quantity"/>
-<Annotation Term="SAP__common.QuickInfo" String="Quantity"/>
+<Annotation Term="SAP__common.IsUpperCase"/>
+<Annotation Term="SAP__common.Heading" String="Char20"/>
+<Annotation Term="SAP__common.QuickInfo" String="Char 20"/>
 </Annotations>
 <Annotations Target="SAP__self.ConvertPLOType/UNIT">
 <Annotation Term="SAP__common.IsUnit"/>

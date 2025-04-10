@@ -75,7 +75,10 @@ service MainService {
   @sap.deletable: 'true'
   entity ZZ1_MFP_ASSIGNMENT         as projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT;
 
+  @sap.creatable: 'true'
+  @sap.deletable: 'true'
   entity ConvertPLO                 as projection on ZMPF_ASS_BATCH_SRV.ConvertPLO;
+
   // action assemble(Records : Records)                  returns Boolean;
   // action disassemble(ZZ1_CombPlnOrdersStock : String) returns Boolean;
   action fragment() returns Boolean;

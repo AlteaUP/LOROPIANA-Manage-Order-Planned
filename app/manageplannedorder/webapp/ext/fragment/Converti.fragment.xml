@@ -37,102 +37,15 @@
                     id="labelTypeOrder"
                     text="Type Order"
                 />
-                <Text
+                <Input
                     id="inputTypeOrder"
-                    text="{selected>/TypeOrder}"
+                    value="{selected>/TypeOrder}"
+                    maxLength="4"
                 />
             </form:SimpleForm>
 
             <Table id="selectedItemsTableCombined">
                 <columns>
-                    <!-- <Column id="columnProductSeasonYear">
-                        <Text
-                            id="columnProductSeasonYearText"
-                            text="Season Year"
-                        />
-                    </Column>
-                    <Column id="columnProductSeason">
-                        <Text
-                            id="columnProductSeasonText"
-                            text="Season"
-                        />
-                    </Column>
-                    <Column id="columnCplndOrd">
-                        <Text
-                            id="columnCplndOrdText"
-                            text="Combined Planned Order"
-                        />
-                    </Column>
-                    <Column id="columnCrossPlantConfigurableProduct">
-                        <Text
-                            id="columnCrossPlantConfigurableProductText"
-                            text="Cross Plant Configurable Product"
-                        />
-                    </Column>
-                    <Column id="columnOverallConversionStatus">
-                        <Text
-                            id="columnOverallConversionStatusText"
-                            text="Overall Conversion Status"
-                        />
-                    </Column>
-                    <Column id="columnPlannedTotalQtyInBaseUnit">
-                        <Text
-                            id="columnPlannedTotalQtyInBaseUnitText"
-                            text="Planned Total Qty In Base Unit"
-                        />
-                    </Column>
-                    <Column id="columnPlndOrderPlannedStartDate">
-                        <Text
-                            id="columnPlndOrderPlannedStartDateText"
-                            text="Planned Start Date"
-                        />
-                    </Column>
-                    <Column id="columnPlndOrderPlannedEndDate">
-                        <Text
-                            id="columnPlndOrderPlannedEndDateText"
-                            text="Planned End Date"
-                        />
-                    </Column>
-                    <Column id="columnPlannedOrderOpeningDate">
-                        <Text
-                            id="columnPlannedOrderOpeningDateText"
-                            text="Planned Order Opening Date"
-                        />
-                    </Column>
-                    <Column id="columnProductCollection">
-                        <Text
-                            id="columnProductCollectionText"
-                            text="Product Collection"
-                        />
-                    </Column>
-                    <Column id="columnProductTheme">
-                        <Text
-                            id="columnProductThemeText"
-                            text="Product Theme"
-                        />
-                    </Column>
-                    <Column id="columnPlndOrderCommittedQty">
-                        <Text
-                            id="columnPlndOrderCommittedQtyText"
-                            text="Planned Order Committed Qty"
-                        />
-                    </Column>
-                    <Column id="columnPlndOrderTotalCmtmtDate">
-                        <Text
-                            id="columnPlndOrderTotalCmtmtDateText"
-                            text="Planned Order Total Commitment Date"
-                        />
-                    </Column>
-                    <Column id="columnRequirementQuantityInBaseUnit">
-                        <Text
-                            id="columnRequirementQuantityInBaseUnitText"
-                            text="Requirement Quantity In Base Unit"
-                        />
-                    </Column> -->
-                    <!-- FSH_CPLND_ORD
-                    AUART
-                    TOT_QTY
-                    UNIT -->
                     <Column id="columnPlannedOrder">
                         <Text
                             id="columnPlannedOrderText"

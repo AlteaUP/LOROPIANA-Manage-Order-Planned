@@ -3,46 +3,31 @@ sap.ui.define(
         'sap/fe/core/PageController',
         'sap/ui/model/json/JSONModel',
         'sap/ui/model/Filter',
-        'sap/ui/model/FilterOperator'
+        'sap/ui/model/FilterOperator',
+        "sap/m/MessageBox",
+        "sap/m/MessageToast",
     ],
-    function (PageController, JSONModel, Filter, FilterOperator) {
+    function (PageController, JSONModel, Filter, FilterOperator, MessageBox, MessageToast) {
         'use strict';
 
         return PageController.extend('manageplannedorder.manageplannedorder.ext.main.Main', {
-            /**
-             * Called when a controller is instantiated and its View controls (if available) are already created.
-             * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
-             * @memberOf manageplannedorder.manageplannedorder.ext.main.Main
-             */
-            //  onInit: function () {
-            //      PageController.prototype.onInit.apply(this, arguments); // needs to be called to properly initialize the page controller
-            //  },
 
-            /**
-             * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
-             * (NOT before the first rendering! onInit() is used for that one!).
-             * @memberOf manageplannedorder.manageplannedorder.ext.main.Main
-             */
-            //  onBeforeRendering: function() {
-            //
-            //  },
-
-            /**
-             * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
-             * This hook is the same one that SAPUI5 controls get after being rendered.
-             * @memberOf manageplannedorder.manageplannedorder.ext.main.Main
-             */
-            //  onAfterRendering: function() {
-            //
-            //  },
-
-            /**
-             * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-             * @memberOf manageplannedorder.manageplannedorder.ext.main.Main
-             */
-            //  onExit: function() {
-            //
-            //  }
+            showMessageConfirm: function (action) {
+                // capitalize the first letter of the action
+                action = action.charAt(0).toUpperCase() + action.slice(1);
+                return new Promise((res, rej) => MessageBox.confirm(
+                    "Are you sure you want to " + action + "?",
+                    {
+                        title: "Confirmation",
+                        onClose: function (oAction) {
+                            if (oAction === MessageBox.Action.OK)
+                                res();
+                            else
+                                rej();
+                        }
+                    }
+                ));
+            },
             pressFragment: function (e) {
                 debugger;
                 const oTable = e.getSource().getParent().getParent().getParent()
@@ -54,7 +39,7 @@ sap.ui.define(
                     _selectedItems.push(oObj)
                 }
                 const model = new JSONModel()
-                model.setData({ TypeOrder: 'antani', selectedItems: _selectedItems })
+                model.setData({ TypeOrder: 'Z300', selectedItems: _selectedItems })
 
                 if (!this._fragmentPezze) {
                     this._fragmentPezze = this.loadFragment({
@@ -65,15 +50,10 @@ sap.ui.define(
                 }
 
                 this._fragmentPezze.then(function (dialog) {
-                    // dialog.bindElement(`/ZZ1_MFP_ASSIGNMENT/(SAP_UUID='${obj.SAP_UUID}')`);
                     dialog.setModel(model, 'selected');
                     dialog.setModel(oModel)
                     const tabella = dialog.getContent().at(-1);
-                    // { 
-                    //     path: '/ZZ1_MFP_ASSIGNMENT',
-                    //     parameters : { $$updateGroupId : 'CreatePezzeBatch' }
-                    // }
-                    // compose filter from selected items
+
                     const filters = []
                     _selectedItems.forEach((item) => {
                         const filter = new Filter("FSH_CPLND_ORD", FilterOperator.EQ, item.CplndOrd)
@@ -91,15 +71,14 @@ sap.ui.define(
                                 new sap.m.Text({
                                     text: "{AUART}"
                                 }),
-                                new sap.m.Text({
-                                    text: "{TOT_QTY}"
+                                new sap.m.Input({
+                                    value: "{path: 'TOT_QTY'}"
                                 }),
                                 new sap.m.Text({
-                                    text: "{UNIT}"
+                                    text: "{path: 'UNIT'}"
                                 })
                             ]
                         }),
-                        templateShareable: true,
                         parameters: { $$updateGroupId: 'CreateConvertPLO' },
                     });
 
@@ -107,40 +86,15 @@ sap.ui.define(
                     binding.resetChanges()
 
                     _selectedItems.forEach((item) => {
-
                         binding.create({
                             FSH_CPLND_ORD: item.CplndOrd,
-                            AUART: item.AUART,
-                            TOT_QTY: parseFloat(item.TotQty),
-                            UNIT: item.Unit,
+                            AUART: "Z300",
+                            TOT_QTY: item.PlndOrderCommittedQty, //  33,
+                            UNIT: "EA"
                         });
                     });
                     dialog.open();
                 }.bind(this));
-                // const oModel = this.getOwnerComponent().getModel();
-                // const oList = oModel.bindList("/ConvertPLO");
-
-                // const sGroupId = 'ConvertPLO';
-                // oList.changeParameters({
-                //     $$updateGroupId: sGroupId
-                // });
-
-                // const oTable = this.getView().byId('TableCombined')
-                // const aSelectedContext = oTable.getSelectedContexts()
-
-                // aSelectedContext.forEach(context => {
-                //     const contextData = context.getObject();
-                //     console.log(contextData);
-                // });
-
-                // oModel.submitBatch(sGroupId).then(() => {
-                //     MessageToast.show("Do Assemble completed.");
-                //     sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze').close();
-                //     oTableBinding.refresh(true);
-                // }).catch((oError) => {
-                //     MessageToast.show("Do Assemble error.");
-                //     console.error("Error", oError);
-                // });
             },
             onCloseDialog: function (oEvent) {
                 const oDialog = oEvent.getSource().getParent();
@@ -148,7 +102,27 @@ sap.ui.define(
                 oDialog.destroy();
             },
             doConvert: function (oEvent) {
-                debugger;
+                const oModel = this.getOwnerComponent().getModel();
+                const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
+                const oTableBinding = oTable.getBinding("items");
+                this.showMessageConfirm("convert").then(function () {
+                    MessageToast.show("Do Convert invoked.");
+                    oModel.submitBatch("CreateConvertPLO").then(() => {
+                        MessageToast.show("Do Convert completed.");
+                        sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--_IDGenDialogConversion').close();
+                        // oTableBinding.refresh(true);
+                    }).catch((oError) => {
+                        MessageToast.show("Do Convert error.");
+                        console.error("Error", oError);
+                    });
+                }.bind(this)).catch((e) => {
+                    MessageToast.show("Do Convert cancelled. " + JSON.stringify(e));
+                });
+            },
+            formattaQty: function (value) {
+                console.log(value)
+                const _value = value.replace(',', '.')
+                return _value
             }
         });
     }

@@ -1,4 +1,4 @@
-/* checksum : 77dd9b566434d9ae47cbc26258df2368 */
+/* checksum : 46f734feb33a47bf974c2864fbb1abaf */
 @cds.external : true
 @CodeList.UnitsOfMeasure : {
   Url: '../../../../default/iwbep/common/0001/$metadata',
@@ -68,9 +68,10 @@ entity ZMPF_ASS_BATCH_SRV.ConvertPLO {
   @Common.QuickInfo : 'Sales Document Type'
   AUART : String(4) not null;
   @Common.Label : 'Quantità totale ordine'
-  @Common.Heading : 'Quantity'
-  @Common.QuickInfo : 'Quantity'
-  TOT_QTY : Decimal(13, 3) not null;
+  @Common.IsUpperCase : true
+  @Common.Heading : 'Char20'
+  @Common.QuickInfo : 'Char 20'
+  TOT_QTY : String(20) not null;
   @Common.IsUnit : true
   @Common.Label : 'Base Unit of Measure'
   @Common.Heading : 'BUn'
