@@ -34,14 +34,6 @@
                 layout="ColumnLayout"
             >
                 <Label
-                    id="labelCplndOrdWhereUsed"
-                    text="Cplnd Ord"
-                />
-                <Text
-                    id="inputCplndOrdWhereUsed"
-                    text="{selected>/CplndOrd}"
-                />
-                <Label
                     id="labelMaterialWhereUsed"
                     text="Material"
                 />
@@ -49,37 +41,13 @@
                     id="inputMaterialWhereUsed"
                     text="{selected>/Material}"
                 />
-                <Label
-                    id="labelRequiredQuantityWhereUsed"
-                    text="Required Quantity"
-                />
-                <Text
-                    idWhereUsed="inputRequiredQuantity"
-                    text="{selected>/RequiredQuantity}"
-                />
-                <Label
-                    id="labelWithdrawnQuantityWhereUsedWhereUsed"
-                    text="Withdrawn Quantity"
-                />
-                <Text
-                    id="inputWithdrawnQuantityWhereUsed"
-                    text="{selected>/WithdrawnQuantity}"
-                />
-                <Label
-                    id="labelBaseUnitWhereUsedWhereUsed"
-                    text="Base Unit"
-                />
-                <Text
-                    id="inputBaseUnitWhereUsed"
-                    text="{selected>/BaseUnit}"
-                />
             </form:SimpleForm>
             <Table id="selectedItemsTableWhereUsed">
                 <columns>
-                    <Column id="columnBatchWhereUsed">
+                    <Column id="columnCplndOrdWhereUsed">
                         <Text
-                            id="textBatchWhereUsed"
-                            text="Batch"
+                            id="textCplndOrdWhereUsed"
+                            text="Combined Planned Order"
                         />
                     </Column>
                     <Column id="columnMaterialWhereUsed">
@@ -88,34 +56,22 @@
                             text="Material"
                         />
                     </Column>
+                    <Column id="columnPlantWhereUsed">
+                        <Text
+                            id="textPlantWhereUsed"
+                            text="Plant"
+                        />
+                    </Column>
                     <Column id="columnStorageLocationWhereUsed">
                         <Text
                             id="textStorageLocationWhereUsed"
                             text="Storage Location"
                         />
                     </Column>
-                    <Column id="columnAvailableQuantityWhereUsed">
-                        <Text
-                            id="textAvailableQuantityWhereUsed"
-                            text="Available Quantity"
-                        />
-                    </Column>
-                    <Column id="columnCustomQtyWhereUsed">
-                        <Text
-                            id="textCustomQtyWhereUsed"
-                            text="Quantity to Assign"
-                        />
-                    </Column>
                 </columns>
             </Table>
         </content>
         <buttons>
-            <Button
-                id="_IDGenBtnAssegnaWhereUsed"
-                text="Assegna"
-                type="Accept"
-                press="doAssign"
-            />
             <Button
                 id="_IDGenBtnCancelWhereUsed"
                 text="Chiudi"
