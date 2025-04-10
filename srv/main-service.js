@@ -87,29 +87,29 @@ module.exports = class MainService extends cds.ApplicationService {
 
       for (let i = 0; i < res.length; i++) {
         const item = res[i];
-        // const { Plant, Material, StorageLocation, Batch } = item;
+        const { Plant, Material, StorageLocation, Batch } = item;
         let TotalProdAllQty = 0;
         try {
           // ZZ1_I_ARUN_BDBSSUMQTY_CDS (PLANT, MATERIAL, STORAGELOCATION, BATCH)
-          // const resTotalProdAllQty = await ZZ1_I_ARUN_BDBSSUMQTY_CDS.run(SELECT.from('ZZ1_I_ARUN_BDBSSUMQTY_CDS').where({ Plant, Material, StorageLocation, Batch }));
+          const resTotalProdAllQty = await ZZ1_I_ARUN_BDBSSUMQTY_CDS.run(SELECT.from('ZZ1_I_ARUN_BDBSSUMQTY_CDS').where({ Plant, Material, StorageLocation, Batch }));
           // console.log({ Plant, Material, StorageLocation, Batch, resTotalProdAllQty })
-          // TotalProdAllQty += resTotalProdAllQty.reduce((sum, item) => sum + parseFloat(item.TotalAllocQty), 0);
+          TotalProdAllQty += resTotalProdAllQty.reduce((sum, item) => sum + parseFloat(item.TotalAllocQty), 0);
         } catch (error) {
           console.log('Error in resTotalProdAllQty', error);
         }
         let TotalPlanAllQty = 0;
         try {
           // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-          // const resTotalPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
+          const resTotalPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
           // console.log({ Plant, Material, StorageLocation, Batch, resTotalPlanAllQty })
-          // TotalPlanAllQty += resTotalPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
+          TotalPlanAllQty += resTotalPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
         } catch (e) {
           console.log('Error in resTotalPlanAllQty', e)
         }
         let CombPlanAllQty = 0;
         try {
           // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per FSH_MPLO_ORD = planned combined order werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-          // const resCombPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ FSH_MPLO_ORD: PlannedCombinedOrder, WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
+          const resCombPlanAllQty = await ZZ1_MFP_ASSIGNMENT_CDS.run(SELECT.from('ZZ1_MFP_ASSIGNMENT').where({ FSH_MPLO_ORD: PlannedCombinedOrder, WERKS: Plant, MATNR: Material, CHARG: Batch, LGORT: StorageLocation }));
           // console.log({
           //   PlannedCombinedOrder,
           //   Material,
@@ -117,7 +117,7 @@ module.exports = class MainService extends cds.ApplicationService {
           //   Batch,
           //   resCombPlanAllQty
           // })
-          // CombPlanAllQty = resCombPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
+          CombPlanAllQty = resCombPlanAllQty.reduce((sum, item) => sum + parseFloat(item.QTA_ASS_V), 0);
         } catch (error) {
           console.log('Error in resCombPlanAllQty', error)
         }
@@ -128,14 +128,14 @@ module.exports = class MainService extends cds.ApplicationService {
         // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
         let TotalDeliveryQty = 0;
         try {
-          // const resTotalDeliveryQty = await ZZ1_I_SUMQTYDELIVERY_T_CDS.run(SELECT.from('ZZ1_I_SUMQTYDELIVERY_T').where({ Material: Material, StorLoc: StorageLocation, Batch: Batch }));
+          const resTotalDeliveryQty = await ZZ1_I_SUMQTYDELIVERY_T_CDS.run(SELECT.from('ZZ1_I_SUMQTYDELIVERY_T').where({ Material: Material, StorLoc: StorageLocation, Batch: Batch }));
           // console.log({
           //   Material,
           //   StorLoc: StorageLocation,
           //   Batch,
           //   resTotalDeliveryQty
           // })
-          // TotalDeliveryQty += resTotalDeliveryQty.reduce((sum, item) => sum + parseFloat(item.TotDeliveryQty), 0);
+          TotalDeliveryQty += resTotalDeliveryQty.reduce((sum, item) => sum + parseFloat(item.TotDeliveryQty), 0);
         } catch (error) {
           console.log('Error in resTotalDeliveryQty', error);
         }
