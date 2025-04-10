@@ -1,0 +1,127 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="_IDGenDialogWhereUsed"
+        stretch="true"
+        resizable="false"
+        type="Message"
+        state="Information"
+        icon="sap-icon://ai"
+        title="Assegna WhereUsed"
+    >
+        <content>
+            <Text
+                id="_IDGenTextWhereUsed"
+                text="Assegna WhereUsed"
+            />
+            <form:SimpleForm
+                id="SimpleFormWhereUsed"
+                columnsM="2"
+                columnsL="3"
+                columnsXL="4"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanXL="0"
+                labelSpanL="12"
+                labelSpanM="12"
+                labelSpanXL="12"
+                visible="true"
+                editable="false"
+                singleContainerFullSize="false"
+                layout="ColumnLayout"
+            >
+                <Label
+                    id="labelCplndOrdWhereUsed"
+                    text="Cplnd Ord"
+                />
+                <Text
+                    id="inputCplndOrdWhereUsed"
+                    text="{selected>/CplndOrd}"
+                />
+                <Label
+                    id="labelMaterialWhereUsed"
+                    text="Material"
+                />
+                <Text
+                    id="inputMaterialWhereUsed"
+                    text="{selected>/Material}"
+                />
+                <Label
+                    id="labelRequiredQuantityWhereUsed"
+                    text="Required Quantity"
+                />
+                <Text
+                    idWhereUsed="inputRequiredQuantity"
+                    text="{selected>/RequiredQuantity}"
+                />
+                <Label
+                    id="labelWithdrawnQuantityWhereUsedWhereUsed"
+                    text="Withdrawn Quantity"
+                />
+                <Text
+                    id="inputWithdrawnQuantityWhereUsed"
+                    text="{selected>/WithdrawnQuantity}"
+                />
+                <Label
+                    id="labelBaseUnitWhereUsedWhereUsed"
+                    text="Base Unit"
+                />
+                <Text
+                    id="inputBaseUnitWhereUsed"
+                    text="{selected>/BaseUnit}"
+                />
+            </form:SimpleForm>
+            <Table id="selectedItemsTableWhereUsed">
+                <columns>
+                    <Column id="columnBatchWhereUsed">
+                        <Text
+                            id="textBatchWhereUsed"
+                            text="Batch"
+                        />
+                    </Column>
+                    <Column id="columnMaterialWhereUsed">
+                        <Text
+                            id="textMaterialWhereUsed"
+                            text="Material"
+                        />
+                    </Column>
+                    <Column id="columnStorageLocationWhereUsed">
+                        <Text
+                            id="textStorageLocationWhereUsed"
+                            text="Storage Location"
+                        />
+                    </Column>
+                    <Column id="columnAvailableQuantityWhereUsed">
+                        <Text
+                            id="textAvailableQuantityWhereUsed"
+                            text="Available Quantity"
+                        />
+                    </Column>
+                    <Column id="columnCustomQtyWhereUsed">
+                        <Text
+                            id="textCustomQtyWhereUsed"
+                            text="Quantity to Assign"
+                        />
+                    </Column>
+                </columns>
+            </Table>
+        </content>
+        <buttons>
+            <Button
+                id="_IDGenBtnAssegnaWhereUsed"
+                text="Assegna"
+                type="Accept"
+                press="doAssign"
+            />
+            <Button
+                id="_IDGenBtnCancelWhereUsed"
+                text="Chiudi"
+                type="Back"
+                press="onCloseDialog"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

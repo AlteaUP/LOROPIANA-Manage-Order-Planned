@@ -191,7 +191,7 @@ sap.ui.define([
                 tabella.bindAggregation('items', {
                     path: '/ZZ1_CombPlnOrdersStockAPI',
                     filters: [
-                        new sap.ui.model.Filter("CplndOrd", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+                        new sap.ui.model.Filter("CplndOrd", sap.ui.model.FilterOperator.NE, obj.CplndOrd),
                         new sap.ui.model.Filter("Material", sap.ui.model.FilterOperator.EQ, obj.Material),
                         new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, obj.Plant),
                     ],
