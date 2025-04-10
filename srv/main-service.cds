@@ -77,7 +77,12 @@ service MainService {
 
   @sap.creatable: 'true'
   @sap.deletable: 'true'
-  entity ConvertPLO                 as projection on ZMPF_ASS_BATCH_SRV.ConvertPLO;
+  entity ConvertPLO                 as
+    projection on ZMPF_ASS_BATCH_SRV.ConvertPLO {
+      *,
+      null as PlannedTotalQtyInBaseUnit     : String(40),
+      null as CrossPlantConfigurableProduct : String(40)
+    };
 
   // action assemble(Records : Records)                  returns Boolean;
   // action disassemble(ZZ1_CombPlnOrdersStock : String) returns Boolean;

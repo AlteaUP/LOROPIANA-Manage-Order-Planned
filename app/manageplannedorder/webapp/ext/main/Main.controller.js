@@ -41,15 +41,15 @@ sap.ui.define(
                 const model = new JSONModel()
                 model.setData({ TypeOrder: 'Z300', selectedItems: _selectedItems })
 
-                if (!this._fragmentPezze) {
-                    this._fragmentPezze = this.loadFragment({
+                if (!this._fragmentConvert) {
+                    this._fragmentConvert = this.loadFragment({
                         id: "fragmentPezze",
                         name: "manageplannedorder.manageplannedorder.ext.fragment.Converti",
                         controller: this
                     });
                 }
 
-                this._fragmentPezze.then(function (dialog) {
+                this._fragmentConvert.then(function (dialog) {
                     dialog.setModel(model, 'selected');
                     dialog.setModel(oModel)
                     const tabella = dialog.getContent().at(-1);
@@ -68,14 +68,20 @@ sap.ui.define(
                                 new sap.m.ObjectIdentifier({
                                     title: "{FSH_CPLND_ORD}"
                                 }),
+                                new sap.m.ObjectIdentifier({
+                                    title: "{CrossPlantConfigurableProduct}"
+                                }),
                                 new sap.m.Text({
                                     text: "{AUART}"
                                 }),
                                 new sap.m.Input({
-                                    value: "{path: 'TOT_QTY'}"
+                                    value: "{TOT_QTY}"
+                                }),
+                                new sap.m.ObjectIdentifier({
+                                    title: "{PlannedTotalQtyInBaseUnit}"
                                 }),
                                 new sap.m.Text({
-                                    text: "{path: 'UNIT'}"
+                                    text: "{UNIT}"
                                 })
                             ]
                         }),
@@ -86,11 +92,14 @@ sap.ui.define(
                     binding.resetChanges()
 
                     _selectedItems.forEach((item) => {
+                        debugger;
                         binding.create({
                             FSH_CPLND_ORD: item.CplndOrd,
                             AUART: "Z300",
                             TOT_QTY: item.PlndOrderCommittedQty, //  33,
-                            UNIT: "EA"
+                            UNIT: "EA",
+                            PlannedTotalQtyInBaseUnit: item.PlannedTotalQtyInBaseUnit,
+                            CrossPlantConfigurableProduct: item.CrossPlantConfigurableProduct,
                         });
                     });
                     dialog.open();
@@ -99,7 +108,7 @@ sap.ui.define(
             onCloseDialog: function (oEvent) {
                 const oDialog = oEvent.getSource().getParent();
                 oDialog.close();
-                oDialog.destroy();
+                // oDialog.destroy();
             },
             doConvert: function (oEvent) {
                 const oModel = this.getOwnerComponent().getModel();

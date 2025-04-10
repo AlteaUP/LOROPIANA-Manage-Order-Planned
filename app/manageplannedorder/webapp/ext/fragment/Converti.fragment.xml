@@ -10,12 +10,12 @@
         type="Message"
         state="Information"
         icon="sap-icon://ai"
-        title="Assegna Conversion"
+        title="Conversion"
     >
         <content>
             <Text
                 id="_IDGenTextConversion"
-                text="Assegna Conversion"
+                text="Conversion"
             />
             <form:SimpleForm
                 id="SimpleFormConversion"
@@ -52,6 +52,12 @@
                             text="Planned Order"
                         />
                     </Column>
+                    <Column id="columnCrossPlantConfigurableProduct">
+                        <Text
+                            id="columnCrossPlantConfigurableProductText"
+                            text="Cross Plant Configurable Product"
+                        />
+                    </Column>
                     <Column id="columnOrderType">
                         <Text
                             id="columnOrderTypeText"
@@ -62,6 +68,12 @@
                         <Text
                             id="columnPlannedOrderQtyText"
                             text="Planned Order Qty"
+                        />
+                    </Column>
+                    <Column id="columnPlndOrderCommittedQtyUnit">
+                        <Text
+                            id="columnPlndOrderCommittedQtyUnitText"
+                            text="Planned Order Committed Qty Unit"
                         />
                     </Column>
                     <Column id="columnPlannedOrderUnit">
