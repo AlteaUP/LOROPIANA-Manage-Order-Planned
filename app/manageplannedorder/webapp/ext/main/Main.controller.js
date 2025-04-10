@@ -103,15 +103,20 @@ sap.ui.define(
             },
             doConvert: function (oEvent) {
                 const oModel = this.getOwnerComponent().getModel();
-                const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
+                // const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
                 // const oTableBinding = oTable.getBinding("items");
+
+                const oMainTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--TableCombined-content');
+                const oMainTableBinding = oMainTable._oTable.getBinding('items')
+
                 this.showMessageConfirm("convert").then(function () {
                     MessageToast.show("Do Convert invoked.");
-                    oModel.submitBatch("CreateConvertPLO").then(() => {
+                    oModel.submitBatch("CreateConvertPLO").then(function () {
                         MessageToast.show("Do Convert completed.");
                         sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--_IDGenDialogConversion').close();
-                        // oTableBinding.refresh(true);
-                    }).catch((oError) => {
+                        debugger;
+                        oMainTableBinding.refresh();
+                    }.bind(this)).catch((oError) => {
                         MessageToast.show("Do Convert error.");
                         console.error("Error", oError);
                     });
