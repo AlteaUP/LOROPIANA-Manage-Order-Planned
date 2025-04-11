@@ -174,15 +174,60 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
 );
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    CplndOrd @Common.Label : 'CplndOrd'
+    CplndOrd @(
+        Common.Label : 'CplndOrd',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : CplndOrd,
+                    ValueListProperty : 'CplndOrd',
+                },
+            ],
+            Label : 'Combined Planned Order',
+        },
+        Common.ValueListWithFixedValues : true,
+    )
 };
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    ProductCollection @Common.Label : 'ProductCollection'
+    ProductCollection @(
+        Common.Label : 'ProductCollection',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : ProductCollection,
+                    ValueListProperty : 'ProductCollection',
+                },
+            ],
+            Label : 'Product Collection',
+        },
+        Common.ValueListWithFixedValues : true,
+    )
 };
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    ProductionPlant @Common.Label : 'ProductionPlant'
+    ProductionPlant @(
+        Common.Label : 'ProductionPlant',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : ProductionPlant,
+                    ValueListProperty : 'ProductionPlant',
+                },
+            ],
+            Label : 'Production Plan',
+        },
+        Common.ValueListWithFixedValues : true,
+    )
 };
 
 
