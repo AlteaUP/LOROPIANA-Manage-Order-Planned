@@ -63,7 +63,6 @@ module.exports = class MainService extends cds.ApplicationService {
       let TotalProdAllQty = 0;
 
       if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
-        debugger;
         // 1. Fetch the data
         resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where.slice(0, where.length - 1)))
         const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
@@ -83,7 +82,6 @@ module.exports = class MainService extends cds.ApplicationService {
                   MATNR: { in: resAll.map(i => i.Material) }
                 })
             );
-            debugger;
             // 4. Create lookup map for faster access
             const combPlanAllQtyMap = createLookupMap(assignmentData, 'WERKS', 'MATNR');
 
@@ -114,6 +112,8 @@ module.exports = class MainService extends cds.ApplicationService {
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom/to_ZZ1_CombPlnOrdersStock", async (req) => {
       // 1. Get base stock data
+      debugger;
+      // add InventoryStockType eq 1
       let from = {
         ref: [
           {
@@ -121,6 +121,14 @@ module.exports = class MainService extends cds.ApplicationService {
             where: req.query.SELECT.from.ref[1].where
           },
           req.query.SELECT.from.ref[2]
+          // {
+          // id: req.query.SELECT.from.ref[2],
+          // where: [
+          //   { ref: ['InventoryStockType'] },
+          //   'eq',
+          //   { val: '1' }
+          // ]
+          // }
         ]
       };
       const stockData = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from));
@@ -183,8 +191,10 @@ module.exports = class MainService extends cds.ApplicationService {
       const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
 
+
+      debugger;
       // 9. Process results with maps instead of additional queries
-      return stockData.map(item => {
+      return stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
         const { Plant, Material, StorageLocation, Batch } = item;
         const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
 
