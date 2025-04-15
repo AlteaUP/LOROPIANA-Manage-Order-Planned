@@ -29,12 +29,18 @@ sap.ui.define([
       const selectedItems = this._view.byId(id).getSelectedItems()
       const oModel = this._controller.getOwnerComponent().getModel()
       const _selectedItems = []
+      // let SumTotalPlanAllQty = 0;
       for (let i = 0; i < selectedItems.length; i++) {
         const oObj = selectedItems[i].getBindingContext().getObject()
+        // SumTotalPlanAllQty += parseInt(oObj.$$updateGroupId)
         _selectedItems.push(oObj)
       }
       const model = new JSONModel()
-      model.setData({ ...obj, selectedItems: _selectedItems })
+      model.setData({
+        ...obj,
+        // TotalPlanAllQty: SumTotalPlanAllQty.toFixed(3).toString(), 
+        selectedItems: _selectedItems
+      })
 
       if (!this._fragmentPezze) {
         this._fragmentPezze = this.loadFragment({
@@ -98,7 +104,7 @@ sap.ui.define([
             "WERKS": item.Plant,
             "LGORT": item.StorageLocation,
             "FSH_MPLO_ORD": obj.CplndOrd,
-            "BAGNI": item.dye_lot || "antani",
+            "BAGNI": item.dye_lot || "",
             "MATNR": item.Material,
             "CHARG": item.Batch,
             "Bagno": item.dye_lot,

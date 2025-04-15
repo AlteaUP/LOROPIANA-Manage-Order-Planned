@@ -572,7 +572,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             ID : 'GeneralInfo',
             Target : '@UI.FieldGroup#GeneralInfo',
             Label : 'Quantity',
-        },
+        }
     ],
     UI.FieldGroup #GeneralInfo : {
         $Type : 'UI.FieldGroupType',

@@ -60,16 +60,21 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
-      where = req.query.SELECT.from.ref[0].where.slice(0, 4)
+      where = req.query.SELECT.from.ref[0].where.slice(0, 3)
+      let resAll = [];
       if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
+        resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
+        debugger;
         const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
-        where.push(...materialWhere)
+        where.push('and', ...materialWhere)
+
       } else {
         // remove latest where condition from where array
         where.pop()
       }
 
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
+      debugger;
       return res;
     });
 
