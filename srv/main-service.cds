@@ -14,7 +14,27 @@ service MainService {
   // COMPONENTS
   entity ZZ1_CombinPlannedOrdersCom as
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
-      *,
+      Material, 
+      RequiredQuantity, 
+      TotalAllocQty,  
+      AvailableQuantity,  
+      WithdrawnQuantity,  
+      BaseUnit, 
+      Batch,  
+      BillOfMaterialCategory, 
+      BOMItem,  
+      BOMItemDescription, 
+      CplndOrd, 
+      CrossPlantConfigurableProduct,  
+      MatlCompRequirementDate,  
+      MRPController,  
+      MRPControllerName,  
+      Plant,  
+      PlantName,  
+      ProductCharacteristic1, 
+      ProductCharacteristic2, 
+      ProductCharacteristic3, 
+      StorageLocation,
       to_ZZ1_CombPlnOrdersStock : Composition of many ZZ1_CombPlnOrdersStock
                                     on  Material = $self.Material
                                     and Plant    = $self.Plant
@@ -74,7 +94,23 @@ service MainService {
 
   @sap.creatable: 'true'
   @sap.deletable: 'true'
-  entity ZZ1_MFP_ASSIGNMENT         as projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT;
+  entity ZZ1_MFP_ASSIGNMENT         as projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
+    key SAP_UUID,
+    WERKS,
+    LGORT,
+    FSH_MPLO_ORD,
+    BAGNI,
+    MATNR,
+    CHARG,
+    Bagno,
+    QTA_ASS_V,
+    QTA_ASS_U,
+    FABB_TOT_V,
+    FABB_TOT_U,
+    COPERTURA,
+    SORT,
+    null as AvaibilityQty : String(40)
+  };
 
   @sap.creatable: 'true'
   @sap.deletable: 'true'

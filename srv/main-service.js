@@ -2,7 +2,7 @@ const cds = require("@sap/cds");
 const { action } = require("@sap/cds/lib/core/classes");
 
 module.exports = class MainService extends cds.ApplicationService {
-  async init() {
+  async init () {
     // PLANNED ORDERS API (Combined, Master, Planned Orders)
     const ZZ1_COMBINEDPLNORDERSAPI_CDS = await cds.connect.to("ZZ1_COMBINEDPLNORDERSAPI_CDS");
     const ZZ1_MASTERPLANNEDORDERAPI_CDS = await cds.connect.to("ZZ1_MASTERPLANNEDORDERAPI_CDS");
@@ -60,8 +60,15 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
-      where = req.query.SELECT.from.ref[0].where
-      // where = where.slice(0, 3)
+      where = req.query.SELECT.from.ref[0].where.slice(0, 4)
+      if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
+        const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
+        where.push(...materialWhere)
+      } else {
+        // remove latest where condition from where array
+        where.pop()
+      }
+
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
       return res;
     });
@@ -155,7 +162,6 @@ module.exports = class MainService extends cds.ApplicationService {
         let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) -
           TotalProdAllQty - TotalPlanAllQty - TotalDeliveryQty).toFixed(3).toString();
         if (AvaibilityQty < 0) AvaibilityQty = "0.000";
-
         return {
           ...item,
           StorageLocationStock: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
@@ -170,7 +176,7 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     // Helper functions
-    function createLookupMap(data, ...keys) {
+    function createLookupMap (data, ...keys) {
       const map = {};
       if (!Array.isArray(data)) return map;
 
@@ -183,7 +189,7 @@ module.exports = class MainService extends cds.ApplicationService {
       return map;
     }
 
-    function sumValues(items, propertyName) {
+    function sumValues (items, propertyName) {
       if (!Array.isArray(items)) return 0;
       return items.reduce((sum, item) => sum + parseFloat(item[propertyName] || 0), 0);
     }
