@@ -71,10 +71,13 @@ sap.ui.define([
                 text: "{LGORT}"
               }),
               new sap.m.Text({
-                text: "{path: 'AvaibilityQty', formatter: '.formatAvaibilityQty'}"
+                text: "{FABB_TOT_V}"
               }),
               new sap.m.Input({
-                value: "{QTA_ASS_V}"
+                value: "{QTA_ASS_V}",
+                change: function (e) {
+                  debugger;
+                }
               })
             ]
           }),
@@ -86,7 +89,10 @@ sap.ui.define([
         binding.resetChanges()
 
         _selectedItems.forEach((item) => {
-
+          let QTA_ASS_V = parseInt(obj.RequiredQuantity);
+          if (parseInt(item.AvaibilityQty) < QTA_ASS_V) {
+            QTA_ASS_V = parseInt(item.AvaibilityQty);
+          }
           binding.create({
             "SAP_UUID": crypto.randomUUID(),
             "WERKS": item.Plant,
@@ -96,7 +102,7 @@ sap.ui.define([
             "MATNR": item.Material,
             "CHARG": item.Batch,
             "Bagno": item.dye_lot,
-            "QTA_ASS_V": 0,
+            "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
             "QTA_ASS_U": "",
             "QTA_ASS_U_Text": "",
             "FABB_TOT_V": item.AvaibilityQty || 0,
