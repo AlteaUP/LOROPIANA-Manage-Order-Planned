@@ -83,14 +83,14 @@ module.exports = class MainService extends cds.ApplicationService {
                   MATNR: { in: resAll.map(i => i.Material) }
                 })
             );
-
+            debugger;
             // 4. Create lookup map for faster access
-            const combPlanAllQtyMap = createLookupMap(assignmentData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+            const combPlanAllQtyMap = createLookupMap(assignmentData, 'WERKS', 'MATNR');
 
             // 5. Calculate CombPlanAllQty for each record and sum up
             TotalProdAllQty = resAll.reduce((sum, item) => {
-              const { Plant, Material, StorageLocation, Batch } = item;
-              const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+              const { Plant, Material } = item;
+              const key = `${Plant}|${Material}`;
               const combPlanItems = combPlanAllQtyMap[key] || [];
               const itemCombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
               return sum + itemCombPlanAllQty;
