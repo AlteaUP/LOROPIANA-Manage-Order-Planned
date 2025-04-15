@@ -1,8 +1,6 @@
 const cds = require("@sap/cds");
-const { action } = require("@sap/cds/lib/core/classes");
-
 module.exports = class MainService extends cds.ApplicationService {
-  async init () {
+  async init() {
     // PLANNED ORDERS API (Combined, Master, Planned Orders)
     const ZZ1_COMBINEDPLNORDERSAPI_CDS = await cds.connect.to("ZZ1_COMBINEDPLNORDERSAPI_CDS");
     const ZZ1_MASTERPLANNEDORDERAPI_CDS = await cds.connect.to("ZZ1_MASTERPLANNEDORDERAPI_CDS");
@@ -60,21 +58,57 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
-      where = req.query.SELECT.from.ref[0].where.slice(0, 3)
-      let resAll = [];
-      if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
-        resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
-        debugger;
-        const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
-        where.push('and', ...materialWhere)
+      where = req.query.SELECT.from.ref[0].where.slice(0, 4)
+      let resAll = []
+      let TotalProdAllQty = 0;
 
+      if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
+        debugger;
+        // 1. Fetch the data
+        resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where.slice(0, where.length - 1)))
+        const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
+        where.push(...materialWhere)
+
+        // 2. Exit early if no data
+        if (Array.isArray(resAll) && resAll.length > 0) {
+          const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
+
+          if (PlannedCombinedOrder) {
+            // 3. Query assignment data in batch for better performance
+            const assignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+              SELECT.from('ZZ1_MFP_ASSIGNMENT')
+                .where({
+                  FSH_MPLO_ORD: PlannedCombinedOrder,
+                  WERKS: { in: resAll.map(i => i.Plant) },
+                  MATNR: { in: resAll.map(i => i.Material) }
+                })
+            );
+
+            // 4. Create lookup map for faster access
+            const combPlanAllQtyMap = createLookupMap(assignmentData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+
+            // 5. Calculate CombPlanAllQty for each record and sum up
+            TotalProdAllQty = resAll.reduce((sum, item) => {
+              const { Plant, Material, StorageLocation, Batch } = item;
+              const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+              const combPlanItems = combPlanAllQtyMap[key] || [];
+              const itemCombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+              return sum + itemCombPlanAllQty;
+            }, 0);
+          }
+        }
       } else {
         // remove latest where condition from where array
         where.pop()
       }
 
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
-      debugger;
+
+      // if the res is array of one row
+      if (Array.isArray(res) && res.length === 1) {
+        res[0].TotalProdAllQty = TotalProdAllQty.toFixed(3);
+      }
+
       return res;
     });
 
@@ -181,7 +215,7 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     // Helper functions
-    function createLookupMap (data, ...keys) {
+    function createLookupMap(data, ...keys) {
       const map = {};
       if (!Array.isArray(data)) return map;
 
@@ -194,7 +228,7 @@ module.exports = class MainService extends cds.ApplicationService {
       return map;
     }
 
-    function sumValues (items, propertyName) {
+    function sumValues(items, propertyName) {
       if (!Array.isArray(items)) return 0;
       return items.reduce((sum, item) => sum + parseFloat(item[propertyName] || 0), 0);
     }
