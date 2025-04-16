@@ -35,11 +35,12 @@ service MainService {
       ProductCharacteristic2,
       ProductCharacteristic3,
       StorageLocation,
-      null as TotalProdAllQty   : String(20), // ZZ1_I_ARUN_BDBSSUMQTY_CDS (PLANT, MATERIAL, STORAGELOCATION, BATCH)
-      to_ZZ1_CombPlnOrdersStock : Composition of many ZZ1_CombPlnOrdersStock
-                                    on  Material = $self.Material
-                                    and Plant    = $self.Plant
-                                    and CplndOrd = $self.CplndOrd
+      null as TotalProdAllQty    : String(20), // rappresenta il totale di tutte le righe
+      null as FinishedProductQty : String(20),
+      to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
+                                     on  Material = $self.Material
+                                     and Plant    = $self.Plant
+                                     and CplndOrd = $self.CplndOrd
       };
 
 

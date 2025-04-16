@@ -212,15 +212,15 @@ sap.ui.define([
               new sap.m.ObjectIdentifier({
                 title: "{CplndOrd}"
               }),
-              new sap.m.Text({
-                text: "{Material}"
-              }),
-              new sap.m.Text({
-                text: "{Plant}"
-              }),
-              new sap.m.Text({
-                text: "{StorageLocation}"
-              }),
+              // new sap.m.Text({
+              //   text: "{Material}"
+              // }),
+              // new sap.m.Text({
+              //   text: "{Plant}"
+              // }),
+              // new sap.m.Text({
+              //   text: "{StorageLocation}"
+              // }),
               new sap.m.Text({
                 text: "{AvailableQuantity}"
               }),

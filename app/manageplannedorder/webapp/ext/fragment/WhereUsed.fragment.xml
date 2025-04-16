@@ -31,8 +31,27 @@
                     id="inputMaterialWhereUsed"
                     text="{selected>/Material}"
                 />
+                <Label
+                    id="labelPlantWhereUsed"
+                    text="Plant"
+                />
+                <Text
+                    id="inputPlantWhereUsed"
+                    text="{selected>/Plant}"
+                />
+                <Label
+                    id="labelStorageLocationWhereUsed"
+                    text="StorageLocation"
+                />
+                <Text
+                    id="inputStorageLocationWhereUsed"
+                    text="{selected>/StorageLocation}"
+                />
             </form:SimpleForm>
-            <Table id="selectedItemsTableWhereUsed">
+            <Table
+                id="selectedItemsTableWhereUsed"
+                mode="MultiSelect"
+            >
                 <columns>
                     <Column id="columnCplndOrdWhereUsed">
                         <Text
@@ -40,24 +59,24 @@
                             text="Combined Planned Order"
                         />
                     </Column>
-                    <Column id="columnMaterialWhereUsed">
+                    <!-- <Column id="columnMaterialWhereUsed">
                         <Text
                             id="textMaterialWhereUsed"
                             text="Material"
                         />
-                    </Column>
+                    </Column> 
                     <Column id="columnPlantWhereUsed">
                         <Text
                             id="textPlantWhereUsed"
                             text="Plant"
                         />
-                    </Column>
+                    </Column> 
                     <Column id="columnStorageLocationWhereUsed">
                         <Text
                             id="textStorageLocationWhereUsed"
                             text="Storage Location"
-                        />
-                    </Column>
+                        /> 
+                    </Column> -->
                     <Column id="columnQtyWhereUsed">
                         <Text
                             id="textQtyWhereUsed"
@@ -73,6 +92,12 @@
                 text="Chiudi"
                 type="Back"
                 press="onCloseDialog"
+            />
+            <Button
+                id="_IDGenBtnDesassemblyWhereUsed"
+                text="Desassembly"
+                type="Accept"
+                press="onDesassembly"
             />
         </buttons>
     </Dialog>

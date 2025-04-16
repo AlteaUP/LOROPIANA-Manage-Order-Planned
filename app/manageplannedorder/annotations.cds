@@ -469,6 +469,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             ID : 'TotalProdAllQty',
             Target : '@UI.DataPoint#TotalProdAllQty',
         },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'TotalAllocQty',
+            Target : '@UI.DataPoint#TotalAllocQty',
+        },
     ],
     UI.FieldGroup #GeneralInfo : {
         $Type : 'UI.FieldGroupType',
@@ -610,7 +615,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     UI.DataPoint #TotalProdAllQty : {
         $Type : 'UI.DataPointType',
         Value : TotalProdAllQty,
-        Title : '{i18n>TotalProdAllQty}',
+        Title : '{i18n>CombPlanAllQty}',
+    },
+    UI.DataPoint #TotalAllocQty : {
+        $Type : 'UI.DataPointType',
+        Value : TotalAllocQty,
+        Title : '{i18n>RequestFinishedProductQty}',
     },
 );
 

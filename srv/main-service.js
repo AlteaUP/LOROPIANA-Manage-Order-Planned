@@ -63,7 +63,6 @@ module.exports = class MainService extends cds.ApplicationService {
       where = req.query.SELECT.from.ref[0].where.slice(0, 4)
       let resAll = []
       let TotalProdAllQty = 0;
-
       if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
         // 1. Fetch the data
         resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where.slice(0, where.length - 1)))

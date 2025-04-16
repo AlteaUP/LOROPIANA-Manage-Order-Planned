@@ -1,85 +1,127 @@
-<core:FragmentDefinition xmlns:core="sap.ui.core"
-  xmlns="sap.m"
-  xmlns:form="sap.ui.layout.form">
-  <Dialog id="_IDGenDialogPezze"
-    stretch="true"
-    resizable="false"
-    type="Message"
-    state="Information"
-    icon="sap-icon://ai"
-    title="Assegna Pezze">
-    <content>
-      <Text id="_IDGenTextPezze"
-        text="Assegna Pezze" />
-      <form:SimpleForm id="SimpleFormPezze"
-        columnsM="2"
-        columnsL="3"
-        columnsXL="4"
-        emptySpanL="0"
-        emptySpanM="0"
-        emptySpanXL="0"
-        labelSpanL="12"
-        labelSpanM="12"
-        labelSpanXL="12"
-        visible="true"
-        editable="false"
-        singleContainerFullSize="false"
-        layout="ColumnLayout">
-        <Label id="labelCplndOrd"
-          text="Cplnd Ord" />
-        <Text id="inputCplndOrd"
-          text="{selected>/CplndOrd}" />
-        <Label id="labelMaterial"
-          text="Material" />
-        <Text id="inputMaterial"
-          text="{selected>/Material}" />
-        <Label id="labelRequiredQuantity"
-          text="Required Quantity" />
-        <Text id="inputRequiredQuantity"
-          text="{selected>/RequiredQuantity}" />
-        <Label id="labelWithdrawnQuantity"
-          text="Withdrawn Quantity" />
-        <Text id="inputWithdrawnQuantity"
-          text="{selected>/WithdrawnQuantity}" />
-        <Label id="labelBaseUnit"
-          text="Base Unit" />
-        <Text id="inputBaseUnit"
-          text="{selected>/BaseUnit}" />
-      </form:SimpleForm>
-      <Table id="selectedItemsTable">
-        <columns>
-          <Column id="columnBatch">
-            <Text id="textBatch"
-              text="Batch" />
-          </Column>
-          <Column id="columnMaterial">
-            <Text id="textMaterial"
-              text="Material" />
-          </Column>
-          <Column id="columnStorageLocation">
-            <Text id="textStorageLocation"
-              text="Storage Location" />
-          </Column>
-          <Column id="columnAvailableQuantity">
-            <Text id="textAvailableQuantity"
-              text="Available Quantity" />
-          </Column>
-          <Column id="columnCustomQty">
-            <Text id="textCustomQty"
-              text="Quantity to Assign" />
-          </Column>
-        </columns>
-      </Table>
-    </content>
-    <buttons>
-      <Button id="_IDGenBtnAssegnaPezze"
-        text="Assegna"
-        type="Accept"
-        press="doAssign" />
-      <Button id="_IDGenBtnCancelPezze"
-        text="Chiudi"
-        type="Back"
-        press="onCloseDialog" />
-    </buttons>
-  </Dialog>
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="_IDGenDialogPezze"
+        stretch="true"
+        resizable="false"
+        type="Message"
+        state="Information"
+        icon="sap-icon://ai"
+        title="Assegna Pezze"
+    >
+        <content>
+            <Text
+                id="_IDGenTextPezze"
+                text="Assegna Pezze"
+            />
+            <form:SimpleForm
+                id="SimpleFormPezze"
+                columnsM="2"
+                columnsL="3"
+                columnsXL="4"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanXL="0"
+                labelSpanL="12"
+                labelSpanM="12"
+                labelSpanXL="12"
+                visible="true"
+                editable="false"
+                singleContainerFullSize="false"
+                layout="ColumnLayout"
+            >
+                <Label
+                    id="labelCplndOrd"
+                    text="Cplnd Ord"
+                />
+                <Text
+                    id="inputCplndOrd"
+                    text="{selected>/CplndOrd}"
+                />
+                <Label
+                    id="labelMaterial"
+                    text="Material"
+                />
+                <Text
+                    id="inputMaterial"
+                    text="{selected>/Material}"
+                />
+                <Label
+                    id="labelRequiredQuantity"
+                    text="Required Quantity"
+                />
+                <Text
+                    id="inputRequiredQuantity"
+                    text="{selected>/RequiredQuantity}"
+                />
+                <Label
+                    id="labelAvailableQuantity"
+                    text="Available Quantity"
+                />
+                <Text
+                    id="inputAvailableQuantity"
+                    text="{selected>/AvailableQuantity}"
+                />
+                <Label
+                    id="labelBaseUnit"
+                    text="Base Unit"
+                />
+                <Text
+                    id="inputBaseUnit"
+                    text="{selected>/BaseUnit}"
+                />
+            </form:SimpleForm>
+            <Table id="selectedItemsTable">
+                <columns>
+                    <Column id="columnBatch">
+                        <Text
+                            id="textBatch"
+                            text="Batch"
+                        />
+                    </Column>
+                    <Column id="columnMaterial">
+                        <Text
+                            id="textMaterial"
+                            text="Material"
+                        />
+                    </Column>
+                    <Column id="columnStorageLocation">
+                        <Text
+                            id="textStorageLocation"
+                            text="Storage Location"
+                        />
+                    </Column>
+                    <Column id="columnAvailableQuantity">
+                        <Text
+                            id="textAvailableQuantity"
+                            text="Available Quantity"
+                        />
+                    </Column>
+                    <Column id="columnCustomQty">
+                        <Text
+                            id="textCustomQty"
+                            text="Quantity to Assign"
+                        />
+                    </Column>
+                </columns>
+            </Table>
+        </content>
+        <buttons>
+            <Button
+                id="_IDGenBtnAssegnaPezze"
+                text="Assegna"
+                type="Accept"
+                press="doAssign"
+            />
+            <Button
+                id="_IDGenBtnCancelPezze"
+                text="Chiudi"
+                type="Back"
+                press="onCloseDialog"
+            />
+        </buttons>
+    </Dialog>
 </core:FragmentDefinition>
