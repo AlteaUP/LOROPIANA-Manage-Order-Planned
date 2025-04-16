@@ -616,7 +616,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     UI.DataPoint #CplndOrd : {
         $Type : 'UI.DataPointType',
         Value : CplndOrd,
-        Title : 'CplndOrd',
+        Title : 'Cplnd Ord',
     },
     UI.DataPoint #Material : {
         $Type : 'UI.DataPointType',
@@ -637,27 +637,27 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : RequiredQuantity,
-            Label : 'RequiredQuantity',
+            Label : 'Required Quantity',
         },
         {
             $Type : 'UI.DataField',
             Value : TotalAllocQty,
-            Label : 'TotalAllocQty',
+            Label : 'Total Alloc Qty',
         },
         {
             $Type : 'UI.DataField',
             Value : AvailableQuantity,
-            Label : 'AvailableQuantity',
+            Label : 'Available Quantity',
         },
         {
             $Type : 'UI.DataField',
             Value : WithdrawnQuantity,
-            Label : 'WithdrawnQuantity',
+            Label : 'Withdrawn Quantity',
         },
         {
             $Type : 'UI.DataField',
             Value : BaseUnit,
-            Label : 'BaseUnit',
+            Label : 'Base Unit',
         },
         {
             $Type : 'UI.DataField',
@@ -668,49 +668,49 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : BillOfMaterialCategory,
-            Label : 'BillOfMaterialCategory',
+            Label : 'Bill Of Material Category',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : BOMItem,
-            Label : 'BOMItem',
+            Label : 'BOM Item',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : BOMItemDescription,
-            Label : 'BOMItemDescription',
+            Label : 'BOM Item Description',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : CplndOrd,
-            Label : 'CplndOrd',
+            Label : 'Cplnd Ord',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : CrossPlantConfigurableProduct,
-            Label : 'CrossPlantConfigurableProduct',
+            Label : 'Cross Plant Configurable Product',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : MatlCompRequirementDate,
-            Label : 'MatlCompRequirementDate',
+            Label : 'Matl Comp RequirementDate',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : MRPController,
-            Label : 'MRPController',
+            Label : 'MRP Controller',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : MRPControllerName,
-            Label : 'MRPControllerName',
+            Label : 'MRP Controller Name',
             ![@UI.Hidden],
         },
         {
@@ -722,31 +722,37 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : PlantName,
-            Label : 'PlantName',
+            Label : 'Plant Name',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : ProductCharacteristic1,
-            Label : 'ProductCharacteristic1',
+            Label : 'Product Characteristic 1',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : ProductCharacteristic2,
-            Label : 'ProductCharacteristic2',
+            Label : 'Product Characteristic 2',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : ProductCharacteristic3,
-            Label : 'ProductCharacteristic3',
+            Label : 'Product Characteristic 3',
             ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : StorageLocation,
-            Label : 'StorageLocation',
+            Label : 'Storage Location',
+            ![@UI.Hidden],
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : TotalProdAllQty,
+            Label : 'Total Prod All Qty',
             ![@UI.Hidden],
         },
     ],
@@ -756,22 +762,22 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             {
                 $Type : 'UI.DataField',
                 Value : AvailableQuantity,
-                Label : 'AvailableQuantity',
+                Label : 'Available Quantity',
             },
             {
                 $Type : 'UI.DataField',
                 Value : RequiredQuantity,
-                Label : 'RequiredQuantity',
+                Label : 'Required Quantity',
             },
             {
                 $Type : 'UI.DataField',
                 Value : WithdrawnQuantity,
-                Label : 'WithdrawnQuantity',
+                Label : 'Withdrawn Quantity',
             },
             {
                 $Type : 'UI.DataField',
                 Value : BaseUnit,
-                Label : 'BaseUnit',
+                Label : 'Base Unit',
             },
         ],
     },
@@ -788,12 +794,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     UI.DataPoint #PlantName : {
         $Type : 'UI.DataPointType',
         Value : PlantName,
-        Title : 'PlantName',
+        Title : 'Plant Name',
     },
     UI.DataPoint #TotalProdAllQty : {
         $Type : 'UI.DataPointType',
         Value : TotalProdAllQty,
-        Title : 'TotalProdAllQty',
+        Title : 'Total Prod All Qty',
     },
 );
 
@@ -804,121 +810,107 @@ annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
     UI.LineItem #Stocks : [
     ],
 );
-
+// #/ZZ1_CombinedPlnOrdersAPI(CplndOrd='<>',CrossPlantConfigurableProduct='<>')/to_CombinPlannedOrdersCom(Material='<>',Batch='<>',CplndOrd='<>',CrossPlantConfigurableProduct='<>',Plant='<>',StorageLocation='<>')
 annotate service.ZZ1_CombPlnOrdersStock with @(
     UI.LineItem #Stock : [
         {
             $Type : 'UI.DataField',
             Value : Batch,
             Label : 'Batch',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
         },
         {
             $Type : 'UI.DataField',
             Value : Material,
             Label : 'Material',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            ![@HTML5.CssDefaults] : {
+                width : '10rem',
+            },
         },
-                {
+        {
             $Type : 'UI.DataField',
             Value : Plant,
-            Label : 'Plant',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label : 'Plant'
         },
         {
             $Type : 'UI.DataField',
             Value : StorageLocation,
-            Label : 'Storage Location',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label : 'Storage Location'
         },
         {
-
             $Type : 'UI.DataField',
             Value : StorageLocationStock,
-            Label : 'Storage Location Stock',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label : 'Storage Location Stock'
         },
         {
-
             $Type : 'UI.DataField',
             Value : MaterialBaseUnit,
             Label : 'Base Unit',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            ![@HTML5.CssDefaults] : {
+                width : '3rem',
+            },
         },
         {
-
             $Type : 'UI.DataField',
             Value : dye_lot,
             Label : 'Dye Lot',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            ![@HTML5.CssDefaults] : {
+                width : '3rem',
+            },
         },
         {
-
             $Type : 'UI.DataField',
             Value : choice,
             Label : 'Choise',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            ![@HTML5.CssDefaults] : {
+                width : '3rem',
+            },
         },
         {
-
             $Type : 'UI.DataField',
             Value : TotalProdAllQty,
-            Label: 'Total Product All Qty',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label: 'Total Product All Qty'
         },
         {
-
             $Type : 'UI.DataField',
             Value : TotalPlanAllQty,
-            Label: 'Total Planned All Qty', 
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label: 'Total Planned All Qty'
         },
         {
-
             $Type : 'UI.DataField',
             Value : CombPlanAllQty,
-            Label: 'Comb Plan All Qty',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label: 'Comb Plan All Qty'
         },
         {
-
             $Type : 'UI.DataField',
             Value : AvaibilityQty,
-            Label: 'Avaibility Qty',    
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label: 'Avaibility Qty'
         },
         {
-
             $Type : 'UI.DataField',
             Value : TotalInDelQty,
-            Label: 'Total In Del Qty',
-            // ![@HTML5.CssDefaults] : {
-            //     width : '15rem',
-            // },
+            Label: 'Total In Del Qty'
         },
+        {$Type: 'UI.DataField', Value: GROSS_LENGHT,Label: 'GROSS_LENGHT',![@UI.Hidden],},
+        {$Type: 'UI.DataField', Value: NET_HEIGHT,Label: 'NET_HEIGHT',![@UI.Hidden],},
+        {$Type: 'UI.DataField', Value: DEROGA,Label: 'DEROGA',![@UI.Hidden],},
+        {$Type: 'UI.DataField', Value: PDF_RATING_ID,Label: 'PDF_RATING_ID',![@UI.Hidden],},
+        {$Type: 'UI.DataField', Value: SERIALE_MATRICOLA,Label: 'SERIALE_MATRICOLA',![@UI.Hidden],},
+        {$Type: 'UI.DataField', Value: ALTEZZA_STANDARD,Label: 'ALTEZZA_STANDARD',![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: Supplier, Label: 'Supplier', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: SDDocument, Label: 'SDDocument', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: SDDocumentItem, Label: 'SDDocumentItem', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: WBSElementInternalID, Label: 'WBSElementInternalID', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: Customer, Label: 'Customer', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: SpecialStockIdfgStockOwner, Label: 'SpecialStockIdfgStockOwner', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: InventoryStockType, Label: 'InventoryStockType', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: InventorySpecialStockType, Label: 'InventorySpecialStockType', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: CostEstimate, Label: 'CostEstimate', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: ResourceID, Label: 'ResourceID', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: CompanyCode, Label: 'CompanyCode', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: MatlWrhsStkQtyInMatlBaseUnit, Label: 'MatlWrhsStkQtyInMatlBaseUnit', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: MatlCnsmpnQtyInMatlBaseUnit, Label: 'MatlCnsmpnQtyInMatlBaseUnit', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: MatlStkIncrQtyInMatlBaseUnit, Label: 'MatlStkIncrQtyInMatlBaseUnit', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: MatlStkDecrQtyInMatlBaseUnit, Label: 'MatlStkDecrQtyInMatlBaseUnit', ![@UI.Hidden]},
+        {$Type: 'UI.DataField', Value: CustomQty, Label: 'CustomQty', ![@UI.Hidden]},
     ]
 );
