@@ -811,75 +811,114 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
             $Type : 'UI.DataField',
             Value : Batch,
             Label : 'Batch',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
             $Type : 'UI.DataField',
             Value : Material,
             Label : 'Material',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
                 {
             $Type : 'UI.DataField',
             Value : Plant,
             Label : 'Plant',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
             $Type : 'UI.DataField',
             Value : StorageLocation,
             Label : 'Storage Location',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : StorageLocationStock,
             Label : 'Storage Location Stock',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : MaterialBaseUnit,
             Label : 'Base Unit',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : dye_lot,
             Label : 'Dye Lot',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : choice,
             Label : 'Choise',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : TotalProdAllQty,
-            Label: 'Total Product All Qty'
+            Label: 'Total Product All Qty',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : TotalPlanAllQty,
-            Label: 'Total Planned All Qty'
+            Label: 'Total Planned All Qty', 
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : CombPlanAllQty,
-            Label: 'Comb Plan All Qty'
+            Label: 'Comb Plan All Qty',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : AvaibilityQty,
-            Label: 'Avaibility Qty'
+            Label: 'Avaibility Qty',    
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
         {
 
             $Type : 'UI.DataField',
             Value : TotalInDelQty,
             Label: 'Total In Del Qty',
+            // ![@HTML5.CssDefaults] : {
+            //     width : '15rem',
+            // },
         },
     ]
 );

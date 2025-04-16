@@ -40,3 +40,8 @@ Then run `cds import srv/external/<METADATA>.edmx --from edmx --as cds` to gener
 | ZZ1_PLOCAPACITYCORD       | [ZZ1_PLOCAPACITYCORD_CDS](http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_PLOCAPACITYCORD_CDS/$metadata)       | Capacity Aggregation by Combined PLO  |
 | ZZ1_PLOCAPACITYMORD       | [ZZ1_PLOCAPACITYMORD_CDS](http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_PLOCAPACITYMORD_CDS/$metadata)      | Capacity Aggregated by Master PLO     |
 
+
+
+
+
+https://sap.github.io/odata-vocabularies/vocabularies/HTML5.html#CssDefaultsType

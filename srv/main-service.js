@@ -52,7 +52,9 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD", async (req) => {
-      return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      debugger;
+      return res;
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
@@ -99,9 +101,9 @@ module.exports = class MainService extends cds.ApplicationService {
         // remove latest where condition from where array
         where.pop()
       }
-
+      debugger;
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
-
+      res['$count'] = res.length.toString();
       // if the res is array of one row
       if (Array.isArray(res) && res.length === 1) {
         res[0].TotalProdAllQty = TotalProdAllQty.toFixed(3);
@@ -194,7 +196,7 @@ module.exports = class MainService extends cds.ApplicationService {
 
       debugger;
       // 9. Process results with maps instead of additional queries
-      return stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
+      const res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
         const { Plant, Material, StorageLocation, Batch } = item;
         const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
 
@@ -222,6 +224,9 @@ module.exports = class MainService extends cds.ApplicationService {
           CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
         };
       });
+
+      res['$count'] = res.length.toString();
+      return res;
     });
 
     // Helper functions
