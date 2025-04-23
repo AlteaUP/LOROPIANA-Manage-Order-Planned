@@ -155,6 +155,19 @@
           "password": "Sap1234567890!!!",
           "sap-client": "300"
         }
+      },
+      "ZS_RFM_ATP_PLANNED_ORDERS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZS_RFM_ATP_PLANNED_ORDERS",
+        "csrf": true,
+        "csrfInBatch": true,
+        "credentials": {
+          "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata4/sap/zsb_rfm_atp_planned_orders/srvd_a2x/sap/zs_rfm_atp_planned_orders/0001/",
+          "authentication": "BasicAuthentication",
+          "username": "laspatas",
+          "password": "Sap1234567890!!!",
+          "sap-client": "300"
+        }
       }
     }
   },

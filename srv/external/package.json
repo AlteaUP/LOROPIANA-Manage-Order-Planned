@@ -36,7 +36,16 @@
       "ZMPF_ASS_BATCH_SRV": {
         "kind": "odata",
         "model": "srv/external/ZMPF_ASS_BATCH_SRV"
+      },
+      "ZS_RFM_ATP_PLANNED_ORDERS": {
+        "kind": "odata",
+        "model": "srv/external/ZS_RFM_ATP_PLANNED_ORDERS"
       }
     }
+  },
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^3",
+    "@sap-cloud-sdk/http-client": "^3",
+    "@sap-cloud-sdk/resilience": "^3"
   }
 }
