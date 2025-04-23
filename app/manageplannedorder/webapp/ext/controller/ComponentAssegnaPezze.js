@@ -113,7 +113,7 @@ sap.ui.define([
         // binding.attachDataReceived(function () {
         //   debugger;
         // });
-        // binding.resetChanges()
+        binding.resetChanges()
         // const count = Math.round(parseInt(obj.RequiredQuantity) / parseInt(_selectedItems.length));
         // sommatoria AvaibilityQty 
         const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
@@ -212,6 +212,8 @@ sap.ui.define([
       const model = new JSONModel()
       model.setData({ ...obj })
 
+      this._controller.getView().setModel(model, 'selectedWhereUsed');
+
       if (!this._fragmentWhereUsed) {
         this._fragmentWhereUsed = this.loadFragment({
           id: "fragmentPezze",
@@ -225,6 +227,7 @@ sap.ui.define([
         dialog.setModel(model, 'selected');
         dialog.setModel(oModel)
 
+        const fakeTabella = dialog.getContent().at(-2);
         const tabella = dialog.getContent().at(-1);
 
         tabella.bindAggregation('items', {
@@ -244,12 +247,60 @@ sap.ui.define([
               }),
             ]
           }),
-          templateShareable: true,
-          parameters: { $$updateGroupId: 'CreatePezzeBatch' },
+          templateShareable: true
         });
 
         const binding = tabella.getBinding('items');
         binding.resetChanges()
+        binding.attachDataReceived(function () {
+          fakeTabella.bindAggregation('items', {
+            path: '/atp_item',
+            filters: [],
+            template: new sap.m.ColumnListItem({
+              cells: [
+                new sap.m.ObjectIdentifier({
+                  title: "{fsh_cplnd_ord}"
+                }),
+                new sap.m.Text({
+                  text: "{flag}"
+                }),
+              ]
+            }),
+            templateShareable: true,
+            parameters: { $$updateGroupId: 'CreateWhereUsedBatch' },
+          });
+          fakeTabella.resetChanges()
+          // const bindingFake = fakeTabella.getBinding('items');
+          // bindingFake.resetChanges()
+          // const selectedItems = this._view.byId('fragmentPezze--selectedItemsTableWhereUsed').getSelectedItems()
+          // const _selectedItems = []
+          // for (let i = 0; i < selectedItems.length; i++) {
+          //   const oObj = selectedItems[i].getBindingContext().getObject()
+          //   _selectedItems.push(oObj)
+          // }
+          // _selectedItems.forEach((_item) => {
+          //   const item = structuredClone(_item)
+          //   const newCreate = structuredClone({
+          //     fsh_cplnd_ord: item.CplndOrd,
+          //     flag: true,
+          //   })
+          //   bindingFake.create(newCreate, false, false);
+          // });
+        }.bind(this));
+        // const selectedItems = this._view.byId('fragmentPezze--selectedItemsTableWhereUsed').getSelectedItems()
+        // const _selectedItems = []
+        // for (let i = 0; i < selectedItems.length; i++) {
+        //   const oObj = selectedItems[i].getBindingContext().getObject()
+        //   _selectedItems.push(oObj)
+        // }
+        // _selectedItems.forEach((_item) => {
+        //   const item = structuredClone(_item)
+        //   const newCreate = structuredClone({
+        //     fsh_cplnd_ord: item.CplndOrd,
+        //     flag: true,
+        //   })
+        //   binding.create(newCreate, false, false);
+        // });
 
         dialog.open();
       }.bind(this));

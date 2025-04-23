@@ -53,6 +53,26 @@
                 />
             </form:SimpleForm>
             <Table
+                id="selectedItemsTableWhereUsedFake"
+                mode="MultiSelect"
+            >
+                <!-- visible="false" -->
+                <columns>
+                    <Column id="columnCplndOrdWhereUsedFake">
+                        <Text
+                            id="textCplndOrdWhereUsedFake"
+                            text="Combined Planned Order"
+                        />
+                    </Column>
+                    <Column id="columnQtyWhereUsedFake">
+                        <Text
+                            id="textQtyWhereUsedFake"
+                            text="flag"
+                        />
+                    </Column>
+                </columns>
+            </Table>
+            <Table
                 id="selectedItemsTableWhereUsed"
                 mode="MultiSelect"
             >
@@ -63,24 +83,6 @@
                             text="Combined Planned Order"
                         />
                     </Column>
-                    <!-- <Column id="columnMaterialWhereUsed">
-                        <Text
-                            id="textMaterialWhereUsed"
-                            text="Material"
-                        />
-                    </Column> 
-                    <Column id="columnPlantWhereUsed">
-                        <Text
-                            id="textPlantWhereUsed"
-                            text="Plant"
-                        />
-                    </Column> 
-                    <Column id="columnStorageLocationWhereUsed">
-                        <Text
-                            id="textStorageLocationWhereUsed"
-                            text="Storage Location"
-                        /> 
-                    </Column> -->
                     <Column id="columnQtyWhereUsed">
                         <Text
                             id="textQtyWhereUsed"

@@ -55,8 +55,8 @@ sap.ui.define([
       return sValue
     },
     onBeforeRebindTable: function (oEvent) {
-      var oSmartTable = oEvent.getSource();
-      debugger;
+      // var oSmartTable = oEvent.getSource();
+      // debugger;
       // const data = this.getView().getModel('selectedPezze').getData()
       // selectedItems.forEach((item) => {
       //   const oBinding = oSmartTable.getTable().getBinding("items");
@@ -79,6 +79,38 @@ sap.ui.define([
       // );
 
 
+    },
+    onDesassembly: function () {
+
+      const id = 'fragmentPezze--selectedItemsTableWhereUsed';
+      const idFake = 'fragmentPezze--selectedItemsTableWhereUsedFake';
+      const fakeTableInsert = sap.ui.getCore().byId(idFake);
+      const binding = fakeTableInsert.getBinding("items");
+      const selectedItems = sap.ui.getCore().byId(id).getSelectedItems()
+      const oModel = this.getOwnerComponent().getModel();
+      const oSelectedWhereUsed = this.getView().getModel('selectedWhereUsed');
+      const CplndOrd = oSelectedWhereUsed.getProperty("/CplndOrd");
+
+      binding.create({
+        fsh_cplnd_ord: CplndOrd,
+        flag: false
+      })
+
+      selectedItems.forEach((item) => {
+        binding.create({
+          fsh_cplnd_ord: item.getBindingContext().getProperty("CplndOrd"),
+          flag: true
+        })
+      });
+
+      oModel.submitBatch("CreateWhereUsedBatch").then(() => {
+        MessageToast.show("Do Desassembly completed.");
+        sap.ui.getCore().byId('fragmentPezze--_IDGenDialogWhereUsed').close();
+        binding.refresh(true);
+      }).catch((oError) => {
+        MessageToast.show("Do Desassembly error.");
+        console.error("Error", oError);
+      });
     }
   }
 });
