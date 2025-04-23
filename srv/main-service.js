@@ -100,12 +100,58 @@ module.exports = class MainService extends cds.ApplicationService {
         // remove latest where condition from where array
         where.pop()
       }
-      debugger;
+
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
       res['$count'] = res.length.toString();
       // if the res is array of one row
       if (Array.isArray(res) && res.length === 1) {
         res[0].TotalProdAllQty = TotalProdAllQty.toFixed(3);
+      } else {
+        // Calculate TotalPlanAllQty and CombPlanAllQty for each record
+        if (Array.isArray(res) && res.length > 0) {
+          const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
+
+          // Batch query to get all assignment data
+          const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+            SELECT.from('ZZ1_MFP_ASSIGNMENT')
+              .where({
+                WERKS: { in: res.map(i => i.Plant) },
+                MATNR: { in: res.map(i => i.Material) }
+              })
+          );
+
+          // Create lookup maps
+          const allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
+
+          // If we have a specific combined order, get its assignments too
+          let combPlanAssignmentsMap = {};
+          if (PlannedCombinedOrder) {
+            const combPlanAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+              SELECT.from('ZZ1_MFP_ASSIGNMENT')
+                .where({
+                  FSH_MPLO_ORD: PlannedCombinedOrder,
+                  WERKS: { in: res.map(i => i.Plant) },
+                  MATNR: { in: res.map(i => i.Material) }
+                })
+            );
+            combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
+          }
+
+          // Calculate and add the values to each record
+          res.forEach(item => {
+            const { Plant, Material } = item;
+            const key = `${Plant}|${Material}`;
+
+            const allAssignments = allAssignmentsMap[key] || [];
+            const combPlanAssignments = combPlanAssignmentsMap[key] || [];
+
+            const TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V');
+            const CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V');
+
+            item.TotalPlanAllQty = TotalPlanAllQty.toFixed(3);
+            item.CombPlanAllQty = CombPlanAllQty.toFixed(3);
+          });
+        }
       }
 
       return res;

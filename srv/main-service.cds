@@ -35,6 +35,8 @@ service MainService {
       ProductCharacteristic2,
       ProductCharacteristic3,
       StorageLocation,
+      null as CombPlanAllQty     : String(20),
+      null as TotalPlanAllQty    : String(20),
       null as TotalProdAllQty    : String(20), // rappresenta il totale di tutte le righe
       null as FinishedProductQty : String(20),
       to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
@@ -112,6 +114,7 @@ service MainService {
           FABB_TOT_U,
           COPERTURA,
           SORT,
+          // null as QTY_CALCOLATA : String(20),
           null as AvaibilityQty : String(40)
     };
 

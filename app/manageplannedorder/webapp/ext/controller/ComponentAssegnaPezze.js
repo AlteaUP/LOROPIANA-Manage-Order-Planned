@@ -24,23 +24,35 @@ sap.ui.define([
       ));
     },
     doAssegnaPezze: function (oEvent) {
+      const model = new JSONModel()
       const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
       const obj = this.getBindingContext().getObject()
       const selectedItems = this._view.byId(id).getSelectedItems()
       const oModel = this._controller.getOwnerComponent().getModel()
       const _selectedItems = []
-      // let SumTotalPlanAllQty = 0;
+      // In testata aggiungere il total  Comb Plan All qty delle righe selezionate 
+      let TotCombPlanAllQty = 0;
+      // In testata mettere un nuovo campo Open qty che rappresenta la differenza tra la Required Quantity 
+      // - il totale Comb Plan All (quello di tutte le righe non di solo quelle selezionate) 
+      // - la Quantity to Assign delle righe presente nel pop up.
+      let OpenQty = 0;
       for (let i = 0; i < selectedItems.length; i++) {
         const oObj = selectedItems[i].getBindingContext().getObject()
-        // SumTotalPlanAllQty += parseInt(oObj.$$updateGroupId)
+        TotCombPlanAllQty += parseInt(oObj.CombPlanAllQty)
         _selectedItems.push(oObj)
       }
-      const model = new JSONModel()
+
+      OpenQty = parseInt(obj.RequiredQuantity) - TotCombPlanAllQty
+
+
       model.setData({
         ...obj,
-        // TotalPlanAllQty: SumTotalPlanAllQty.toFixed(3).toString(), 
+        TotalPlanAllQty: TotCombPlanAllQty.toFixed(3).toString(),
+        OpenQty: OpenQty.toFixed(3).toString(),
         selectedItems: _selectedItems
       })
+
+      this._controller.getView().setModel(model, 'selectedPezze');
 
       if (!this._fragmentPezze) {
         this._fragmentPezze = this.loadFragment({
@@ -53,13 +65,13 @@ sap.ui.define([
       this._fragmentPezze.then(function (dialog) {
         // dialog.bindElement(`/ZZ1_MFP_ASSIGNMENT/(SAP_UUID='${obj.SAP_UUID}')`);
         dialog.setModel(model, 'selected');
-        dialog.setModel(oModel)
-        const tabella = dialog.getContent().at(-1);
+        dialog.setModel(oModel);
+        const table = dialog.getContent().at(-1);
         // { 
         //     path: '/ZZ1_MFP_ASSIGNMENT',
         //     parameters : { $$updateGroupId : 'CreatePezzeBatch' }
         // }
-        tabella.bindAggregation('items', {
+        table.bindAggregation('items', {
           path: '/ZZ1_MFP_ASSIGNMENT',
           filters: [
             new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
@@ -70,19 +82,25 @@ sap.ui.define([
               new sap.m.ObjectIdentifier({
                 title: "{CHARG}"
               }),
-              new sap.m.Text({
-                text: "{MATNR}"
-              }),
+              // new sap.m.Text({
+              //   text: "{MATNR}"
+              // }),
               new sap.m.Text({
                 text: "{LGORT}"
               }),
               new sap.m.Text({
                 text: "{FABB_TOT_V}"
               }),
+              new sap.m.Text({
+                text: "{COPERTURA}"
+              }),
               new sap.m.Input({
                 value: "{QTA_ASS_V}",
+                liveChange: function (e) {
+                  console.log(e)
+                },
                 change: function (e) {
-                  debugger;
+                  console.log(e)
                 }
               })
             ]
@@ -91,16 +109,32 @@ sap.ui.define([
           parameters: { $$updateGroupId: 'CreatePezzeBatch' },
         });
 
-        const binding = tabella.getBinding('items');
-        binding.resetChanges()
-        const count = Math.round(parseInt(obj.RequiredQuantity) / parseInt(_selectedItems.length));
-        _selectedItems.forEach((item) => {
-          let QTA_ASS_V = count// parseInt(obj.RequiredQuantity);
-          if (parseInt(item.AvaibilityQty) < QTA_ASS_V) {
-            QTA_ASS_V = parseInt(item.AvaibilityQty);
-          }
-          binding.create({
-            "SAP_UUID": crypto.randomUUID(),
+        const binding = table.getBinding('items');
+        // binding.attachDataReceived(function () {
+        //   debugger;
+        // });
+        // binding.resetChanges()
+        // const count = Math.round(parseInt(obj.RequiredQuantity) / parseInt(_selectedItems.length));
+        // sommatoria AvaibilityQty 
+        const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
+        console.log("Total Availability Quantity: ", TotAvaibilityQty);
+
+        _selectedItems.forEach((_item) => {
+          const item = structuredClone(_item)
+          // let QTA_ASS_V = count// parseInt(obj.RequiredQuantity);
+          // if (parseInt(item.AvaibilityQty) < QTA_ASS_V) {
+          //   QTA_ASS_V = parseInt(item.AvaibilityQty);
+          // }
+
+          // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
+          const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+          // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
+          // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
+          const QTA_ASS_V = Math.min(parseInt(item.AvaibilityQty), (TotAvaibilityQty * (COPERTURA / 100)));
+
+          const SAP_UUID = crypto.randomUUID()
+          const newCreate = structuredClone({
+            "SAP_UUID": SAP_UUID,
             "WERKS": item.Plant,
             "LGORT": item.StorageLocation,
             "FSH_MPLO_ORD": obj.CplndOrd,
@@ -109,12 +143,13 @@ sap.ui.define([
             "CHARG": item.Batch,
             "Bagno": item.dye_lot,
             "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
+            // "QTY_CALCOLATA": 'amtam',
             "QTA_ASS_U": "",
             "QTA_ASS_U_Text": "",
             "FABB_TOT_V": item.AvaibilityQty || 0,
             "FABB_TOT_U": "",
             "FABB_TOT_U_Text": "",
-            "COPERTURA": 0,
+            "COPERTURA": COPERTURA,
             "SORT": 0,
             "SAP_CreatedDateTime": new Date(),
             "SAP_CreatedByUser": "LASPATAS",
@@ -122,7 +157,8 @@ sap.ui.define([
             "SAP_LastChangedDateTime": new Date(),
             "SAP_LastChangedByUser": "LASPATAS",
             "SAP_LastChangedByUser_Text": ""
-          });
+          })
+          binding.create(newCreate, false, false);
         });
 
         dialog.open();
@@ -170,18 +206,11 @@ sap.ui.define([
 
     },
     doWhereUsed: function (oEvent) {
-      sap.m.MessageToast.show("Custom handler invoked. [WHERE USED]");
-      const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
+      // sap.m.MessageToast.show("Custom handler invoked. [WHERE USED]");
       const obj = this.getBindingContext().getObject()
-      const selectedItems = this._view.byId(id).getSelectedItems()
       const oModel = this._controller.getOwnerComponent().getModel()
-      const _selectedItems = []
-      for (let i = 0; i < selectedItems.length; i++) {
-        const oObj = selectedItems[i].getBindingContext().getObject()
-        _selectedItems.push(oObj)
-      }
       const model = new JSONModel()
-      model.setData({ ...obj, selectedItems: _selectedItems })
+      model.setData({ ...obj })
 
       if (!this._fragmentWhereUsed) {
         this._fragmentWhereUsed = this.loadFragment({
@@ -192,14 +221,12 @@ sap.ui.define([
       }
 
       this._fragmentWhereUsed.then(function (dialog) {
-        // dialog.bindElement(`/ZZ1_MFP_ASSIGNMENT/(SAP_UUID='${obj.SAP_UUID}')`);
+
         dialog.setModel(model, 'selected');
         dialog.setModel(oModel)
+
         const tabella = dialog.getContent().at(-1);
-        // { 
-        //     path: '/ZZ1_MFP_ASSIGNMENT',
-        //     parameters : { $$updateGroupId : 'CreatePezzeBatch' }
-        // }
+
         tabella.bindAggregation('items', {
           path: '/ZZ1_CombPlnOrdersStockAPI',
           filters: [
@@ -212,15 +239,6 @@ sap.ui.define([
               new sap.m.ObjectIdentifier({
                 title: "{CplndOrd}"
               }),
-              // new sap.m.Text({
-              //   text: "{Material}"
-              // }),
-              // new sap.m.Text({
-              //   text: "{Plant}"
-              // }),
-              // new sap.m.Text({
-              //   text: "{StorageLocation}"
-              // }),
               new sap.m.Text({
                 text: "{AvailableQuantity}"
               }),
@@ -232,34 +250,6 @@ sap.ui.define([
 
         const binding = tabella.getBinding('items');
         binding.resetChanges()
-
-        _selectedItems.forEach((item) => {
-
-          binding.create({
-            "SAP_UUID": crypto.randomUUID(),
-            "WERKS": item.Plant,
-            "LGORT": item.StorageLocation,
-            "FSH_MPLO_ORD": obj.CplndOrd,
-            "BAGNI": item.dye_lot || "antani",
-            "MATNR": item.Material,
-            "CHARG": item.Batch,
-            "Bagno": item.dye_lot,
-            "QTA_ASS_V": 0,
-            "QTA_ASS_U": "",
-            "QTA_ASS_U_Text": "",
-            "FABB_TOT_V": item.AvaibilityQty || 0,
-            "FABB_TOT_U": "",
-            "FABB_TOT_U_Text": "",
-            "COPERTURA": 0,
-            "SORT": 0,
-            "SAP_CreatedDateTime": new Date(),
-            "SAP_CreatedByUser": "LASPATAS",
-            "SAP_CreatedByUser_Text": "",
-            "SAP_LastChangedDateTime": new Date(),
-            "SAP_LastChangedByUser": "LASPATAS",
-            "SAP_LastChangedByUser_Text": ""
-          });
-        });
 
         dialog.open();
       }.bind(this));

@@ -53,6 +53,32 @@ sap.ui.define([
     formatAvaibilityQty: function (sValue) {
       debugger;
       return sValue
+    },
+    onBeforeRebindTable: function (oEvent) {
+      var oSmartTable = oEvent.getSource();
+      debugger;
+      // const data = this.getView().getModel('selectedPezze').getData()
+      // selectedItems.forEach((item) => {
+      //   const oBinding = oSmartTable.getTable().getBinding("items");
+      //   const oFilter = new sap.ui.model.Filter("SAP_UUID", sap.ui.model.FilterOperator.EQ, item.SAP_UUID);
+      //   oBinding.filter([oFilter]);
+      // });
+      // oSmartTable.applyVariant(
+      //   {
+      //     filter: {
+      //       filterItems: [{
+      //         columnKey: "YourSelectedColumn",
+      //         exclude: false,
+      //         operation: "EQ",
+      //         value1: "SomeEnteredValue",
+      //         value2: ""
+      //       }]
+      //     }
+      //   }
+
+      // );
+
+
     }
   }
 });

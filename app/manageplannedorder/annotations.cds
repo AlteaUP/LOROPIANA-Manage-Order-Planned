@@ -474,6 +474,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             ID : 'TotalAllocQty',
             Target : '@UI.DataPoint#TotalAllocQty',
         },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'FinishedProductQty',
+            Target : '@UI.DataPoint#FinishedProductQty',
+        },
     ],
     UI.FieldGroup #GeneralInfo : {
         $Type : 'UI.FieldGroupType',
@@ -571,6 +576,21 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {$Type : 'UI.DataField',Value : ProductCharacteristic3,Label : '{i18n>ProductCharacteristic3}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : StorageLocation,Label : '{i18n>StorageLocation}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : TotalProdAllQty,Label : '{i18n>TotalProdAllQty}',![@UI.Hidden]},
+        {
+            $Type : 'UI.DataField',
+            Value : CombPlanAllQty,
+            Label : 'CombPlanAllQty',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : TotalPlanAllQty,
+            Label : 'TotalPlanAllQty',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : FinishedProductQty,
+            Label : 'FinishedProductQty',
+        },
     ],
     UI.FieldGroup #QTY : {
         $Type : 'UI.FieldGroupType',
@@ -622,6 +642,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         Value : TotalAllocQty,
         Title : '{i18n>RequestFinishedProductQty}',
     },
+    UI.DataPoint #FinishedProductQty : {
+        $Type : 'UI.DataPointType',
+        Value : FinishedProductQty,
+        Title : '{i18n>FinishedProductQty}',
+    }
 );
 
 
@@ -733,5 +758,47 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
         {$Type: 'UI.DataField', Value: MatlStkIncrQtyInMatlBaseUnit, Label: 'MatlStkIncrQtyInMatlBaseUnit', ![@UI.Hidden]},
         {$Type: 'UI.DataField', Value: MatlStkDecrQtyInMatlBaseUnit, Label: 'MatlStkDecrQtyInMatlBaseUnit', ![@UI.Hidden]},
         {$Type: 'UI.DataField', Value: CustomQty, Label: 'CustomQty', ![@UI.Hidden]},
+    ]
+);
+
+
+
+annotate service.ZZ1_MFP_ASSIGNMENT with @(
+    UI.LineItem #tablePezze : [
+        {
+            $Type : 'UI.DataField',
+            Value : CHARG,
+            Label : '{i18n>CHARG}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : MATNR,
+            Label : '{i18n>MATNR}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : WERKS,
+            Label : '{i18n>WERKS}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : AvaibilityQty,
+            Label : '{i18n>AvaibilityQty}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : COPERTURA,
+            Label : '{i18n>COPERTURA}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : QTA_ASS_U,
+            Label : '{i18n>PlannedTotalQtyIn}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : QTY_CALCOLATA,
+            Label : '{i18n>QTY_CALCOLATA}',
+        }
     ]
 );
