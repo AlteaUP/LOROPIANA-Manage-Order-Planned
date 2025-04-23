@@ -106,7 +106,6 @@ sap.ui.define([
       oModel.submitBatch("CreateWhereUsedBatch").then(() => {
         MessageToast.show("Do Desassembly completed.");
         sap.ui.getCore().byId('fragmentPezze--_IDGenDialogWhereUsed').close();
-        binding.refresh(true);
       }).catch((oError) => {
         MessageToast.show("Do Desassembly error.");
         console.error("Error", oError);
