@@ -93,9 +93,9 @@ sap.ui.define([
 
         const binding = tabella.getBinding('items');
         binding.resetChanges()
-
+        const count = Math.round(parseInt(obj.RequiredQuantity) / parseInt(_selectedItems.length));
         _selectedItems.forEach((item) => {
-          let QTA_ASS_V = parseInt(obj.RequiredQuantity);
+          let QTA_ASS_V = count// parseInt(obj.RequiredQuantity);
           if (parseInt(item.AvaibilityQty) < QTA_ASS_V) {
             QTA_ASS_V = parseInt(item.AvaibilityQty);
           }

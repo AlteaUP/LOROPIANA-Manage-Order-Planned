@@ -16,12 +16,16 @@
             <form:SimpleForm
                 id="SimpleFormWhereUsed"
                 singleContainerFullSize="true"
+                layout="ColumnLayout"
                 emptySpanL="0"
                 emptySpanM="0"
                 emptySpanS="0"
                 labelSpanL="12"
                 labelSpanM="12"
                 labelSpanS="12"
+                columnsL="3"
+                columnsM="3"
+                columnsXL="3"
             >
                 <Label
                     id="labelMaterialWhereUsed"
