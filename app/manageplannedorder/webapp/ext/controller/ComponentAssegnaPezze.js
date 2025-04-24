@@ -76,37 +76,22 @@ sap.ui.define([
           ],
           template: new sap.m.ColumnListItem({
             cells: [
-              new sap.m.ObjectIdentifier({
-                title: "{CHARG}"
-              }),
-              new sap.m.Text({
-                text: "{LGORT}"
-              }),
-              new sap.m.Text({
-                text: "{FABB_TOT_V}"
-              }),
-              new sap.m.Text({
-                text: "{COPERTURA}"
-              }),
-              new sap.m.Input({
-                value: "{QTA_ASS_V}",
-                liveChange: function (e) {
-                  console.log(e)
-                },
-                change: function (e) {
-                  console.log(e)
-                }
-              })
+              new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
+              new sap.m.Text({ text: "{LGORT}" }),
+              new sap.m.Text({ text: "{FABB_TOT_V}" }),
+              new sap.m.Text({ text: "{COPERTURA}" }),
+              new sap.m.Input({ value: "{QTA_ASS_V}" })
             ]
           }),
-          templateShareable: true,
+          templateShareable: false,
           parameters: { $$updateGroupId: 'CreatePezzeBatch' },
         });
 
         const binding = table.getBinding('items');
         binding.resetChanges();
-        binding.attachDataReceived(function () {
-          debugger;
+        binding.attachDataReceived(async function () {
+          await binding.requestContexts(0, 1); // forza la creazione del context
+
           // sommatoria AvaibilityQty 
           const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
           console.log("Total Availability Quantity: ", TotAvaibilityQty);
@@ -131,7 +116,6 @@ sap.ui.define([
               "CHARG": item.Batch,
               "Bagno": item.dye_lot,
               "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
-              // "QTY_CALCOLATA": 'amtam',
               "QTA_ASS_U": "",
               "QTA_ASS_U_Text": "",
               "FABB_TOT_V": item.AvaibilityQty || 0,
@@ -147,9 +131,17 @@ sap.ui.define([
               "SAP_LastChangedByUser_Text": ""
             })
 
+            // const isPresent = binding.getContexts().some(context => context.getObject().FSH_MPLO_ORD === obj.CplndOrd);
+            // if (!isPresent) {
+            //   console.warn("Combined planned order is not present in binding.");
             binding.create(newCreate, false, false, false);
+            // } else {
+            //   console.log("Combined planned order is present in binding.");
+            // }
+
 
           });
+          table.invalidate(); // Forza il rendering della tabella
         }.bind(this));
         dialog.open();
       }.bind(this));

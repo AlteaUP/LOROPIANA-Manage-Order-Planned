@@ -8,7 +8,7 @@
     <Dialog
         id="_IDGenDialogPezze"
         stretch="true"
-        resizable="false"
+        resizable="true"
         type="Message"
         state="Information"
         icon="sap-icon://ai"

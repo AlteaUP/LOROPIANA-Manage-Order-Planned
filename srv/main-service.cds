@@ -112,22 +112,9 @@ service MainService {
   @sap.deletable: 'true'
   entity ZZ1_MFP_ASSIGNMENT         as
     projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
-      key SAP_UUID,
-          WERKS,
-          LGORT,
-          FSH_MPLO_ORD,
-          BAGNI,
-          MATNR,
-          CHARG,
-          Bagno,
-          QTA_ASS_V,
-          QTA_ASS_U,
-          FABB_TOT_V,
-          FABB_TOT_U,
-          COPERTURA,
-          SORT,
-          // null as QTY_CALCOLATA : String(20),
-          null as AvaibilityQty : String(40)
+      *,
+      // null as QTY_CALCOLATA : String(20),
+      null as AvaibilityQty : String(40)
     };
 
   @sap.creatable: 'true'
