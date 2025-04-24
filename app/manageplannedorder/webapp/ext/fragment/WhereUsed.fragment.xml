@@ -52,11 +52,10 @@
                     text="{selected>/StorageLocation}"
                 />
             </form:SimpleForm>
-            <Table
+            <!-- <Table
                 id="selectedItemsTableWhereUsedFake"
                 mode="MultiSelect"
             >
-                <!-- visible="false" -->
                 <columns>
                     <Column id="columnCplndOrdWhereUsedFake">
                         <Text
@@ -71,7 +70,7 @@
                         />
                     </Column>
                 </columns>
-            </Table>
+            </Table> -->
             <Table
                 id="selectedItemsTableWhereUsed"
                 mode="MultiSelect"

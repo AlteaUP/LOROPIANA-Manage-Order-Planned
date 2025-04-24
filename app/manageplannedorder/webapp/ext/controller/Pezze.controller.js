@@ -1,8 +1,9 @@
 sap.ui.define([
   "sap/m/MessageToast",
   "sap/m/MessageBox",
-  "sap/ui/model/Context"
-], function (MessageToast, MessageBox, Context) {
+  "sap/ui/model/Context",
+  "jquery.sap.global"
+], function (MessageToast, MessageBox, Context, jQuery) {
   'use strict';
 
   return {
@@ -81,35 +82,89 @@ sap.ui.define([
 
     },
     onDesassembly: function () {
-
       const id = 'fragmentPezze--selectedItemsTableWhereUsed';
-      const idFake = 'fragmentPezze--selectedItemsTableWhereUsedFake';
-      const fakeTableInsert = sap.ui.getCore().byId(idFake);
-      const binding = fakeTableInsert.getBinding("items");
-      const selectedItems = sap.ui.getCore().byId(id).getSelectedItems()
+      const selectedItems = sap.ui.getCore().byId(id).getSelectedItems();
       const oModel = this.getOwnerComponent().getModel();
       const oSelectedWhereUsed = this.getView().getModel('selectedWhereUsed');
-      const CplndOrd = oSelectedWhereUsed.getProperty("/CplndOrd");
+      const mainCplndOrd = oSelectedWhereUsed.getProperty("/CplndOrd");
 
-      binding.create({
-        fsh_cplnd_ord: CplndOrd,
+      // Create array for atpplo items
+      const atpplo = [];
+
+      // Add the main CplndOrd with flag=false
+      atpplo.push({
+        id: "1",
+        fsh_cplnd_ord: mainCplndOrd,
         flag: false
-      })
-
-      selectedItems.forEach((item) => {
-        binding.create({
-          fsh_cplnd_ord: item.getBindingContext().getProperty("CplndOrd"),
-          flag: true
-        })
       });
 
-      oModel.submitBatch("CreateWhereUsedBatch").then(() => {
-        MessageToast.show("Do Desassembly completed.");
-        sap.ui.getCore().byId('fragmentPezze--_IDGenDialogWhereUsed').close();
-      }).catch((oError) => {
-        MessageToast.show("Do Desassembly error.");
-        console.error("Error", oError);
+      // Add selected items with flag=true
+      selectedItems.forEach((item) => {
+        const itemContext = item.getBindingContext();
+        if (itemContext) {
+          atpplo.push({
+            id: "1",
+            fsh_cplnd_ord: itemContext.getProperty("CplndOrd"),
+            flag: true
+          });
+        }
+      });
+
+      // Prepare payload for the action
+      const payload = {
+        id: "1",
+        atpplo: atpplo
+      };
+
+      // Call the atpPlo action using AJAX
+      this.showMessageConfirm("process ATP").then(() => {
+        // Get service URL from the model
+        const serviceUrl = oModel.sServiceUrl;
+
+        // First get CSRF token
+        // jQuery.ajax({
+        //   url: serviceUrl,
+        //   type: "GET",
+        //   headers: {
+        //     "X-CSRF-Token": "Fetch",
+        //     "Accept": "application/json"
+        //   },
+        //   success: function (data, textStatus, jqXHR) {
+        //     const csrfToken = jqXHR.getResponseHeader("X-CSRF-Token");
+
+        // Now make the actual call to the action
+        debugger;
+        jQuery.ajax({
+          url: serviceUrl + "atpPlo",
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          data: JSON.stringify({ Payload: payload }),
+          headers: {
+            // "X-CSRF-Token": csrfToken,
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          },
+          success: function () {
+            debugger;
+            MessageToast.show("ATP Process completed successfully");
+            sap.ui.getCore().byId('fragmentPezze--_IDGenDialogWhereUsed').close();
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            debugger;
+            MessageToast.show("ATP Process failed");
+            console.error("Error in ATP Process:", textStatus, errorThrown);
+          }
+        });
+        //   },
+        //   error: function (jqXHR, textStatus, errorThrown) {
+        //     MessageToast.show("Failed to fetch CSRF token");
+        //     console.error("CSRF Token Error:", textStatus, errorThrown);
+        //   }
+        // });
+      }).catch(() => {
+        MessageToast.show("ATP Process cancelled");
       });
     }
-  }
+  };
 });

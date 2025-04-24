@@ -63,14 +63,11 @@ sap.ui.define([
       }
 
       this._fragmentPezze.then(function (dialog) {
-        // dialog.bindElement(`/ZZ1_MFP_ASSIGNMENT/(SAP_UUID='${obj.SAP_UUID}')`);
         dialog.setModel(model, 'selected');
         dialog.setModel(oModel);
         const table = dialog.getContent().at(-1);
-        // { 
-        //     path: '/ZZ1_MFP_ASSIGNMENT',
-        //     parameters : { $$updateGroupId : 'CreatePezzeBatch' }
-        // }
+
+        debugger;
         table.bindAggregation('items', {
           path: '/ZZ1_MFP_ASSIGNMENT',
           filters: [
@@ -82,9 +79,6 @@ sap.ui.define([
               new sap.m.ObjectIdentifier({
                 title: "{CHARG}"
               }),
-              // new sap.m.Text({
-              //   text: "{MATNR}"
-              // }),
               new sap.m.Text({
                 text: "{LGORT}"
               }),
@@ -110,57 +104,53 @@ sap.ui.define([
         });
 
         const binding = table.getBinding('items');
-        // binding.attachDataReceived(function () {
-        //   debugger;
-        // });
-        binding.resetChanges()
-        // const count = Math.round(parseInt(obj.RequiredQuantity) / parseInt(_selectedItems.length));
-        // sommatoria AvaibilityQty 
-        const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
-        console.log("Total Availability Quantity: ", TotAvaibilityQty);
+        binding.resetChanges();
+        binding.attachDataReceived(function () {
+          debugger;
+          // sommatoria AvaibilityQty 
+          const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
+          console.log("Total Availability Quantity: ", TotAvaibilityQty);
 
-        _selectedItems.forEach((_item) => {
-          const item = structuredClone(_item)
-          // let QTA_ASS_V = count// parseInt(obj.RequiredQuantity);
-          // if (parseInt(item.AvaibilityQty) < QTA_ASS_V) {
-          //   QTA_ASS_V = parseInt(item.AvaibilityQty);
-          // }
+          _selectedItems.forEach((_item) => {
+            const item = structuredClone(_item)
+            // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
+            const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+            // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
+            // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
+            const QTA_ASS_V = Math.min(parseInt(item.AvaibilityQty), (TotAvaibilityQty * (COPERTURA / 100)));
 
-          // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
-          const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
-          // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
-          // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-          const QTA_ASS_V = Math.min(parseInt(item.AvaibilityQty), (TotAvaibilityQty * (COPERTURA / 100)));
+            const SAP_UUID = crypto.randomUUID()
 
-          const SAP_UUID = crypto.randomUUID()
-          const newCreate = structuredClone({
-            "SAP_UUID": SAP_UUID,
-            "WERKS": item.Plant,
-            "LGORT": item.StorageLocation,
-            "FSH_MPLO_ORD": obj.CplndOrd,
-            "BAGNI": item.dye_lot || "",
-            "MATNR": item.Material,
-            "CHARG": item.Batch,
-            "Bagno": item.dye_lot,
-            "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
-            // "QTY_CALCOLATA": 'amtam',
-            "QTA_ASS_U": "",
-            "QTA_ASS_U_Text": "",
-            "FABB_TOT_V": item.AvaibilityQty || 0,
-            "FABB_TOT_U": "",
-            "FABB_TOT_U_Text": "",
-            "COPERTURA": COPERTURA,
-            "SORT": 0,
-            "SAP_CreatedDateTime": new Date(),
-            "SAP_CreatedByUser": "LASPATAS",
-            "SAP_CreatedByUser_Text": "",
-            "SAP_LastChangedDateTime": new Date(),
-            "SAP_LastChangedByUser": "LASPATAS",
-            "SAP_LastChangedByUser_Text": ""
-          })
-          binding.create(newCreate, false, false);
-        });
+            const newCreate = structuredClone({
+              "SAP_UUID": SAP_UUID,
+              "WERKS": item.Plant,
+              "LGORT": item.StorageLocation,
+              "FSH_MPLO_ORD": obj.CplndOrd,
+              "BAGNI": item.dye_lot || "",
+              "MATNR": item.Material,
+              "CHARG": item.Batch,
+              "Bagno": item.dye_lot,
+              "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
+              // "QTY_CALCOLATA": 'amtam',
+              "QTA_ASS_U": "",
+              "QTA_ASS_U_Text": "",
+              "FABB_TOT_V": item.AvaibilityQty || 0,
+              "FABB_TOT_U": "",
+              "FABB_TOT_U_Text": "",
+              "COPERTURA": COPERTURA,
+              "SORT": 0,
+              "SAP_CreatedDateTime": new Date(),
+              "SAP_CreatedByUser": "LASPATAS",
+              "SAP_CreatedByUser_Text": "",
+              "SAP_LastChangedDateTime": new Date(),
+              "SAP_LastChangedByUser": "LASPATAS",
+              "SAP_LastChangedByUser_Text": ""
+            })
 
+            binding.create(newCreate, false, false, false);
+
+          });
+        }.bind(this));
         dialog.open();
       }.bind(this));
     },
@@ -227,7 +217,7 @@ sap.ui.define([
         dialog.setModel(model, 'selected');
         dialog.setModel(oModel)
 
-        const fakeTabella = dialog.getContent().at(-2);
+        // const fakeTabella = dialog.getContent().at(-2);
         const tabella = dialog.getContent().at(-1);
 
         tabella.bindAggregation('items', {
@@ -252,55 +242,25 @@ sap.ui.define([
 
         const binding = tabella.getBinding('items');
         binding.resetChanges()
-        binding.attachDataReceived(function () {
-          fakeTabella.bindAggregation('items', {
-            path: '/atp_item',
-            filters: [],
-            template: new sap.m.ColumnListItem({
-              cells: [
-                new sap.m.ObjectIdentifier({
-                  title: "{fsh_cplnd_ord}"
-                }),
-                new sap.m.Text({
-                  text: "{flag}"
-                }),
-              ]
-            }),
-            templateShareable: true,
-            parameters: { $$updateGroupId: 'CreateWhereUsedBatch' },
-          });
-          fakeTabella.resetChanges()
-          // const bindingFake = fakeTabella.getBinding('items');
-          // bindingFake.resetChanges()
-          // const selectedItems = this._view.byId('fragmentPezze--selectedItemsTableWhereUsed').getSelectedItems()
-          // const _selectedItems = []
-          // for (let i = 0; i < selectedItems.length; i++) {
-          //   const oObj = selectedItems[i].getBindingContext().getObject()
-          //   _selectedItems.push(oObj)
-          // }
-          // _selectedItems.forEach((_item) => {
-          //   const item = structuredClone(_item)
-          //   const newCreate = structuredClone({
-          //     fsh_cplnd_ord: item.CplndOrd,
-          //     flag: true,
-          //   })
-          //   bindingFake.create(newCreate, false, false);
-          // });
-        }.bind(this));
-        // const selectedItems = this._view.byId('fragmentPezze--selectedItemsTableWhereUsed').getSelectedItems()
-        // const _selectedItems = []
-        // for (let i = 0; i < selectedItems.length; i++) {
-        //   const oObj = selectedItems[i].getBindingContext().getObject()
-        //   _selectedItems.push(oObj)
-        // }
-        // _selectedItems.forEach((_item) => {
-        //   const item = structuredClone(_item)
-        //   const newCreate = structuredClone({
-        //     fsh_cplnd_ord: item.CplndOrd,
-        //     flag: true,
-        //   })
-        //   binding.create(newCreate, false, false);
-        // });
+        // binding.attachDataReceived(function () {
+        //   fakeTabella.bindAggregation('items', {
+        //     path: '/atp_item',
+        //     filters: [],
+        //     template: new sap.m.ColumnListItem({
+        //       cells: [
+        //         new sap.m.ObjectIdentifier({
+        //           title: "{fsh_cplnd_ord}"
+        //         }),
+        //         new sap.m.Text({
+        //           text: "{flag}"
+        //         }),
+        //       ]
+        //     }),
+        //     templateShareable: true,
+        //     parameters: { $$updateGroupId: 'CreateWhereUsedBatch' },
+        //   });
+        //   fakeTabella.resetChanges()
+        // }.bind(this));
 
         dialog.open();
       }.bind(this));

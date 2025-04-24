@@ -318,6 +318,10 @@ module.exports = class MainService extends cds.ApplicationService {
       return ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
     });
 
+    this.on("*", "ZZ1_MFP_ASSIGNMENT", async (req) => {
+      return await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
+    });
+
     this.on("disassemble", async (req) => {
       debugger;
     });
@@ -329,15 +333,47 @@ module.exports = class MainService extends cds.ApplicationService {
       return res;
     });
 
-    this.on("*", "ZZ1_MFP_ASSIGNMENT", async (req) => {
-      return await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
-    });
+
     this.on("*", "ConvertPLO", async (req) => {
       return await ZMPF_ASS_BATCH_SRV.run(req.query);
     });
 
     this.on('myNewAction', async (req) => {
       return true; // or any appropriate response
+    });
+
+    // ATP Planned Orders action handler
+    this.on('atpPlo', async (req) => {
+      try {
+        const { id, atpplo } = req.data;
+
+        if (!id || !Array.isArray(atpplo)) {
+          return false;
+        }
+
+        // Access the ATP service
+        const ZS_RFM_ATP_PLANNED_ORDERS = await cds.connect.to('ZS_RFM_ATP_PLANNED_ORDERS');
+
+        // Create header record
+        const headerResult = await ZS_RFM_ATP_PLANNED_ORDERS.create('atp_header').entries({ id });
+
+        // Create items with reference to the header
+        const itemEntries = atpplo.map(item => ({
+          id: item.id,
+          fsh_cplnd_ord: item.fsh_cplnd_ord,
+          flag: item.flag,
+          parent_id: id
+        }));
+
+        // Insert all items in one batch
+        const itemsResult = await ZS_RFM_ATP_PLANNED_ORDERS.create('atp_item').entries(itemEntries);
+
+        return true;
+      } catch (error) {
+        console.error('Error in atpPlo action:', error);
+        req.error(500, error.message);
+        return false;
+      }
     });
   }
 };

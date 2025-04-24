@@ -5,7 +5,18 @@ using {ZZ1_PLANNEDORDERSAPI_CDS} from './external/ZZ1_PLANNEDORDERSAPI_CDS';
 using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS';
 using {ZZ1_MFP_ASSIGNMENT_CDS} from './external/ZZ1_MFP_ASSIGNMENT_CDS';
 using {ZMPF_ASS_BATCH_SRV} from './external/ZMPF_ASS_BATCH_SRV';
-using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
+// using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
+
+type AtpPloItemType : {
+  id            : String(3);
+  fsh_cplnd_ord : String(12);
+  flag          : Boolean;
+}
+
+type AtpPloType     : {
+  id     : String;
+  atpplo : array of AtpPloItemType;
+}
 
 service MainService {
 
@@ -128,13 +139,6 @@ service MainService {
       null as CrossPlantConfigurableProduct : String(40)
     };
 
-  @sap.creatable: 'true'
-  @sap.deletable: 'true'
-  entity atp_item                   as projection on ZS_RFM_ATP_PLANNED_ORDERS.atp_item;
-
-  // action assemble(Records : Records)                  returns Boolean;
-  // action disassemble(ZZ1_CombPlnOrdersStock : String) returns Boolean;
-  action fragment() returns Boolean;
-// Stock - End
-
+  // entity atp_item                   as projection on ZS_RFM_ATP_PLANNED_ORDERS.atp_item;
+  action atpPlo(Payload : AtpPloType) returns Boolean;
 }
