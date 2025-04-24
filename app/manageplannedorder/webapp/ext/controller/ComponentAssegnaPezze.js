@@ -109,9 +109,9 @@ sap.ui.define([
             const newCreate = structuredClone({
               "SAP_UUID": SAP_UUID,
               "WERKS": item.Plant,
-              "LGORT": item.StorageLocation,
+              "LGORT": item.StorageLocation || "X",
               "FSH_MPLO_ORD": obj.CplndOrd,
-              "BAGNI": item.dye_lot || "",
+              "BAGNI": item.dye_lot || "X",
               "MATNR": item.Material,
               "CHARG": item.Batch,
               "Bagno": item.dye_lot,
