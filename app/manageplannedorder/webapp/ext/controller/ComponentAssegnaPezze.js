@@ -131,13 +131,13 @@ sap.ui.define([
               "SAP_LastChangedByUser_Text": ""
             })
 
-            // const isPresent = binding.getContexts().some(context => context.getObject().FSH_MPLO_ORD === obj.CplndOrd);
-            // if (!isPresent) {
-            //   console.warn("Combined planned order is not present in binding.");
-            binding.create(newCreate, false, false, false);
-            // } else {
-            //   console.log("Combined planned order is present in binding.");
-            // }
+            const isPresent = binding.getContexts().some(context => context.getObject().CHARG === obj.Batch);
+            if (!isPresent) {
+              console.warn("Combined planned order is not present in binding.");
+              binding.create(newCreate, false, false, false);
+            } else {
+              console.log("Combined planned order is present in binding.");
+            }
 
 
           });
