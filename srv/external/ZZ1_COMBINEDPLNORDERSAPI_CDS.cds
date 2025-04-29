@@ -1,4 +1,4 @@
-/* checksum : 8f8d9004d5c735ac9dd1d881c2458a8a */
+/* checksum : 6d911712c25f4df6da4e41617d3732d5 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -710,6 +710,9 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.label : 'Theme'
   @sap.quickinfo : 'Fashion Theme'
   ProductTheme : String(10);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Product Description'
+  ProductDescription : String(40);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };

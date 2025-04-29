@@ -47,6 +47,7 @@ service MainService {
       ProductCharacteristic2,
       ProductCharacteristic3,
       StorageLocation,
+      ProductDescription,
       null as CombPlanAllQty     : String(20),
       null as TotalPlanAllQty    : String(20),
       null as TotalProdAllQty    : String(20), // rappresenta il totale di tutte le righe

@@ -85,6 +85,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {$Type : 'UI.DataField',Value : PlndOrderTotalCmtmtDate,Label : '{i18n>PlndOrderTotalCmtmt}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : ProductCollection,Label : '{i18n>ProductCollection}',![@UI.Hidden]},
+        {
+            $Type : 'UI.DataField',
+            Value : ProductDescription,
+            Label : 'Product Description',
+        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
@@ -534,6 +539,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.DataField',
             Value : Material,
             Label : '{i18n>Material}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductDescription,
+            Label : 'ProductDescription',
         },
         {
             $Type : 'UI.DataField',

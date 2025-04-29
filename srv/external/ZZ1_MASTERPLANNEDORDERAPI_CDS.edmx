@@ -617,6 +617,7 @@
 <Property Name="ProductCollection" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Collection" sap:quickinfo="Fashion Collection"/>
 <Property Name="ProductSeasonYear" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Season Year"/>
 <Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
+<Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrdersCom" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_3EFCF33BBBF8C54DA04394F364D9BCAC" FromRole="FromRole_assoc_3EFCF33BBBF8C54DA04394F364D9BCAC" ToRole="ToRole_assoc_3EFCF33BBBF8C54DA04394F364D9BCAC"/>
 <NavigationProperty Name="to_ZZ1_PlannedOrders" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_520ECF1B51A59165ED2BF7E61F6F1D46" FromRole="FromRole_assoc_520ECF1B51A59165ED2BF7E61F6F1D46" ToRole="ToRole_assoc_520ECF1B51A59165ED2BF7E61F6F1D46"/>
 <NavigationProperty Name="to_ZZ1_PlannedOrdersCompChar" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_79BBB3F33B4CBDDA690DC713AE76BC5D" FromRole="FromRole_assoc_79BBB3F33B4CBDDA690DC713AE76BC5D" ToRole="ToRole_assoc_79BBB3F33B4CBDDA690DC713AE76BC5D"/>
@@ -645,6 +646,7 @@
 <Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
 <Property Name="RequiredQuantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequiredQuantity"/>
 <Property Name="TotalAllocQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="TotalAllocQty"/>
+<Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <NavigationProperty Name="to_StorageLocation" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_6F1563F740A9ADE728487EE71D71D13E" FromRole="FromRole_assoc_6F1563F740A9ADE728487EE71D71D13E" ToRole="ToRole_assoc_6F1563F740A9ADE728487EE71D71D13E"/>
 </EntityType>
 <EntityType Name="ZZ1_PlannedOrdersType" sap:semantics="aggregate" sap:label="Planned Orders" sap:content-version="1">

@@ -1,4 +1,4 @@
-/* checksum : e606aff44a697d772a3c3daa2cf0d314 */
+/* checksum : 6d5999e2b283d3ddb790b72e552dd573 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -225,6 +225,9 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   @sap.unit : 'BaseUnit'
   @sap.label : 'TotalAllocQty'
   TotalAllocQty : Decimal(14, 3);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Product Description'
+  ProductDescription : String(40);
   to_ZZ1_CombPlnOrdersStock : Association to many ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {  };
 };
 

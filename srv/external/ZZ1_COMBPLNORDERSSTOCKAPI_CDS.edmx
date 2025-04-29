@@ -108,6 +108,7 @@
 <Property Name="WithdrawnQuantity" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="WithdrawnQuantity"/>
 <Property Name="RequiredQuantity" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequiredQuantity"/>
 <Property Name="TotalAllocQty" Type="Edm.Decimal" Precision="14" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="TotalAllocQty"/>
+<Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <NavigationProperty Name="to_ZZ1_CombPlnOrdersStock" Relationship="ZZ1_COMBPLNORDERSSTOCKAPI_CDS.assoc_D849BEF3EA1D621CBBBB905E9A13C008" FromRole="FromRole_assoc_D849BEF3EA1D621CBBBB905E9A13C008" ToRole="ToRole_assoc_D849BEF3EA1D621CBBBB905E9A13C008"/>
 </EntityType>
 <Association Name="assoc_D849BEF3EA1D621CBBBB905E9A13C008" sap:content-version="1">

@@ -1,4 +1,4 @@
-/* checksum : 0303415e3a43c9325c1ab2813b40b029 */
+/* checksum : 6c743262942b76f144b0d26e0310a8c8 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -2109,6 +2109,9 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPI {
   @sap.label : 'Theme'
   @sap.quickinfo : 'Fashion Theme'
   ProductTheme : String(10);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Product Description'
+  ProductDescription : String(40);
   to_ZZ1_MasterPlannedOrdersCom : Association to many ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrdersCom {  };
   to_ZZ1_PlannedOrders : Association to many ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PlannedOrders {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
@@ -2203,6 +2206,9 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrdersCom {
   @sap.unit : 'BaseUnit'
   @sap.label : 'TotalAllocQty'
   TotalAllocQty : Decimal(13, 3);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Product Description'
+  ProductDescription : String(40);
   to_StorageLocation : Association to ZZ1_MASTERPLANNEDORDERAPI_CDS.I_StorageLocation {  };
 };
 

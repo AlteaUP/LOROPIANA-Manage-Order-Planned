@@ -82,3 +82,4 @@ entity ZS_RFM_ATP_PLANNED_ORDERS.atp_item {
   flag : Boolean not null;
   parent : Association to one ZS_RFM_ATP_PLANNED_ORDERS.atp_header {  };
 };
+
