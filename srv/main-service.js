@@ -23,6 +23,7 @@ module.exports = class MainService extends cds.ApplicationService {
       if (!Array.isArray(res)) {
         return res;
       }
+
       return res.map((item => {
         let committed_percent = item.PlndOrderCommittedQty / item.PlannedTotalQtyInBaseUnit * 100
         let committed_criticality;
@@ -315,11 +316,32 @@ module.exports = class MainService extends cds.ApplicationService {
     });
     // ZZ1_COMBPLNORDERSSTOCKAPI - End
     this.on('INSERT', 'ZZ1_MFP_ASSIGNMENT', async (req) => {
+      console.log('[INSERT]*************')
       return ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
     });
 
-    this.on("*", "ZZ1_MFP_ASSIGNMENT", async (req) => {
-      return await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
+    this.on('UPDATE', 'ZZ1_MFP_ASSIGNMENT', async (req) => {
+      console.log('[PATCH]*************')
+      let res;
+      try {
+        res = await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
+      } catch (error) {
+        console.error('Error in UPDATE ZZ1_MFP_ASSIGNMENT:', error);
+        return req.error(500, error.message);
+      };
+    });
+
+    this.on("READ", "ZZ1_MFP_ASSIGNMENT", async (req) => {
+      console.log('[GET]*************')
+      const res = await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query)
+      return res;
+
+    });
+    this.on("DELETE", "ZZ1_MFP_ASSIGNMENT", async (req) => {
+      console.log('[DELETE]*************')
+      const res = await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query)
+      return res;
+
     });
 
     this.on("disassemble", async (req) => {
@@ -327,7 +349,6 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("assemble", async (req) => {
-      debugger;
       const data = req.body;
       const res = await ZZ1_MFP_ASSIGNMENT_CDS.insert("ZZ1_MFP_ASSIGNMENT").entries([data]);
       return res;

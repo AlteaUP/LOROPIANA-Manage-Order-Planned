@@ -128,10 +128,11 @@ sap.ui.define([
               "SAP_CreatedByUser_Text": "",
               "SAP_LastChangedDateTime": new Date(),
               "SAP_LastChangedByUser": "LASPATAS",
-              "SAP_LastChangedByUser_Text": ""
+              "SAP_LastChangedByUser_Text": "X"
             })
 
-            const isPresent = binding.getContexts().some(context => context.getObject().CHARG === obj.Batch);
+            const isPresent = binding.getContexts().some(context => context.getObject().CHARG === _item.Batch);
+
             if (!isPresent) {
               console.warn("Combined planned order is not present in binding.");
               binding.create(newCreate, false, false, false);

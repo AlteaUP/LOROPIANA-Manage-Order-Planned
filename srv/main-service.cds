@@ -110,6 +110,7 @@ service MainService {
 
   @sap.creatable: 'true'
   @sap.deletable: 'true'
+  @sap.updatable: 'true'
   entity ZZ1_MFP_ASSIGNMENT         as
     projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
       *,

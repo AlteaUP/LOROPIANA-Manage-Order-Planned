@@ -28,11 +28,11 @@ sap.ui.define([
 
       this.showMessageConfirm("assign").then(function () {
         MessageToast.show("Do Assemble invoked.");
-        oModel.submitBatch("CreatePezzeBatch").then(() => {
+        oModel.submitBatch("CreatePezzeBatch").then((a, b, c) => {
           MessageToast.show("Do Assemble completed.");
           sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze').close();
-          oTableBinding.refresh(true);
-        }).catch((oError) => {
+          oTableBinding.filter();
+        }).catch((oError, err, err1) => {
           MessageToast.show("Do Assemble error.");
           console.error("Error", oError);
         });
