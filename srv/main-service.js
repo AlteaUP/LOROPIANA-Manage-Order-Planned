@@ -366,30 +366,33 @@ module.exports = class MainService extends cds.ApplicationService {
     // ATP Planned Orders action handler
     this.on('atpPlo', async (req) => {
       try {
-        const { id, atpplo } = req.data;
+        const { Payload: { id, atpplo } } = req.data;
 
         if (!id || !Array.isArray(atpplo)) {
           return false;
         }
-
+        debugger;
         // Access the ATP service
         const ZS_RFM_ATP_PLANNED_ORDERS = await cds.connect.to('ZS_RFM_ATP_PLANNED_ORDERS');
 
         // Create header record
-        const headerResult = await ZS_RFM_ATP_PLANNED_ORDERS.create('atp_header').entries({ id });
+        // const headerResult = await ZS_RFM_ATP_PLANNED_ORDERS.create('atp_header').entries({ id });
 
         // Create items with reference to the header
-        const itemEntries = atpplo.map(item => ({
-          id: item.id,
-          fsh_cplnd_ord: item.fsh_cplnd_ord,
-          flag: item.flag,
-          parent_id: id
-        }));
+        // const itemEntries = atpplo.map(item => ({
+        //   id: item.id,
+        //   fsh_cplnd_ord: item.fsh_cplnd_ord,
+        //   flag: item.flag,
+        //   parent_id: id
+        // }));
 
         // Insert all items in one batch
-        const itemsResult = await ZS_RFM_ATP_PLANNED_ORDERS.create('atp_item').entries(itemEntries);
+        // const itemsResult = await ZS_RFM_ATP_PLANNED_ORDERS.create('atp_item').entries(itemEntries);
 
-        return true;
+        return ZS_RFM_ATP_PLANNED_ORDERS.tx(req).post("/atp_header", {
+          id,
+          atpplo
+        })
       } catch (error) {
         console.error('Error in atpPlo action:', error);
         req.error(500, error.message);
