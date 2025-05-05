@@ -176,6 +176,14 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     },
     UI.LineItem #tableMacro1 : [
     ],
+    UI.HeaderInfo : {
+        Title : {
+            $Type : 'UI.DataField',
+            Value : CplndOrd,
+        },
+        TypeName : '',
+        TypeNamePlural : '',
+    },
 );
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
@@ -268,6 +276,11 @@ annotate service.ZZ1_MasterPlannedOrders with @(
             $Type : 'UI.DataField',
             Value : RequirementQuantityInBaseUnit,
             Label : '{i18n>RequirementQuantityInBase}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductDescription,
+            Label : '{i18n>Productdescription}',
         },
     ],
     UI.SelectionPresentationVariant #MasterPlannedOrder : {
@@ -460,6 +473,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         },
         {
             $Type : 'UI.ReferenceFacet',
+            ID : 'ProductDescription',
+            Target : '@UI.DataPoint#ProductDescription',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
             ID : 'Plant',
             Target : '@UI.DataPoint#Plant',
         },
@@ -483,6 +501,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.ReferenceFacet',
             ID : 'FinishedProductQty',
             Target : '@UI.DataPoint#FinishedProductQty',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'chart_percent',
+            Target : '@UI.Chart#chart_percent',
         },
     ],
     UI.FieldGroup #GeneralInfo : {
@@ -536,6 +559,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     },
     UI.LineItem #Components : [
         {
+            $Type : 'UI.DataFieldForAnnotation',
+            Target : '@UI.Chart#RequiredQuantity',
+            Label : '{i18n>AvailableQuantityRequired}',
+        },
+        {
             $Type : 'UI.DataField',
             Value : Material,
             Label : '{i18n>Material}',
@@ -543,7 +571,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : ProductDescription,
-            Label : 'ProductDescription',
+            Label : '{i18n>Productdescription}',
         },
         {
             $Type : 'UI.DataField',
@@ -656,7 +684,50 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         $Type : 'UI.DataPointType',
         Value : FinishedProductQty,
         Title : '{i18n>FinishedProductQty}',
-    }
+    },
+    UI.DataPoint #ProductDescription : {
+        $Type : 'UI.DataPointType',
+        Value : ProductDescription,
+        Title : '{i18n>Productdescription}',
+    },
+    UI.DataPoint #RequiredQuantity : {
+        Value : chart_percent,
+        // TargetValue : AvailableQuantity,
+        Criticality: chart_criticality
+    },
+    UI.Chart #RequiredQuantity : {
+        Title : 'chart_percent',
+        Description : 'chart_percent',
+        ChartType : #Donut,
+        Measures : [chart_percent],
+        MeasureAttributes : [{
+                $Type : 'UI.ChartMeasureAttributeType',
+                Measure : chart_percent,
+                Role : #Axis1,
+                DataPoint : '@UI.DataPoint#RequiredQuantity',
+        }],
+    },
+    UI.DataPoint #chart_percent : {
+        Value : chart_percent,
+        // TargetValue : chart_percent,
+        Criticality: chart_criticality
+    },
+    UI.Chart #chart_percent : {
+        Title : '{i18n>AvailableQuantityRequired}',
+        Description : '',
+        ChartType : #Donut,
+        Measures : [chart_percent],
+        MeasureAttributes : [
+            {
+                $Type : 'UI.ChartMeasureAttributeType',
+                DataPoint : '@UI.DataPoint#chart_percent',
+                Role : #Axis1,
+                Measure : chart_percent,
+            },
+        ],
+    },
+
+
 );
 
 
@@ -805,10 +876,10 @@ annotate service.ZZ1_MFP_ASSIGNMENT with @(
             Value : QTA_ASS_U,
             Label : '{i18n>PlannedTotalQtyIn}',
         },
-        {
-            $Type : 'UI.DataField',
-            Value : QTY_CALCOLATA,
-            Label : '{i18n>QTY_CALCOLATA}',
-        }
+        // {
+        //     $Type : 'UI.DataField',
+        //     Value : QTY_CALCOLATA,
+        //     Label : '{i18n>QTY_CALCOLATA}',
+        // }
     ]
 );

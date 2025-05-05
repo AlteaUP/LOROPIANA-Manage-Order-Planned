@@ -60,8 +60,16 @@
                     text="{selected>/RequiredQuantity}"
                 />
                 <Label
+                    id="labelProductDescription"
+                    text="{i18n>ProductDescription}"
+                />
+                <Text
+                    id="inputProductDescription"
+                    text="{selected>/ProductDescription}"
+                />
+                <Label
                     id="labelAvailableQuantity"
-                    text="Available Quantity"
+                    text="{Available Quantity}"
                 />
                 <Text
                     id="inputAvailableQuantity"

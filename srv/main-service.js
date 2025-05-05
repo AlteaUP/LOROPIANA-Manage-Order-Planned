@@ -107,6 +107,20 @@ module.exports = class MainService extends cds.ApplicationService {
       // if the res is array of one row
       if (Array.isArray(res) && res.length === 1) {
         res[0].TotalProdAllQty = TotalProdAllQty.toFixed(3);
+        // AvailableQuantity / RequiredQuantity
+        let chart_percent = Math.round(parseFloat(res[0].AvailableQuantity) / parseFloat(res[0].RequiredQuantity) * 100);
+        let chart_criticality;
+        if (chart_percent === 100) {
+          chart_criticality = 3
+        } else if (chart_percent < 100 && chart_percent > 0) {
+          chart_criticality = 2
+        } else {
+          chart_criticality = 1
+          chart_percent = 100
+        }
+        res[0].chart_percent = chart_percent;
+        res[0].chart_criticality = chart_criticality;
+
       } else {
         // Calculate TotalPlanAllQty and CombPlanAllQty for each record
         if (Array.isArray(res) && res.length > 0) {
@@ -151,6 +165,19 @@ module.exports = class MainService extends cds.ApplicationService {
 
             item.TotalPlanAllQty = TotalPlanAllQty.toFixed(3);
             item.CombPlanAllQty = CombPlanAllQty.toFixed(3);
+            // AvailableQuantity / RequiredQuantity
+            let chart_percent = Math.round(parseFloat(item.AvailableQuantity) / parseFloat(item.RequiredQuantity) * 100);
+            let chart_criticality;
+            if (chart_percent === 100) {
+              chart_criticality = 3
+            } else if (chart_percent < 100 && chart_percent > 0) {
+              chart_criticality = 2
+            } else {
+              chart_criticality = 1
+              chart_percent = 100
+            }
+            item.chart_percent = chart_percent;
+            item.chart_criticality = chart_criticality;
           });
         }
       }
@@ -267,7 +294,7 @@ module.exports = class MainService extends cds.ApplicationService {
           CombPlanAllQty: CombPlanAllQty.toFixed(3).toString(),
           AvaibilityQty,
           TotalInDelQty: TotalDeliveryQty.toFixed(3).toString(),
-          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
+          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString()
         };
       });
 
@@ -309,7 +336,7 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // ZZ1_COMBPLNORDERSSTOCKAPI - Start
     this.on("*", "ZZ1_CombPlnOrdersStockAPI", async (req) => {
-      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);
+      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query)
     });
     this.on("*", "ZZ1_CombPlnOrdersStock", async (req) => {
       return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);

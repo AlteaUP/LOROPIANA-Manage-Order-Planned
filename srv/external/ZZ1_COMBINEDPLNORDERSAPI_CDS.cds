@@ -1,4 +1,4 @@
-/* checksum : 6d911712c25f4df6da4e41617d3732d5 */
+/* checksum : ec876760b46a71a9c199f03fa9f3bfa7 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -713,6 +713,14 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Product Description'
   ProductDescription : String(40);
+  @sap.display.format : 'NonNegative'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'WorkCenterID'
+  @sap.quickinfo : 'Object ID'
+  WorkCenterInternalID : String(8);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Work Center Text'
+  WorkCenterText : String(40);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
@@ -854,6 +862,9 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {
   @sap.label : 'Combined Plnd. Order'
   @sap.quickinfo : 'Combined Master Planned Order'
   CplndOrd : String(12);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Product Description'
+  ProductDescription : String(40);
 };
 
 @cds.external : true
