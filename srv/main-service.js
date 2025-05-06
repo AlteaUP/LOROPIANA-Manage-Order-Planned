@@ -58,6 +58,8 @@ module.exports = class MainService extends cds.ApplicationService {
       return res;
     });
 
+
+    // Table - Components
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
@@ -152,7 +154,6 @@ module.exports = class MainService extends cds.ApplicationService {
             combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
           }
 
-          // Calculate and add the values to each record
           res.forEach(item => {
             const { Plant, Material } = item;
             const key = `${Plant}|${Material}`;
@@ -176,8 +177,8 @@ module.exports = class MainService extends cds.ApplicationService {
               chart_criticality = 1
               chart_percent = 100
             }
-            item.chart_percent = chart_percent;
-            item.chart_criticality = chart_criticality;
+            item.chart_percent = chart_percent; // Components
+            item.chart_criticality = chart_criticality; // Components
           });
         }
       }

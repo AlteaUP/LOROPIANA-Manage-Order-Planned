@@ -18,16 +18,40 @@ sap.ui.define([
 
       oTable.attachSelectionChange(function (oEvent) {
         console.log("Selection changed:", oEvent);
+        const idTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable';
+        const oTable = sap.ui.getCore().byId(idTable);
+        oEvent.preventDefault();
         const oContext = oEvent.getParameter('listItem');
-        const selected = oEvent.getParameter('selected')
+        // const selected = oEvent.getParameter('selected')
         const highlight = oContext.getHighlight()
         // se highlight === 'Success' permetto la selezione altrimenti no
-        if (!selected) return
-        if (highlight === 'Success') {
-          oContext.setSelected(true);
-        } else {
-          oContext.setSelected(false);
-          MessageToast.show("Item not selectable");
+        // if (!selected) return
+        // if (highlight === 'Success') {
+        //   oContext.setSelected(true);
+        // } else {
+        //   debugger;
+        //   oContext.setSelected(false);
+        //   oTable.removeSelections();
+        //   MessageToast.show("Item not selectable");
+        // }
+        if (highlight !== 'Success') {
+          setTimeout(() => {
+            oTable.removeSelections(); // Rimuove selezione visiva
+            // Rimuove il context anche dalla lista effettiva
+            const oBinding = oTable.getBinding("items");
+            if (oBinding && oBinding.getContexts) {
+              oTable.setSelectedItem(null); // forza aggiornamento
+              // remove all selected items
+              // const selectedItems = oTable.getSelectedItems();
+              // selectedItems.forEach((item) => {
+              //   const oContext = item.getBindingContext();
+              //   if (oContext) {
+              //     oTableBinding.removeItem(oContext);
+              //   }
+              // });
+            }
+            sap.m.MessageToast.show("Item not selectable");
+          }, 0);
         }
       }, this);
 
@@ -63,7 +87,6 @@ sap.ui.define([
     },
     onAfterRendering: function () {
       console.log('Pezze controller after rendering');
-      debugger;
     },
 
     showMessageConfirm: function (action) {
@@ -88,9 +111,20 @@ sap.ui.define([
       this.showMessageConfirm("assign").then(function () {
         MessageToast.show("Do Assemble invoked.");
         oModel.submitBatch("CreatePezzeBatch").then((a, b, c) => {
+          const oStockTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
           MessageToast.show("Do Assemble completed.");
           sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze').close();
-          oTableBinding.filter();
+          oStockTable.refreshItems();
+          oStockTable.getBinding('items').refresh()
+          // remove all selected items
+          oStockTable.removeSelections();
+          // const selectedItems = oStockTable.getSelectedItems();
+          // selectedItems.forEach((item) => {
+          //   const oContext = item.getBindingContext();
+          //   if (oContext) {
+          //     oTableBinding.removeItem(oContext);
+          //   }
+          // });
         }).catch((oError, err, err1) => {
           MessageToast.show("Do Assemble error.");
           console.error("Error", oError);
@@ -208,6 +242,10 @@ sap.ui.define([
             debugger;
             MessageToast.show("ATP Process completed successfully");
             sap.ui.getCore().byId('fragmentPezze--_IDGenDialogWhereUsed').close();
+
+            const oStockTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
+            oStockTable.refreshItems();
+            oStockTable.getBinding('items').refresh();
           },
           error: function (jqXHR, textStatus, errorThrown) {
             debugger;

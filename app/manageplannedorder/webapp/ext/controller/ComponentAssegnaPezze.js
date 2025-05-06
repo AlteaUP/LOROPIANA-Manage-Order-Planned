@@ -182,10 +182,14 @@ sap.ui.define([
 
       const oData = await oModel.submitBatch(sGroupId)
       BusyIndicator.hide(0);
-      if (!oData)
+      const oStockTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
+      if (!oData) {
         MessageToast.show("Disassemble completed successfully.");
-      else
+        oStockTable.refreshItems();
+        oStockTable.getBinding('items').refresh();
+      } else {
         MessageToast.show("Disassemble failed.");
+      }
 
     },
     doWhereUsed: function (oEvent) {
