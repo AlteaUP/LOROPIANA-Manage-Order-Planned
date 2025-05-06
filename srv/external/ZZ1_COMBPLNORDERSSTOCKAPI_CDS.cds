@@ -1,4 +1,4 @@
-/* checksum : 6d5999e2b283d3ddb790b72e552dd573 */
+/* checksum : 855455ef9463365a08d4a2fb563a6aab */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -127,6 +127,9 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
   @sap.required.in.filter : 'false'
   @sap.label : 'ALTEZZA_STANDARD'
   ALTEZZA_STANDARD : String(70);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Product Description'
+  ProductDescription : String(40);
 };
 
 @cds.external : true

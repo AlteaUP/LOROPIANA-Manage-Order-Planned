@@ -525,6 +525,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
                 $Type : 'UI.DataField',
                 Value : WithdrawnQuantity,
                 Label : '{i18n>WithdrawnQuantity}',
+                ![@UI.Hidden],
             },
             {
                 $Type : 'UI.DataField',
@@ -590,8 +591,14 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         },
         {
             $Type : 'UI.DataField',
+            Value : CombPlanAllQty,
+            Label : 'CombPlanAllQty',
+        },
+        {
+            $Type : 'UI.DataField',
             Value : WithdrawnQuantity,
             Label : '{i18n>WithdrawnQuantity}',
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
@@ -614,11 +621,6 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {$Type : 'UI.DataField',Value : ProductCharacteristic3,Label : '{i18n>ProductCharacteristic3}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : StorageLocation,Label : '{i18n>StorageLocation}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : TotalProdAllQty,Label : '{i18n>TotalProdAllQty}',![@UI.Hidden]},
-        {
-            $Type : 'UI.DataField',
-            Value : CombPlanAllQty,
-            Label : 'CombPlanAllQty',
-        },
         {
             $Type : 'UI.DataField',
             Value : TotalPlanAllQty,

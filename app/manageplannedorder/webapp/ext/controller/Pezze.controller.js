@@ -7,6 +7,65 @@ sap.ui.define([
   'use strict';
 
   return {
+    onInit: function () {
+      console.log('Pezze controller initialized');
+      const idTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable';
+      const oTable = sap.ui.getCore().byId(idTable);
+
+      oTable.attachItemPress(function (oEvent) {
+        console.log("Item pressed:", oEvent);
+      }, this);
+
+      oTable.attachSelectionChange(function (oEvent) {
+        console.log("Selection changed:", oEvent);
+        const oContext = oEvent.getParameter('listItem');
+        const selected = oEvent.getParameter('selected')
+        const highlight = oContext.getHighlight()
+        // se highlight === 'Success' permetto la selezione altrimenti no
+        if (!selected) return
+        if (highlight === 'Success') {
+          oContext.setSelected(true);
+        } else {
+          oContext.setSelected(false);
+          MessageToast.show("Item not selectable");
+        }
+      }, this);
+
+      oTable.attachUpdateFinished(function (oEvent) {
+        console.log("Update finished:", oEvent);
+        const idTable = oEvent.getParameter('id');
+        const oTable = sap.ui.getCore().byId(idTable)
+        const aItems = oTable.getItems()
+        aItems.forEach((item) => {
+          const oContext = item.getBindingContext().getObject();
+          const { AvaibilityQty, CombPlanAllQty } = oContext;
+          let highlight = 'None';
+          let highlightText = '';
+          if (parseInt(AvaibilityQty) === 0 && parseInt(CombPlanAllQty) > 0) {
+            highlight = 'Error';
+            highlightText = 'No stock available';
+          } else if (parseInt(AvaibilityQty) > 0 && parseInt(CombPlanAllQty) === 0) {
+            highlight = 'Success';
+            highlightText = 'Stock available';
+          } else if (parseInt(CombPlanAllQty) > 0) {
+            highlight = 'Warning';
+            highlightText = 'Stock available but not enough';
+          }
+          item.setHighlight(highlight);
+          item.setHighlightText(highlightText)
+        });
+      }, this);
+      // attach data retrieve
+      // oTable.getBinding("items").attachDataReceived(function (oEvent) {
+      //   console.log("Data received:", oEvent);
+      //   debugger;
+      // });
+    },
+    onAfterRendering: function () {
+      console.log('Pezze controller after rendering');
+      debugger;
+    },
+
     showMessageConfirm: function (action) {
       // capitalize the first letter of the action
       action = action.charAt(0).toUpperCase() + action.slice(1);

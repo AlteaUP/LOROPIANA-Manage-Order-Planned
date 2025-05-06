@@ -77,6 +77,7 @@
 <Property Name="PDF_RATING_ID" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="PDF_RATING_ID"/>
 <Property Name="SERIALE_MATRICOLA" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="SERIALE_MATRICOLA"/>
 <Property Name="ALTEZZA_STANDARD" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="ALTEZZA_STANDARD"/>
+<Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 </EntityType>
 <EntityType Name="ZZ1_CombPlnOrdersStockAPIType" sap:label="Combined Planned Orders Stock API" sap:content-version="1">
 <Key>

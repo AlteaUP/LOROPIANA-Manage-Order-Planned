@@ -227,7 +227,7 @@
                 },
                 "to_ZZ1_CombPlnOrdersStock/@com.sap.vocabularies.UI.v1.LineItem#Stock": {
                   "tableSettings": {
-                    "selectAll": true,
+                    "selectAll": false,
                     "selectionMode": "Multi"
                   },
                   "actions": {
