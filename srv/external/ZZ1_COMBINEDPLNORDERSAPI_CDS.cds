@@ -1,4 +1,4 @@
-/* checksum : bc492baf94973d814678c1f8077d9da7 */
+/* checksum : 514af202029db583b86695444c9769e4 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -715,7 +715,12 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   ProductDescription : String(40);
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center Text'
-  WorkCenterText_1 : String(40);
+  WorkCenterText : String(40);
+  @sap.display.format : 'NonNegative'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'WorkCenterID'
+  @sap.quickinfo : 'Object ID'
+  WorkCenterInternalID : String(8);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
@@ -1079,9 +1084,6 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.label : 'Plant'
   @sap.value.list : 'standard'
   Plant : String(4);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'Work Center Text'
-  WorkCenterText_1 : String(40);
   to_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {  };
 };
 

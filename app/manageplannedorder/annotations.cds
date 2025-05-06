@@ -90,6 +90,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Value : ProductDescription,
             Label : 'Product Description',
         },
+        {
+            $Type : 'UI.DataField',
+            Value : WorkCenterText,
+            Label : '{i18n>WorkCenter}',
+        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
