@@ -601,11 +601,6 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     },
     UI.LineItem #Components : [
         {
-            $Type : 'UI.DataFieldForAnnotation',
-            Target : '@UI.Chart#RequiredQuantity',
-            Label : '{i18n>AvailableQuantityRequired}',
-        },
-        {
             $Type : 'UI.DataField',
             Value : Material,
             Label : '{i18n>Material}',
@@ -619,6 +614,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.DataField',
             Value : RequiredQuantity,
             Label : '{i18n>RequiredQuantity}',
+        },
+        {
+            $Type : 'UI.DataFieldForAnnotation',
+            Target : '@UI.Chart#RequiredQuantity',
+            Label : '{i18n>AvailableQuantityRequired}',
         },
         {
             $Type : 'UI.DataField',
