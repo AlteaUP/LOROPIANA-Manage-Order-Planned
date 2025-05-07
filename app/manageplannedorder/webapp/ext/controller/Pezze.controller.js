@@ -11,7 +11,7 @@ sap.ui.define([
       console.log('Pezze controller initialized');
       const idTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable';
       const oTable = sap.ui.getCore().byId(idTable);
-
+      oTable.setGrowing(false);
       oTable.attachItemPress(function (oEvent) {
         console.log("Item pressed:", oEvent);
       }, this);
