@@ -108,7 +108,45 @@ module.exports = class MainService extends cds.ApplicationService {
       res['$count'] = res.length.toString();
       // if the res is array of one row
       if (Array.isArray(res) && res.length === 1) {
+        debugger;
+        const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
+
+        // Batch query to get all assignment data
+        const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+          SELECT.from('ZZ1_MFP_ASSIGNMENT')
+            .where({
+              WERKS: { in: res.map(i => i.Plant) },
+              MATNR: { in: res.map(i => i.Material) }
+            })
+        );
+
+        // Create lookup maps
+        const allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
+
+        // If we have a specific combined order, get its assignments too
+        let combPlanAssignmentsMap = {};
+        if (PlannedCombinedOrder) {
+          const combPlanAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+            SELECT.from('ZZ1_MFP_ASSIGNMENT')
+              .where({
+                FSH_MPLO_ORD: PlannedCombinedOrder,
+                WERKS: { in: res.map(i => i.Plant) },
+                MATNR: { in: res.map(i => i.Material) }
+              })
+          );
+          combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
+        }
+
+
         res[0].TotalProdAllQty = TotalProdAllQty.toFixed(3);
+
+        const key = `${res[0].Plant}|${res[0].Material}`;
+        const allAssignments = allAssignmentsMap[key] || [];
+        const combPlanAssignments = combPlanAssignmentsMap[key] || [];
+
+        res[0].TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V');
+        res[0].CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V');
+
         // AvailableQuantity / RequiredQuantity
         let chart_percent = Math.round(parseFloat(res[0].AvailableQuantity) / parseFloat(res[0].RequiredQuantity) * 100);
         let chart_criticality;
@@ -123,6 +161,11 @@ module.exports = class MainService extends cds.ApplicationService {
         res[0].chart_percent = chart_percent;
         res[0].chart_criticality = chart_criticality;
 
+        if (parseInt(res[0].TotalPlanAllQty) > 0 && parseInt(res[0].CombPlanAllQty) > 0) {
+          res[0].FinishedProductQty = (parseFloat(res[0].RequiredQuantity) / parseFloat(res[0].TotalPlanAllQty) * parseFloat(res[0].CombPlanAllQty)).toFixed(3);
+        } else {
+          res[0].FinishedProductQty = parseInt("0").toFixed(3);
+        }
       } else {
         // Calculate TotalPlanAllQty and CombPlanAllQty for each record
         if (Array.isArray(res) && res.length > 0) {
@@ -179,6 +222,12 @@ module.exports = class MainService extends cds.ApplicationService {
             }
             item.chart_percent = chart_percent; // Components
             item.chart_criticality = chart_criticality; // Components
+            // Finished product qty: (Required Quantity (del componente) / Planned Total Qty) * Comb Plan All qty;
+            if (parseInt(item.TotalPlanAllQty) > 0 && parseInt(item.CombPlanAllQty) > 0) {
+              item.FinishedProductQty = (parseFloat(item.RequiredQuantity) / parseFloat(item.TotalPlanAllQty) * parseFloat(item.CombPlanAllQty)).toFixed(3);
+            } else {
+              item.FinishedProductQty = parseInt("0").toFixed(3);
+            }
           });
         }
       }

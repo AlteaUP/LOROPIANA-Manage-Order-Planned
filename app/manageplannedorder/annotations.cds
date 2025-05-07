@@ -107,6 +107,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             ID : 'ProductionPlant',
             Target : '@UI.DataPoint#ProductionPlant',
         },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'ProductDescription',
+            Target : '@UI.DataPoint#ProductDescription',
+        },
     ],
     UI.Facets : [
         {
@@ -188,6 +193,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         TypeName : '',
         TypeNamePlural : '',
+        ImageUrl : CplndOrd,
+    },
+    UI.DataPoint #ProductDescription : {
+        $Type : 'UI.DataPointType',
+        Value : ProductDescription,
+        Title : '{i18n>ProductDescription}',
     },
 );
 
@@ -588,6 +599,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.DataField',
             Value : TotalAllocQty,
             Label : '{i18n>TotalAllocQty}',
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
@@ -597,7 +609,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : CombPlanAllQty,
-            Label : 'CombPlanAllQty',
+            Label : '{i18n>TotAssignedComb}',
         },
         {
             $Type : 'UI.DataField',
@@ -629,12 +641,26 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : TotalPlanAllQty,
-            Label : 'TotalPlanAllQty',
+            Label : '{i18n>TotalPlanAllQty}',
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : FinishedProductQty,
-            Label : 'FinishedProductQty',
+            Label : '{i18n>FinishedProductQty}',
+            ![@UI.Hidden],
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : chart_criticality,
+            Label : 'chart_criticality',
+            ![@UI.Hidden],
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : chart_percent,
+            Label : 'chart_percent',
+            ![@UI.Hidden],
         },
     ],
     UI.FieldGroup #QTY : {
@@ -684,7 +710,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     },
     UI.DataPoint #TotalAllocQty : {
         $Type : 'UI.DataPointType',
-        Value : TotalAllocQty,
+        Value : RequiredQuantity,
         Title : '{i18n>RequestFinishedProductQty}',
     },
     UI.DataPoint #FinishedProductQty : {
@@ -763,7 +789,8 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
         {
             $Type : 'UI.DataField',
             Value : Plant,
-            Label : 'Plant'
+            Label : 'Plant',
+            ![@UI.Hidden]
         },
         {
             $Type : 'UI.DataField',
@@ -799,30 +826,33 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
                 width : '5rem',
             },
         },
-        {
-            $Type : 'UI.DataField',
-            Value : TotalProdAllQty,
-            Label: 'Total Product All Qty'
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : TotalPlanAllQty,
-            Label: 'Total Planned All Qty'
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : CombPlanAllQty,
-            Label: 'Comb Plan All Qty'
-        },
+
+
         {
             $Type : 'UI.DataField',
             Value : AvaibilityQty,
             Label: 'Avaibility Qty'
         },
+
+        {
+            $Type : 'UI.DataField',
+            Value : TotalProdAllQty,
+            Label: 'Tot Assigned PrO'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : TotalPlanAllQty,
+            Label: 'Tot Assigned PlO'
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : CombPlanAllQty,
+            Label: 'Tot Assigned Comb'
+        },
         {
             $Type : 'UI.DataField',
             Value : TotalInDelQty,
-            Label: 'Total In Del Qty'
+            Label: 'Tot Delivery Qty'
         },
         {$Type: 'UI.DataField', Value: GROSS_LENGHT,Label: 'GROSS_LENGHT',![@UI.Hidden],},
         {$Type: 'UI.DataField', Value: NET_HEIGHT,Label: 'NET_HEIGHT',![@UI.Hidden],},

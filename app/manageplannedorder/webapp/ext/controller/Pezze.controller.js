@@ -34,7 +34,7 @@ sap.ui.define([
         //   oTable.removeSelections();
         //   MessageToast.show("Item not selectable");
         // }
-        if (highlight !== 'Success') {
+        if (highlight === 'Error') {
           setTimeout(() => {
             oTable.removeSelections(); // Rimuove selezione visiva
             // Rimuove il context anche dalla lista effettiva
@@ -63,18 +63,23 @@ sap.ui.define([
         aItems.forEach((item) => {
           const oContext = item.getBindingContext().getObject();
           const { AvaibilityQty, CombPlanAllQty } = oContext;
-          let highlight = 'None';
-          let highlightText = '';
-          if (parseInt(AvaibilityQty) === 0 && parseInt(CombPlanAllQty) > 0) {
+
+          let highlight = 'Success';
+          let highlightText = 'Stock available';
+
+          if (parseFloat(AvaibilityQty) === 0 && parseFloat(CombPlanAllQty) === 0) {
             highlight = 'Error';
             highlightText = 'No stock available';
-          } else if (parseInt(AvaibilityQty) > 0 && parseInt(CombPlanAllQty) === 0) {
-            highlight = 'Success';
-            highlightText = 'Stock available';
-          } else if (parseInt(CombPlanAllQty) > 0) {
+          }
+          else if (parseFloat(AvaibilityQty) === 0 && parseFloat(CombPlanAllQty) > 0) {
             highlight = 'Warning';
             highlightText = 'Stock available but not enough';
           }
+          else if (parseFloat(AvaibilityQty) > 0 && parseFloat(CombPlanAllQty) === 0) {
+            highlight = 'None';
+            highlightText = '';
+          }
+
           item.setHighlight(highlight);
           item.setHighlightText(highlightText)
         });
