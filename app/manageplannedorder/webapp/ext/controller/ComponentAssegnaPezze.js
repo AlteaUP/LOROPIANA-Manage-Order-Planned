@@ -187,6 +187,10 @@ sap.ui.define([
         MessageToast.show("Disassemble completed successfully.");
         oStockTable.refreshItems();
         oStockTable.getBinding('items').refresh();
+
+        // refresh header facet
+        const oDataPoint = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::HeaderFacet::KeyFigure::TotalProdAllQty');
+        oDataPoint.getBindingContext().refresh();
       } else {
         MessageToast.show("Disassemble failed.");
       }

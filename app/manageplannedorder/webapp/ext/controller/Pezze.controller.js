@@ -123,6 +123,9 @@ sap.ui.define([
           oStockTable.getBinding('items').refresh()
           // remove all selected items
           oStockTable.removeSelections();
+          // refresh header facet
+          const oDataPoint = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::HeaderFacet::KeyFigure::TotalProdAllQty');
+          oDataPoint.getBindingContext().refresh();
           // const selectedItems = oStockTable.getSelectedItems();
           // selectedItems.forEach((item) => {
           //   const oContext = item.getBindingContext();
@@ -251,6 +254,10 @@ sap.ui.define([
             const oStockTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
             oStockTable.refreshItems();
             oStockTable.getBinding('items').refresh();
+
+            // refresh header facet
+            const oDataPoint = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::HeaderFacet::KeyFigure::TotalProdAllQty');
+            oDataPoint.getBindingContext().refresh();
           },
           error: function (jqXHR, textStatus, errorThrown) {
             debugger;

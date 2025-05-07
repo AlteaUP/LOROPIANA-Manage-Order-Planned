@@ -153,8 +153,8 @@ module.exports = class MainService extends cds.ApplicationService {
         res[0].TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V').toFixed(3);
         res[0].CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V').toFixed(3); // Added toFixed(3)
 
-        // AvailableQuantity / RequiredQuantity
-        let chart_percent = Math.round(parseFloat(res[0].AvailableQuantity) / parseFloat(res[0].RequiredQuantity) * 100);
+        // TotalPlanAllQty / AvailableQuantity
+        let chart_percent = Math.round(parseFloat(res[0].TotalPlanAllQty) / parseFloat(res[0].AvailableQuantity) * 100);
         let chart_criticality;
         if (chart_percent === 100) {
           chart_criticality = 3
@@ -162,7 +162,7 @@ module.exports = class MainService extends cds.ApplicationService {
           chart_criticality = 2
         } else {
           chart_criticality = 1
-          chart_percent = 100
+          // chart_percent = 100
         }
         res[0].chart_percent = chart_percent;
         res[0].chart_criticality = chart_criticality;

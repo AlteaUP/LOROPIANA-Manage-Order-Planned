@@ -129,8 +129,18 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     UI.HeaderFacets : [
         {
             $Type : 'UI.ReferenceFacet',
+            ID : 'CrossPlantConfigurableProduct',
+            Target : '@UI.DataPoint#CrossPlantConfigurableProduct',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
             ID : 'ProductionPlant',
             Target : '@UI.DataPoint#ProductionPlant',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'Material',
+            Target : '@UI.DataPoint#Material',
         },
         {
             $Type : 'UI.ReferenceFacet',
@@ -224,6 +234,16 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         $Type : 'UI.DataPointType',
         Value : ProductDescription,
         Title : '{i18n>ProductDescription}',
+    },
+    UI.DataPoint #Material : {
+        $Type : 'UI.DataPointType',
+        Value : Product,
+        Title : 'Product',
+    },
+    UI.DataPoint #CrossPlantConfigurableProduct : {
+        $Type : 'UI.DataPointType',
+        Value : CrossPlantConfigurableProduct,
+        Title : 'CrossPlantConfigurableProduct',
     },
 );
 

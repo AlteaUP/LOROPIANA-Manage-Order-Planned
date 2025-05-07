@@ -1,15 +1,51 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros" xmlns:table="sap.fe.macros.table" xmlns:html="http://www.w3.org/1999/xhtml" controllerName="manageplannedorder.manageplannedorder.ext.main.Main">
-    <Page id="Main" title="{i18n>MainTitle}">
+<mvc:View
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:macros="sap.fe.macros"
+    xmlns:table="sap.fe.macros.table"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    controllerName="manageplannedorder.manageplannedorder.ext.main.Main"
+>
+    <Page
+        id="Main"
+        title="{i18n>MainTitle}"
+    >
         <content>
             <!-- <VBox id="VBOX"> -->
-            <macros:FilterBar id="FilterBar" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro"/>
+            <macros:FilterBar
+                id="FilterBar"
+                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro"
+            />
             <!-- icon tab bar -->
             <!-- <IconTabBar id="idIconTabBarInlineMode" headerMode="Inline" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding">
                     <items>
                         <IconTabFilter id="idIconTabFilterCombined" text="Combined" key="combined"> -->
-            <macros:Table id="TableCombined" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro" filterBar="FilterBar" header="Combined" selectionMode="Multi">
+            <macros:Table
+                id="TableCombined"
+                type="GridTable"
+                rowCount="20"
+                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
+                filterBar="FilterBar"
+                header="Combinedd"
+                selectionMode="Multi"
+            >
+                <!-- <macros:rowCount>
+                    <macros:RowCount
+                        id="RowCount"
+                        text="{i18n>rowCount}"
+                        items="{= ${TableCombined>/} ? ${TableCombined>/}.length : 0 }"
+                    />
+                </macros:rowCount> -->
                 <macros:actions>
-                    <table:Action id="fragment" press=".pressFragment" text="Crea Commesse" requiresSelection="true" placement="After" key="act1"/>
+                    <table:Action
+                        id="fragment"
+                        press=".pressFragment"
+                        text="Crea Commesse"
+                        requiresSelection="true"
+                        placement="After"
+                        key="act1"
+                    />
                 </macros:actions>
             </macros:Table>
             <!-- </IconTabFilter>
