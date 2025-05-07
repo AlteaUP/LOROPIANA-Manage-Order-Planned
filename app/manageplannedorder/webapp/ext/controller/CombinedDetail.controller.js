@@ -23,14 +23,16 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension'], function (ControllerExten
 					const aItems = oTable.getItems()
 					aItems.forEach(function (oRow) {
 						const item = oRow.getBindingContext().getObject();
-						if (parseFloat(item.RequiredQuantity) === parseFloat(item.AvailableQuantity)) {
-							// oRow.addStyleClass('green');
-							oRow.setHighlight("Success");
-							oRow.setHighlightText("Quantity matches");
-						} else {
-							// oRow.addStyleClass('red');
-							oRow.setHighlight("Error");
-							oRow.setHighlightText("Quantity does not match");
+						if (item.BaseUnit.toUpperCase() === 'M2') {
+							if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
+								// oRow.addStyleClass('green');
+								oRow.setHighlight("Success");
+								oRow.setHighlightText("Quantity matches");
+							} else {
+								// oRow.addStyleClass('red');
+								oRow.setHighlight("Error");
+								oRow.setHighlightText("Quantity does not match");
+							}
 						}
 					});
 				})

@@ -27,46 +27,76 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : ProductSeasonYear,
             Label : '{i18n>SeasonYear}',
+            ![@HTML5.CssDefaults] : {
+                width : '5rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : ProductSeason,
             Label : '{i18n>Season}',
+            ![@HTML5.CssDefaults] : {
+                width : '5rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : ProductTheme,
             Label : '{i18n>ProductTheme}',
+            ![@HTML5.CssDefaults] : {
+                width : '5rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : CplndOrd,
             Label : '{i18n>CombinedPlannedOrder}',
+            ![@HTML5.CssDefaults] : {
+                width : '5rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : CrossPlantConfigurableProduct,
             Label : '{i18n>CrossPlantConfigurableProduct}',
+            ![@HTML5.CssDefaults] : {
+                width : '10rem',
+            },
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductDescription,
+            Label : 'Product Description',
         },
         {
             $Type : 'UI.DataFieldForAnnotation',
             Target : '@UI.Chart#radialChart',
             Label   : '{i18n>OverallConversionStatus}',
+            ![@HTML5.CssDefaults] : {
+                width : '5rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : PlannedTotalQtyInBaseUnit,
             Label : '{i18n>PlannedTotalQtyIn}',
+            ![@HTML5.CssDefaults] : {
+                width : '8rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : PlndOrderCommittedQty,
             Label : '{i18n>PlndOrderCommittedQty}',
+            ![@HTML5.CssDefaults] : {
+                width : '8rem',
+            },
         },
         {
             $Type : 'UI.DataField',
             Value : RequirementQuantityInBaseUnit,
             Label : '{i18n>RequirementQuantityInBase}',
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
@@ -85,11 +115,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {$Type : 'UI.DataField',Value : PlndOrderTotalCmtmtDate,Label : '{i18n>PlndOrderTotalCmtmt}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : ProductCollection,Label : '{i18n>ProductCollection}',![@UI.Hidden]},
-        {
-            $Type : 'UI.DataField',
-            Value : ProductDescription,
-            Label : 'Product Description',
-        },
         {
             $Type : 'UI.DataField',
             Value : WorkCenterText,
@@ -711,12 +736,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     UI.DataPoint #TotalAllocQty : {
         $Type : 'UI.DataPointType',
         Value : RequestFinished,
-        Title : '{i18n>RequestFinishedProductQty}',
+        Title : '{i18n>FinishedProductAtpQty}',
     },
     UI.DataPoint #FinishedProductQty : {
         $Type : 'UI.DataPointType',
         Value : FinishedProductQty,
-        Title : '{i18n>FinishedProductQty}',
+        Title : '{i18n>FinishedFeasibleProductQty}',
     },
     UI.DataPoint #ProductDescription : {
         $Type : 'UI.DataPointType',
@@ -782,6 +807,7 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
             $Type : 'UI.DataField',
             Value : Material,
             Label : 'Material',
+            ![@UI.Hidden],
             ![@HTML5.CssDefaults] : {
                 width : '10rem',
             },
@@ -795,7 +821,10 @@ annotate service.ZZ1_CombPlnOrdersStock with @(
         {
             $Type : 'UI.DataField',
             Value : StorageLocation,
-            Label : 'Storage Location'
+            Label : 'Storage Location',
+            ![@HTML5.CssDefaults] : {
+                width : '5rem',
+            },
         },
         {
             $Type : 'UI.DataField',

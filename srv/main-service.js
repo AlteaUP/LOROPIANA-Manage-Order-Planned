@@ -164,7 +164,7 @@ module.exports = class MainService extends cds.ApplicationService {
           chart_criticality = 1
           chart_percent = 100
         }
-        res[0].chart_percent = 98//chart_percent;
+        res[0].chart_percent = chart_percent;
         res[0].chart_criticality = chart_criticality;
 
 
@@ -178,15 +178,15 @@ module.exports = class MainService extends cds.ApplicationService {
             })
         );
 
-        res[0].RequestFinished = parseFloat(CommittedQty[0].PlndOrderCommittedQty).toFixed();
+        res[0].RequestFinished = parseInt(CommittedQty[0].PlndOrderCommittedQty);
 
         // (Request Finished / Required) * Tot Assigned Comb
         // (60 / 39) * 35
 
         if (parseInt(res[0].TotalPlanAllQty) > 0 && parseInt(res[0].CombPlanAllQty) > 0) {
-          res[0].FinishedProductQty = (parseFloat(res[0].RequestFinished) / parseFloat(res[0].RequiredQuantity) * parseFloat(res[0].CombPlanAllQty)).toFixed(3);
+          res[0].FinishedProductQty = parseInt((parseFloat(res[0].RequestFinished) / parseFloat(res[0].RequiredQuantity) * parseFloat(res[0].CombPlanAllQty)));
         } else {
-          res[0].FinishedProductQty = parseInt("0").toFixed(3);
+          res[0].FinishedProductQty = parseInt("0");
         }
 
 

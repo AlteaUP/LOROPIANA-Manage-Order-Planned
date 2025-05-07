@@ -11,7 +11,9 @@ sap.ui.define(
         'use strict';
 
         return PageController.extend('manageplannedorder.manageplannedorder.ext.main.Main', {
+            onInit: function () {
 
+            },
             showMessageConfirm: function (action) {
                 // capitalize the first letter of the action
                 action = action.charAt(0).toUpperCase() + action.slice(1);

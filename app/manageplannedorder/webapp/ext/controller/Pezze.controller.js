@@ -71,10 +71,10 @@ sap.ui.define([
             highlight = 'Error';
             highlightText = 'No stock available';
           }
-          else if (parseFloat(AvaibilityQty) === 0 && parseFloat(CombPlanAllQty) > 0) {
-            highlight = 'Warning';
-            highlightText = 'Stock available but not enough';
-          }
+          // else if (parseFloat(AvaibilityQty) === 0 && parseFloat(CombPlanAllQty) > 0) {
+          //   highlight = 'Warning';
+          //   highlightText = 'Stock available but not enough';
+          // }
           else if (parseFloat(AvaibilityQty) > 0 && parseFloat(CombPlanAllQty) === 0) {
             highlight = 'None';
             highlightText = '';

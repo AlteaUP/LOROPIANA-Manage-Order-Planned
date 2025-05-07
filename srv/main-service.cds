@@ -48,13 +48,13 @@ service MainService {
       ProductCharacteristic3,
       StorageLocation,
       ProductDescription,
-      null as CombPlanAllQty     : String(20),
-      null as TotalPlanAllQty    : String(20),
-      null as TotalProdAllQty    : String(20), // rappresenta il totale di tutte le righe
-      null as FinishedProductQty : String(20),
+      null as CombPlanAllQty     : Decimal(13, 3), // String(20),
+      null as TotalPlanAllQty    : Decimal(13, 3), // String(20),
+      null as TotalProdAllQty    : Decimal(13, 3), //String(20), // rappresenta il totale di tutte le righe
+      null as FinishedProductQty : Integer, //Decimal(13, 3), //String(20),
       null as chart_criticality  : String(20),
       null as chart_percent      : Integer,
-      null as RequestFinished    : String(20),
+      null as RequestFinished    : Integer, // String(20),
       to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
                                      on  Material = $self.Material
                                      and Plant    = $self.Plant
@@ -98,13 +98,13 @@ service MainService {
   entity ZZ1_CombPlnOrdersStock     as
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
       *,
-      null as StorageLocationStock : String(20),
+      null as StorageLocationStock : Decimal(13, 3), //String(20),
       null as CustomQty            : String(20),
-      null as TotalProdAllQty      : String(20), // ZZ1_I_ARUN_BDBSSUMQTY_CDS (PLANT, MATERIAL, STORAGELOCATION, BATCH)
-      null as TotalPlanAllQty      : String(20), // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
-      null as CombPlanAllQty       : String(20), // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per FSH_MPLO_ORD = planned combined order werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
+      null as TotalProdAllQty      : Decimal(13, 3), // String(20), // ZZ1_I_ARUN_BDBSSUMQTY_CDS (PLANT, MATERIAL, STORAGELOCATION, BATCH)
+      null as TotalPlanAllQty      : Decimal(13, 3), //String(20), // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
+      null as CombPlanAllQty       : Decimal(13, 3), //String(20), // ZZ1_MFP_ASSIGNMENT fare la somma QTA_ASS accedendo per FSH_MPLO_ORD = planned combined order werks = PLANT, MATNR = MATERIAL, CHARG = BATCH,
       null as AvaibilityQty        : Decimal(13, 3), // String(20), // REQUIREDQUANTITY - TotalProdAllQty - CombPlanAllQty
-      null as TotalInDelQty        : String(20), // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
+      null as TotalInDelQty        : Decimal(13, 3), // String(20), // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
       null as chart_percent        : Integer,
       null as chart_criticality    : Integer
     };
