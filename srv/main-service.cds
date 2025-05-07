@@ -54,6 +54,7 @@ service MainService {
       null as FinishedProductQty : String(20),
       null as chart_criticality  : String(20),
       null as chart_percent      : Integer,
+      null as RequestFinished    : String(20),
       to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
                                      on  Material = $self.Material
                                      and Plant    = $self.Plant

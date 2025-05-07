@@ -110,22 +110,28 @@ module.exports = class MainService extends cds.ApplicationService {
       if (Array.isArray(res) && res.length === 1) {
         debugger;
         const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
+        const CrossPlantConfigurableProduct = req.params.at(-1)?.CrossPlantConfigurableProduct;
 
         // Batch query to get all assignment data
-        const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
-          SELECT.from('ZZ1_MFP_ASSIGNMENT')
-            .where({
-              WERKS: { in: res.map(i => i.Plant) },
-              MATNR: { in: res.map(i => i.Material) }
-            })
-        );
+
 
         // Create lookup maps
-        const allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
 
         // If we have a specific combined order, get its assignments too
         let combPlanAssignmentsMap = {};
+        let allAssignmentsMap = {}
         if (PlannedCombinedOrder) {
+          const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+            SELECT.from('ZZ1_MFP_ASSIGNMENT')
+              .where({
+                FSH_MPLO_ORD: PlannedCombinedOrder,
+                WERKS: { in: res.map(i => i.Plant) },
+                MATNR: { in: res.map(i => i.Material) }
+              })
+          );
+
+          allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
+
           const combPlanAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
             SELECT.from('ZZ1_MFP_ASSIGNMENT')
               .where({
@@ -135,8 +141,8 @@ module.exports = class MainService extends cds.ApplicationService {
               })
           );
           combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
-        }
 
+        }
 
         res[0].TotalProdAllQty = TotalProdAllQty.toFixed(3);
 
@@ -144,8 +150,8 @@ module.exports = class MainService extends cds.ApplicationService {
         const allAssignments = allAssignmentsMap[key] || [];
         const combPlanAssignments = combPlanAssignmentsMap[key] || [];
 
-        res[0].TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V');
-        res[0].CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V');
+        res[0].TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V').toFixed(3);
+        res[0].CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V').toFixed(3); // Added toFixed(3)
 
         // AvailableQuantity / RequiredQuantity
         let chart_percent = Math.round(parseFloat(res[0].AvailableQuantity) / parseFloat(res[0].RequiredQuantity) * 100);
@@ -158,14 +164,33 @@ module.exports = class MainService extends cds.ApplicationService {
           chart_criticality = 1
           chart_percent = 100
         }
-        res[0].chart_percent = chart_percent;
+        res[0].chart_percent = 98//chart_percent;
         res[0].chart_criticality = chart_criticality;
 
+
+
+        // call combinend order api to retrieve CommittedQty
+        const CommittedQty = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+          SELECT.from('ZZ1_CombinedPlnOrdersAPI')
+            .where({
+              CplndOrd: PlannedCombinedOrder,
+              CrossPlantConfigurableProduct: CrossPlantConfigurableProduct,
+            })
+        );
+
+        res[0].RequestFinished = parseFloat(CommittedQty[0].PlndOrderCommittedQty).toFixed();
+
+        // (Request Finished / Required) * Tot Assigned Comb
+        // (60 / 39) * 35
+
         if (parseInt(res[0].TotalPlanAllQty) > 0 && parseInt(res[0].CombPlanAllQty) > 0) {
-          res[0].FinishedProductQty = (parseFloat(res[0].RequiredQuantity) / parseFloat(res[0].TotalPlanAllQty) * parseFloat(res[0].CombPlanAllQty)).toFixed(3);
+          res[0].FinishedProductQty = (parseFloat(res[0].RequestFinished) / parseFloat(res[0].RequiredQuantity) * parseFloat(res[0].CombPlanAllQty)).toFixed(3);
         } else {
           res[0].FinishedProductQty = parseInt("0").toFixed(3);
         }
+
+
+
       } else {
         // Calculate TotalPlanAllQty and CombPlanAllQty for each record
         if (Array.isArray(res) && res.length > 0) {
@@ -278,6 +303,7 @@ module.exports = class MainService extends cds.ApplicationService {
           })
       );
 
+
       // 4. Batch query for TotalPlanAllQty
       const planAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
         SELECT.from('ZZ1_MFP_ASSIGNMENT')
@@ -316,8 +342,6 @@ module.exports = class MainService extends cds.ApplicationService {
       const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
 
-
-      debugger;
       // 9. Process results with maps instead of additional queries
       const res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
         const { Plant, Material, StorageLocation, Batch } = item;

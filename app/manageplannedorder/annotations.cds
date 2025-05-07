@@ -705,12 +705,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
     },
     UI.DataPoint #TotalProdAllQty : {
         $Type : 'UI.DataPointType',
-        Value : TotalProdAllQty,
+        Value : TotalPlanAllQty,
         Title : '{i18n>CombPlanAllQty}',
     },
     UI.DataPoint #TotalAllocQty : {
         $Type : 'UI.DataPointType',
-        Value : RequiredQuantity,
+        Value : RequestFinished,
         Title : '{i18n>RequestFinishedProductQty}',
     },
     UI.DataPoint #FinishedProductQty : {
