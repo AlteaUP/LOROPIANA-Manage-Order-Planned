@@ -36,11 +36,10 @@
 <PropertyRef Name="ID"/>
 </Key>
 <Property Name="ID" Type="Edm.String" Nullable="false" sap:sortable="false" sap:filterable="false"/>
-<Property Name="DELIVERYDOCUMENTBYSUPPLIER" Type="Edm.String" MaxLength="35" sap:aggregation-role="dimension" sap:required-in-filter="false" sap:label="External Delivery ID" sap:heading="" sap:quickinfo="External Identification of Delivery Note"/>
+<Property Name="DELIVERYDOCUMENTBYSUPPLIER" Type="Edm.String" MaxLength="35" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Customer Material" sap:heading=""/>
 <Property Name="Batch" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Batch" sap:heading="" sap:quickinfo="Batch Number"/>
 <Property Name="Material" Type="Edm.String" MaxLength="40" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Material" sap:heading="" sap:quickinfo="Material Number"/>
 <Property Name="StorLoc" Type="Edm.String" MaxLength="4" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location" sap:heading=""/>
-<Property Name="DeliveryDocumentType" Type="Edm.String" MaxLength="4" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Delivery Type" sap:heading=""/>
 <Property Name="OVERALLGOODSMOVEMENTSTATUS" Type="Edm.String" MaxLength="1" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Goods Movement Sts" sap:heading="" sap:quickinfo="Goods Movement Status (All Items)"/>
 <Property Name="MaterialByCustomer" Type="Edm.String" MaxLength="35" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Customer Material" sap:heading=""/>
 <Property Name="DeliveryQuantityUnit" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension" sap:required-in-filter="false" sap:label="Sales Unit" sap:heading="" sap:semantics="unit-of-measure"/>

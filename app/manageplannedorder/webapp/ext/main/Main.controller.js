@@ -31,9 +31,15 @@ sap.ui.define(
                 ));
             },
             pressFragment: function (e) {
-                debugger;
-                const oTable = e.getSource().getParent().getParent().getParent()
+                const idTable = e.getParameter('id').split('::').slice(0, -2).join("::")
+                const oTable = sap.ui.getCore().byId(idTable)._oTable;
+                // remove latest element
+
                 const selectedItems = oTable.getSelectedItems()
+                if (selectedItems.length === 0) {
+                    MessageToast.show("Select at least one item");
+                    return;
+                }
                 const oModel = this.getOwnerComponent().getModel()
                 const _selectedItems = []
                 for (let i = 0; i < selectedItems.length; i++) {

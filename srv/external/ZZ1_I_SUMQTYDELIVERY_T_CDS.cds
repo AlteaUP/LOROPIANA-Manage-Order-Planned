@@ -1,4 +1,4 @@
-/* checksum : 8e5787e2f14d6b3c46a9a69863cc1694 */
+/* checksum : bae608495234d39e804f154aa61381eb */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -17,10 +17,10 @@ entity ZZ1_I_SUMQTYDELIVERY_T_CDS.ZZ1_I_SUMQTYDELIVERY_T {
   @sap.filterable : 'false'
   key ID : LargeString not null;
   @sap.aggregation.role : 'dimension'
+  @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
-  @sap.label : 'External Delivery ID'
+  @sap.label : 'Customer Material'
   @sap.heading : ''
-  @sap.quickinfo : 'External Identification of Delivery Note'
   DELIVERYDOCUMENTBYSUPPLIER : String(35);
   @sap.aggregation.role : 'dimension'
   @sap.display.format : 'UpperCase'
@@ -42,12 +42,6 @@ entity ZZ1_I_SUMQTYDELIVERY_T_CDS.ZZ1_I_SUMQTYDELIVERY_T {
   @sap.label : 'Storage Location'
   @sap.heading : ''
   StorLoc : String(4);
-  @sap.aggregation.role : 'dimension'
-  @sap.display.format : 'UpperCase'
-  @sap.required.in.filter : 'false'
-  @sap.label : 'Delivery Type'
-  @sap.heading : ''
-  DeliveryDocumentType : String(4);
   @sap.aggregation.role : 'dimension'
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'

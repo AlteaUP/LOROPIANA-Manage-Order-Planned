@@ -115,11 +115,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {$Type : 'UI.DataField',Value : PlndOrderTotalCmtmtDate,Label : '{i18n>PlndOrderTotalCmtmt}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : ProductCollection,Label : '{i18n>ProductCollection}',![@UI.Hidden]},
-        {
-            $Type : 'UI.DataField',
-            Value : WorkCenterText,
-            Label : '{i18n>WorkCenter}',
-        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',

@@ -1,4 +1,4 @@
-/* checksum : 3a6a37a4ae5a4c9da6fe7c84907dc2b0 */
+/* checksum : eacd584f3439d3cff8f34b52442bc6c4 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -713,14 +713,6 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Product Description'
   ProductDescription : String(40);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'Work Center Text'
-  WorkCenterText : String(40);
-  @sap.display.format : 'NonNegative'
-  @sap.required.in.filter : 'false'
-  @sap.label : 'WorkCenterID'
-  @sap.quickinfo : 'Object ID'
-  WorkCenterInternalID : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Product'
@@ -1089,6 +1081,30 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.label : 'Plant'
   @sap.value.list : 'standard'
   Plant : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO Group'
+  @sap.quickinfo : 'Bill of Operations Group'
+  BillOfOperationsGroup : String(8);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO Type'
+  @sap.quickinfo : 'Bill of Operations Type'
+  BillOfOperationsType : String(1);
+  @sap.display.format : 'NonNegative'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Capacity Requirement'
+  @sap.quickinfo : 'ID of the Capacity Requirements Record'
+  CapacityRequirement : String(12);
+  @sap.display.format : 'NonNegative'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO WorkCenterID'
+  @sap.quickinfo : 'Object ID'
+  BOOWorkCenterInternalID : String(8);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'BOO Work Center Text'
+  @sap.quickinfo : 'Work Center Text'
+  BOOWorkCenterText : String(40);
   to_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {  };
 };
 
