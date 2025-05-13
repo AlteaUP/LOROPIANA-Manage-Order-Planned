@@ -7,7 +7,7 @@
             <!-- <IconTabBar id="idIconTabBarInlineMode" headerMode="Inline" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding">
                     <items>
                         <IconTabFilter id="idIconTabFilterCombined" text="Combined" key="combined"> -->
-            <macros:Table id="TableCombined" rowCount="20" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro" filterBar="FilterBar" header="Combinedd" selectionMode="ForceMulti" type="ResponsiveTable">
+            <macros:Table id="TableCombined" rowCount="20" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro" filterBar="FilterBar" header="Combined" selectionMode="ForceMulti" type="ResponsiveTable">
                 <!-- <macros:rowCount>
                     <macros:RowCount
                         id="RowCount"

@@ -4,6 +4,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         CplndOrd,
         ProductCollection,
         ProductionPlant,
+        to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterInternalID,
+        to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterText,
     ],
     UI.DataPoint #radialChart : { 
         Value : committed_percent,
@@ -115,6 +117,16 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {$Type : 'UI.DataField',Value : PlndOrderTotalCmtmtDate,Label : '{i18n>PlndOrderTotalCmtmt}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : ProductCollection,Label : '{i18n>ProductCollection}',![@UI.Hidden]},
+        {
+            $Type : 'UI.DataField',
+            Value : to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterInternalID,
+            Label : '{i18n>WorkCenterInternalId}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterText,
+            Label : '{i18n>WorkCenterText}',
+        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
@@ -360,16 +372,6 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
     UI.LineItem #Capacity : [
         {
             $Type : 'UI.DataField',
-            Value : WorkCenter,
-            Label : '{i18n>WorkCenter}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : WorkCenterText,
-            Label : '{i18n>WorkCenterText}',
-        },
-        {
-            $Type : 'UI.DataField',
             Value : Operation,
             Label : '{i18n>Operation}',
         },
@@ -403,9 +405,18 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
         {$Type : 'UI.DataField',Value : ScheduledCapReqOpSegTrdwnDurn,Label : '{i18n>ScheduledCapReqOp2}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : Sequence,Label : '{i18n>Sequence}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : SubOperation,Label : '{i18n>SubOperation}',![@UI.Hidden]},
-        {$Type : 'UI.DataField',Value : WorkCenterInternalID,Label : '{i18n>WorkCenterInternalId}',![@UI.Hidden]},
-        {$Type : 'UI.DataField',Value : WorkCenterType,Label : '{i18n>WorkCenterType}',![@UI.Hidden]},
-        {$Type : 'UI.DataField',Value : Plant,Label : '{i18n>Plant}',![@UI.Hidden]},
+        {$Type : 'UI.DataField',Value : WorkCenterInternalID,Label : '{i18n>WorkCenterInternalId}',},
+        {$Type : 'UI.DataField',Value : WorkCenterType,Label : '{i18n>WorkCenterType}',},
+        {
+            $Type : 'UI.DataField',
+            Value : BOOWorkCenterInternalID,
+            Label : '{i18n>BOOWorkCenterInternalId}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : BOOWorkCenterText,
+            Label : '{i18n>BOOWorkCenterText}',
+        },
     ]
 );
 
@@ -964,3 +975,11 @@ annotate service.ZZ1_MFP_ASSIGNMENT with @(
         // }
     ]
 );
+annotate service.ZZ1_PLOCAPACITYCORD with {
+    BOOWorkCenterInternalID @Common.Label : '{i18n>BOOWorkCenterInternalID}'
+};
+
+annotate service.ZZ1_PLOCAPACITYCORD with {
+    BOOWorkCenterText @Common.Label : '{i18n>BOOWorkCenterText}'
+};
+
