@@ -1,0 +1,173 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:table="sap.ui.table"
+    xmlns:macros="sap.fe.macros"
+>
+    <Dialog
+        id="_IDGenDialogPezze"
+        stretch="true"
+        resizable="true"
+        type="Message"
+        state="Information"
+        icon="sap-icon://ai"
+        title="Assegna Pezze"
+    >
+        <content>
+            <Text
+                id="_IDGenTextPezze"
+                text="Assegna Pezze"
+            />
+            <form:SimpleForm
+                id="SimpleFormPezze"
+                columnsM="2"
+                columnsL="3"
+                columnsXL="4"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanXL="0"
+                labelSpanL="12"
+                labelSpanM="12"
+                labelSpanXL="12"
+                visible="true"
+                editable="false"
+                singleContainerFullSize="false"
+                layout="ColumnLayout"
+            >
+                <Label
+                    id="labelCplndOrd"
+                    text="Cplnd Ord"
+                />
+                <Text
+                    id="inputCplndOrd"
+                    text="{selected>/CplndOrd}"
+                />
+                <Label
+                    id="labelMaterial"
+                    text="Material"
+                />
+                <Text
+                    id="inputMaterial"
+                    text="{selected>/Material}"
+                />
+                <Label
+                    id="labelRequiredQuantity"
+                    text="Required Quantity"
+                />
+                <Text
+                    id="inputRequiredQuantity"
+                    text="{selected>/RequiredQuantity}"
+                />
+                <Label
+                    id="labelProductDescription"
+                    text="{i18n>ProductDescription}"
+                />
+                <Text
+                    id="inputProductDescription"
+                    text="{selected>/ProductDescription}"
+                />
+                <Label
+                    id="labelAvailableQuantity"
+                    text="{i18n>AvailableQuantity}"
+                />
+                <Text
+                    id="inputAvailableQuantity"
+                    text="{selected>/AvailableQuantity}"
+                />
+                <Label
+                    id="labelBaseUnit"
+                    text="Base Unit"
+                />
+                <Text
+                    id="inputBaseUnit"
+                    text="{selected>/BaseUnit}"
+                />
+                <Label
+                    id="labelTotalPlanAllQty"
+                    text="Tot {i18n>CombPlanAllQty}"
+                />
+                <Text
+                    id="inputTotalPlanAllQty"
+                    text="{selected>/TotalPlanAllQty}"
+                />
+                <Label
+                    id="labelOpenQty"
+                    text="Tot {i18n>OpenQty}"
+                />
+                <Text
+                    id="inputOpenQty"
+                    text="{selected>/OpenQty}"
+                />
+            </form:SimpleForm>
+            <Table id="selectedItemsTable">
+                <columns>
+                    <Column id="columnBatch">
+                        <Text
+                            id="textBatch"
+                            text="Batch"
+                        />
+                    </Column>
+                    <!-- <Column id="columnMaterial">
+                        <Text
+                            id="textMaterial"
+                            text="Material"
+                        />
+                    </Column> -->
+                    <Column id="columnStorageLocation">
+                        <Text
+                            id="textStorageLocation"
+                            text="Storage Location"
+                        />
+                    </Column>
+                    <Column id="columnAvailableQuantity">
+                        <Text
+                            id="textAvailableQuantity"
+                            text="Available Quantity"
+                        />
+                    </Column>
+                    <Column id="columnCOPERTURA">
+                        <Text
+                            id="textCOPERTURA"
+                            text="Copertura (%)"
+                        />
+                    </Column>
+                    <Column id="columnCustomQty">
+                        <Text
+                            id="textCustomQty"
+                            text="Quantity to Assign"
+                        />
+                    </Column>
+                    <!-- <Column id="columnQTY_CALCOLATA">
+                        <Text
+                            id="textQTY_CALCOLATA"
+                            text="QTY_CALCOLATA"
+                        />
+                    </Column> -->
+                </columns>
+            </Table>
+            <!-- <macros:Table
+                id="TablePezze"
+                metaPath="/ZZ1_MFP_ASSIGNMENT/@com.sap.vocabularies.UI.v1.LineItem#tablePezze"
+                header="Pezze Assegnate"
+                beforeRebindTable=".onBeforeRebindTable"
+            >
+                <macros:actions />
+            </macros:Table> -->
+        </content>
+        <buttons>
+            <Button
+                id="_IDGenBtnAssegnaPezze"
+                text="Assegna"
+                type="Accept"
+                press="doAssign"
+            />
+            <Button
+                id="_IDGenBtnCancelPezze"
+                text="Chiudi"
+                type="Back"
+                press="onCloseDialog"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

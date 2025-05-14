@@ -1,0 +1,292 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "manageplannedorder.manageplannedorder",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:fpm",
+            "version": "1.16.4",
+            "toolsId": "8090b97d-1921-45ec-930a-9a86cbce716d"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "odata/v4/main/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "odataVersion": "4.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.134.1",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.fe.core": {},
+                "sap.fe.macros": {},
+                "sap.fe.templates": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "manageplannedorder.manageplannedorder.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {},
+            "routes": [
+                {
+                    "name": "ZZ1_CombinedPlnOrdersAPIMain",
+                    "pattern": ":?query:",
+                    "target": "ZZ1_CombinedPlnOrdersAPIMain"
+                },
+                {
+                    "name": "ZZ1_CombinedPlnOrdersAPIObjectPage",
+                    "pattern": "ZZ1_CombinedPlnOrdersAPI({ZZ1_CombinedPlnOrdersAPIKey}):?query:",
+                    "target": "ZZ1_CombinedPlnOrdersAPIObjectPage"
+                },
+                {
+                    "name": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage",
+                    "pattern": "ZZ1_CombinedPlnOrdersAPI({ZZ1_CombinedPlnOrdersAPIKey})/to_CombinPlannedOrdersCom({to_CombinPlannedOrdersComKey}):?query:",
+                    "target": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage"
+                }
+            ],
+            "targets": {
+                "ZZ1_CombinedPlnOrdersAPIMain": {
+                    "type": "Component",
+                    "id": "ZZ1_CombinedPlnOrdersAPIMain",
+                    "name": "sap.fe.core.fpm",
+                    "options": {
+                        "settings": {
+                            "navigation": {
+                                "ZZ1_CombinedPlnOrdersAPI": {
+                                    "detail": {
+                                        "route": "ZZ1_CombinedPlnOrdersAPIObjectPage"
+                                    }
+                                }
+                            },
+                            "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
+                            "viewName": "manageplannedorder.manageplannedorder.ext.main.Main"
+                        }
+                    }
+                },
+                "ZZ1_CombinedPlnOrdersAPIObjectPage": {
+                    "type": "Component",
+                    "id": "ZZ1_CombinedPlnOrdersAPIObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "navigation": {
+                                "to_CombinPlannedOrdersCom": {
+                                    "detail": {
+                                        "route": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage"
+                                    }
+                                }
+                            },
+                            "contextPath": "/ZZ1_CombinedPlnOrdersAPI",
+                            "showRelatedApps": false,
+                            "controlConfiguration": {
+                                "to_ZZ1_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#Components": {
+                                    "actions": {
+                                        "AssegnaPezze": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.AssegnaPezze.doAssegnaPezze",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "Assegna Pezze"
+                                        }
+                                    },
+                                    "tableSettings": {
+                                        "selectAll": false,
+                                        "selectionLimit": 1,
+                                        "selectionMode": "Single"
+                                    }
+                                },
+                                "to_ZZ1_PLOCAPACITYCORD/@com.sap.vocabularies.UI.v1.LineItem#Capacity": {
+                                    "actions": {
+                                        "ChangeWorkCenter": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ChangeWorkCenter.doChangeWorkCenter",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "Change Work Cener"
+                                        }
+                                    }
+                                },
+                                "to_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#componenti": {
+                                    "tableSettings": {
+                                        "selectAll": false,
+                                        "selectionLimit": 1,
+                                        "selectionMode": "Single"
+                                    }
+                                }
+                            },
+                            "variantManagement": "Control"
+                        }
+                    }
+                },
+                "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage": {
+                    "type": "Component",
+                    "id": "ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "navigation": {},
+                            "contextPath": "/ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom",
+                            "controlConfiguration": {
+                                "to_Stock/@com.sap.vocabularies.UI.v1.LineItem#Stock": {
+                                    "tableSettings": {
+                                        "selectAll": true,
+                                        "selectionMode": "Multi"
+                                    },
+                                    "actions": {
+                                        "ComponentAssegnaPezze": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doAssegnaPezze",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "Assegna Pezze"
+                                        },
+                                        "DisassegnaPezze": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doDisassignPezze",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "Disassegna Pezze",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "ComponentAssegnaPezze"
+                                            }
+                                        },
+                                        "WhereUsed": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doWhereUsed",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "Where Used",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "DisassegnaPezze"
+                                            }
+                                        }
+                                    }
+                                },
+                                "to_ZZ1_CombPlnOrdersStock/@com.sap.vocabularies.UI.v1.LineItem#Stock": {
+                                    "tableSettings": {
+                                        "selectAll": false,
+                                        "selectionMode": "Multi"
+                                    },
+                                    "actions": {
+                                        "AssegnaPezze": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doAssegnaPezze",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": true,
+                                            "text": "Assegna"
+                                        },
+                                        "Disassegna": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doDisassignPezze",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": false,
+                                            "text": "Disassegna",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "AssegnaPezze"
+                                            }
+                                        },
+                                        "WhereUsed": {
+                                            "press": "manageplannedorder.manageplannedorder.ext.controller.ComponentAssegnaPezze.doWhereUsed",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": false,
+                                            "text": "Where Used",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "Disassegna"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {
+                    "sap.fe.templates.ObjectPage.ObjectPageController#manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage": {
+                        "controllerName": "manageplannedorder.manageplannedorder.ext.controller.Pezze"
+                    },
+                    "sap.fe.templates.ObjectPage.ObjectPageController": {
+                        "controllerName": "manageplannedorder.manageplannedorder.ext.controller.CombinedDetail"
+                    }
+                }
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "lp.zmanageplannedorder"
+    }
+}
