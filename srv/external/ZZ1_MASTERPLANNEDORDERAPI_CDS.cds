@@ -1,4 +1,4 @@
-/* checksum : 6c743262942b76f144b0d26e0310a8c8 */
+/* checksum : 6b3f9044b27225f0404dcbecaf19f0ce */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -2217,6 +2217,28 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrdersCom {
 @sap.creatable : 'false'
 @sap.updatable : 'false'
 @sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'ZZ1_MFI_CR_TYPE'
+@sap.value.list : 'true'
+entity ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MFI_CR_TYPE_V {
+  @sap.text : 'Code_Text'
+  @sap.label : 'Order type'
+  key Code : String(3) not null;
+  @sap.label : 'Order type (Desc.)'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  Code_Text : String(60);
+  @sap.label : 'Is Disabled'
+  @sap.quickinfo : 'Custom Field: Code Disabled Indicator'
+  IsDisabled : Boolean;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
 @sap.content.version : '1'
 @sap.semantics : 'aggregate'
 @sap.label : 'Planned Orders'
@@ -2371,6 +2393,15 @@ entity ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PlannedOrders {
   @sap.quickinfo : 'ID of the Capacity Requirements Record'
   @sap.value.list : 'standard'
   CapacityRequirement : String(12);
+  @sap.aggregation.role : 'dimension'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Order type'
+  @sap.value.list : 'standard'
+  ZZ1_MFI_CR_TYPE_PLA : String(3);
+  @sap.aggregation.role : 'dimension'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Order Personalization'
+  ZZ1_MFI_CRORDER_PERSON_PLA : String(20);
   to_Reservation : Association to ZZ1_MASTERPLANNEDORDERAPI_CDS.I_ReservationDocumentHeader {  };
   to_StorageLocation : Association to ZZ1_MASTERPLANNEDORDERAPI_CDS.I_StorageLocation {  };
 };

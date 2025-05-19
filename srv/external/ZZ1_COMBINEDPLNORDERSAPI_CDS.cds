@@ -1,4 +1,4 @@
-/* checksum : a8c6f509d4c8296a1b383f008da77875 */
+/* checksum : fada5b5a7f627bfa4b2ac88429d0e008 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -291,6 +291,12 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.label : 'Product'
   @sap.quickinfo : 'Product Number'
   Product : String(40);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Order type'
+  ZZ1_MFI_CR_TYPE_PLA : String(3);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Order Personalization'
+  ZZ1_MFI_CRORDER_PERSON_PLA : String(20);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };

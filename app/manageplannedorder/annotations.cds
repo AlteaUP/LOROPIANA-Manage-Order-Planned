@@ -3,7 +3,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     UI.SelectionFields #filterBarMacro : [
         CplndOrd,
         ProductCollection,
-        ProductionPlant
+        ProductionPlant,
+        MRPController,
     ],
     UI.DataPoint #radialChart : { 
         Value : committed_percent,
@@ -46,6 +47,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             ![@HTML5.CssDefaults] : {
                 width : '5rem',
             },
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ZZ1_MFI_CR_TYPE_PLA,
+            Label : '{i18n>OrderType}',
         },
         {
             $Type : 'UI.DataField',
@@ -112,8 +118,14 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : PlannedOrderOpeningDate,
             Label : '{i18n>PlannedOrderOpeningDate}',
+            ![@UI.Hidden],
         },
         {$Type : 'UI.DataField',Value : PlndOrderTotalCmtmtDate,Label : '{i18n>PlndOrderTotalCmtmt}',![@UI.Hidden]},
+        {
+            $Type : 'UI.DataField',
+            Value : ZZ1_MFI_CRORDER_PERSON_PLA,
+            Label : '{i18n>PersonalizzationOrderNumber}',
+        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
@@ -292,10 +304,10 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
                     ValueListProperty : 'ProductionPlant',
                 },
             ],
-            Label : 'Production Plan',
+            Label : 'Production Plant',
         },
         Common.ValueListWithFixedValues : true,
-    )
+        )
 };
 
 
@@ -357,6 +369,12 @@ annotate service.ZZ1_MasterPlannedOrders with @(
 
 annotate service.ZZ1_PLOCAPACITYCORD with @(
     UI.LineItem #Capacity : [
+        {$Type : 'UI.DataField',Value : WorkCenterInternalID,Label : '{i18n>WorkCenterInternalId}',},
+        {
+            $Type : 'UI.DataField',
+            Value : BOOWorkCenterText,
+            Label : '{i18n>BOOWorkCenterText}',
+        },
         {
             $Type : 'UI.DataField',
             Value : Operation,
@@ -371,16 +389,19 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
             $Type : 'UI.DataField',
             Value : OperationLatestStartDate,
             Label : '{i18n>OperationLatestStartDate}',
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : ScheduledCapReqOpSegProcgDurn,
             Label : '{i18n>ScheduledCapReqOp}',
+            ![@UI.Hidden],
         },
         {
             $Type : 'UI.DataField',
             Value : CapacityRequirementUnit,
             Label : '{i18n>CapacityRequirementUnit}',
+            ![@UI.Hidden],
         },
         {$Type : 'UI.DataField',Value : CapacityCategory,Label : '{i18n>CapacityCategory}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : CapacityInternalID,Label : '{i18n>CapacityInternalId}',![@UI.Hidden]},
@@ -392,17 +413,13 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
         {$Type : 'UI.DataField',Value : ScheduledCapReqOpSegTrdwnDurn,Label : '{i18n>ScheduledCapReqOp2}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : Sequence,Label : '{i18n>Sequence}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : SubOperation,Label : '{i18n>SubOperation}',![@UI.Hidden]},
-        {$Type : 'UI.DataField',Value : WorkCenterInternalID,Label : '{i18n>WorkCenterInternalId}',},
-        {$Type : 'UI.DataField',Value : WorkCenterType,Label : '{i18n>WorkCenterType}',},
+        {$Type : 'UI.DataField',Value : WorkCenterType,Label : '{i18n>WorkCenterType}',
+            ![@UI.Hidden],},
         {
             $Type : 'UI.DataField',
             Value : BOOWorkCenterInternalID,
             Label : '{i18n>BOOWorkCenterInternalId}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : BOOWorkCenterText,
-            Label : '{i18n>BOOWorkCenterText}',
+            ![@UI.Hidden],
         },
     ]
 );
@@ -968,5 +985,9 @@ annotate service.ZZ1_PLOCAPACITYCORD with {
 
 annotate service.ZZ1_PLOCAPACITYCORD with {
     BOOWorkCenterText @Common.Label : '{i18n>BOOWorkCenterText}'
+};
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+    MRPController @Common.Label : 'MRPController'
 };
 

@@ -19,7 +19,6 @@
                     <table:Action id="fragment" press=".pressFragment" text="Crea Commesse" placement="After" key="act1"/>
                     <!-- requiresSelection="true" -->
                 </macros:actions>
-                <rowCount/>
             </macros:Table>
             <!-- </IconTabFilter>
                         <IconTabFilter id="idIconTabFilterMaster" text="Master" key="master"> -->

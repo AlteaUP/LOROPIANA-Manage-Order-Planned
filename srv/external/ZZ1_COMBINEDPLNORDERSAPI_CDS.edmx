@@ -112,6 +112,8 @@
 <Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
 <Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <Property Name="Product" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Product" sap:quickinfo="Product Number"/>
+<Property Name="ZZ1_MFI_CR_TYPE_PLA" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Order type"/>
+<Property Name="ZZ1_MFI_CRORDER_PERSON_PLA" Type="Edm.String" MaxLength="20" sap:required-in-filter="false" sap:label="Order Personalization"/>
 <NavigationProperty Name="to_ZZ1_CombinPlannedOrdersCom" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" FromRole="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" ToRole="ToRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrders" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_14452F1BDEBB4D010D6E121B05303A09" FromRole="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09" ToRole="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 <NavigationProperty Name="to_ZZ1_PlannedOrdersCompChar" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" FromRole="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" ToRole="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>

@@ -649,6 +649,14 @@
 <Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <NavigationProperty Name="to_StorageLocation" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_6F1563F740A9ADE728487EE71D71D13E" FromRole="FromRole_assoc_6F1563F740A9ADE728487EE71D71D13E" ToRole="ToRole_assoc_6F1563F740A9ADE728487EE71D71D13E"/>
 </EntityType>
+<EntityType Name="ZZ1_MFI_CR_TYPE_VType" sap:label="ZZ1_MFI_CR_TYPE" sap:value-list="true" sap:content-version="1">
+<Key>
+<PropertyRef Name="Code"/>
+</Key>
+<Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="3" sap:text="Code_Text" sap:label="Order type"/>
+<Property Name="Code_Text" Type="Edm.String" MaxLength="60" sap:label="Order type (Desc.)" sap:creatable="false" sap:updatable="false"/>
+<Property Name="IsDisabled" Type="Edm.Boolean" sap:label="Is Disabled" sap:quickinfo="Custom Field: Code Disabled Indicator"/>
+</EntityType>
 <EntityType Name="ZZ1_PlannedOrdersType" sap:semantics="aggregate" sap:label="Planned Orders" sap:content-version="1">
 <Key>
 <PropertyRef Name="ID"/>
@@ -678,6 +686,8 @@
 <Property Name="ProductCollection" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Collection" sap:quickinfo="Fashion Collection"/>
 <Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:aggregation-role="dimension" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
 <Property Name="CapacityRequirement" Type="Edm.String" MaxLength="12" sap:aggregation-role="dimension" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="Capacity Requirement" sap:quickinfo="ID of the Capacity Requirements Record" sap:value-list="standard"/>
+<Property Name="ZZ1_MFI_CR_TYPE_PLA" Type="Edm.String" MaxLength="3" sap:aggregation-role="dimension" sap:required-in-filter="false" sap:label="Order type" sap:value-list="standard"/>
+<Property Name="ZZ1_MFI_CRORDER_PERSON_PLA" Type="Edm.String" MaxLength="20" sap:aggregation-role="dimension" sap:required-in-filter="false" sap:label="Order Personalization"/>
 <NavigationProperty Name="to_Reservation" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_EBB41F54AADBEE6D5FEF13E37A1E2CBF" FromRole="FromRole_assoc_EBB41F54AADBEE6D5FEF13E37A1E2CBF" ToRole="ToRole_assoc_EBB41F54AADBEE6D5FEF13E37A1E2CBF"/>
 <NavigationProperty Name="to_StorageLocation" Relationship="ZZ1_MASTERPLANNEDORDERAPI_CDS.assoc_14A6178E79B10D08B697B6BA7208E8B1" FromRole="FromRole_assoc_14A6178E79B10D08B697B6BA7208E8B1" ToRole="ToRole_assoc_14A6178E79B10D08B697B6BA7208E8B1"/>
 </EntityType>
@@ -885,6 +895,7 @@
 <EntitySet Name="I_StorageLocation" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.I_StorageLocationType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="ZZ1_MasterPlannedOrderAPI" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPIType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_MasterPlannedOrdersCom" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrdersComType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+<EntitySet Name="ZZ1_MFI_CR_TYPE_V" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MFI_CR_TYPE_VType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PlannedOrders" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PlannedOrdersType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PlannedOrdersCompChar" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PlannedOrdersCompCharType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PLOCAPACITYMORD" EntityType="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PLOCAPACITYMORDType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
@@ -1417,6 +1428,26 @@
 <Record Type="Common.ValueListParameterInOut">
 <PropertyValue Property="LocalDataProperty" PropertyPath="CapacityRequirement"/>
 <PropertyValue Property="ValueListProperty" String="CapacityRequirement"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_PlannedOrdersType/ZZ1_MFI_CR_TYPE_PLA">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="ZZ1_MFI_CR_TYPE"/>
+<PropertyValue Property="CollectionPath" String="ZZ1_MFI_CR_TYPE_V"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="ZZ1_MFI_CR_TYPE_PLA"/>
+<PropertyValue Property="ValueListProperty" String="Code"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Code_Text"/>
 </Record>
 </Collection>
 </PropertyValue>
