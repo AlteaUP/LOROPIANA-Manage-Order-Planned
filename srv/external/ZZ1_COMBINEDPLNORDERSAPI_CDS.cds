@@ -1,4 +1,4 @@
-/* checksum : ee377926953ac788e6dcf924900d622e */
+/* checksum : a8c6f509d4c8296a1b383f008da77875 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -643,26 +643,19 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Group'
-  @sap.quickinfo : 'Bill of Operations Group'
+  @sap.quickinfo : 'Key for Task List Group'
   BillOfOperationsGroup : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Type'
-  @sap.quickinfo : 'Bill of Operations Type'
+  @sap.quickinfo : 'Task List Type'
   BillOfOperationsType : String(1);
-  @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
-  @sap.label : 'Capacity Requirement'
-  @sap.quickinfo : 'ID of the Capacity Requirements Record'
-  CapacityRequirement : String(12);
-  @sap.display.format : 'NonNegative'
-  @sap.required.in.filter : 'false'
-  @sap.label : 'BOO WorkCenterID'
-  @sap.quickinfo : 'Object ID'
-  BOOWorkCenterInternalID : String(8);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'BOO Work Center Text'
-  @sap.quickinfo : 'Work Center Text'
+  @sap.label : 'Work Center Text'
   BOOWorkCenterText : String(40);
+  @sap.display.format : 'NonNegative'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Object ID'
+  BOOWorkCenterInternalID : String(8);
 };
 

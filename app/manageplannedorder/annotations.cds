@@ -3,9 +3,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     UI.SelectionFields #filterBarMacro : [
         CplndOrd,
         ProductCollection,
-        ProductionPlant,
-        to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterInternalID,
-        to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterText,
+        ProductionPlant
     ],
     UI.DataPoint #radialChart : { 
         Value : committed_percent,
@@ -116,17 +114,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Label : '{i18n>PlannedOrderOpeningDate}',
         },
         {$Type : 'UI.DataField',Value : PlndOrderTotalCmtmtDate,Label : '{i18n>PlndOrderTotalCmtmt}',![@UI.Hidden]},
-        {$Type : 'UI.DataField',Value : ProductCollection,Label : '{i18n>ProductCollection}',![@UI.Hidden]},
-        {
-            $Type : 'UI.DataField',
-            Value : to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterInternalID,
-            Label : '{i18n>WorkCenterInternalId}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : to_ZZ1_PLOCAPACITYCORD.BOOWorkCenterText,
-            Label : '{i18n>WorkCenterText}',
-        },
     ],
     UI.DataPoint #ProductionPlant : {
         $Type : 'UI.DataPointType',
