@@ -52,6 +52,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : ZZ1_MFI_CR_TYPE_PLA,
             Label : '{i18n>OrderType}',
+                width : '5rem',
         },
         {
             $Type : 'UI.DataField',
@@ -417,9 +418,8 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
             ![@UI.Hidden],},
         {
             $Type : 'UI.DataField',
-            Value : BOOWorkCenterInternalID,
-            Label : '{i18n>BOOWorkCenterInternalId}',
-            ![@UI.Hidden],
+            Value : FreeDefinedIndicator1,
+            Label : 'Critical Operation',
         },
     ]
 );

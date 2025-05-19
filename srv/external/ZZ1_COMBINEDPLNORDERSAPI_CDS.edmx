@@ -236,8 +236,9 @@
 <Property Name="RemainingCapReqOpSegTrdwnDurn" Type="Edm.Double" sap:required-in-filter="false" sap:unit="CapacityRequirementUnit" sap:label="RemainingCapReqOpSegTrdwnDurn"/>
 <Property Name="BillOfOperationsGroup" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOO Group" sap:quickinfo="Key for Task List Group"/>
 <Property Name="BillOfOperationsType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOO Type" sap:quickinfo="Task List Type"/>
-<Property Name="BOOWorkCenterText" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Work Center Text"/>
 <Property Name="BOOWorkCenterInternalID" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="Object ID"/>
+<Property Name="BOOWorkCenterText" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Work Center Text"/>
+<Property Name="FreeDefinedIndicator1" Type="Edm.Boolean" sap:required-in-filter="false" sap:label="User field indicator" sap:quickinfo="User-defined field: Indicator for reports"/>
 </EntityType>
 <Association Name="assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>

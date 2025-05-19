@@ -1,4 +1,4 @@
-/* checksum : fada5b5a7f627bfa4b2ac88429d0e008 */
+/* checksum : 40a8451357686750616129d3a45dd1c1 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -656,12 +656,16 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.label : 'BOO Type'
   @sap.quickinfo : 'Task List Type'
   BillOfOperationsType : String(1);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'Work Center Text'
-  BOOWorkCenterText : String(40);
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Object ID'
   BOOWorkCenterInternalID : String(8);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Work Center Text'
+  BOOWorkCenterText : String(40);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'User field indicator'
+  @sap.quickinfo : 'User-defined field: Indicator for reports'
+  FreeDefinedIndicator1 : Boolean;
 };
 

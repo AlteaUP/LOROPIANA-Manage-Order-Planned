@@ -18,7 +18,7 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
-      console.log('aaaaaa -> ZZ1_CombinedPlnOrdersAPI')
+      
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       console.log(res)
       // check res is an array
@@ -47,17 +47,17 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_MasterPlannedOrders", async (req) => {
-      console.log('aaaaaa -> ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD')
+      
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_CombinPlannedOrdersCom", async (req) => {
-      console.log('aaaaaa -> ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD')
+      
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD", async (req) => {
-      console.log('aaaaaa -> ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD')
+      
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       return res;
     });

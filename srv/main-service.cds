@@ -70,6 +70,8 @@ service MainService {
   entity ZZ1_CombinedPlnOrdersAPI   as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,
+      // null as PlannedTotalQtyInBaseUnit : Integer,
+      // null as PlndOrderCommittedQty : Integer,
       null as committed_criticality : String(20),
       null as committed_percent     : Integer,
       // master planned orders
