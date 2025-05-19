@@ -87,6 +87,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : PlannedTotalQtyInBaseUnit,
             Label : '{i18n>PlannedTotalQtyIn}',
+              @Semantics.quantity.unitOfMeasure: 'BaseUnit',
+            @Semantics.unitOfMeasure: true,
             ![@HTML5.CssDefaults] : {
                 width : '8rem',
             },
@@ -126,6 +128,22 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : ZZ1_MFI_CRORDER_PERSON_PLA,
             Label : '{i18n>PersonalizzationOrderNumber}',
+            ![@UI.Hidden],
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterInternalID,
+            Label : '{i18n>WorkCenterInternalId}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterText,
+            Label : '{i18n>WorkCenterText}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : BaseUnit,
+            Label : '{i18n>BaseUnit}',
         },
     ],
     UI.DataPoint #ProductionPlant : {
@@ -374,7 +392,7 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
         {
             $Type : 'UI.DataField',
             Value : BOOWorkCenterText,
-            Label : '{i18n>BOOWorkCenterText}',
+            Label : '{i18n>OperationWorkCenterText}',
         },
         {
             $Type : 'UI.DataField',
@@ -420,6 +438,12 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(
             $Type : 'UI.DataField',
             Value : FreeDefinedIndicator1,
             Label : 'Critical Operation',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : BOOWorkCenterInternalID,
+            Label : '{i18n>OperationWorkCenterInternal}',
+            ![@UI.Hidden],
         },
     ]
 );
@@ -989,5 +1013,14 @@ annotate service.ZZ1_PLOCAPACITYCORD with {
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     MRPController @Common.Label : 'MRPController'
+};
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+};
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+};
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
 };
 

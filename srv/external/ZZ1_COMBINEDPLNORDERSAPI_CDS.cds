@@ -1,4 +1,4 @@
-/* checksum : 40a8451357686750616129d3a45dd1c1 */
+/* checksum : cb8eb07c9128bb7b2da92c30c63c65c2 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -301,6 +301,7 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
   to_ZZ1_PLOCAPACITYCORD : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
+  to_ZZ1_PLOCAPACITYCORD_TEXT : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
 };
 
 @cds.external : true
@@ -656,6 +657,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.label : 'BOO Type'
   @sap.quickinfo : 'Task List Type'
   BillOfOperationsType : String(1);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'User field indicator'
+  @sap.quickinfo : 'User-defined field: Indicator for reports'
+  FreeDefinedIndicator1 : Boolean;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Object ID'
@@ -663,9 +668,5 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center Text'
   BOOWorkCenterText : String(40);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'User field indicator'
-  @sap.quickinfo : 'User-defined field: Indicator for reports'
-  FreeDefinedIndicator1 : Boolean;
 };
 

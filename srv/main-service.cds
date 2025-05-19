@@ -65,11 +65,16 @@ service MainService {
   // CAPACITY
   entity ZZ1_PLOCAPACITYCORD        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
+  @cds.redirection.target 
+  entity ZZ1_PLOCAPACITYCORD_TEXT        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
+
 
   // COMBINED PLANNED ORDER
   entity ZZ1_CombinedPlnOrdersAPI   as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,
+      // cast(PlannedTotalQtyInBaseUnit as Integer) as ZPlannedTotalQtyInBaseUnit,
+      // cast(PlndOrderCommittedQty as Integer) as ZPlndOrderCommittedQty,
       // null as PlannedTotalQtyInBaseUnit : Integer,
       // null as PlndOrderCommittedQty : Integer,
       null as committed_criticality : String(20),
@@ -82,9 +87,12 @@ service MainService {
                                         on CplndOrd = $self.CplndOrd,
       // null as combinplannedorderscomcount,
       // capacità
-      to_PLOCAPACITYCORD            : Composition of many ZZ1_PLOCAPACITYCORD
+      to_ZZ1_PLOCAPACITYCORD            : Composition of many ZZ1_PLOCAPACITYCORD
                                         on CplndOrd = $self.CplndOrd,
                                       // null as plocapacitycordcount
+
+      to_ZZ1_PLOCAPACITYCORD_TEXT            : Composition of one ZZ1_PLOCAPACITYCORD_TEXT
+                                        on CplndOrd = $self.CplndOrd
                                       };
 
   // add count of master

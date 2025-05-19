@@ -62,6 +62,12 @@ module.exports = class MainService extends cds.ApplicationService {
       return res;
     });
 
+    this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD_TEXT", async (req) => {
+      
+      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      return res;
+    });
+
 
     // Table - Components
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
