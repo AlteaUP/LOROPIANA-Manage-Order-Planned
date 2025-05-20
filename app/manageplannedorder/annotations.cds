@@ -56,7 +56,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Value : ZZ1_MFI_CR_TYPE_PLA,
             Label : '{i18n>OrderType}',
             ![@HTML5.CssDefaults] : {
-                width : '5rem',
+                width : '8rem',
             },
         },
         {
@@ -1161,13 +1161,25 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
     )
 };
 
-annotate service.ZZ1_MFI_CR_TYPE_V with {
-    Code @Common.Text : Code_Text
-};
-annotate service.ZZ1_MFI_CR_TYPE_V with {
-    Code @Common.TextArrangement: #TextFirst
-};
+// annotate service.ZZ1_MFI_CR_TYPE_V with {
+//     Code @Common.Text : Code_Text
+// };
+// annotate service.ZZ1_MFI_CR_TYPE_V with {
+//     Code @Common.TextArrangement: #TextFirst
+// };
 
 annotate service.ZZ1_Plant with {
     Plant @Common.Text : PlantName
 };
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+    ZZ1_MFI_CR_TYPE_PLA @(
+        Common.Label : 'ZZ1_MFI_CR_TYPE_PLA',
+        Common.Text: to_ZZ1_MFI_CR_TYPE_PLA.Code_Text,
+        Common.TextArrangement: #TextFirst
+    )
+};
+
+annotate service.ZZ1_MFI_CR_TYPE_V with {
+    Code @Common.Text : Code_Text
+};
+

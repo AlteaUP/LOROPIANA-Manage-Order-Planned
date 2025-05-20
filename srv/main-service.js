@@ -526,17 +526,16 @@ module.exports = class MainService extends cds.ApplicationService {
 
 
     this.on("*", "ZZ1_Plant", async (req) => {
-      // debugger;
       // req.query.SELECT.from.ref[0] = "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_Plant";
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      console.log({ query: JSON.stringify(req.query), res })
       res['$count'] = res.length.toString();
       return res
     });
 
     this.on("*", "ZZ1_MFI_CR_TYPE_V", async (req) => {
-      // debugger;
-      // req.query.SELECT.from.ref[0] = "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_Plant";
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      console.log({ query: JSON.stringify(req.query), res })
       res['$count'] = res.length.toString();
       return res
     });

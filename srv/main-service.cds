@@ -101,7 +101,8 @@ service MainService {
                                         on MRPPlant = $self.MRPPlant,
 
       to_ZZ1_MFI_CR_TYPE_PLA        : Composition of one ZZ1_MFI_CR_TYPE_V
-                                        on to_ZZ1_MFI_CR_TYPE_PLA.Code = $self.ZZ1_MFI_CR_TYPE_PLA,
+                                        on  MRPController = $self.MRPController
+                                        and MRPPlant      = $self.MRPPlant,
                                       };
 
   // add count of master
