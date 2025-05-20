@@ -2,11 +2,12 @@ using MainService as service from '../../srv/main-service';
 annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     UI.SelectionFields #filterBarMacro : [
         CplndOrd,
-        ProductCollection,
         ProductionPlant,
         MRPController,
         to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterInternalID,
-        to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterText,
+        ProductSeasonYear,
+        ProductSeason,
+        PlannedOrderType,
     ],
     UI.DataPoint #radialChart : { 
         Value : committed_percent,
@@ -56,7 +57,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Label : '{i18n>OrderType}',
             ![@HTML5.CssDefaults] : {
                 width : '5rem',
-                },
+            },
         },
         {
             $Type : 'UI.DataField',
@@ -148,6 +149,16 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : BaseUnit,
             Label : '{i18n>BaseUnit}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : to_ZZ1_MFI_CR_TYPE_PLA.Code_Text,
+            Label : 'Code_Text',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : to_ZZ1_MFI_CR_TYPE_PLA.Code,
+            Label : 'Code',
         },
     ],
     UI.DataPoint #ProductionPlant : {
@@ -319,7 +330,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label : '{i18n>ProductionPlant}',
         Common.ValueList : {
             $Type : 'Common.ValueListType',
-            CollectionPath : 'I_Plant',
+            CollectionPath : 'ZZ1_Plant',
             Parameters : [
                 {
                     $Type : 'Common.ValueListParameterInOut',
@@ -327,13 +338,11 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
                     ValueListProperty : 'Plant',
                 },
             ],
-            Label : 'Production Plant',
+            Label : 'Plant',
         },
         Common.ValueListWithFixedValues : true,
-        )
+        )    
 };
-
-
 
 annotate service.ZZ1_MasterPlannedOrders with @(
     UI.LineItem #MasterPlannedOrder : [
@@ -1018,34 +1027,147 @@ annotate service.ZZ1_PLOCAPACITYCORD with {
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     MRPController @(
         Common.Label : 'MRPController',
-        Common.Text : BOOWorkCenterText,
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : MRPController,
+                    ValueListProperty : 'MRPController',
+                },
+            ],
+        },
+        Common.ValueListWithFixedValues : true,
+    )
+};
+
+
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+};
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+};
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+};
+
+annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
+    BOOWorkCenterInternalID @(
+        Common.Label : 'Work Center',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_PLOCAPACITYCORD_TEXT',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : BOOWorkCenterInternalID,
+                    ValueListProperty : 'BOOWorkCenterInternalID',
+                },
+            ],
+        },
+        Common.ValueListWithFixedValues : true,
+    )
+};
+
+
+annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
+    BOOWorkCenterText @Common.Label : 'BOOWorkCenterText'
+};
+
+annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
+    BOOWorkCenterInternalID @Text : BOOWorkCenterText
+};
+
+// annotate service.I_Plant with {
+//     Plant @Common.Text : PlantName
+// };
+
+// annotate service.ZZ1_Plant with {
+//     Plant @(
+//         Common.Text : PlantName,
+//         Common.ValueList : {
+//             $Type : 'Common.ValueListType',
+//             CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+//             Parameters : [
+//                 {
+//                     $Type : 'Common.ValueListParameterInOut',
+//                     LocalDataProperty : ProductSeasonYear,
+//                     ValueListProperty : 'ProductSeasonYear',
+//                 },
+//             ],
+//             Label : 'year',
+//         },
+//         Common.ValueListWithFixedValues : true,
+//     )
+// };
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+    ProductSeasonYear @(
+        Common.Label : 'Product Season Year',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : ProductSeasonYear,
+                    ValueListProperty : 'ProductSeasonYear',
+                },
+            ],
+            Label : 'season year',
+        },
+        Common.ValueListWithFixedValues : true,
+    )
+};
+
+
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+    ProductSeason @(
+        Common.Label : 'Product Season',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : ProductSeason,
+                    ValueListProperty : 'ProductSeason',
+                },
+            ],
+            Label : 'season',
+        },
+        Common.ValueListWithFixedValues : true,
     )
 };
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
+    PlannedOrderType @(
+        Common.Label : 'Planned Order Type',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'ZZ1_MFI_CR_TYPE_V',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : PlannedOrderType,
+                    ValueListProperty : 'Code'
+                },
+            ],
+            Label : 'Planned Order Type',
+        },
+        Common.ValueListWithFixedValues : true,
+    )
 };
 
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
+annotate service.ZZ1_MFI_CR_TYPE_V with {
+    Code @Common.Text : Code_Text
+};
+annotate service.ZZ1_MFI_CR_TYPE_V with {
+    Code @Common.TextArrangement: #TextFirst
 };
 
-annotate service.ZZ1_CombinedPlnOrdersAPI with {
-};
-
-annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
-    BOOWorkCenterInternalID @Common.Label : 'to_ZZ1_PLOCAPACITYCORD_TEXT/BOOWorkCenterInternalID'
-    
-    
-};
-
-annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
-    BOOWorkCenterText @Common.Label : 'to_ZZ1_PLOCAPACITYCORD_TEXT/BOOWorkCenterText'
-};
-
-annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
-    BOOWorkCenterInternalID @Text : 'BOOWorkCenterText'
-};
-
-annotate service.I_Plant with {
+annotate service.ZZ1_Plant with {
     Plant @Common.Text : PlantName
 };
-

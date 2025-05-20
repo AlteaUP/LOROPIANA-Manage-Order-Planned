@@ -31,6 +31,41 @@
 </edmx:Reference>
 <edmx:DataServices m:DataServiceVersion="2.0">
 <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZZ1_COMBINEDPLNORDERSAPI_CDS" xml:lang="en" sap:schema-version="1">
+<EntityType Name="I_Customer_VHType" sap:label="Customer" sap:value-list="true" sap:content-version="1">
+<Key>
+<PropertyRef Name="Customer"/>
+</Key>
+<Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="BPCustomerName" sap:label="Customer" sap:quickinfo="Customer Number"/>
+<Property Name="OrganizationBPName1" Type="Edm.String" MaxLength="35" sap:label="Customer Name 1" sap:quickinfo="Name 1"/>
+<Property Name="BusinessPartnerName1" Type="Edm.String" MaxLength="40" sap:label="Business Partner Name 1" sap:quickinfo="Name 1"/>
+<Property Name="OrganizationBPName2" Type="Edm.String" MaxLength="35" sap:label="Customer Name 2" sap:quickinfo="Name 2"/>
+<Property Name="BusinessPartnerName2" Type="Edm.String" MaxLength="40" sap:label="Business Partner Name 2" sap:quickinfo="Name 2"/>
+<Property Name="Country" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Country/Region" sap:quickinfo="Country/Region Key"/>
+<Property Name="CityName" Type="Edm.String" MaxLength="35" sap:label="City"/>
+<Property Name="BPAddrCityName" Type="Edm.String" MaxLength="40" sap:label="Business Partner Address City" sap:quickinfo="City"/>
+<Property Name="StreetName" Type="Edm.String" MaxLength="35" sap:label="Street" sap:quickinfo="Street and House Number"/>
+<Property Name="BPAddrStreetName" Type="Edm.String" MaxLength="60" sap:label="Business Partner Address Street" sap:quickinfo="Street"/>
+<Property Name="PostalCode" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Postal Code"/>
+<Property Name="CustomerName" Type="Edm.String" MaxLength="80" sap:label="Customer Name" sap:quickinfo="Name of Customer"/>
+<Property Name="BPCustomerName" Type="Edm.String" MaxLength="81" sap:label="Business Partner Customer Name" sap:quickinfo="Customer Name"/>
+<Property Name="CustomerAccountGroup" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Account group" sap:quickinfo="Customer Account Group"/>
+<Property Name="AuthorizationGroup" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Authorization" sap:quickinfo="Authorization Group"/>
+<Property Name="IsBusinessPurposeCompleted" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Purpose Complete Flag" sap:quickinfo="Business Purpose Completed Flag"/>
+<Property Name="IsCompetitor" Type="Edm.Boolean" sap:label="Competitors" sap:quickinfo="Indicator: Competitor"/>
+<Property Name="BusinessPartner" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+<Property Name="BusinessPartnerType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Business Partner Type"/>
+<Property Name="DataControllerSet" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Data Ctrlr. Set" sap:quickinfo="BP: Data Controller Set Flag"/>
+<Property Name="DataController1" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController2" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController3" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController4" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController5" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController6" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController7" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController8" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController9" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController10" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+</EntityType>
 <EntityType Name="I_PlantType" sap:label="Plant" sap:content-version="1">
 <Key>
 <PropertyRef Name="Plant"/>
@@ -38,8 +73,8 @@
 <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:text="PlantName" sap:label="Plant"/>
 <Property Name="PlantName" Type="Edm.String" MaxLength="30" sap:label="Plant Name"/>
 <Property Name="ValuationArea" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Valuation Area"/>
-<Property Name="PlantCustomer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer No Plant" sap:quickinfo="Customer Number of Plant"/>
-<Property Name="PlantSupplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sppl. No. Plnt" sap:quickinfo="Supplier Number of Plant"/>
+<Property Name="PlantCustomer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer No Plant" sap:quickinfo="Customer Number of Plant" sap:value-list="standard"/>
+<Property Name="PlantSupplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sppl. No. Plnt" sap:quickinfo="Supplier Number of Plant" sap:value-list="standard"/>
 <Property Name="FactoryCalendar" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Factory Calendar" sap:quickinfo="Factory calendar key"/>
 <Property Name="DefaultPurchasingOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Purch. Organization" sap:quickinfo="Purchasing Organization"/>
 <Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sls Organization ICB" sap:quickinfo="Sales Organization for Intercompany Billing"/>
@@ -66,6 +101,31 @@
 <Property Name="ConfigDeprecationCode" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Validity" sap:quickinfo="Deprecated Entries"/>
 <NavigationProperty Name="to_Plant" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_BE5383DAFB653A11C6A17794652A43B0" FromRole="FromRole_assoc_BE5383DAFB653A11C6A17794652A43B0" ToRole="ToRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
 </EntityType>
+<EntityType Name="I_Supplier_VHType" sap:label="Supplier" sap:value-list="true" sap:content-version="1">
+<Key>
+<PropertyRef Name="Supplier"/>
+</Key>
+<Property Name="Supplier" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:text="BPSupplierName" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+<Property Name="SupplierName" Type="Edm.String" MaxLength="35" sap:label="Supplier Name1" sap:quickinfo="Supplier Name"/>
+<Property Name="BusinessPartnerName1" Type="Edm.String" MaxLength="40" sap:label="Business Partner Name1"/>
+<Property Name="BPSupplierName" Type="Edm.String" MaxLength="81" sap:label="Business Partner Supplier Name" sap:quickinfo="Supplier Name"/>
+<Property Name="AuthorizationGroup" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Authorization" sap:quickinfo="Authorization Group"/>
+<Property Name="SupplierAccountGroup" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Account group" sap:quickinfo="Vendor account group"/>
+<Property Name="IsBusinessPurposeCompleted" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Purpose Completed" sap:quickinfo="Business Purpose Completed Flag"/>
+<Property Name="BusinessPartner" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+<Property Name="BusinessPartnerType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Business Partner Type"/>
+<Property Name="DataControllerSet" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Data Ctrlr. Set" sap:quickinfo="BP: Data Controller Set Flag"/>
+<Property Name="DataController1" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController2" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController3" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController4" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController5" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController6" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController7" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController8" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController9" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+<Property Name="DataController10" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Data Controller" sap:quickinfo="BP: Data Controller (Internal Use Only)"/>
+</EntityType>
 <EntityType Name="ZZ1_CombinedPlnOrdersAPIType" sap:label="Combined Planned Orders API" sap:content-version="1">
 <Key>
 <PropertyRef Name="CplndOrd"/>
@@ -76,7 +136,7 @@
 <Property Name="PlannedOrderType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planned Order Type"/>
 <Property Name="PlannedOrderCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planned Order Category"/>
 <Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="LastChangeDate"/>
-<Property Name="MRPPlant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planning Plant"/>
+<Property Name="MRPPlant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Planning Plant" sap:value-list="standard"/>
 <Property Name="MRPArea" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Area"/>
 <Property Name="MRPController" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Controller"/>
 <Property Name="MaterialProcurementCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Procurement Category" sap:quickinfo="Material Procurement Category"/>
@@ -99,13 +159,13 @@
 <Property Name="PlndOrderTotalCmtmtDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="PlndOrderTotalCmtmtDate"/>
 <Property Name="ProductionStartDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="ProductionStartDate"/>
 <Property Name="ProductionEndDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="ProductionEndDate"/>
-<Property Name="PlndOrderBaseToEntryQtyNmrtr" Type="Edm.Decimal" Precision="5" Scale="0" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderBaseToEntryQtyNmrtr"/>
-<Property Name="PlndOrderBaseToEntryQtyDnmntr" Type="Edm.Decimal" Precision="5" Scale="0" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderBaseToEntryQtyDnmntr"/>
+<Property Name="PlndOrderBaseToEntryQtyNmrtr" Type="Edm.Int32" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderBaseToEntryQtyNmrtr"/>
+<Property Name="PlndOrderBaseToEntryQtyDnmntr" Type="Edm.Int32" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderBaseToEntryQtyDnmntr"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
-<Property Name="PlannedTotalQtyInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlannedTotalQtyInBaseUnit"/>
-<Property Name="RequirementQuantityInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequirementQuantityInBaseUnit"/>
-<Property Name="QuantityWithdrawnInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="QuantityWithdrawnInBaseUnit"/>
-<Property Name="PlndOrderCommittedQty" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderCommittedQty"/>
+<Property Name="PlannedTotalQtyInBaseUnit" Type="Edm.Int32" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlannedTotalQtyInBaseUnit"/>
+<Property Name="RequirementQuantityInBaseUnit" Type="Edm.Int32" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="RequirementQuantityInBaseUnit"/>
+<Property Name="QuantityWithdrawnInBaseUnit" Type="Edm.Int32" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="QuantityWithdrawnInBaseUnit"/>
+<Property Name="PlndOrderCommittedQty" Type="Edm.Int32" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="PlndOrderCommittedQty"/>
 <Property Name="ProductSeason" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Season"/>
 <Property Name="ProductCollection" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Collection" sap:quickinfo="Fashion Collection"/>
 <Property Name="ProductSeasonYear" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Season Year"/>
@@ -118,6 +178,7 @@
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrders" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_14452F1BDEBB4D010D6E121B05303A09" FromRole="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09" ToRole="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 <NavigationProperty Name="to_ZZ1_MFI_CR_TYPE_PLA" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0C2F76746DFA4414D55B646BD949E01A" FromRole="FromRole_assoc_0C2F76746DFA4414D55B646BD949E01A" ToRole="ToRole_assoc_0C2F76746DFA4414D55B646BD949E01A"/>
 <NavigationProperty Name="to_ZZ1_PlannedOrdersCompChar" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" FromRole="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" ToRole="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
+<NavigationProperty Name="to_ZZ1_Plant" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF" FromRole="FromRole_assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF" ToRole="ToRole_assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF"/>
 <NavigationProperty Name="to_ZZ1_PLOCAPACITYCORD" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_245A91E238A4802D70CDD492A235572E" FromRole="FromRole_assoc_245A91E238A4802D70CDD492A235572E" ToRole="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 <NavigationProperty Name="to_ZZ1_PLOCAPACITYCORD_TEXT" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_703974299644AD47BD49A0301C4DD477" FromRole="FromRole_assoc_703974299644AD47BD49A0301C4DD477" ToRole="ToRole_assoc_703974299644AD47BD49A0301C4DD477"/>
 </EntityType>
@@ -221,6 +282,25 @@
 <Property Name="SERIALE_MATRICOLA" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="SERIALE_MATRICOLA"/>
 <Property Name="ALTEZZA_STANDARD" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="ALTEZZA_STANDARD"/>
 </EntityType>
+<EntityType Name="ZZ1_PlantType" sap:label="Plant" sap:content-version="1">
+<Key>
+<PropertyRef Name="Plant"/>
+</Key>
+<Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:text="PlantName" sap:label="Plant"/>
+<Property Name="PlantName" Type="Edm.String" MaxLength="30" sap:required-in-filter="false" sap:label="Plant Name"/>
+<Property Name="ValuationArea" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Valuation Area"/>
+<Property Name="IsMarkedForArchiving" Type="Edm.Boolean" sap:required-in-filter="false" sap:label="Archiving Flag" sap:quickinfo="Central archiving marker for master record"/>
+<Property Name="PlantCustomer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Customer No Plant" sap:quickinfo="Customer Number of Plant" sap:value-list="standard"/>
+<Property Name="PlantSupplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Sppl. No. Plnt" sap:quickinfo="Supplier Number of Plant" sap:value-list="standard"/>
+<Property Name="FactoryCalendar" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Factory Calendar" sap:quickinfo="Factory calendar key"/>
+<Property Name="DefaultPurchasingOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Purch. Organization" sap:quickinfo="Purchasing Organization"/>
+<Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Sls Organization ICB" sap:quickinfo="Sales Organization for Intercompany Billing"/>
+<Property Name="AddressID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Address"/>
+<Property Name="PlantCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant Cat." sap:quickinfo="Plant category"/>
+<Property Name="DistributionChannel" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Distrib.Channel" sap:quickinfo="Distribution Channel for Intercompany billing"/>
+<Property Name="Division" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Interco. Billing Div" sap:quickinfo="Division for Intercompany Billing"/>
+<Property Name="Language" Type="Edm.String" MaxLength="2" sap:required-in-filter="false" sap:label="Language Key"/>
+</EntityType>
 <EntityType Name="ZZ1_PLOCAPACITYCORDType" sap:label="Capacity Aggregation by Combined PLO" sap:content-version="1">
 <Key>
 <PropertyRef Name="CombinedMasterOrder"/>
@@ -275,6 +355,10 @@
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompCharType" Multiplicity="*" Role="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
 </Association>
+<Association Name="assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF" sap:content-version="1">
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF"/>
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlantType" Multiplicity="0..1" Role="ToRole_assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF"/>
+</Association>
 <Association Name="assoc_245A91E238A4802D70CDD492A235572E" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" Multiplicity="*" Role="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>
@@ -310,13 +394,16 @@
 </ReferentialConstraint>
 </Association>
 <EntityContainer Name="ZZ1_COMBINEDPLNORDERSAPI_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+<EntitySet Name="I_Customer_VH" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Customer_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="I_Plant" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="I_StorageLocation" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+<EntitySet Name="I_Supplier_VH" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="ZZ1_CombinedPlnOrdersAPI" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_CombinPlannedOrdersCom" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersComType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_MasterPlannedOrders" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrdersType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_MFI_CR_TYPE_V" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_VType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PlannedOrdersCompChar" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompCharType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+<EntitySet Name="ZZ1_Plant" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlantType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PLOCAPACITYCORD" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <AssociationSet Name="assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
 <End EntitySet="ZZ1_CombinedPlnOrdersAPI" Role="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
@@ -350,8 +437,94 @@
 <End EntitySet="ZZ1_CombinedPlnOrdersAPI" Role="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 <End EntitySet="ZZ1_CombinPlannedOrdersCom" Role="ToRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 </AssociationSet>
+<AssociationSet Name="assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_CombinedPlnOrdersAPI" Role="FromRole_assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF"/>
+<End EntitySet="ZZ1_Plant" Role="ToRole_assoc_5DFB2E0DCD7D5319A6BE986201DEF8FF"/>
+</AssociationSet>
 </EntityContainer>
 <Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType/PlantCustomer">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Customer"/>
+<PropertyValue Property="CollectionPath" String="I_Customer_VH"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="PlantCustomer"/>
+<PropertyValue Property="ValueListProperty" String="Customer"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="OrganizationBPName1"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerName1"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="OrganizationBPName2"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerName2"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Country"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="CityName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="StreetName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PostalCode"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="CustomerName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BPCustomerName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType/PlantSupplier">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Supplier"/>
+<PropertyValue Property="CollectionPath" String="I_Supplier_VH"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="PlantSupplier"/>
+<PropertyValue Property="ValueListProperty" String="Supplier"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="SupplierName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerName1"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BPSupplierName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerType"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocationType/Plant">
 <Annotation Term="Common.ValueList">
 <Record>
@@ -366,6 +539,62 @@
 </Record>
 <Record Type="Common.ValueListParameterDisplayOnly">
 <PropertyValue Property="ValueListProperty" String="PlantName"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType/MRPPlant">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Plant"/>
+<PropertyValue Property="CollectionPath" String="ZZ1_Plant"/>
+<PropertyValue Property="SearchSupported" Bool="false"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="MRPPlant"/>
+<PropertyValue Property="ValueListProperty" String="Plant"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PlantName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="ValuationArea"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="IsMarkedForArchiving"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PlantCustomer"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PlantSupplier"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="FactoryCalendar"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="DefaultPurchasingOrganization"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="SalesOrganization"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="AddressID"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PlantCategory"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="DistributionChannel"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Division"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Language"/>
 </Record>
 </Collection>
 </PropertyValue>
@@ -410,6 +639,88 @@
 </Record>
 <Record Type="Common.ValueListParameterDisplayOnly">
 <PropertyValue Property="ValueListProperty" String="StorageLocationName"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlantType/PlantCustomer">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Customer"/>
+<PropertyValue Property="CollectionPath" String="I_Customer_VH"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="PlantCustomer"/>
+<PropertyValue Property="ValueListProperty" String="Customer"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="OrganizationBPName1"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerName1"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="OrganizationBPName2"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerName2"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Country"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="CityName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="StreetName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="PostalCode"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="CustomerName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BPCustomerName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlantType/PlantSupplier">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="Supplier"/>
+<PropertyValue Property="CollectionPath" String="I_Supplier_VH"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="PlantSupplier"/>
+<PropertyValue Property="ValueListProperty" String="Supplier"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="SupplierName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerName1"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BPSupplierName"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartner"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="BusinessPartnerType"/>
 </Record>
 </Collection>
 </PropertyValue>
@@ -508,6 +819,14 @@
 </Record>
 </PropertyValue>
 </Record>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ZZ1_Plant"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
 </Collection>
 </PropertyValue>
 </Record>
@@ -528,6 +847,9 @@
 </Annotation>
 </Annotations>
 <Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlantType/PlantCategory">
+<Annotation Term="Common.SAPObjectNodeTypeReference" String="PlantCategory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlantType/PlantCategory">
 <Annotation Term="Common.SAPObjectNodeTypeReference" String="PlantCategory"/>
 </Annotations>
 <atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_COMBINEDPLNORDERSAPI_CDS/$metadata"/>

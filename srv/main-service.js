@@ -20,7 +20,7 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
 
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
-      console.log(res)
+      // console.log(res)
       // check res is an array
       if (!Array.isArray(res)) {
         return res;
@@ -66,6 +66,18 @@ module.exports = class MainService extends cds.ApplicationService {
 
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       return res;
+    });
+
+    this.on("*", "ZZ1_PLOCAPACITYCORD_TEXT", async (req) => {
+
+      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      return res;
+    });
+
+
+
+    this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_MFI_CR_TYPE_PLA", async (req) => {
+      return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
 
 
@@ -513,9 +525,17 @@ module.exports = class MainService extends cds.ApplicationService {
 
 
 
-    this.on("*", "I_Plant", async (req) => {
-      debugger;
-      req.query.SELECT.from.ref[0] = "ZZ1_CombinedPlnOrdersAPI/I_Plant";
+    this.on("*", "ZZ1_Plant", async (req) => {
+      // debugger;
+      // req.query.SELECT.from.ref[0] = "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_Plant";
+      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      res['$count'] = res.length.toString();
+      return res
+    });
+
+    this.on("*", "ZZ1_MFI_CR_TYPE_V", async (req) => {
+      // debugger;
+      // req.query.SELECT.from.ref[0] = "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_Plant";
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       res['$count'] = res.length.toString();
       return res

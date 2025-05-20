@@ -1,9 +1,128 @@
-/* checksum : 2cce562af7ad1adf34f39c2ff4a6a88c */
+/* checksum : 356242d23297b23c4047dd4fdab62fc3 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
 @sap.supported.formats : 'atom json xlsx'
 service ZZ1_COMBINEDPLNORDERSAPI_CDS {};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'Customer'
+@sap.value.list : 'true'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Customer_VH {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'BPCustomerName'
+  @sap.label : 'Customer'
+  @sap.quickinfo : 'Customer Number'
+  key Customer : String(10) not null;
+  @sap.label : 'Customer Name 1'
+  @sap.quickinfo : 'Name 1'
+  OrganizationBPName1 : String(35);
+  @sap.label : 'Business Partner Name 1'
+  @sap.quickinfo : 'Name 1'
+  BusinessPartnerName1 : String(40);
+  @sap.label : 'Customer Name 2'
+  @sap.quickinfo : 'Name 2'
+  OrganizationBPName2 : String(35);
+  @sap.label : 'Business Partner Name 2'
+  @sap.quickinfo : 'Name 2'
+  BusinessPartnerName2 : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Country/Region'
+  @sap.quickinfo : 'Country/Region Key'
+  Country : String(3);
+  @sap.label : 'City'
+  CityName : String(35);
+  @sap.label : 'Business Partner Address City'
+  @sap.quickinfo : 'City'
+  BPAddrCityName : String(40);
+  @sap.label : 'Street'
+  @sap.quickinfo : 'Street and House Number'
+  StreetName : String(35);
+  @sap.label : 'Business Partner Address Street'
+  @sap.quickinfo : 'Street'
+  BPAddrStreetName : String(60);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Postal Code'
+  PostalCode : String(10);
+  @sap.label : 'Customer Name'
+  @sap.quickinfo : 'Name of Customer'
+  CustomerName : String(80);
+  @sap.label : 'Business Partner Customer Name'
+  @sap.quickinfo : 'Customer Name'
+  BPCustomerName : String(81);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Account group'
+  @sap.quickinfo : 'Customer Account Group'
+  CustomerAccountGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Authorization'
+  @sap.quickinfo : 'Authorization Group'
+  AuthorizationGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Purpose Complete Flag'
+  @sap.quickinfo : 'Business Purpose Completed Flag'
+  IsBusinessPurposeCompleted : String(1);
+  @sap.label : 'Competitors'
+  @sap.quickinfo : 'Indicator: Competitor'
+  IsCompetitor : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner'
+  @sap.quickinfo : 'Business Partner Number'
+  BusinessPartner : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner Type'
+  BusinessPartnerType : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Ctrlr. Set'
+  @sap.quickinfo : 'BP: Data Controller Set Flag'
+  DataControllerSet : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController1 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController2 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController3 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController4 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController5 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController6 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController7 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController8 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController9 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController10 : String(30);
+};
 
 @cds.external : true
 @cds.persistence.skip : true
@@ -26,10 +145,12 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {
   @sap.display.format : 'UpperCase'
   @sap.label : 'Customer No Plant'
   @sap.quickinfo : 'Customer Number of Plant'
+  @sap.value.list : 'standard'
   PlantCustomer : String(10);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Sppl. No. Plnt'
   @sap.quickinfo : 'Supplier Number of Plant'
+  @sap.value.list : 'standard'
   PlantSupplier : String(10);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Factory Calendar'
@@ -113,6 +234,94 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {
 @sap.creatable : 'false'
 @sap.updatable : 'false'
 @sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'Supplier'
+@sap.value.list : 'true'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VH {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'BPSupplierName'
+  @sap.label : 'Supplier'
+  @sap.quickinfo : 'Account Number of Supplier'
+  key Supplier : String(10) not null;
+  @sap.label : 'Supplier Name1'
+  @sap.quickinfo : 'Supplier Name'
+  SupplierName : String(35);
+  @sap.label : 'Business Partner Name1'
+  BusinessPartnerName1 : String(40);
+  @sap.label : 'Business Partner Supplier Name'
+  @sap.quickinfo : 'Supplier Name'
+  BPSupplierName : String(81);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Authorization'
+  @sap.quickinfo : 'Authorization Group'
+  AuthorizationGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Account group'
+  @sap.quickinfo : 'Vendor account group'
+  SupplierAccountGroup : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Purpose Completed'
+  @sap.quickinfo : 'Business Purpose Completed Flag'
+  IsBusinessPurposeCompleted : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner'
+  @sap.quickinfo : 'Business Partner Number'
+  BusinessPartner : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Business Partner Type'
+  BusinessPartnerType : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Ctrlr. Set'
+  @sap.quickinfo : 'BP: Data Controller Set Flag'
+  DataControllerSet : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController1 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController2 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController3 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController4 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController5 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController6 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController7 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController8 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController9 : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
+  DataController10 : String(30);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
 @sap.content.version : '1'
 @sap.label : 'Combined Planned Orders API'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
@@ -141,6 +350,7 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Planning Plant'
+  @sap.value.list : 'standard'
   MRPPlant : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
@@ -240,11 +450,11 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'PlndOrderBaseToEntryQtyNmrtr'
-  PlndOrderBaseToEntryQtyNmrtr : Decimal(5, 0);
+  PlndOrderBaseToEntryQtyNmrtr : Integer;
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'PlndOrderBaseToEntryQtyDnmntr'
-  PlndOrderBaseToEntryQtyDnmntr : Decimal(5, 0);
+  PlndOrderBaseToEntryQtyDnmntr : Integer;
   @sap.required.in.filter : 'false'
   @sap.label : 'Base Unit of Measure'
   @sap.semantics : 'unit-of-measure'
@@ -252,19 +462,19 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'PlannedTotalQtyInBaseUnit'
-  PlannedTotalQtyInBaseUnit : Decimal(13, 3);
+  PlannedTotalQtyInBaseUnit : Integer;
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'RequirementQuantityInBaseUnit'
-  RequirementQuantityInBaseUnit : Decimal(13, 3);
+  RequirementQuantityInBaseUnit : Integer;
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'QuantityWithdrawnInBaseUnit'
-  QuantityWithdrawnInBaseUnit : Decimal(13, 3);
+  QuantityWithdrawnInBaseUnit : Integer;
   @sap.required.in.filter : 'false'
   @sap.unit : 'BaseUnit'
   @sap.label : 'PlndOrderCommittedQty'
-  PlndOrderCommittedQty : Decimal(13, 3);
+  PlndOrderCommittedQty : Integer;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Season'
@@ -302,6 +512,7 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_MFI_CR_TYPE_PLA : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
+  to_ZZ1_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant {  };
   to_ZZ1_PLOCAPACITYCORD : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
   to_ZZ1_PLOCAPACITYCORD_TEXT : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
 };
@@ -588,6 +799,81 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {
   @sap.required.in.filter : 'false'
   @sap.label : 'ALTEZZA_STANDARD'
   ALTEZZA_STANDARD : String(70);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '1'
+@sap.label : 'Plant'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant {
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.text : 'PlantName'
+  @sap.label : 'Plant'
+  key Plant : String(4) not null;
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Plant Name'
+  PlantName : String(30);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Valuation Area'
+  ValuationArea : String(4);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Archiving Flag'
+  @sap.quickinfo : 'Central archiving marker for master record'
+  IsMarkedForArchiving : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Customer No Plant'
+  @sap.quickinfo : 'Customer Number of Plant'
+  @sap.value.list : 'standard'
+  PlantCustomer : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Sppl. No. Plnt'
+  @sap.quickinfo : 'Supplier Number of Plant'
+  @sap.value.list : 'standard'
+  PlantSupplier : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Factory Calendar'
+  @sap.quickinfo : 'Factory calendar key'
+  FactoryCalendar : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Purch. Organization'
+  @sap.quickinfo : 'Purchasing Organization'
+  DefaultPurchasingOrganization : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Sls Organization ICB'
+  @sap.quickinfo : 'Sales Organization for Intercompany Billing'
+  SalesOrganization : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Address'
+  AddressID : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Plant Cat.'
+  @sap.quickinfo : 'Plant category'
+  PlantCategory : String(1);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Distrib.Channel'
+  @sap.quickinfo : 'Distribution Channel for Intercompany billing'
+  DistributionChannel : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Interco. Billing Div'
+  @sap.quickinfo : 'Division for Intercompany Billing'
+  Division : String(2);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Language Key'
+  Language : String(2);
 };
 
 @cds.external : true

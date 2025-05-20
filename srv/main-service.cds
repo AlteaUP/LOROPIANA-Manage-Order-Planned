@@ -20,7 +20,8 @@ type AtpPloType     : {
 
 service MainService {
 
-  entity I_Plant                    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant;
+  entity ZZ1_Plant                  as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant;
+  entity ZZ1_MFI_CR_TYPE_V          as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V;
   // MASTER PLANNED ORDER
   entity ZZ1_MasterPlannedOrders    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
 
@@ -94,7 +95,13 @@ service MainService {
       // null as plocapacitycordcount
 
       to_ZZ1_PLOCAPACITYCORD_TEXT   : Composition of one ZZ1_PLOCAPACITYCORD_TEXT
-                                        on CplndOrd = $self.CplndOrd
+                                        on CplndOrd = $self.CplndOrd,
+
+      to_ZZ1_Plant                  : Composition of many ZZ1_Plant
+                                        on MRPPlant = $self.MRPPlant,
+
+      to_ZZ1_MFI_CR_TYPE_PLA        : Composition of one ZZ1_MFI_CR_TYPE_V
+                                        on to_ZZ1_MFI_CR_TYPE_PLA.Code = $self.ZZ1_MFI_CR_TYPE_PLA,
                                       };
 
   // add count of master
