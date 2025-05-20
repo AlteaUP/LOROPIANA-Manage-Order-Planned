@@ -1,4 +1,4 @@
-/* checksum : cb8eb07c9128bb7b2da92c30c63c65c2 */
+/* checksum : 2cce562af7ad1adf34f39c2ff4a6a88c */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -293,12 +293,14 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   Product : String(40);
   @sap.required.in.filter : 'false'
   @sap.label : 'Order type'
+  @sap.value.list : 'standard'
   ZZ1_MFI_CR_TYPE_PLA : String(3);
   @sap.required.in.filter : 'false'
   @sap.label : 'Order Personalization'
   ZZ1_MFI_CRORDER_PERSON_PLA : String(20);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
+  to_ZZ1_MFI_CR_TYPE_PLA : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
   to_ZZ1_PLOCAPACITYCORD : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
   to_ZZ1_PLOCAPACITYCORD_TEXT : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {  };
@@ -342,15 +344,14 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.label : 'Batch'
   @sap.quickinfo : 'Batch Number'
   key Batch : String(10) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Bill Of Material Item Number'
+  key BillOfMaterialItemNumber_2 : String(4) not null;
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
   @sap.label : 'MatlCompRequirementDate'
   MatlCompRequirementDate : Date;
-  @sap.display.format : 'NonNegative'
-  @sap.required.in.filter : 'false'
-  @sap.label : 'BOM Item'
-  @sap.quickinfo : 'Bill of Material Item'
-  BOMItem : String(8);
   @sap.required.in.filter : 'false'
   @sap.label : 'Item Text'
   @sap.quickinfo : 'BOM Item Text (Line 1)'
@@ -442,6 +443,27 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {
   @sap.required.in.filter : 'false'
   @sap.label : 'Product Description'
   ProductDescription : String(40);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'ZZ1_MFI_CR_TYPE'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {
+  @sap.text : 'Code_Text'
+  @sap.label : 'Order type'
+  key Code : String(3) not null;
+  @sap.label : 'Order type (Desc.)'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  Code_Text : String(60);
+  @sap.label : 'Is Disabled'
+  @sap.quickinfo : 'Custom Field: Code Disabled Indicator'
+  IsDisabled : Boolean;
 };
 
 @cds.external : true

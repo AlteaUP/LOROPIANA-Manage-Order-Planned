@@ -112,10 +112,11 @@
 <Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
 <Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <Property Name="Product" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Product" sap:quickinfo="Product Number"/>
-<Property Name="ZZ1_MFI_CR_TYPE_PLA" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Order type"/>
+<Property Name="ZZ1_MFI_CR_TYPE_PLA" Type="Edm.String" MaxLength="3" sap:required-in-filter="false" sap:label="Order type" sap:value-list="standard"/>
 <Property Name="ZZ1_MFI_CRORDER_PERSON_PLA" Type="Edm.String" MaxLength="20" sap:required-in-filter="false" sap:label="Order Personalization"/>
 <NavigationProperty Name="to_ZZ1_CombinPlannedOrdersCom" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" FromRole="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" ToRole="ToRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrders" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_14452F1BDEBB4D010D6E121B05303A09" FromRole="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09" ToRole="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
+<NavigationProperty Name="to_ZZ1_MFI_CR_TYPE_PLA" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0C2F76746DFA4414D55B646BD949E01A" FromRole="FromRole_assoc_0C2F76746DFA4414D55B646BD949E01A" ToRole="ToRole_assoc_0C2F76746DFA4414D55B646BD949E01A"/>
 <NavigationProperty Name="to_ZZ1_PlannedOrdersCompChar" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" FromRole="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" ToRole="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
 <NavigationProperty Name="to_ZZ1_PLOCAPACITYCORD" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_245A91E238A4802D70CDD492A235572E" FromRole="FromRole_assoc_245A91E238A4802D70CDD492A235572E" ToRole="ToRole_assoc_245A91E238A4802D70CDD492A235572E"/>
 <NavigationProperty Name="to_ZZ1_PLOCAPACITYCORD_TEXT" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_703974299644AD47BD49A0301C4DD477" FromRole="FromRole_assoc_703974299644AD47BD49A0301C4DD477" ToRole="ToRole_assoc_703974299644AD47BD49A0301C4DD477"/>
@@ -128,6 +129,7 @@
 <PropertyRef Name="Plant"/>
 <PropertyRef Name="StorageLocation"/>
 <PropertyRef Name="Batch"/>
+<PropertyRef Name="BillOfMaterialItemNumber_2"/>
 </Key>
 <Property Name="CplndOrd" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
 <Property Name="CrossPlantConfigurableProduct" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Cross-plant CP" sap:quickinfo="Cross-Plant Configurable Product"/>
@@ -135,8 +137,8 @@
 <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
 <Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:text="to_StorageLocation/StorageLocationName" sap:label="Storage Location" sap:value-list="standard"/>
 <Property Name="Batch" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Batch" sap:quickinfo="Batch Number"/>
+<Property Name="BillOfMaterialItemNumber_2" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Bill Of Material Item Number"/>
 <Property Name="MatlCompRequirementDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="MatlCompRequirementDate"/>
-<Property Name="BOMItem" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="BOM Item" sap:quickinfo="Bill of Material Item"/>
 <Property Name="BOMItemDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Item Text" sap:quickinfo="BOM Item Text (Line 1)"/>
 <Property Name="BillOfMaterialCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOM Category" sap:quickinfo="Bill of Material Category Code"/>
 <Property Name="MRPController" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Controller"/>
@@ -163,6 +165,14 @@
 <Property Name="QuantityWithdrawnInBaseUnit" Type="Edm.Decimal" Precision="13" Scale="3" sap:required-in-filter="false" sap:unit="BaseUnit" sap:label="QuantityWithdrawnInBaseUnit"/>
 <Property Name="CplndOrd" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
 <Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
+</EntityType>
+<EntityType Name="ZZ1_MFI_CR_TYPE_VType" sap:label="ZZ1_MFI_CR_TYPE" sap:content-version="1">
+<Key>
+<PropertyRef Name="Code"/>
+</Key>
+<Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="3" sap:text="Code_Text" sap:label="Order type"/>
+<Property Name="Code_Text" Type="Edm.String" MaxLength="60" sap:label="Order type (Desc.)" sap:creatable="false" sap:updatable="false"/>
+<Property Name="IsDisabled" Type="Edm.Boolean" sap:label="Is Disabled" sap:quickinfo="Custom Field: Code Disabled Indicator"/>
 </EntityType>
 <EntityType Name="ZZ1_PlannedOrdersCompCharType" sap:label="Planned Order Component Characteristic" sap:content-version="1">
 <Key>
@@ -249,6 +259,18 @@
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrdersType" Multiplicity="*" Role="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
 </Association>
+<Association Name="assoc_0C2F76746DFA4414D55B646BD949E01A" sap:content-version="1">
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_0C2F76746DFA4414D55B646BD949E01A"/>
+<End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_VType" Multiplicity="0..1" Role="ToRole_assoc_0C2F76746DFA4414D55B646BD949E01A"/>
+<ReferentialConstraint>
+<Principal Role="ToRole_assoc_0C2F76746DFA4414D55B646BD949E01A">
+<PropertyRef Name="Code"/>
+</Principal>
+<Dependent Role="FromRole_assoc_0C2F76746DFA4414D55B646BD949E01A">
+<PropertyRef Name="ZZ1_MFI_CR_TYPE_PLA"/>
+</Dependent>
+</ReferentialConstraint>
+</Association>
 <Association Name="assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompCharType" Multiplicity="*" Role="ToRole_assoc_15D6D5EEC9D8572867EBF74C08B3EF8D"/>
@@ -293,6 +315,7 @@
 <EntitySet Name="ZZ1_CombinedPlnOrdersAPI" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_CombinPlannedOrdersCom" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersComType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_MasterPlannedOrders" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrdersType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+<EntitySet Name="ZZ1_MFI_CR_TYPE_V" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_VType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PlannedOrdersCompChar" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompCharType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <EntitySet Name="ZZ1_PLOCAPACITYCORD" EntityType="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORDType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 <AssociationSet Name="assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_15D6D5EEC9D8572867EBF74C08B3EF8D" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
@@ -302,6 +325,10 @@
 <AssociationSet Name="assoc_0A5BF57D4E55588B2FA395AF34CAEADA" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0A5BF57D4E55588B2FA395AF34CAEADA" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
 <End EntitySet="ZZ1_CombinPlannedOrdersCom" Role="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
 <End EntitySet="I_StorageLocation" Role="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
+</AssociationSet>
+<AssociationSet Name="assoc_0C2F76746DFA4414D55B646BD949E01A" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0C2F76746DFA4414D55B646BD949E01A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_CombinedPlnOrdersAPI" Role="FromRole_assoc_0C2F76746DFA4414D55B646BD949E01A"/>
+<End EntitySet="ZZ1_MFI_CR_TYPE_V" Role="ToRole_assoc_0C2F76746DFA4414D55B646BD949E01A"/>
 </AssociationSet>
 <AssociationSet Name="assoc_BE5383DAFB653A11C6A17794652A43B0" Association="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_BE5383DAFB653A11C6A17794652A43B0" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
 <End EntitySet="I_StorageLocation" Role="FromRole_assoc_BE5383DAFB653A11C6A17794652A43B0"/>
@@ -339,6 +366,26 @@
 </Record>
 <Record Type="Common.ValueListParameterDisplayOnly">
 <PropertyValue Property="ValueListProperty" String="PlantName"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType/ZZ1_MFI_CR_TYPE_PLA">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="ZZ1_MFI_CR_TYPE"/>
+<PropertyValue Property="CollectionPath" String="ZZ1_MFI_CR_TYPE_V"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="ZZ1_MFI_CR_TYPE_PLA"/>
+<PropertyValue Property="ValueListProperty" String="Code"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Code_Text"/>
 </Record>
 </Collection>
 </PropertyValue>
@@ -415,6 +462,14 @@
 <Collection>
 <Record>
 <PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ZZ1_CombinPlannedOrdersCom"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ZZ1_MFI_CR_TYPE_PLA"/>
 <PropertyValue Property="InsertRestrictions">
 <Record>
 <PropertyValue Property="Insertable" Bool="false"/>

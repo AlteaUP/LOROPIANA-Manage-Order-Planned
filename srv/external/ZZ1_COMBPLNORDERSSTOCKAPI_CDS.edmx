@@ -87,6 +87,7 @@
 <PropertyRef Name="Plant"/>
 <PropertyRef Name="StorageLocation"/>
 <PropertyRef Name="Batch"/>
+<PropertyRef Name="BillOfMaterialItemNumber_2"/>
 </Key>
 <Property Name="CplndOrd" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Combined Plnd. Order" sap:quickinfo="Combined Master Planned Order"/>
 <Property Name="CrossPlantConfigurableProduct" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Cross-plant CP" sap:quickinfo="Cross-Plant Configurable Product"/>
@@ -94,8 +95,8 @@
 <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
 <Property Name="StorageLocation" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Storage Location"/>
 <Property Name="Batch" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Batch" sap:quickinfo="Batch Number"/>
+<Property Name="BillOfMaterialItemNumber_2" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Bill Of Material Item Number"/>
 <Property Name="MatlCompRequirementDate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:required-in-filter="false" sap:label="MatlCompRequirementDate"/>
-<Property Name="BOMItem" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="BOM Item" sap:quickinfo="Bill of Material Item"/>
 <Property Name="BOMItemDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Item Text" sap:quickinfo="BOM Item Text (Line 1)"/>
 <Property Name="BillOfMaterialCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="BOM Category" sap:quickinfo="Bill of Material Category Code"/>
 <Property Name="MRPController" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="MRP Controller"/>

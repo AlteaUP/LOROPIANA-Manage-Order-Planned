@@ -5,6 +5,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         ProductCollection,
         ProductionPlant,
         MRPController,
+        to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterInternalID,
+        to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterText,
     ],
     UI.DataPoint #radialChart : { 
         Value : committed_percent,
@@ -52,7 +54,9 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : ZZ1_MFI_CR_TYPE_PLA,
             Label : '{i18n>OrderType}',
+            ![@HTML5.CssDefaults] : {
                 width : '5rem',
+                },
         },
         {
             $Type : 'UI.DataField',
@@ -315,12 +319,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label : '{i18n>ProductionPlant}',
         Common.ValueList : {
             $Type : 'Common.ValueListType',
-            CollectionPath : 'ZZ1_CombinedPlnOrdersAPI',
+            CollectionPath : 'I_Plant',
             Parameters : [
                 {
                     $Type : 'Common.ValueListParameterInOut',
                     LocalDataProperty : ProductionPlant,
-                    ValueListProperty : 'ProductionPlant',
+                    ValueListProperty : 'Plant',
                 },
             ],
             Label : 'Production Plant',
@@ -703,7 +707,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         },
         {$Type : 'UI.DataField',Value : Batch,Label : '{i18n>Batch}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : BillOfMaterialCategory,Label : '{i18n>BillOfMaterialCategory}',![@UI.Hidden]},
-        {$Type : 'UI.DataField',Value : BOMItem,Label : '{i18n>BomItem}',![@UI.Hidden]},
+
         {$Type : 'UI.DataField',Value : BOMItemDescription,Label : '{i18n>BomItemDescription}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : CplndOrd,Label : '{i18n>CplndOrd}',![@UI.Hidden]},
         {$Type : 'UI.DataField',Value : CrossPlantConfigurableProduct,Label : '{i18n>CrossPlantConfigurableProduct}',![@UI.Hidden]},
@@ -1012,7 +1016,10 @@ annotate service.ZZ1_PLOCAPACITYCORD with {
 };
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
-    MRPController @Common.Label : 'MRPController'
+    MRPController @(
+        Common.Label : 'MRPController',
+        Common.Text : BOOWorkCenterText,
+    )
 };
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
@@ -1022,5 +1029,23 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
 };
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
+};
+
+annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
+    BOOWorkCenterInternalID @Common.Label : 'to_ZZ1_PLOCAPACITYCORD_TEXT/BOOWorkCenterInternalID'
+    
+    
+};
+
+annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
+    BOOWorkCenterText @Common.Label : 'to_ZZ1_PLOCAPACITYCORD_TEXT/BOOWorkCenterText'
+};
+
+annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
+    BOOWorkCenterInternalID @Text : 'BOOWorkCenterText'
+};
+
+annotate service.I_Plant with {
+    Plant @Common.Text : PlantName
 };
 

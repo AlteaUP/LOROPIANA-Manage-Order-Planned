@@ -20,53 +20,55 @@ type AtpPloType     : {
 
 service MainService {
 
+  entity I_Plant                    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant;
   // MASTER PLANNED ORDER
   entity ZZ1_MasterPlannedOrders    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
 
   // COMPONENTS
   entity ZZ1_CombinPlannedOrdersCom as
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
-      Material,
-      RequiredQuantity,
-      TotalAllocQty,
-      AvailableQuantity,
-      WithdrawnQuantity,
-      BaseUnit,
-      Batch,
-      BillOfMaterialCategory,
-      BOMItem,
-      BOMItemDescription,
-      CplndOrd,
-      CrossPlantConfigurableProduct,
-      MatlCompRequirementDate,
-      MRPController,
-      MRPControllerName,
-      Plant,
-      PlantName,
-      ProductCharacteristic1,
-      ProductCharacteristic2,
-      ProductCharacteristic3,
-      StorageLocation,
-      ProductDescription,
-      null as CombPlanAllQty     : Decimal(13, 3), // String(20),
-      null as TotalPlanAllQty    : Decimal(13, 3), // String(20),
-      null as TotalProdAllQty    : Decimal(13, 3), //String(20), // rappresenta il totale di tutte le righe
-      null as FinishedProductQty : Integer, //Decimal(13, 3), //String(20),
-      null as chart_criticality  : String(20),
-      null as chart_percent      : Integer,
-      null as RequestFinished    : Integer, // String(20),
-      to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
-                                     on  Material = $self.Material
-                                     and Plant    = $self.Plant
-                                     and CplndOrd = $self.CplndOrd
+      key CplndOrd,
+      key CrossPlantConfigurableProduct,
+      key Material,
+      key Plant,
+      key StorageLocation,
+      key Batch,
+      key BillOfMaterialItemNumber_2,
+          RequiredQuantity,
+          TotalAllocQty,
+          AvailableQuantity,
+          WithdrawnQuantity,
+          BaseUnit,
+          BillOfMaterialCategory,
+          // BOMItem,
+          BOMItemDescription,
+          MatlCompRequirementDate,
+          MRPController,
+          MRPControllerName,
+          PlantName,
+          ProductCharacteristic1,
+          ProductCharacteristic2,
+          ProductCharacteristic3,
+          ProductDescription,
+          null as CombPlanAllQty     : Decimal(13, 3), // String(20),
+          null as TotalPlanAllQty    : Decimal(13, 3), // String(20),
+          null as TotalProdAllQty    : Decimal(13, 3), //String(20), // rappresenta il totale di tutte le righe
+          null as FinishedProductQty : Integer, //Decimal(13, 3), //String(20),
+          null as chart_criticality  : String(20),
+          null as chart_percent      : Integer,
+          null as RequestFinished    : Integer, // String(20),
+          to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
+                                         on  Material = $self.Material
+                                         and Plant    = $self.Plant
+                                         and CplndOrd = $self.CplndOrd
       };
 
 
   // CAPACITY
   entity ZZ1_PLOCAPACITYCORD        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
-  @cds.redirection.target 
-  entity ZZ1_PLOCAPACITYCORD_TEXT        as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
+  @cds.redirection.target
+  entity ZZ1_PLOCAPACITYCORD_TEXT   as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
 
   // COMBINED PLANNED ORDER
@@ -87,11 +89,11 @@ service MainService {
                                         on CplndOrd = $self.CplndOrd,
       // null as combinplannedorderscomcount,
       // capacità
-      to_ZZ1_PLOCAPACITYCORD            : Composition of many ZZ1_PLOCAPACITYCORD
+      to_ZZ1_PLOCAPACITYCORD        : Composition of many ZZ1_PLOCAPACITYCORD
                                         on CplndOrd = $self.CplndOrd,
-                                      // null as plocapacitycordcount
+      // null as plocapacitycordcount
 
-      to_ZZ1_PLOCAPACITYCORD_TEXT            : Composition of one ZZ1_PLOCAPACITYCORD_TEXT
+      to_ZZ1_PLOCAPACITYCORD_TEXT   : Composition of one ZZ1_PLOCAPACITYCORD_TEXT
                                         on CplndOrd = $self.CplndOrd
                                       };
 

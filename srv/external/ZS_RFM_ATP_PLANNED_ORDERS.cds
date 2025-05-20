@@ -1,6 +1,9 @@
-/* checksum : 9ea1144724d0cbd9b7edd04ecc61ef76 */
+/* checksum : 31543fb9d410ab9b9a2d4eb7ca36d7df */
 @cds.external : true
-@Aggregation.ApplySupported : { Transformations: [ 'aggregate', 'groupby', 'filter' ], Rollup: #None }
+@Aggregation.ApplySupported : {
+  Transformations: [ 'aggregate', 'groupby', 'filter' ],
+  Rollup: #None
+}
 @Common.ApplyMultiUnitBehaviorForSortingAndFiltering : true
 @Capabilities.FilterFunctions : [
   'eq',
@@ -42,7 +45,10 @@ service ZS_RFM_ATP_PLANNED_ORDERS {};
 @cds.persistence.skip : true
 @Common.Label : 'CDS for ATP of Planned Orders'
 @Capabilities.NavigationRestrictions.RestrictedProperties : [
-  { NavigationProperty: atpplo, InsertRestrictions: { Insertable: true } }
+  {
+    NavigationProperty: atpplo,
+    InsertRestrictions: { Insertable: true }
+  }
 ]
 @Capabilities.SearchRestrictions.Searchable : false
 @Capabilities.ReadRestrictions.Readable : false

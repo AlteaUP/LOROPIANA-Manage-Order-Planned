@@ -1,4 +1,4 @@
-/* checksum : 855455ef9463365a08d4a2fb563a6aab */
+/* checksum : d06f8f436dae1733cd94bfd1821614b7 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -168,15 +168,14 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   @sap.label : 'Batch'
   @sap.quickinfo : 'Batch Number'
   key Batch : String(10) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Bill Of Material Item Number'
+  key BillOfMaterialItemNumber_2 : String(4) not null;
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
   @sap.label : 'MatlCompRequirementDate'
   MatlCompRequirementDate : Date;
-  @sap.display.format : 'NonNegative'
-  @sap.required.in.filter : 'false'
-  @sap.label : 'BOM Item'
-  @sap.quickinfo : 'Bill of Material Item'
-  BOMItem : String(8);
   @sap.required.in.filter : 'false'
   @sap.label : 'Item Text'
   @sap.quickinfo : 'BOM Item Text (Line 1)'

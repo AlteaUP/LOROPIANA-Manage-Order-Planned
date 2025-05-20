@@ -1,10 +1,13 @@
-/* checksum : c98b0e8ce69129700e7a113a359b3ce4 */
+/* checksum : 46f734feb33a47bf974c2864fbb1abaf */
 @cds.external : true
 @CodeList.UnitsOfMeasure : {
   Url: '../../../../default/iwbep/common/0001/$metadata',
   CollectionPath: 'UnitsOfMeasure'
 }
-@Aggregation.ApplySupported : { Transformations: [ 'aggregate', 'groupby', 'filter' ], Rollup: #None }
+@Aggregation.ApplySupported : {
+  Transformations: [ 'aggregate', 'groupby', 'filter' ],
+  Rollup: #None
+}
 @Common.ApplyMultiUnitBehaviorForSortingAndFiltering : true
 @Capabilities.FilterFunctions : [
   'eq',
@@ -47,7 +50,12 @@ service ZMPF_ASS_BATCH_SRV {};
 @Common.Label : 'Entity assegnazione da cruscotto'
 @Capabilities.SearchRestrictions.Searchable : false
 @Capabilities.ReadRestrictions.Readable : false
-@Capabilities.FilterRestrictions.FilterExpressionRestrictions : [ { Property: AUART, AllowedExpressions: 'MultiValue' } ]
+@Capabilities.FilterRestrictions.FilterExpressionRestrictions : [
+  {
+    Property: AUART,
+    AllowedExpressions: 'MultiValue'
+  }
+]
 @Capabilities.UpdateRestrictions.QueryOptions.SelectSupported : true
 entity ZMPF_ASS_BATCH_SRV.ConvertPLO {
   @Common.Label : 'Combined Order'
