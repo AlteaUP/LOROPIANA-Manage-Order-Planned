@@ -24,6 +24,19 @@
           "odataVersion": "4.0"
         }
       }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "prapp-display": {
+          "semanticObject": "zmanageplannedorder",
+          "action": "display",
+          "title": "Manage Planned Order",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
     }
   },
   "sap.ui": {
@@ -283,7 +296,7 @@
   },
   "sap.fiori": {
     "registrationIds": [],
-      "archeType": "transactional"
+    "archeType": "transactional"
   },
   "sap.cloud": {
     "public": true,
