@@ -22,6 +22,10 @@ modules:
   - name: zmanageplannedorder-srv-dest-content
     type: com.sap.application.content
     requires:
+    - name: ui5-flexibility-keyuser
+      parameters:
+        service-key:
+        name: zmanageplannedorder-ui5-flexibility-keyuser-key
     - name: zmanageplannedorder-destination
       parameters:
         content-target: true
@@ -64,6 +68,7 @@ modules:
       - name: zmanageplannedorder-auth
       - name: zmanageplannedorder-destination
       - name: zmanageplannedorder-html5-runtime
+      - name: ui5-flexibility-keyuser
     provides:
       - name: app-api
         properties:
@@ -97,6 +102,11 @@ modules:
       supported-platforms: 
         []        
 resources:
+  - name: ui5-flexibility-keyuser
+    parameters:
+      service-plan: keyuser
+      service: ui5-flexibility-keyuser
+    type: org.cloudfoundry.managed-service
   - name: zmanageplannedorder-auth
     type: org.cloudfoundry.managed-service
     parameters:
