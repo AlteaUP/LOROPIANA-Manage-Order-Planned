@@ -2,8 +2,9 @@ sap.ui.define([
   "sap/m/MessageToast",
   "sap/m/MessageBox",
   "sap/ui/model/Context",
-  "jquery.sap.global"
-], function (MessageToast, MessageBox, Context, jQuery) {
+  "jquery.sap.global",
+  "sap/ui/core/BusyIndicator"
+], function (MessageToast, MessageBox, Context, jQuery, BusyIndicator) {
   'use strict';
 
   return {
@@ -114,7 +115,7 @@ sap.ui.define([
       const oTableBinding = oTable.getBinding("items");
 
       this.showMessageConfirm("assign").then(function () {
-        MessageToast.show("Do Assemble invoked.");
+        BusyIndicator.show(0);
         oModel.submitBatch("CreatePezzeBatch").then((a, b, c) => {
           const oStockTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
           MessageToast.show("Do Assemble completed.");
@@ -133,9 +134,11 @@ sap.ui.define([
           //     oTableBinding.removeItem(oContext);
           //   }
           // });
+          BusyIndicator.hide();
         }).catch((oError, err, err1) => {
           MessageToast.show("Do Assemble error.");
           console.error("Error", oError);
+          BusyIndicator.hide();
         });
       }.bind(this)).catch((e) => {
         MessageToast.show("Do Assemble cancelled. " + JSON.stringify(e));

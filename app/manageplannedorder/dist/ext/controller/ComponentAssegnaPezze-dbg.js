@@ -67,7 +67,7 @@ sap.ui.define([
         dialog.setModel(oModel);
         const table = dialog.getContent().at(-1);
 
-        debugger;
+
         table.bindAggregation('items', {
           path: '/ZZ1_MFP_ASSIGNMENT',
           filters: [
@@ -102,7 +102,7 @@ sap.ui.define([
             const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
             // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
             // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-            const QTA_ASS_V = Math.min(parseInt(item.AvaibilityQty), (TotAvaibilityQty * (COPERTURA / 100)));
+            const QTA_ASS_V = Math.min(parseInt(obj.AvailableQuantity), (obj.AvailableQuantity * (COPERTURA / 100)));
 
             const SAP_UUID = crypto.randomUUID()
 
@@ -272,7 +272,7 @@ sap.ui.define([
       // dialog.destroy();
     },
     formatAvaibilityQty: function (sValue) {
-      debugger;
+
       return sValue
     }
   };
