@@ -6,14 +6,13 @@ sap.ui.define(
         'sap/ui/model/FilterOperator',
         "sap/m/MessageBox",
         "sap/m/MessageToast",
+        "sap/ui/core/BusyIndicator"
     ],
-    function (PageController, JSONModel, Filter, FilterOperator, MessageBox, MessageToast) {
+    function (PageController, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, BusyIndicator) {
         'use strict';
 
         return PageController.extend('manageplannedorder.manageplannedorder.ext.main.Main', {
-            onInit: function () {
-
-            },
+            onInit: function () { },
             showMessageConfirm: function (action) {
                 // capitalize the first letter of the action
                 action = action.charAt(0).toUpperCase() + action.slice(1);
@@ -101,16 +100,24 @@ sap.ui.define(
                     binding.resetChanges()
 
                     _selectedItems.forEach((item) => {
-                        debugger;
                         binding.create({
                             FSH_CPLND_ORD: item.CplndOrd,
                             AUART: "Z300",
-                            TOT_QTY: item.PlndOrderCommittedQty, //  33,
+                            TOT_QTY: item.PlndOrderCommittedQty.toString(), //  33,
                             UNIT: "EA",
                             PlannedTotalQtyInBaseUnit: item.PlannedTotalQtyInBaseUnit,
                             CrossPlantConfigurableProduct: item.CrossPlantConfigurableProduct,
                         });
                     });
+
+                    dialog.attachEventOnce('afterOpen', function () {
+                        const oInput = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--inputTypeOrder');
+                        if (oInput) {
+                            oInput.focus();
+                            oInput.attachLiveChange(this.onTypeOrderLiveChange.bind(this));
+                        }
+                    }.bind(this));
+
                     dialog.open();
                 }.bind(this));
             },
@@ -129,14 +136,19 @@ sap.ui.define(
 
                 this.showMessageConfirm("convert").then(function () {
                     MessageToast.show("Do Convert invoked.");
-                    oModel.submitBatch("CreateConvertPLO").then(function () {
+
+                    BusyIndicator.show(0);
+                    debugger;
+                    oModel.submitBatch("CreateConvertPLO").then(function (e) {
+                        console.log("Convert response", e);
                         MessageToast.show("Do Convert completed.");
                         sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--_IDGenDialogConversion').close();
-                        debugger;
+                        BusyIndicator.hide();
                         oMainTableBinding.refresh();
                     }.bind(this)).catch((oError) => {
                         MessageToast.show("Do Convert error.");
                         console.error("Error", oError);
+                        BusyIndicator.hide();
                     });
                 }.bind(this)).catch((e) => {
                     MessageToast.show("Do Convert cancelled. " + JSON.stringify(e));
@@ -146,6 +158,20 @@ sap.ui.define(
                 console.log(value)
                 const _value = value.replace(',', '.')
                 return _value
+            },
+            onTypeOrderLiveChange: function (oEvent) {
+                console.log("onTypeOrderLiveChange", oEvent);
+                // change the type of order to for each selected item
+                const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
+                const oBinding = oTable.getBinding('items');
+                // set AWART property to the value of the input
+                const value = oEvent.getParameter('value');
+                oBinding.getContexts().forEach(function (oContext) {
+                    if (oContext) {
+                        oContext.setProperty('AUART', value);
+                    }
+                });
+
             }
         });
     }

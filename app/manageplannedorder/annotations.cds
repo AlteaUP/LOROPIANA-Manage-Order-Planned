@@ -851,6 +851,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             },
         ],
     },
+    UI.DataPoint #Material2 : {
+        $Type : 'UI.DataPointType',
+        Value : Material,
+        Title : 'Material',
+    },
 
 
 );

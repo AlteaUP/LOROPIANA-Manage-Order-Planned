@@ -35,7 +35,7 @@
             >
                 <Label
                     id="labelTypeOrder"
-                    text="Type Order"
+                    text="Type Orderaaaa"
                 />
                 <Input
                     id="inputTypeOrder"

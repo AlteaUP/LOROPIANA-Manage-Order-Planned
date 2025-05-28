@@ -83,16 +83,28 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // Table - Components
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
+      debugger;
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
-      where = req.query.SELECT.from.ref[0].where.slice(0, 4)
+      where = req.query.SELECT.from.ref[0].where //.slice(0, 4)
+      const whereAll = [].concat(where);
+      if (req.params.at(-1)?.Material) {
+        where.push('and', {
+          ref: ['Material'],
+        }, '=', {
+          val: req.params.at(-1).Material,
+        });
+
+      }
+
       let resAll = []
       let TotalProdAllQty = 0;
       if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
         // 1. Fetch the data
-        resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where.slice(0, where.length - 1)))
-        const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
-        where.push(...materialWhere)
+        debugger;
+        resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(whereAll));
+        // const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
+        // where.push(...materialWhere)
 
         // 2. Exit early if no data
         if (Array.isArray(resAll) && resAll.length > 0) {
@@ -123,14 +135,13 @@ module.exports = class MainService extends cds.ApplicationService {
         }
       } else {
         // remove latest where condition from where array
-        where.pop()
+        // where.pop()
       }
 
       const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
       res['$count'] = res.length.toString();
       // if the res is array of one row
       if (Array.isArray(res) && res.length === 1) {
-        debugger;
         const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
         const CrossPlantConfigurableProduct = req.params.at(-1)?.CrossPlantConfigurableProduct;
 
@@ -178,7 +189,8 @@ module.exports = class MainService extends cds.ApplicationService {
         // TotalPlanAllQty / AvailableQuantity
         let chart_percent = Math.round(parseFloat(res[0].TotalPlanAllQty) / parseFloat(res[0].AvailableQuantity) * 100);
         let chart_criticality;
-        if (chart_percent === 100) {
+        debugger;
+        if (chart_percent >= 100) {
           chart_criticality = 3
         } else if (chart_percent < 100 && chart_percent > 0) {
           chart_criticality = 2
@@ -259,7 +271,7 @@ module.exports = class MainService extends cds.ApplicationService {
             // AvailableQuantity / RequiredQuantity
             let chart_percent = Math.round(parseFloat(item.AvailableQuantity) / parseFloat(item.RequiredQuantity) * 100);
             let chart_criticality;
-            if (chart_percent === 100) {
+            if (chart_percent >= 100) {
               chart_criticality = 3
             } else if (chart_percent < 100 && chart_percent > 0) {
               chart_criticality = 2
@@ -284,7 +296,6 @@ module.exports = class MainService extends cds.ApplicationService {
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom/to_ZZ1_CombPlnOrdersStock", async (req) => {
       // 1. Get base stock data
-      debugger;
       // add InventoryStockType eq 1
       let from = {
         ref: [
