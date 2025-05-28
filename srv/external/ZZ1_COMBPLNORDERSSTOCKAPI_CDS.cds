@@ -1,4 +1,4 @@
-/* checksum : d06f8f436dae1733cd94bfd1821614b7 */
+/* checksum : 0bf4dee010da52cae5cc1f90c8eec399 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -130,6 +130,10 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
   @sap.required.in.filter : 'false'
   @sap.label : 'Product Description'
   ProductDescription : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Stock Segment'
+  StockSegment : String(40);
 };
 
 @cds.external : true

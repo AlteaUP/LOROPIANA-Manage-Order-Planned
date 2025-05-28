@@ -1,4 +1,4 @@
-/* checksum : 356242d23297b23c4047dd4fdab62fc3 */
+/* checksum : c04c420b5556789fc7be8961b802f025 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -508,6 +508,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Order Personalization'
   ZZ1_MFI_CRORDER_PERSON_PLA : String(20);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Stock Segment'
+  StockSegment : String(40);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_MFI_CR_TYPE_PLA : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {  };
@@ -614,6 +618,14 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.unit : 'BaseUnit'
   @sap.label : 'TotalAllocQty'
   TotalAllocQty : Decimal(14, 3);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Stock Segment'
+  StockSegment : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Requirement Segment'
+  RequirementSegment : String(40);
   to_StorageLocation : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {  };
 };
 

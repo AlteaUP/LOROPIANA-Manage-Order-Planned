@@ -51,6 +51,8 @@ service MainService {
           ProductCharacteristic2,
           ProductCharacteristic3,
           ProductDescription,
+          // StockSegment,
+          // RequirementSegment,
           null as CombPlanAllQty     : Decimal(13, 3), // String(20),
           null as TotalPlanAllQty    : Decimal(13, 3), // String(20),
           null as TotalProdAllQty    : Decimal(13, 3), //String(20), // rappresenta il totale di tutte le righe

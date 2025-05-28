@@ -21,8 +21,12 @@ for edmx_file in $all_edmx_files; do
   # replace odata with the name of the odata service
   # For example, if the edmx file is named ZZ1_CombPlnOrdersStockAPI_CDS.edmx, the odata service name is ZZ1_CombPlnOrdersStockAPI_CDS
 
-  # url="http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/${edmx_file%.*}/$metadata"
+  # edmx_file is srv/external/ZZ1_CombPlnOrdersStockAPI_CDS.edmx i need to extract the name without the extension and remove the extension
+  # edmx_file_name=$(basename "$edmx_file")
+  # edmx_file_name_no_ext="${edmx_file_name%.*}"
 
+  # url="http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/${edmx_file_name_no_ext}/\$metadata"
+  # echo "Downloading $edmx_file from $url ..."
   # curl --request GET \
   # --url "$url" \
   # --header 'Authorization: Basic bGFzcGF0YXM6U2FwMTIzNDU2Nzg5MCEhIQ==' \
@@ -71,4 +75,4 @@ echo "Thank you for using the update script!"
 # Have a great day!
 # If you have any feedback or suggestions for improvements, please let me know.
 # I appreciate your understanding and cooperation.
-# Thank you for your time and attention!    
+# Thank you for your time and attention!
