@@ -381,13 +381,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {
             $Type : 'UI.ReferenceFacet',
-            Label : 'Component',
-            ID    : 'componenti1',
-            Target: 'to_CombinPlannedOrdersCom/@UI.LineItem#componenti',
-            ![@UI.Hidden],
-        },
-        {
-            $Type : 'UI.ReferenceFacet',
             Label : 'Components',
             ID    : 'Components',
             Target: 'to_CombinPlannedOrdersCom/@UI.LineItem#Components',
@@ -899,6 +892,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.DataFieldForAnnotation',
             Target: '@UI.Chart#RequiredQuantity',
             Label : '{i18n>AvailableQuantityRequired}',
+            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',

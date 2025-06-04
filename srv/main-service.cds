@@ -89,7 +89,8 @@ service MainService {
                                         on CplndOrd = $self.CplndOrd,
       // componenti
       to_CombinPlannedOrdersCom     : Composition of many ZZ1_CombinPlannedOrdersCom
-                                        on CplndOrd = $self.CplndOrd,
+                                        on  CplndOrd                      = $self.CplndOrd
+                                        and CrossPlantConfigurableProduct = $self.to_CombinPlannedOrdersCom.Material,
       // null as combinplannedorderscomcount,
       // capacità
       to_ZZ1_PLOCAPACITYCORD        : Composition of many ZZ1_PLOCAPACITYCORD

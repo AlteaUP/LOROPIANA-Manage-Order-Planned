@@ -172,6 +172,9 @@ sap.ui.define(
                     }
                 });
 
+            },
+            onRowPress: function (oEvn) {
+
             }
         });
     }

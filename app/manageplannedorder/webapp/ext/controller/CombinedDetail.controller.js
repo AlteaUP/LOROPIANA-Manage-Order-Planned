@@ -10,6 +10,7 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension'], function (ControllerExten
 						 * @memberOf manageplannedorder.manageplannedorder.ext.controller.CombinedDetail
 						 */
 			onInit: function () {
+				debugger;
 				// you can access the Fiori elements extensionAPI via this.base.getExtensionAPI
 				// var oModel = this.base.getExtensionAPI().getModel();
 				const idComponentsTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_CombinPlannedOrdersCom::LineItem::Components'
@@ -20,6 +21,7 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension'], function (ControllerExten
 					// verde se la required quantity = ATP Quantity
 					// altrimenti rosso
 					const oTable = oEvent.getSource();
+					debugger;
 					const aItems = oTable.getItems()
 					aItems.forEach(function (oRow) {
 						const item = oRow.getBindingContext().getObject();
