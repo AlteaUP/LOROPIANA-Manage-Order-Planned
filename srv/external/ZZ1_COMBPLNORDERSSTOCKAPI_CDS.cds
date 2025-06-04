@@ -1,4 +1,4 @@
-/* checksum : 0bf4dee010da52cae5cc1f90c8eec399 */
+/* checksum : 2e9bd1354a189dc207124bee16ffa221 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -134,6 +134,9 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
   @sap.required.in.filter : 'false'
   @sap.label : 'Stock Segment'
   StockSegment : String(40);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'CERTIFICATO'
+  CERTIFICATO : String(70);
 };
 
 @cds.external : true

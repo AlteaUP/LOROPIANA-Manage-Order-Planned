@@ -79,6 +79,7 @@
 <Property Name="ALTEZZA_STANDARD" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="ALTEZZA_STANDARD"/>
 <Property Name="ProductDescription" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Product Description"/>
 <Property Name="StockSegment" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Stock Segment"/>
+<Property Name="CERTIFICATO" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="CERTIFICATO"/>
 </EntityType>
 <EntityType Name="ZZ1_CombPlnOrdersStockAPIType" sap:label="Combined Planned Orders Stock API" sap:content-version="1">
 <Key>
