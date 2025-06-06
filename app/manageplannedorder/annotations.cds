@@ -1042,6 +1042,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Label: 'StockSegment',
             ![@UI.Hidden],
         },
+        {
+            $Type : 'UI.DataFieldForAnnotation',
+            Target: '@UI.Chart#chart_percent1',
+            Label : 'chart_percent',
+            ![@UI.Hidden],
+        },
     ],
     UI.FieldGroup #QTY              : {
         $Type: 'UI.FieldGroupType',
@@ -1141,6 +1147,20 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         $Type: 'UI.DataPointType',
         Value: Material,
         Title: 'Material',
+    },
+    UI.DataPoint #chart_percent1    : {
+        Value      : chart_percent,
+        // TargetValue : chart_percent,
+        Criticality: chart_criticality,
+    },
+    UI.Chart #chart_percent1        : {
+        ChartType        : #Donut,
+        Measures         : [chart_percent, ],
+        MeasureAttributes: [{
+            DataPoint: '@UI.DataPoint#chart_percent1',
+            Role     : #Axis1,
+            Measure  : chart_percent,
+        }, ],
     },
 
 

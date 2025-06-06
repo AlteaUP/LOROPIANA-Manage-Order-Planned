@@ -57,7 +57,7 @@ service MainService {
           null as TotalPlanAllQty    : Decimal(13, 3), // String(20),
           null as TotalProdAllQty    : Decimal(13, 3), //String(20), // rappresenta il totale di tutte le righe
           null as FinishedProductQty : Integer, //Decimal(13, 3), //String(20),
-          null as chart_criticality  : String(20),
+          null as chart_criticality  : Integer,
           null as chart_percent      : Integer,
           null as RequestFinished    : Integer, // String(20),
           to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
@@ -82,7 +82,7 @@ service MainService {
       // cast(PlndOrderCommittedQty as Integer) as ZPlndOrderCommittedQty,
       // null as PlannedTotalQtyInBaseUnit : Integer,
       // null as PlndOrderCommittedQty : Integer,
-      null as committed_criticality : String(20),
+      null as committed_criticality : Integer,
       null as committed_percent     : Integer,
       // master planned orders
       to_ZZ1_MasterPlannedOrders    : Composition of many ZZ1_MasterPlannedOrders
