@@ -16,6 +16,8 @@ module.exports = class MainService extends cds.ApplicationService {
 
     const ZMPF_ASS_BATCH_SRV = await cds.connect.to('ZMPF_ASS_BATCH_SRV');
 
+    const ZI_RFM_ATP_RULES_CDS = await cds.connect.to('ZI_RFM_ATP_RULES_CDS');
+
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
 
@@ -365,9 +367,24 @@ module.exports = class MainService extends cds.ApplicationService {
           })
       );
 
+      // modifica DL - 10/06/2025 - recupero atp
+      const atpRulesPromise = ZI_RFM_ATP_RULES_CDS.run(
+        SELECT.from('ZI_RFM_ATP_RULES')
+          .where({
+            CplndOrd: req.params.at(-1).CplndOrd,
+            CrossPlantConfigurableProduct: req.params.at(-1).CrossPlantConfigurableProduct,
+            Material: req.params.at(-1).Material,
+            Plant: req.params.at(-1).Plant,
+            StorageLocation: req.params.at(-1).StorageLocation,
+            Batch: req.params.at(-1).Batch,
+            BillOfMaterialItemNumber_2: req.params.at(-1).BillOfMaterialItemNumber_2
+          })
+      );
+      // modifica DL - 10/06/2025 - recupero atp - FINE
+
       // 7. Execute all queries in parallel
-      const [prodAllQtyData, planAllQtyData, combPlanAllQtyData, deliveryQtyData] =
-        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise]);
+      const [prodAllQtyData, planAllQtyData, combPlanAllQtyData, deliveryQtyData, atpRulesData] =
+        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise, atpRulesPromise]);
 
       // 8. Create lookup maps for faster association
       const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
@@ -376,7 +393,7 @@ module.exports = class MainService extends cds.ApplicationService {
       const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
 
       // 9. Process results with maps instead of additional queries
-      const res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
+      var res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
         const { Plant, Material, StorageLocation, Batch } = item;
         const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
 
@@ -404,6 +421,14 @@ module.exports = class MainService extends cds.ApplicationService {
           CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString()
         };
       });
+
+      // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation
+      if(atpRulesData.length > 0){
+        var atpRulesArray = JSON.parse(atpRulesData[0].atp)
+        var filteredData = res.filter(item => atpRulesArray.includes(item.StockSegment));
+        res = filteredData
+      }
+      // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation - FINE
 
       res['$count'] = res.length.toString();
       return res;
@@ -549,6 +574,13 @@ module.exports = class MainService extends cds.ApplicationService {
       console.log({ query: JSON.stringify(req.query), res })
       res['$count'] = res.length.toString();
       return res
+    });
+
+    this.on('READ', "ZI_RFM_ATP_RULES", async request => {
+        request.query.SELECT.count = false
+        var data = await ZI_RFM_ATP_RULES_CDS.tx(request).run(request.query);
+
+        return data;
     });
 
   }

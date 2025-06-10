@@ -5,6 +5,7 @@ using {ZZ1_PLANNEDORDERSAPI_CDS} from './external/ZZ1_PLANNEDORDERSAPI_CDS';
 using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS';
 using {ZZ1_MFP_ASSIGNMENT_CDS} from './external/ZZ1_MFP_ASSIGNMENT_CDS';
 using {ZMPF_ASS_BATCH_SRV} from './external/ZMPF_ASS_BATCH_SRV';
+using {ZI_RFM_ATP_RULES_CDS} from './external/ZI_RFM_ATP_RULES_CDS';
 // using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
 
 type AtpPloItemType : {
@@ -131,6 +132,8 @@ service MainService {
       null as chart_percent        : Integer,
       null as chart_criticality    : Integer
     };
+
+  entity ZI_RFM_ATP_RULES as projection on ZI_RFM_ATP_RULES_CDS.ZI_RFM_ATP_RULES;
 
   entity ZZ1_CombPlnOrdersStockAPI  as
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {

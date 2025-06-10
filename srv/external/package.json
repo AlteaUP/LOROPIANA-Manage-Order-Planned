@@ -40,6 +40,10 @@
       "ZS_RFM_ATP_PLANNED_ORDERS": {
         "kind": "odata",
         "model": "srv/external/ZS_RFM_ATP_PLANNED_ORDERS"
+      },
+      "ZI_RFM_ATP_RULES_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZI_RFM_ATP_RULES_CDS"
       }
     }
   },

@@ -248,6 +248,26 @@
             "path": "/sap/opu/odata4/sap/zsb_rfm_atp_planned_orders/srvd_a2x/sap/zs_rfm_atp_planned_orders/0001/"
           }
         }
+      },
+      "ZI_RFM_ATP_RULES_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZI_RFM_ATP_RULES_CDS",
+        "[hybrid]": {
+          "credentials": {
+            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZI_RFM_ATP_RULES_CDS",
+            "authentication": "BasicAuthentication",
+            "username": "laspatas",
+            "password": "Sap1234567890!!!",
+            "sap-client": "300"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZI_RFM_ATP_RULES_CDS"
+          }
+        }
       }
     }
   },
