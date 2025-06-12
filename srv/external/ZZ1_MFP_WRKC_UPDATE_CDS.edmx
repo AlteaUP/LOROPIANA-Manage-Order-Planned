@@ -1,0 +1,133 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpappsvi.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+</edmx:Reference>
+<edmx:DataServices m:DataServiceVersion="2.0">
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZZ1_MFP_WRKC_UPDATE_CDS" xml:lang="it" sap:schema-version="1">
+<EntityType Name="P_Scbo_UserType" sap:label="User" sap:content-version="1">
+<Key>
+<PropertyRef Name="name"/>
+</Key>
+<Property Name="name" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="UpperCase" sap:label="Utente" sap:quickinfo="Nome riportato nell'anagrafica utente"/>
+<Property Name="description" Type="Edm.String" MaxLength="80" sap:label="Descrizione" sap:quickinfo="Descrizione del conto utente tecnico"/>
+</EntityType>
+<EntityType Name="ZZ1_MFP_WRKC_UPDATEType" sap:label="MFP_WRKC_UPDATE" sap:content-version="1">
+<Key>
+<PropertyRef Name="SAP_UUID"/>
+</Key>
+<Property Name="SAP_UUID" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
+<Property Name="FSH_CPLND_ORD" Type="Edm.String" MaxLength="12" sap:label="FSH_CPLND_ORD"/>
+<Property Name="MANUFACTURINGORDEROPERATION" Type="Edm.String" MaxLength="4" sap:label="MANUFACTURINGORDEROPERATION"/>
+<Property Name="MANUFACTURINGORDERSEQUENCE" Type="Edm.String" MaxLength="6" sap:label="MANUFACTURINGORDERSEQUENCE"/>
+<Property Name="WORKCENTER" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="WORKCENTER"/>
+<Property Name="OPLTSTSCHEDLDEXECSTRTDTE" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="OPLTSTSCHEDLDEXECSTRTDTE"/>
+<Property Name="OPLTSTSCHEDLDEXECENDDTE" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="OPLTSTSCHEDLDEXECENDDTE"/>
+<Property Name="SAP_CreatedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Data creazione" sap:creatable="false" sap:updatable="false"/>
+<Property Name="SAP_CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="SAP_CreatedByUser_Text" sap:label="Autore creazione" sap:creatable="false" sap:updatable="false"/>
+<Property Name="SAP_CreatedByUser_Text" Type="Edm.String" MaxLength="80" sap:label="Descrizione" sap:quickinfo="Descrizione del conto utente tecnico" sap:creatable="false" sap:updatable="false"/>
+<Property Name="SAP_LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Data dell'ultima modifica" sap:creatable="false" sap:updatable="false"/>
+<Property Name="SAP_LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="SAP_LastChangedByUser_Text" sap:label="Autore dell'ultima modifica" sap:creatable="false" sap:updatable="false"/>
+<Property Name="SAP_LastChangedByUser_Text" Type="Edm.String" MaxLength="80" sap:label="Descrizione" sap:quickinfo="Descrizione del conto utente tecnico" sap:creatable="false" sap:updatable="false"/>
+<NavigationProperty Name="to_SAPSysAdminDataChangeUser" Relationship="ZZ1_MFP_WRKC_UPDATE_CDS.assoc_1E2BEFF8EA4D61E390738A5A105E7F27" FromRole="FromRole_assoc_1E2BEFF8EA4D61E390738A5A105E7F27" ToRole="ToRole_assoc_1E2BEFF8EA4D61E390738A5A105E7F27"/>
+<NavigationProperty Name="to_SAPSysAdminDataCreateUser" Relationship="ZZ1_MFP_WRKC_UPDATE_CDS.assoc_9180C0C3B1C8E803012E5DD7205BD01E" FromRole="FromRole_assoc_9180C0C3B1C8E803012E5DD7205BD01E" ToRole="ToRole_assoc_9180C0C3B1C8E803012E5DD7205BD01E"/>
+</EntityType>
+<Association Name="assoc_9180C0C3B1C8E803012E5DD7205BD01E" sap:content-version="1">
+<End Type="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATEType" Multiplicity="1" Role="FromRole_assoc_9180C0C3B1C8E803012E5DD7205BD01E"/>
+<End Type="ZZ1_MFP_WRKC_UPDATE_CDS.P_Scbo_UserType" Multiplicity="0..1" Role="ToRole_assoc_9180C0C3B1C8E803012E5DD7205BD01E"/>
+</Association>
+<Association Name="assoc_1E2BEFF8EA4D61E390738A5A105E7F27" sap:content-version="1">
+<End Type="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATEType" Multiplicity="1" Role="FromRole_assoc_1E2BEFF8EA4D61E390738A5A105E7F27"/>
+<End Type="ZZ1_MFP_WRKC_UPDATE_CDS.P_Scbo_UserType" Multiplicity="0..1" Role="ToRole_assoc_1E2BEFF8EA4D61E390738A5A105E7F27"/>
+</Association>
+<EntityContainer Name="ZZ1_MFP_WRKC_UPDATE_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+<EntitySet Name="P_Scbo_User" EntityType="ZZ1_MFP_WRKC_UPDATE_CDS.P_Scbo_UserType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+<EntitySet Name="ZZ1_MFP_WRKC_UPDATE" EntityType="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATEType" sap:searchable="true" sap:content-version="1"/>
+<AssociationSet Name="assoc_1E2BEFF8EA4D61E390738A5A105E7F27" Association="ZZ1_MFP_WRKC_UPDATE_CDS.assoc_1E2BEFF8EA4D61E390738A5A105E7F27" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_MFP_WRKC_UPDATE" Role="FromRole_assoc_1E2BEFF8EA4D61E390738A5A105E7F27"/>
+<End EntitySet="P_Scbo_User" Role="ToRole_assoc_1E2BEFF8EA4D61E390738A5A105E7F27"/>
+</AssociationSet>
+<AssociationSet Name="assoc_9180C0C3B1C8E803012E5DD7205BD01E" Association="ZZ1_MFP_WRKC_UPDATE_CDS.assoc_9180C0C3B1C8E803012E5DD7205BD01E" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_MFP_WRKC_UPDATE" Role="FromRole_assoc_9180C0C3B1C8E803012E5DD7205BD01E"/>
+<End EntitySet="P_Scbo_User" Role="ToRole_assoc_9180C0C3B1C8E803012E5DD7205BD01E"/>
+</AssociationSet>
+<FunctionImport Name="ZZ1_MFP_WRKC_UPDATESap_upsert" ReturnType="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATEType" EntitySet="ZZ1_MFP_WRKC_UPDATE" m:HttpMethod="POST">
+<Parameter Name="FSH_CPLND_ORD" Type="Edm.String" Mode="In" MaxLength="12" sap:label="Testo di lungh. 12"/>
+<Parameter Name="MANUFACTURINGORDEROPERATION" Type="Edm.String" Mode="In" MaxLength="4" sap:label="Testo di lunghezza 4"/>
+<Parameter Name="MANUFACTURINGORDERSEQUENCE" Type="Edm.String" Mode="In" MaxLength="6" sap:label="Testo di lunghezza 6"/>
+<Parameter Name="WORKCENTER" Type="Edm.String" Mode="In" MaxLength="8" sap:label="Testo num.lungh. 8"/>
+<Parameter Name="OPLTSTSCHEDLDEXECSTRTDTE" Type="Edm.DateTime" Mode="In" Precision="0" sap:label="OPLTSTSCHEDLDEXECSTRTDTE" sap:display-format="Date"/>
+<Parameter Name="OPLTSTSCHEDLDEXECENDDTE" Type="Edm.DateTime" Mode="In" Precision="0" sap:label="OPLTSTSCHEDLDEXECENDDTE" sap:display-format="Date"/>
+</FunctionImport>
+</EntityContainer>
+<Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATE_CDS_Entities">
+<Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATEType/FSH_CPLND_ORD">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATE_CDS_Entities/ZZ1_MFP_WRKC_UPDATE">
+<Annotation Term="Capabilities.NavigationRestrictions">
+<Record>
+<PropertyValue Property="RestrictedProperties">
+<Collection>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SAPSysAdminDataChangeUser"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_SAPSysAdminDataCreateUser"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATEType">
+<Annotation Term="Common.SemanticKey">
+<Collection>
+<PropertyPath>FSH_CPLND_ORD</PropertyPath>
+</Collection>
+</Annotation>
+</Annotations>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_WRKC_UPDATE_CDS/$metadata"/>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_WRKC_UPDATE_CDS/$metadata"/>
+</Schema>
+</edmx:DataServices>
+</edmx:Edmx>

@@ -44,6 +44,10 @@
       "ZI_RFM_ATP_RULES_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZI_RFM_ATP_RULES_CDS"
+      },
+      "ZZ1_MFP_WRKC_UPDATE_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MFP_WRKC_UPDATE_CDS"
       }
     }
   },

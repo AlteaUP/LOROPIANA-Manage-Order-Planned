@@ -12,13 +12,36 @@
         icon="sap-icon://ai"
         title="Change Work Center {CplndOrd}"
     >
-        <content />
+        <content>
+             <Table
+                id="workCenterTable"
+                mode= "MultiSelect"
+                noDataText="Loading...">
+                <columns>
+                    <Column id="WorkCenterColumnId">
+                        <Text id="WorkCenterId" text="Work Center" />
+                    </Column>
+                    <Column id="WorkCenterDescriptionColumnId">
+                        <Text id="WorkCenterDescriptionId" text="Description" />
+                    </Column>
+                </columns>
+                <items>
+                    
+                </items>
+            </Table>
+        </content>
         <buttons>
             <Button
                 id="_IDGenBtnCancelWork"
                 text="Annulla"
                 type="Reject"
-                press="onCancel"
+                press="onCloseDialog"
+            />
+            <Button
+                id="_IDGenBtnChangeWork"
+                text="Change"
+                type="Accept"
+                press="onSubmitChangeWorkCenter"
             />
         </buttons>
     </Dialog>

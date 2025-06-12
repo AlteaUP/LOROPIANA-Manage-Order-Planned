@@ -290,6 +290,9 @@
           },
           "sap.fe.templates.ObjectPage.ObjectPageController": {
             "controllerName": "manageplannedorder.manageplannedorder.ext.controller.CombinedDetail"
+          },
+          "sap.fe.templates.ObjectPage.ObjectPageController#manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage": {
+            "controllerName": "manageplannedorder.manageplannedorder.ext.controller.WorkCenters"
           }
         }
       }

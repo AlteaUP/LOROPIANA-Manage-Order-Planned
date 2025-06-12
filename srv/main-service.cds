@@ -74,6 +74,7 @@ service MainService {
   @cds.redirection.target
   entity ZZ1_PLOCAPACITYCORD_TEXT   as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD;
 
+  entity ZZ1_PlannedOrdersCapacity as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCapacity;
 
   // COMBINED PLANNED ORDER
   entity ZZ1_CombinedPlnOrdersAPI   as
@@ -104,6 +105,9 @@ service MainService {
       to_ZZ1_Plant                  : Composition of many ZZ1_Plant
                                         on MRPPlant = $self.MRPPlant,
 
+      to_ZZ1_PlannedOrdersCapacity  : Composition of many ZZ1_PlannedOrdersCapacity
+                                        on CplndOrd = $self.CplndOrd,
+                                     
       to_ZZ1_MFI_CR_TYPE_PLA        : Composition of one ZZ1_MFI_CR_TYPE_V
                                         on  MRPController = $self.MRPController
                                         and MRPPlant      = $self.MRPPlant,
