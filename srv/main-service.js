@@ -430,7 +430,13 @@ module.exports = class MainService extends cds.ApplicationService {
         // sorto per valori atpRulesData
         filteredData.sort((a, b) => atpRulesArray.indexOf(a.StockSegment) - atpRulesArray.indexOf(b.StockSegment));
 
-        res = filteredData
+        // valorizzo campo StockSegmentCode
+        var result = filteredData.map(obj => ({
+          ...obj,
+          StockSegmentCode: (atpRulesArray.indexOf(obj.StockSegment))+1
+        }));
+
+        res = result
       }
       // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation - FINE
 

@@ -1267,6 +1267,11 @@ annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
     },
     {
         $Type: 'UI.DataField',
+        Value: StockSegmentCode,
+        Label: 'Stock Segment Code',
+    },
+    {
+        $Type: 'UI.DataField',
         Value: GROSS_LENGHT,
         Label: 'GROSS_LENGHT',
         ![@UI.Hidden],
