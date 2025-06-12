@@ -426,6 +426,10 @@ module.exports = class MainService extends cds.ApplicationService {
       if(atpRulesData.length > 0){
         var atpRulesArray = JSON.parse(atpRulesData[0].atp)
         var filteredData = res.filter(item => atpRulesArray.includes(item.StockSegment));
+
+        // sorto per valori atpRulesData
+        filteredData.sort((a, b) => atpRulesArray.indexOf(a.StockSegment) - atpRulesArray.indexOf(b.StockSegment));
+
         res = filteredData
       }
       // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation - FINE
