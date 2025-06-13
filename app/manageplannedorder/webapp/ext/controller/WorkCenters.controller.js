@@ -29,11 +29,24 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension',"sap/m/MessageToast",], fun
 			var combPlOrder = selectedRecordCapacity.CombinedMasterOrder;
 
 			var payload = {
-				"FSH_CPLND_ORD" : combPlOrder,
-				"MANUFACTURINGORDEROPERATION" : selectedRecordCapacity.Operation,
-				"MANUFACTURINGORDERSEQUENCE" : selectedRecordCapacity.Sequence,
-				"WORKCENTER" : workCenterSelected
+				"CombPlOrder" : combPlOrder,
+				"Operation" : selectedRecordCapacity.Operation,
+				"Sequence" : selectedRecordCapacity.Sequence,
+				"WorkCenter" : workCenterSelected
 			}
+
+			const oModel = this.getView().getModel();
+			var oBindingContext = oModel.bindContext("/ChangeWorkCenter(...)");
+
+			oBindingContext.setParameter("Payload", 
+				payload
+			);
+
+			oBindingContext.execute().then((oResult) => {
+				message.MessageToast("Successo")
+			}).catch((oError) => {
+				message.MessageToast("Errore in chiamata")
+			});
 		}
 
 	};

@@ -18,6 +18,8 @@ module.exports = class MainService extends cds.ApplicationService {
 
     const ZI_RFM_ATP_RULES_CDS = await cds.connect.to('ZI_RFM_ATP_RULES_CDS');
 
+    const changeWorkCenter = await cds.connect.to('ZZ1_MFP_WRKC_UPDATE_CDS');
+
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
 
@@ -592,6 +594,39 @@ module.exports = class MainService extends cds.ApplicationService {
 
         return data;
     });
+
+    this.on("ChangeWorkCenter", async (req) => {
+
+        const object = req.data.Payload;
+
+        var payload = {
+          "FSH_CPLND_ORD" : object.CombPlOrder,
+          "MANUFACTURINGORDEROPERATION" : object.Operation,
+          "MANUFACTURINGORDERSEQUENCE" : object.Sequence,
+          "WORKCENTER" : object.WorkCenter
+        }
+
+        try {
+
+            /*const csrfRes = await changeWorkCenter.get("/ZZ1_MFP_WRKC_UPDATE", {
+                headers: { 'X-CSRF-Token': 'fetch' }
+            });
+
+            const csrfToken = csrfRes.headers['X-CSRF-Token'];*/
+
+            let callCreate = await changeWorkCenter.tx(req).post("/ZZ1_MFP_WRKC_UPDATE", payload)
+            /*let callCreate = await changeWorkCenter.post("/ZZ1_MFP_WRKC_UPDATE", payload, {
+                headers: { 'X-CSRF-Token': csrfToken }
+            });*/
+            console.log("Risultato chiamata " + JSON.stringify(callCreate))
+            return callCreate
+
+        } catch (error) {
+
+            console.log(error.message)
+            return error.message
+        }
+    })
 
   }
 };

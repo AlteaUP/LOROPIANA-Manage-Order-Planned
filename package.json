@@ -272,6 +272,9 @@
       "ZZ1_MFP_WRKC_UPDATE_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_MFP_WRKC_UPDATE_CDS",
+        "csrf": {
+          "method": "get"
+        },
         "[hybrid]": {
           "credentials": {
             "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_WRKC_UPDATE_CDS",

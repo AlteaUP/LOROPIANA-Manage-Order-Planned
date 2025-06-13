@@ -6,6 +6,7 @@ using {ZZ1_COMBPLNORDERSSTOCKAPI_CDS} from './external/ZZ1_COMBPLNORDERSSTOCKAPI
 using {ZZ1_MFP_ASSIGNMENT_CDS} from './external/ZZ1_MFP_ASSIGNMENT_CDS';
 using {ZMPF_ASS_BATCH_SRV} from './external/ZMPF_ASS_BATCH_SRV';
 using {ZI_RFM_ATP_RULES_CDS} from './external/ZI_RFM_ATP_RULES_CDS';
+using {ZZ1_MFP_WRKC_UPDATE_CDS} from './external/ZZ1_MFP_WRKC_UPDATE_CDS';
 // using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
 
 type AtpPloItemType : {
@@ -17,6 +18,13 @@ type AtpPloItemType : {
 type AtpPloType     : {
   id     : String;
   atpplo : array of AtpPloItemType;
+}
+
+type WorkCenterChangeActionType     : {
+  CombPlOrder     : String;
+  Operation       : String;
+  Sequence        : String;
+  WorkCenter      : String;
 }
 
 service MainService {
@@ -140,6 +148,8 @@ service MainService {
 
   entity ZI_RFM_ATP_RULES as projection on ZI_RFM_ATP_RULES_CDS.ZI_RFM_ATP_RULES;
 
+  entity ZZ1_MFP_WRKC_UPDATE as projection on ZZ1_MFP_WRKC_UPDATE_CDS.ZZ1_MFP_WRKC_UPDATE;
+
   entity ZZ1_CombPlnOrdersStockAPI  as
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
       *
@@ -166,4 +176,6 @@ service MainService {
 
   // entity atp_item                   as projection on ZS_RFM_ATP_PLANNED_ORDERS.atp_item;
   action atpPlo(Payload : AtpPloType) returns Boolean;
+
+  action ChangeWorkCenter(Payload: WorkCenterChangeActionType) returns String;
 }
