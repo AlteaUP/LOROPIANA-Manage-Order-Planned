@@ -6,6 +6,16 @@ sap.ui.define([
     return {
         doChangeWorkCenter: function (oEvent) {
 
+            const idTableCapacity = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_ZZ1_PLOCAPACITYCORD::LineItem::Capacity-innerTable";
+            const selectedItems = this._view.byId(idTableCapacity).getSelectedItems();
+            var oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            var sMessage = oResourceBundle.getText("SelectOnlyOneRecord");
+
+            if (selectedItems.length > 1) {
+                MessageToast.show(sMessage);
+                return;
+            }
+
             //apro fragment
             if (!this._fragmentWorkCenter) {
                 this._fragmentWorkCenter = this.loadFragment({

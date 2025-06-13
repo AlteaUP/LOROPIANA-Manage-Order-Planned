@@ -626,7 +626,11 @@ module.exports = class MainService extends cds.ApplicationService {
             console.log(error.message)
             return error.message
         }
-    })
+    }),
+
+    this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PlannedOrdersCapacity", async (req) => {
+      return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+    }); 
 
   }
 };
