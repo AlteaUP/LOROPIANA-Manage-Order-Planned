@@ -43,9 +43,9 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension',"sap/m/MessageToast",], fun
 			);
 
 			oBindingContext.execute().then((oResult) => {
-				message.MessageToast("Successo")
+				MessageToast.show("Successo")
 			}).catch((oError) => {
-				message.MessageToast("Errore in chiamata")
+				MessageToast.show(oError.value)
 			});
 		}
 
