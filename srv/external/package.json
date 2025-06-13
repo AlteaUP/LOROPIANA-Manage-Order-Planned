@@ -48,6 +48,10 @@
       "ZZ1_MFP_WRKC_UPDATE_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_MFP_WRKC_UPDATE_CDS"
+      },
+      "ZSD_RFM_ATP_CHANGE_WC": {
+        "kind": "odata",
+        "model": "srv/external/ZSD_RFM_ATP_CHANGE_WC"
       }
     }
   },

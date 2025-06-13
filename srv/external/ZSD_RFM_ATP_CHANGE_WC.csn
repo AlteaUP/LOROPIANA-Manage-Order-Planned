@@ -1,0 +1,233 @@
+{
+ "meta": {
+  "creator": "cds-dk 8.7.3"
+ },
+ "$version": "2.0",
+ "definitions": {
+  "ZSD_RFM_ATP_CHANGE_WC.changewc_headerCbAControl": {
+   "kind": "type",
+   "@cds.external": true,
+   "elements": {
+    "chgwc": {
+     "type": "cds.Boolean",
+     "notNull": true,
+     "@Common.Label": "Dynamic CbA-Control",
+     "@Common.Heading": "Dynamic Create by Association Control",
+     "@Common.QuickInfo": "Dynamic Create via Association Control Property"
+    }
+   }
+  },
+  "ZSD_RFM_ATP_CHANGE_WC.EntityControl": {
+   "kind": "type",
+   "@cds.external": true,
+   "elements": {
+    "Deletable": {
+     "type": "cds.Boolean",
+     "notNull": true,
+     "@Common.Label": "Dyn. Method Control",
+     "@Common.Heading": "Dynamic Method Control",
+     "@Common.QuickInfo": "Dynamic Method Property"
+    },
+    "Updatable": {
+     "type": "cds.Boolean",
+     "notNull": true,
+     "@Common.Label": "Dyn. Method Control",
+     "@Common.Heading": "Dynamic Method Control",
+     "@Common.QuickInfo": "Dynamic Method Property"
+    }
+   }
+  },
+  "ZSD_RFM_ATP_CHANGE_WC": {
+   "kind": "service",
+   "@cds.external": true,
+   "@Aggregation.ApplySupported": {
+    "Transformations": [
+     "aggregate",
+     "groupby",
+     "filter"
+    ],
+    "Rollup": {
+     "#": "None"
+    }
+   },
+   "@Common.ApplyMultiUnitBehaviorForSortingAndFiltering": true,
+   "@Capabilities.FilterFunctions": [
+    "eq",
+    "ne",
+    "gt",
+    "ge",
+    "lt",
+    "le",
+    "and",
+    "or",
+    "contains",
+    "startswith",
+    "endswith",
+    "any",
+    "all"
+   ],
+   "@Capabilities.SupportedFormats": [
+    "application/json",
+    "application/pdf"
+   ],
+   "@PDF.Features": {
+    "DocumentDescriptionReference": "../../../../default/iwbep/common/0001/$metadata",
+    "DocumentDescriptionCollection": "MyDocumentDescriptions",
+    "ArchiveFormat": true,
+    "Border": true,
+    "CoverPage": true,
+    "FitToPage": true,
+    "FontName": true,
+    "FontSize": true,
+    "Margin": true,
+    "Padding": true,
+    "Signature": true,
+    "HeaderFooter": true,
+    "ResultSizeDefault": 20000,
+    "ResultSizeMaximum": 20000
+   },
+   "@Capabilities.KeyAsSegmentSupported": true,
+   "@Capabilities.AsynchronousRequestsSupported": true
+  },
+  "ZSD_RFM_ATP_CHANGE_WC.changewc_header": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "id": {
+     "key": true,
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true,
+     "@Common.IsUpperCase": true,
+     "@Common.Label": "Campo (3 bytes)"
+    },
+    "__CreateByAssociationControl": {
+     "type": "ZSD_RFM_ATP_CHANGE_WC.changewc_headerCbAControl",
+     "@Core.Computed": true,
+     "@UI.HiddenFilter": true,
+     "@UI.Hidden": true,
+     "@Common.Label": "Dynamic CbA-Control",
+     "@Common.Heading": "Dynamic Create by Association Control",
+     "@Common.QuickInfo": "Dynamic Create via Association Control Property"
+    },
+    "__EntityControl": {
+     "type": "ZSD_RFM_ATP_CHANGE_WC.EntityControl",
+     "@Core.Computed": true,
+     "@UI.HiddenFilter": true,
+     "@UI.Hidden": true,
+     "@Common.Label": "Dyn. Method Control",
+     "@Common.Heading": "Dynamic Method Control",
+     "@Common.QuickInfo": "Dynamic Method Property"
+    },
+    "chgwc": {
+     "type": "cds.Composition",
+     "target": "ZSD_RFM_ATP_CHANGE_WC.changewc_item",
+     "cardinality": {
+      "max": "*"
+     },
+     "keys": [],
+     "@Common.Composition": true
+    }
+   },
+   "@Common.Label": "CDS for ATP of Planned Orders",
+   "@Capabilities.NavigationRestrictions.RestrictedProperties": [
+    {
+     "NavigationProperty": {
+      "=": "chgwc"
+     },
+     "InsertRestrictions": {
+      "Insertable": {
+       "=": "__CreateByAssociationControl/chgwc"
+      }
+     }
+    }
+   ],
+   "@Capabilities.SearchRestrictions.Searchable": false,
+   "@Capabilities.FilterRestrictions.NonFilterableProperties": [
+    "__CreateByAssociationControl",
+    "__EntityControl"
+   ],
+   "@Capabilities.SortRestrictions.NonSortableProperties": [
+    "__CreateByAssociationControl",
+    "__EntityControl"
+   ],
+   "@Capabilities.ReadRestrictions.Readable": false,
+   "@Capabilities.DeleteRestrictions.Deletable": {
+    "=": "__EntityControl/Deletable"
+   },
+   "@Capabilities.UpdateRestrictions.Updatable": {
+    "=": "__EntityControl/Updatable"
+   },
+   "@Capabilities.UpdateRestrictions.QueryOptions.SelectSupported": true
+  },
+  "ZSD_RFM_ATP_CHANGE_WC.changewc_item": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "id": {
+     "key": true,
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true,
+     "@Core.Computed": true,
+     "@Common.IsUpperCase": true,
+     "@Common.Label": "Campo (3 bytes)"
+    },
+    "PlannedOrder": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true,
+     "@Common.IsUpperCase": true,
+     "@Common.Label": "Campo carattere (10 posizioni)"
+    },
+    "__EntityControl": {
+     "type": "ZSD_RFM_ATP_CHANGE_WC.EntityControl",
+     "@Core.Computed": true,
+     "@UI.HiddenFilter": true,
+     "@UI.Hidden": true,
+     "@Common.Label": "Dyn. Method Control",
+     "@Common.Heading": "Dynamic Method Control",
+     "@Common.QuickInfo": "Dynamic Method Property"
+    },
+    "parent": {
+     "type": "cds.Association",
+     "target": "ZSD_RFM_ATP_CHANGE_WC.changewc_header",
+     "cardinality": {
+      "max": 1
+     },
+     "keys": []
+    }
+   },
+   "@Common.Label": "Custom entity per ATP Planned Orders",
+   "@Capabilities.NavigationRestrictions.RestrictedProperties": [
+    {
+     "NavigationProperty": {
+      "=": "parent"
+     },
+     "InsertRestrictions": {
+      "Insertable": false
+     }
+    }
+   ],
+   "@Capabilities.SearchRestrictions.Searchable": false,
+   "@Capabilities.FilterRestrictions.NonFilterableProperties": [
+    "__EntityControl"
+   ],
+   "@Capabilities.SortRestrictions.NonSortableProperties": [
+    "__EntityControl"
+   ],
+   "@Capabilities.ReadRestrictions.Readable": false,
+   "@Capabilities.InsertRestrictions.Insertable": false,
+   "@Capabilities.DeleteRestrictions.Deletable": {
+    "=": "__EntityControl/Deletable"
+   },
+   "@Capabilities.UpdateRestrictions.Updatable": {
+    "=": "__EntityControl/Updatable"
+   },
+   "@Capabilities.UpdateRestrictions.QueryOptions.SelectSupported": true
+  }
+ }
+}

@@ -277,11 +277,9 @@
         },
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_WRKC_UPDATE_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata/sap/API_MATERIAL_DOCUMENT_SRV"
           }
         },
         "[production]": {
@@ -291,7 +289,29 @@
             "path": "/sap/opu/odata/sap/ZZ1_MFP_WRKC_UPDATE_CDS"
           }
         }
-      }
+      },
+      "ZSD_RFM_ATP_CHANGE_WC": {
+        "kind": "odata-v4",
+        "model": "srv/EXTERNAL/ZSD_RFM_ATP_CHANGE_WC",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": {
+            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata4/sap/zc_rfm_atp_change_wc_deep/srvd/sap/zsd_rfm_atp_change_wc_deep/0001",
+            "authentication": "BasicAuthentication",
+            "username": "laspatas",
+            "password": "Sap1234567890!!!",
+            "sap-client": "300"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/zc_rfm_atp_change_wc_deep/srvd/sap/zsd_rfm_atp_change_wc_deep/0001"
+          }
+        }
+      } 
     }
   },
   "sapux": [

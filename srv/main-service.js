@@ -20,6 +20,8 @@ module.exports = class MainService extends cds.ApplicationService {
 
     const changeWorkCenter = await cds.connect.to('ZZ1_MFP_WRKC_UPDATE_CDS');
 
+    const externalATPService = await cds.connect.to("ZSD_RFM_ATP_CHANGE_WC");
+
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
 
@@ -619,7 +621,43 @@ module.exports = class MainService extends cds.ApplicationService {
                 headers: { 'X-CSRF-Token': csrfToken }
             });*/
             console.log("Risultato chiamata " + JSON.stringify(callCreate))
-            return callCreate
+            //return callCreate
+
+            //recupero plannedOrder
+            var plannedOrderNumbers = [];
+            const fixedId = "123"; //id fisso
+            const plannedOrdersCapacity = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+              SELECT.from("ZZ1_PlannedOrdersCapacity") .where({
+                Sequence: object.Sequence,
+                Operation: object.Operation,
+                CplndOrd: object.CombPlOrder,
+              }) 
+            ); 
+            console.log("Risultato chiamata " + JSON.stringify(plannedOrdersCapacity));
+
+            if (plannedOrdersCapacity.length > 0) {
+              plannedOrdersCapacity.forEach((item) => {
+                if (item.PlannedOrder !== undefined) {
+                  plannedOrderNumbers.push(item.PlannedOrder);
+                }
+              });
+              console.log("plannedOrder" + plannedOrderNumbers);
+              var chgwcLines = plannedOrderNumbers.map(number => {
+                    return {
+                      "id": fixedId, // ID fisso per ogni riga
+                      "PlannedOrder": number
+            };
+              });
+              // payload finale con testata e righe
+              var oPayload = {
+                  "id": fixedId, // ID fisso per la testata
+                  "chgwc": chgwcLines 
+              };
+              console.log("Payload per la POST: " + JSON.stringify(oPayload));
+              const result = await externalATPService.tx(req).post("/changewc_header", oPayload);
+              console.log('Risultato della POST:', result);
+                return result
+            }
 
         } catch (error) {
 
