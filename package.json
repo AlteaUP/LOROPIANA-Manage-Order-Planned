@@ -285,11 +285,11 @@
       },
       "ZSD_RFM_ATP_CHANGE_WC": {
         "kind": "odata-v4",
-        "model": "srv/EXTERNAL/ZSD_RFM_ATP_CHANGE_WC",
+        "model": "srv/external/ZSD_RFM_ATP_CHANGE_WC",
         "csrf": true,
         "csrfInBatch": true,
         "[hybrid]": {
-          "credentials": {
+          "credentials": { 
             "requestTimeout": 300000,
             "destination": "S4HANA",            
             "path": "/sap/opu/odata4/sap/zc_rfm_atp_change_wc_deep/srvd/sap/zsd_rfm_atp_change_wc_deep/0001"
