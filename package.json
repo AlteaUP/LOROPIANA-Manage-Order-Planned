@@ -33,7 +33,10 @@
     "watch-test": "cds watch --open test/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-test1": "cds watch --open test1/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false",
-    "watch-manageplannedorder": "cds watch --open manageplannedorder/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-manageplannedorder": "cds watch --open manageplannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
+    "cds-bind-services-srv": "cds bind -2 zmanageplannedorder-auth-srv,zmanageplannedorder-destination,zmanageplannedorder-connectivity",
+    "cds-bind-srv": "cds bind --to-app-services zmanageplannedorder-html5-srv",
+    "cds-srv-hybrid-run": "cds watch --profile hybrid"
   },
   "cds": {
     "cov2ap": {
@@ -42,17 +45,27 @@
     "requires": {
       "connectivity": true,
       "destinations": true,
-      "html5-runtime": true,
+      "html5-repo": true,
+      "[hybrid]": {
+        "auth": "xsuaa"
+      },
+      "[production]": {
+        "auth": "xsuaa",
+        "db": {
+          "kind": "sqlite",
+          "schema_evolution": "auto"
+        }
+      },
       "planned_order": {
         "kind": "odata-v2",
         "model": "srv/external/planned-order",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/UI_RFM_MNG_MSTRPLNDORD",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/UI_RFM_MNG_MSTRPLNDORD"
+          }
           }
         },
         "[production]": {
@@ -68,11 +81,9 @@
         "model": "srv/external/ZZ1_COMBINEDPLNORDERSAPI_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_COMBINEDPLNORDERSAPI_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_COMBINEDPLNORDERSAPI_CDS"
           }
         },
         "[production]": {
@@ -88,11 +99,9 @@
         "model": "srv/external/ZZ1_MASTERPLANNEDORDERAPI_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MASTERPLANNEDORDERAPI_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_MASTERPLANNEDORDERAPI_CDS"
           }
         },
         "[production]": {
@@ -108,11 +117,9 @@
         "model": "srv/external/ZZ1_PLANNEDORDERSAPI_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_PLANNEDORDERSAPI_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_PLANNEDORDERSAPI_CDS"
           }
         },
         "[production]": {
@@ -128,11 +135,9 @@
         "model": "srv/external/ZZ1_COMBPLNORDERSSTOCKAPI_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_COMBPLNORDERSSTOCKAPI_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_COMBPLNORDERSSTOCKAPI_CDS"
           }
         },
         "[production]": {
@@ -148,11 +153,9 @@
         "model": "srv/external/ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_I_ARUN_BDBSSUMQTY_CDS_CDS"
           }
         },
         "[production]": {
@@ -170,11 +173,9 @@
         "csrfInBatch": true,
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_ASSIGNMENT_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_MFP_ASSIGNMENT_CDS"
           }
         },
         "[production]": {
@@ -190,11 +191,9 @@
         "model": "srv/external/ZZ1_I_SUMQTYDELIVERY_T_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZZ1_I_SUMQTYDELIVERY_T_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_I_SUMQTYDELIVERY_T_CDS"
           }
         },
         "[production]": {
@@ -212,11 +211,9 @@
         "csrfInBatch": true,
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata4/sap/zmpf_ass_batch_bnd/srvd_a2x/sap/zmpf_ass_batch_srv/0001",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata4/sap/zmpf_ass_batch_bnd/srvd_a2x/sap/zmpf_ass_batch_srv/0001"
           }
         },
         "[production]": {
@@ -234,11 +231,9 @@
         "csrfInBatch": true,
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata4/sap/zsb_rfm_atp_planned_orders/srvd_a2x/sap/zs_rfm_atp_planned_orders/0001/",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata4/sap/zsb_rfm_atp_planned_orders/srvd_a2x/sap/zs_rfm_atp_planned_orders/0001/"
           }
         },
         "[production]": {
@@ -254,11 +249,9 @@
         "model": "srv/external/ZI_RFM_ATP_RULES_CDS",
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata/sap/ZI_RFM_ATP_RULES_CDS",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZI_RFM_ATP_RULES_CDS"
           }
         },
         "[production]": {
@@ -297,11 +290,9 @@
         "csrfInBatch": true,
         "[hybrid]": {
           "credentials": {
-            "url": "http://lpappsvi.lp.corp:8000/sap/opu/odata4/sap/zc_rfm_atp_change_wc_deep/srvd/sap/zsd_rfm_atp_change_wc_deep/0001",
-            "authentication": "BasicAuthentication",
-            "username": "laspatas",
-            "password": "Sap1234567890!!!",
-            "sap-client": "300"
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/zc_rfm_atp_change_wc_deep/srvd/sap/zsd_rfm_atp_change_wc_deep/0001"
           }
         },        
         "[production]": {
