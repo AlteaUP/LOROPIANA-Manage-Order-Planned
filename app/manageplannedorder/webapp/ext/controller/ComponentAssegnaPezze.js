@@ -24,6 +24,7 @@ sap.ui.define([
       ));
     },
     doAssegnaPezze: function (oEvent) {
+      debugger;
       const model = new JSONModel()
       const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
       const obj = this.getBindingContext().getObject()
@@ -77,6 +78,7 @@ sap.ui.define([
           template: new sap.m.ColumnListItem({
             cells: [
               new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
+              new sap.m.Text({ text: "{StockSegment}" }),
               new sap.m.Text({ text: "{LGORT}" }),
               new sap.m.Text({ text: "{FABB_TOT_V}" }),
               new sap.m.Text({ text: "{COPERTURA}" }),
@@ -123,6 +125,7 @@ sap.ui.define([
               "FABB_TOT_U_Text": "",
               "COPERTURA": COPERTURA,
               "SORT": 0,
+              "StockSegment": item.StockSegment,
               "SAP_CreatedDateTime": new Date(),
               "SAP_CreatedByUser": "LASPATAS",
               "SAP_CreatedByUser_Text": "",

@@ -12,8 +12,10 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension',"sap/m/MessageToast",], fun
 			//recuper workCenter selezionato
 			const idWorkCenter = "fragmentWorkCenter--workCenterTable";
 			const selectedItemWorkCenter = sap.ui.getCore().byId(idWorkCenter).getSelectedItems();
+			var oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            var sMessage = oResourceBundle.getText("SelectOnlyOneRecord");
 			if (selectedItemWorkCenter.length > 1 || selectedItemWorkCenter.length === 0) {
-				MessageToast.show("Selezionare solo un record");
+				MessageToast.show(sMessage);
 				return;
 			}
 			const oBjWorkCenter = selectedItemWorkCenter[0].getBindingContext().getObject();

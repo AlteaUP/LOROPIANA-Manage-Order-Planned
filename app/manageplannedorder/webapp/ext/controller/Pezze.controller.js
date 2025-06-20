@@ -110,6 +110,7 @@ sap.ui.define([
       ));
     },
     doAssign: function (oEvent) {
+      debugger;
       const oModel = this.getOwnerComponent().getModel();
       const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
       const oTableBinding = oTable.getBinding("items");

@@ -1,4 +1,4 @@
-/* checksum : 36cc5fd5044338821f720191d7d17d22 */
+/* checksum : 5c30f09d8dc7a7807104979587c7096b */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -337,6 +337,14 @@ entity ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   SAP_LastChangedByUser_Text : String(80);
+  @sap.label : 'Text of length 1'
+  @sap.heading : ''
+  @sap.quickinfo : ''
+  SpecialStock : String(1);
+  @sap.label : 'Text of length 40'
+  @sap.heading : ''
+  @sap.quickinfo : ''
+  StockSegment : String(40);
   to_FABB_TOT : Association to ZZ1_MFP_ASSIGNMENT_CDS.I_UnitOfMeasure {  };
   to_QTA_ASS : Association to ZZ1_MFP_ASSIGNMENT_CDS.I_UnitOfMeasure {  };
   to_SAPSysAdminDataChangeUser : Association to ZZ1_MFP_ASSIGNMENT_CDS.P_Scbo_User {  };
@@ -372,6 +380,10 @@ action ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENTSap_upsert(
   @sap.label : '% Copertura'
   COPERTURA : Decimal(10, 0),
   @sap.label : 'SORT'
-  SORT : Decimal(10, 0)
+  SORT : Decimal(10, 0),
+  @sap.label : 'Text of length 1'
+  SpecialStock : String(1),
+  @sap.label : 'Text of length 40'
+  StockSegment : String(40)
 ) returns ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT;
 

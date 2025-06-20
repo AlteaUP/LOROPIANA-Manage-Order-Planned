@@ -27,6 +27,7 @@
     "undeploy": "cf undeploy cap --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "cf-login": "cf login -a https://api.cf.eu30.hana.ondemand.com -o 'Loro Piana S.p.A._btp-development-loro-piana-82xq0cpc' -s 'DEV-SPACE-MANUFACTURING' --sso",
     "watch-plannedorder": "cds watch --open plannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-plannedordertest": "cds watch --open plannedordertest/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-combinedplannedorder": "cds watch --open combinedplannedorder/webapp/index.html?sap-ui-xx-viewCache=false",

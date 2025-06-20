@@ -136,6 +136,8 @@
 <Property Name="SAP_LastChangedDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Last Changed On" sap:heading="" sap:quickinfo="" sap:creatable="false" sap:updatable="false"/>
 <Property Name="SAP_LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="SAP_LastChangedByUser_Text" sap:label="Last Changed By" sap:heading="" sap:quickinfo="" sap:creatable="false" sap:updatable="false"/>
 <Property Name="SAP_LastChangedByUser_Text" Type="Edm.String" MaxLength="80" sap:label="Description" sap:quickinfo="Description of the Technical User Account" sap:creatable="false" sap:updatable="false"/>
+<Property Name="SpecialStock" Type="Edm.String" MaxLength="1" sap:label="Text of length 1" sap:heading="" sap:quickinfo=""/>
+<Property Name="StockSegment" Type="Edm.String" MaxLength="40" sap:label="Text of length 40" sap:heading="" sap:quickinfo=""/>
 <NavigationProperty Name="to_FABB_TOT" Relationship="ZZ1_MFP_ASSIGNMENT_CDS.assoc_E20258E24465D911745E1DB58CAC64DC" FromRole="FromRole_assoc_E20258E24465D911745E1DB58CAC64DC" ToRole="ToRole_assoc_E20258E24465D911745E1DB58CAC64DC"/>
 <NavigationProperty Name="to_QTA_ASS" Relationship="ZZ1_MFP_ASSIGNMENT_CDS.assoc_BB583683F3CE68F994076C292CE08C23" FromRole="FromRole_assoc_BB583683F3CE68F994076C292CE08C23" ToRole="ToRole_assoc_BB583683F3CE68F994076C292CE08C23"/>
 <NavigationProperty Name="to_SAPSysAdminDataChangeUser" Relationship="ZZ1_MFP_ASSIGNMENT_CDS.assoc_CC7536DFFEEEC83D5720B79715CF24D5" FromRole="FromRole_assoc_CC7536DFFEEEC83D5720B79715CF24D5" ToRole="ToRole_assoc_CC7536DFFEEEC83D5720B79715CF24D5"/>
@@ -293,6 +295,8 @@
 <Parameter Name="FABB_TOT_U" Type="Edm.String" Mode="In" MaxLength="3" sap:label="Fabbisogno Tot."/>
 <Parameter Name="COPERTURA" Type="Edm.Decimal" Mode="In" Precision="10" Scale="0" sap:label="% Copertura"/>
 <Parameter Name="SORT" Type="Edm.Decimal" Mode="In" Precision="10" Scale="0" sap:label="SORT"/>
+<Parameter Name="SpecialStock" Type="Edm.String" Mode="In" MaxLength="1" sap:label="Text of length 1"/>
+<Parameter Name="StockSegment" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Text of length 40"/>
 </FunctionImport>
 </EntityContainer>
 <Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
