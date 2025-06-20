@@ -375,7 +375,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
 
         {
             $Type : 'UI.ReferenceFacet',
-            Label : 'Capacity',
+            Label : 'Routing',
             ID    : 'Capacity',
             Target: 'to_ZZ1_PLOCAPACITYCORD/@UI.LineItem#Capacity',
         },

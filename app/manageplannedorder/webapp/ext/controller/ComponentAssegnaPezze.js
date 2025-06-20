@@ -43,7 +43,7 @@ sap.ui.define([
         _selectedItems.push(oObj)
       }
 
-      OpenQty = parseInt(obj.RequiredQuantity) - TotCombPlanAllQty
+      OpenQty = obj.RequiredQuantity - TotCombPlanAllQty;
 
 
       model.setData({
