@@ -3,6 +3,37 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension',"sap/m/MessageToast",], fun
 
 	return {
 
+		onInit: function () {
+			debugger;
+			// you can access the Fiori elements extensionAPI via this.base.getExtensionAPI
+			// var oModel = this.base.getExtensionAPI().getModel();
+			const idComponentsTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_CombinPlannedOrdersCom::LineItem::Components'
+			const oComponentsTable = sap.ui.getCore().byId(idComponentsTable)._oTable
+			oComponentsTable.setGrowing(false);
+			oComponentsTable.attachUpdateFinished(function (oEvent) {
+
+				// verde se la required quantity = ATP Quantity
+				// altrimenti rosso
+				const oTable = oEvent.getSource();
+				debugger;
+				const aItems = oTable.getItems()
+				aItems.forEach(function (oRow) {
+					const item = oRow.getBindingContext().getObject();
+					if (item.BaseUnit.toUpperCase() === 'M2') {
+						if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
+							// oRow.addStyleClass('green');
+							oRow.setHighlight("Success");
+							oRow.setHighlightText("Quantity matches");
+						} else {
+							// oRow.addStyleClass('red');
+							oRow.setHighlight("Error");
+							oRow.setHighlightText("Quantity does not match");
+						}
+					}
+				});
+			})
+		},
+
 		onCloseDialog: function (oEvent) {
 			const dialog = oEvent.getSource().getParent();
 			dialog.close();

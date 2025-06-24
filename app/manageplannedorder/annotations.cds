@@ -892,7 +892,6 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             $Type : 'UI.DataFieldForAnnotation',
             Target: '@UI.Chart#RequiredQuantity',
             Label : '{i18n>AvailableQuantityRequired}',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
