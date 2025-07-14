@@ -7,6 +7,14 @@ using {ZZ1_MFP_ASSIGNMENT_CDS} from './external/ZZ1_MFP_ASSIGNMENT_CDS';
 using {ZMPF_ASS_BATCH_SRV} from './external/ZMPF_ASS_BATCH_SRV';
 using {ZI_RFM_ATP_RULES_CDS} from './external/ZI_RFM_ATP_RULES_CDS';
 using {ZZ1_MFP_WRKC_UPDATE_CDS} from './external/ZZ1_MFP_WRKC_UPDATE_CDS';
+using {ZZ1_MATERIAL_F4_CDS} from './external/ZZ1_MATERIAL_F4_CDS';
+using {ZZ1_COMBPLANNEDORDER_F4_CDS} from './external/ZZ1_COMBPLANNEDORDER_F4_CDS';
+using {ZZ1_PRODUCTIONPLANT_F4_CDS} from './external/ZZ1_PRODUCTIONPLANT_F4_CDS';
+using {ZZ1_MRPCONTROLLER_F4_CDS} from './external/ZZ1_MRPCONTROLLER_F4_CDS';
+using {ZZ1_WORKCENTER_F4_CDS} from './external/ZZ1_WORKCENTER_F4_CDS';
+using {ZZ1_PRODUCTSEASON_F4_CDS} from './external/ZZ1_PRODUCTSEASON_F4_CDS';
+using {ZZ1_PLANNEDORDERTYPE_F4_CDS} from './external/ZZ1_PLANNEDORDERTYPE_F4_CDS';
+
 // using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
 
 type AtpPloItemType : {
@@ -33,6 +41,16 @@ service MainService {
   entity ZZ1_MFI_CR_TYPE_V          as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V;
   // MASTER PLANNED ORDER
   entity ZZ1_MasterPlannedOrders    as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders;
+
+  //ENTITY MATCH CODE FILTRI
+  entity ZZ1_MATERIAL_F4    as projection on ZZ1_MATERIAL_F4_CDS.ZZ1_MATERIAL_F4;
+  entity ZZ1_CombPlannedOrder_F4    as projection on ZZ1_COMBPLANNEDORDER_F4_CDS.ZZ1_CombPlannedOrder_F4;
+  @cds.query.limit: { default: 1000, max: 1000 }
+  entity  ZZ1_PRODUCTIONPLANT_F4    as projection on ZZ1_PRODUCTIONPLANT_F4_CDS.ZZ1_PRODUCTIONPLANT_F4;
+  entity  ZZ1_MRPCONTROLLER_F4    as projection on ZZ1_MRPCONTROLLER_F4_CDS.ZZ1_MRPCONTROLLER_F4;
+  entity   ZZ1_WORKCENTER_F4    as projection on ZZ1_WORKCENTER_F4_CDS.ZZ1_WORKCENTER_F4;
+  entity   ZZ1_PRODUCTSEASON_F4    as projection on ZZ1_PRODUCTSEASON_F4_CDS.ZZ1_PRODUCTSEASON_F4;
+  entity   ZZ1_PLANNEDORDERTYPE_F4    as projection on ZZ1_PLANNEDORDERTYPE_F4_CDS.ZZ1_PLANNEDORDERTYPE_F4;
 
   // COMPONENTS
   entity ZZ1_CombinPlannedOrdersCom as
@@ -85,6 +103,7 @@ service MainService {
   entity ZZ1_PlannedOrdersCapacity as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCapacity;
 
   // COMBINED PLANNED ORDER
+  @cds.query.limit: { default: 1000, max: 1000 }
   entity ZZ1_CombinedPlnOrdersAPI   as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
       *,

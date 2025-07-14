@@ -22,6 +22,17 @@ module.exports = class MainService extends cds.ApplicationService {
 
     const externalATPService = await cds.connect.to("ZSD_RFM_ATP_CHANGE_WC");
 
+    const ZZ1_COMBPLANNEDORDER_F4_CDS = await cds.connect.to("ZZ1_COMBPLANNEDORDER_F4_CDS");
+    const ZZ1_PRODUCTIONPLANT_F4_CDS = await cds.connect.to("ZZ1_PRODUCTIONPLANT_F4_CDS");
+    const ZZ1_MRPCONTROLLER_F4_CDS = await cds.connect.to("ZZ1_MRPCONTROLLER_F4_CDS");
+    const ZZ1_WORKCENTER_F4_CDS = await cds.connect.to("ZZ1_WORKCENTER_F4_CDS");
+    const ZZ1_PRODUCTSEASON_F4_CDS = await cds.connect.to("ZZ1_PRODUCTSEASON_F4_CDS");
+    const ZZ1_PLANNEDORDERTYPE_F4_CDS = await cds.connect.to("ZZ1_PLANNEDORDERTYPE_F4_CDS");
+
+
+    
+
+
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
 
@@ -670,5 +681,76 @@ module.exports = class MainService extends cds.ApplicationService {
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     }); 
 
+    this.on("*", "ZZ1_CombPlannedOrder_F4", async (req) => {
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
+      }
+      const res =  await ZZ1_COMBPLANNEDORDER_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
+      return res;
+    });  
+    
+    this.on("*", "ZZ1_PRODUCTIONPLANT_F4", async (req) => {
+     const newQuery = JSON.parse(JSON.stringify(req.query));
+     if (newQuery.SELECT) {
+       delete newQuery.SELECT.limit;
+       delete newQuery.SELECT.offset;
+     }
+    const res =  await ZZ1_PRODUCTIONPLANT_F4_CDS.run(newQuery);
+    console.log({ query: JSON.stringify(req.query), res });
+    res['$count'] = res.length;
+    return res;
+    }); 
+
+    this.on("*", "ZZ1_MRPCONTROLLER_F4", async (req) => {
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
+      }
+      const res =  await ZZ1_MRPCONTROLLER_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
+      return res;
+    }); 
+
+    this.on("*", "ZZ1_WORKCENTER_F4", async (req) => {
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
+      }
+      const res =  await ZZ1_WORKCENTER_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
+      return res;
+    });
+
+    this.on("*", "ZZ1_PRODUCTSEASON_F4", async (req) => {
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
+      }
+      const res =  await ZZ1_PRODUCTSEASON_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
+      return res;
+    });
+
+    this.on("*", "ZZ1_PLANNEDORDERTYPE_F4", async (req) => {
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
+      }
+      const res =  await ZZ1_PLANNEDORDERTYPE_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
+      return res;
+    });
   }
 };

@@ -52,6 +52,34 @@
       "ZSD_RFM_ATP_CHANGE_WC": {
         "kind": "odata",
         "model": "srv/external/ZSD_RFM_ATP_CHANGE_WC"
+      },
+      "ZZ1_COMBPLANNEDORDER_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_COMBPLANNEDORDER_F4_CDS"
+      },
+      "ZZ1_PRODUCTIONPLANT_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_PRODUCTIONPLANT_F4_CDS"
+      },
+      "ZZ1_WORKCENTER_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_WORKCENTER_F4_CDS"
+      },
+      "ZZ1_PRODUCTSEASON_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_PRODUCTSEASON_F4_CDS"
+      },
+      "ZZ1_MRPCONTROLLER_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MRPCONTROLLER_F4_CDS"
+      },
+      "ZZ1_PLANNEDORDERTYPE_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_PLANNEDORDERTYPE_F4_CDS"
+      },
+      "ZZ1_MATERIAL_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MATERIAL_F4_CDS"
       }
     }
   },

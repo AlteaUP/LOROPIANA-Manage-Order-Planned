@@ -10,19 +10,19 @@
         type="Message"
         state="Information"
         icon="sap-icon://ai"
-        title="Change Work Center {CplndOrd}"
+        title="{i18n>ChangeWorkCenter} {CplndOrd}"
     >
         <content>
              <Table
                 id="workCenterTable"
                 mode= "MultiSelect"
-                noDataText="Loading...">
+                noDataText="{i18n>Loading}">
                 <columns>
                     <Column id="WorkCenterColumnId">
-                        <Text id="WorkCenterId" text="Work Center" />
+                        <Text id="WorkCenterId" text="{i18n>WorkCenter}" />
                     </Column>
                     <Column id="WorkCenterDescriptionColumnId">
-                        <Text id="WorkCenterDescriptionId" text="Description" />
+                        <Text id="WorkCenterDescriptionId" text="{i18n>Description}" />
                     </Column>
                 </columns>
                 <items>
@@ -33,13 +33,13 @@
         <buttons>
             <Button
                 id="_IDGenBtnCancelWork"
-                text="Annulla"
+                text="{i18n>Close}"
                 type="Reject"
                 press="onCloseDialog"
             />
             <Button
                 id="_IDGenBtnChangeWork"
-                text="Change"
+                text="{i18n>Change}"
                 type="Accept"
                 press="onSubmitChangeWorkCenter"
             />
