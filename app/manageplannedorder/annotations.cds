@@ -827,7 +827,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.ReferenceFacet',
             ID    : 'chart_percent',
-            Target: '@UI.Chart#chart_percent',
+            Target: '@UI.Chart#RequiredQuantity',
         },
     ],
     UI.FieldGroup #GeneralInfo      : {
@@ -1127,7 +1127,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             DataPoint: '@UI.DataPoint#RequiredQuantity',
         }],
     },
-    UI.DataPoint #chart_percent     : {
+/*     UI.DataPoint #chart_percent     : {
         Value      : chart_percent,
         // TargetValue : chart_percent,
         Criticality: chart_criticality
@@ -1143,13 +1143,13 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Role     : #Axis1,
             Measure  : chart_percent,
         }, ],
-    },
+    }, */
     UI.DataPoint #Material2         : {
         $Type: 'UI.DataPointType',
         Value: Material,
         Title: 'Material',
     },
-    UI.DataPoint #chart_percent1    : {
+/*     UI.DataPoint #chart_percent1    : {
         Value      : chart_percent,
         // TargetValue : chart_percent,
         Criticality: chart_criticality,
@@ -1162,7 +1162,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Role     : #Axis1,
             Measure  : chart_percent,
         }, ],
-    },
+    }, */
 
 
 );
