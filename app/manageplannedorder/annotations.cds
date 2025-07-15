@@ -827,7 +827,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.ReferenceFacet',
             ID    : 'chart_percent',
-            Target: '@UI.Chart#RequiredQuantity',
+            Target: '@UI.Chart#PercentageDonut',
         },
     ],
     UI.FieldGroup #GeneralInfo      : {
@@ -898,7 +898,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         },
         {
             $Type : 'UI.DataFieldForAnnotation',
-            Target: '@UI.Chart#RequiredQuantity',
+            Target: '@UI.Chart#PercentageDonut',
             Label : '{i18n>AvailableQuantityRequired}',
         },
         {
@@ -1110,21 +1110,21 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         Value: ProductDescription,
         Title: '{i18n>Productdescription}',
     },
-    UI.DataPoint #RequiredQuantity  : {
+    UI.DataPoint #PercentageDonut  : {
         Value      : chart_percent,
         // TargetValue : AvailableQuantity,
         Criticality: chart_criticality
     },
-    UI.Chart #RequiredQuantity      : {
-        Title            : 'chart_percent',
-        Description      : 'chart_percent',
+    UI.Chart #PercentageDonut      : {
+        Title            : '{i18n>AvailableQuantityRequired}',
+        Description      : '',
         ChartType        : #Donut,
         Measures         : [chart_percent],
         MeasureAttributes: [{
             $Type    : 'UI.ChartMeasureAttributeType',
             Measure  : chart_percent,
             Role     : #Axis1,
-            DataPoint: '@UI.DataPoint#RequiredQuantity',
+            DataPoint: '@UI.DataPoint#PercentageDonut',
         }],
     },
 /*     UI.DataPoint #chart_percent     : {

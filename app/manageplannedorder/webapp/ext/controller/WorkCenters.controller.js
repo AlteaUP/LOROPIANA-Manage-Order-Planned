@@ -3,36 +3,68 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension',"sap/m/MessageToast",], fun
 
 	return {
 
-		onInit: function () {
+		sTableId: "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_CombinPlannedOrdersCom::LineItem::Components",
+        _fnUpdateFinished: null,
+        onInit: function () {
 			debugger;
-			// you can access the Fiori elements extensionAPI via this.base.getExtensionAPI
-			// var oModel = this.base.getExtensionAPI().getModel();
-			const idComponentsTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_CombinPlannedOrdersCom::LineItem::Components'
-			const oComponentsTable = sap.ui.getCore().byId(idComponentsTable)._oTable
-			oComponentsTable.setGrowing(false);
-			oComponentsTable.attachUpdateFinished(function (oEvent) {
-
-				// verde se la required quantity = ATP Quantity
-				// altrimenti rosso
-				const oTable = oEvent.getSource();
-				debugger;
-				const aItems = oTable.getItems()
-				aItems.forEach(function (oRow) {
-					const item = oRow.getBindingContext().getObject();
-					if (item.BaseUnit.toUpperCase() === 'M2') {
-						if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
-							// oRow.addStyleClass('green');
-							oRow.setHighlight("Success");
-							oRow.setHighlightText("Quantity matches");
-						} else {
-							// oRow.addStyleClass('red');
-							oRow.setHighlight("Error");
-							oRow.setHighlightText("Quantity does not match");
-						}
-					}
-				});
-			})
-		},
+            var that = this;
+            this._fnUpdateFinished = function (oEvent) {
+                const oTable = oEvent.getSource();
+                const aItems = oTable.getItems();
+                aItems.forEach(function (oRow) {
+                    const item = oRow.getBindingContext().getObject();
+                    if (item.BaseUnit && item.BaseUnit.toUpperCase() === 'M2') {
+                        if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
+                            oRow.setHighlight("Success");
+                            oRow.setHighlightText("Quantity matches");
+                        } else {
+                            oRow.setHighlight("Error");
+                            oRow.setHighlightText("Quantity does not match");
+                        }
+                    }
+                });
+            };
+        },
+        // Helper per ottenere la vera inner Table, preferendo API pubbliche
+        _getInnerTable: function () {
+			debugger;
+            var oSmartTable = sap.ui.getCore().byId(this.sTableId);
+            if (!oSmartTable) return null;
+            // Provaci prima con metodo pubblico
+            if (typeof oSmartTable.getTable === "function") {
+                return oSmartTable.getTable();
+            }
+            // Fallback su member privato
+            if (oSmartTable._oTable) {
+                return oSmartTable._oTable;
+            }
+            return null;
+        },
+/* 
+		onBeforeBinding: function () {
+            // Stacca PRIMA di ogni nuovo binding/context!
+            var oTable = this._getInnerTable();
+            if (oTable && this._fnUpdateFinished) {
+                oTable.detachUpdateFinished(this._fnUpdateFinished);
+            }
+        }, */
+		
+        onPageReady: function () {
+			debugger;
+            var oTable = this._getInnerTable();
+            if (oTable && this._fnUpdateFinished) {
+                // Stacca prima per sicurezza (non fa niente se non era attaccato)
+                oTable.detachUpdateFinished(this._fnUpdateFinished);
+                oTable.attachUpdateFinished(this._fnUpdateFinished);
+            }
+        },
+/*         onAfterLeavePage: function () {
+			debugger;
+            var oTable = this._getInnerTable();
+            if (oTable && this._fnUpdateFinished) {
+                oTable.detachUpdateFinished(this._fnUpdateFinished);
+            }
+		}, */
 
 		onCloseDialog: function (oEvent) {
 			const dialog = oEvent.getSource().getParent();
