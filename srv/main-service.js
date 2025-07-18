@@ -457,7 +457,9 @@ module.exports = class MainService extends cds.ApplicationService {
       
       // modifica MDB - 18/007/2025 - filtrare dati per StorageLocation - INIZIO
       const storageLocations = ['H100', 'P100', 'K100'];
-      res = res.filter(row => storageLocations.includes(row.StorageLocation));
+      res = res.filter(row => storageLocations.includes(row.StorageLocation) && 
+      row.
+      StorageLocationStock !== '0.000');
       // modifica MDB - 18/007/2025 - filtrare dati per StorageLocation - FINE
 
       res['$count'] = res.length.toString();
