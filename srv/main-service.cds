@@ -86,6 +86,7 @@ service MainService {
           null as FinishedProductQty : Integer, //Decimal(13, 3), //String(20),
           null as chart_criticality  : Integer,
           null as chart_percent      : Integer,
+          null as priority           : Integer,
           null as RequestFinished    : Integer, // String(20),
           to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
                                          on  Material = $self.Material

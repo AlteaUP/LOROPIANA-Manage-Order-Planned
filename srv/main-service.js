@@ -304,9 +304,22 @@ module.exports = class MainService extends cds.ApplicationService {
             } else {
               item.FinishedProductQty = parseInt("0").toFixed(3);
             }
+            // modifica DL - 22/07/2025 - calcolo campo priorità
+            if (item.BaseUnit && item.BaseUnit.toUpperCase() === 'M2') {
+              if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
+                  item.priority = 2
+              } else {
+                  item.priority = 1
+              }
+            } else {
+              item.priority = 3
+            }
+            // modifica DL - 22/07/2025 - calcolo campo priorità - FINE
           });
         }
       }
+
+      res.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority)); 
 
       return res;
     });

@@ -1048,6 +1048,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Value: to_ZZ1_CombPlnOrdersStock.StockSegment,
             Label: 'StockSegment',
             ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: priority,
+            Label: 'Priority',
+            ![@UI.Hidden],
         }
     ],
     UI.FieldGroup #QTY              : {
