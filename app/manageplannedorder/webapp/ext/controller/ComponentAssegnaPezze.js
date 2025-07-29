@@ -82,7 +82,8 @@ sap.ui.define([
               new sap.m.Text({ text: "{LGORT}" }),
               new sap.m.Text({ text: "{FABB_TOT_V}" }),
               new sap.m.Text({ text: "{COPERTURA}" }),
-              new sap.m.Input({ value: "{QTA_ASS_V}" })
+              new sap.m.Input({ value: "{QTA_ASS_V}" }),
+              //new sap.m.Text({ text: "{BatchBySupplier}" })
             ]
           }),
           templateShareable: false,
@@ -117,6 +118,7 @@ sap.ui.define([
               "MATNR": item.Material,
               "CHARG": item.Batch,
               "Bagno": item.dye_lot,
+              //"BatchBySupplier": 12345,
               "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
               "QTA_ASS_U": "",
               "QTA_ASS_U_Text": "",
@@ -169,6 +171,23 @@ sap.ui.define([
         BusyIndicator.hide(0);
         return;
       }
+ 
+      // modifica DL - 29/07/2025 - disassegno solo record selezionati
+      var table = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable")
+      var selectedItems = table.getSelectedContexts()
+      if(selectedItems.length > 0){
+        var batchSelected = []
+        // creo array partite selezionate
+        for(var i = 0; i < selectedItems.length; i++){
+          batchSelected.push(selectedItems[i].getObject().Batch)
+        }
+        // elimino da aContexts quello che non è stato selezionato
+        var aContextsToKeep = aContexts.filter(function(oContext) {
+            const oData = oContext.getObject(); console.log(oData);
+            return batchSelected.includes(oData.CHARG);
+        });
+      }
+      // modifica DL - 29/07/2025 - disassegno solo record selezionati - FINE
 
       try {
         await this._controller.showMessageConfirm(`disassemble (${aContexts.length})`)
