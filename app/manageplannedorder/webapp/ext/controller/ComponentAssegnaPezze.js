@@ -22,7 +22,7 @@ sap.ui.define([
           }
         }
       ));
-    },
+    },    
     doAssegnaPezze: function (oEvent) {
       debugger;
       const model = new JSONModel()
@@ -82,7 +82,20 @@ sap.ui.define([
               new sap.m.Text({ text: "{LGORT}" }),
               new sap.m.Text({ text: "{FABB_TOT_V}" }),
               new sap.m.Text({ text: "{COPERTURA}" }),
-              new sap.m.Input({ value: "{QTA_ASS_V}" }),
+              //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
+              new sap.m.Input({ value: "{QTA_ASS_V}", change: function(oEvent) {
+                var oInput = oEvent.getSource();
+                var sNewValue = sap.ui.getCore().byId(oInput.getId()).getValue();
+                sNewValue = sNewValue.toString().replace(",",".")
+
+                var remainingQty = sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
+                var requiredQty = sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
+                
+                sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
+
+                // Esempio: aggiornare un'altra proprietà
+                // oContext.getModel().setProperty(oContext.getPath() + "/SomeField", sNewValue);
+            } }),
               //new sap.m.Text({ text: "{BatchBySupplier}" })
             ]
           }),
@@ -90,6 +103,10 @@ sap.ui.define([
           parameters: { $$updateGroupId: 'CreatePezzeBatch' },
         });
 
+        // modifica DL - aggiungo campo con quantità rimamente
+        sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(dialog.getModel("selected").oData.OpenQty);
+        // modifica DL - aggiungo campo con quantità rimamente - FINE
+        
         const binding = table.getBinding('items');
         binding.resetChanges();
         binding.attachDataReceived(async function () {
@@ -126,6 +143,7 @@ sap.ui.define([
               "FABB_TOT_U": "",
               "FABB_TOT_U_Text": "",
               "COPERTURA": COPERTURA,
+              //"COPERTURA_EDITABLE": COPERTURA,
               "SORT": 0,
               "StockSegment": item.StockSegment,
               "SAP_CreatedDateTime": new Date(),
@@ -163,8 +181,8 @@ sap.ui.define([
 
       BusyIndicator.show(0);
 
-      const pContexts = await oList.requestContexts(0, 20)
-      const aContexts = pContexts.map(oContext => oContext)
+      var pContexts = await oList.requestContexts(0, 20)
+      var aContexts = pContexts.map(oContext => oContext)
 
       if (!aContexts.length) {
         MessageToast.show("No items to disassemble.");
@@ -186,6 +204,7 @@ sap.ui.define([
             const oData = oContext.getObject(); console.log(oData);
             return batchSelected.includes(oData.CHARG);
         });
+        aContexts = aContextsToKeep
       }
       // modifica DL - 29/07/2025 - disassegno solo record selezionati - FINE
 

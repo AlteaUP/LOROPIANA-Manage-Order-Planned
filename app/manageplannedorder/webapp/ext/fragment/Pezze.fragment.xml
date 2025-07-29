@@ -99,6 +99,14 @@
                     id="inputOpenQty"
                     text="{selected>/OpenQty}"
                 />
+                <Label
+                    id="labelRemainingQty"
+                    text="Tot {i18n>RemainingQty}"
+                />
+                <Text
+                    id="inputRemainingQty"
+                    text=""
+                />
             </form:SimpleForm>
             <Table id="selectedItemsTable">
                 <columns>
@@ -138,12 +146,24 @@
                             text="Copertura (%)"
                         />
                     </Column>
+                    <!--<Column id="columnCOPERTURAEditable">
+                        <Text
+                            id="textCOPERTURAEditable"
+                            text="Copertura (%)"
+                        />
+                    </Column>-->
                     <Column id="columnCustomQty">
                         <Text
                             id="textCustomQty"
                             text="Quantity to Assign"
                         />
                     </Column>
+                    <!--<Column id="columnBatchBySupplier">
+                        <Text
+                            id="textBatchBySupplier"
+                            text="Batch By Supplier"
+                        />
+                    </Column>-->
                     <!-- <Column id="columnQTY_CALCOLATA">
                         <Text
                             id="textQTY_CALCOLATA"

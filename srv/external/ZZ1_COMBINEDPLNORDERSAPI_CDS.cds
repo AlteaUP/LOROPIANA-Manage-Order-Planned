@@ -1,4 +1,4 @@
-/* checksum : ab47088364e4c89af8a386b0aa7b3ac8 */
+/* checksum : bdd54ee41b0cc24a0086a8b9c2f0f1f5 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -842,9 +842,6 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.label : 'Requirement Segment'
   @sap.quickinfo : 'Segmento fabbisogno'
   RequirementSegment : String(40);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'ATP Rules'
-  atp_rules : String(40);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Seg. Strategy'
@@ -1492,18 +1489,22 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlWrhsStkQtyInMatlBaseUnit'
+  @sap.quickinfo : 'Quantità stock'
   MatlWrhsStkQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlCnsmpnQtyInMatlBaseUnit'
+  @sap.quickinfo : 'Quantità di consumo'
   MatlCnsmpnQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkIncrQtyInMatlBaseUnit'
+  @sap.quickinfo : 'Quantità aumento stock'
   MatlStkIncrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkDecrQtyInMatlBaseUnit'
+  @sap.quickinfo : 'Quantità riduzione stock'
   MatlStkDecrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.label : 'choice'
