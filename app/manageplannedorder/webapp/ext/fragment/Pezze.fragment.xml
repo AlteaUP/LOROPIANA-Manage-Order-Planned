@@ -122,6 +122,12 @@
                             text="Stock Segment"
                         />
                     </Column>
+                    <Column id="columnBatchBySupplier">
+                    <Text
+                            id="textBatchBySupplier"
+                            text="Batch By Supplier"
+                        />
+                    </Column>
                     <!-- <Column id="columnMaterial">
                         <Text
                             id="textMaterial"

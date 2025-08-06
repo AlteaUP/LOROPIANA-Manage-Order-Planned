@@ -30,7 +30,7 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZZ1_PLANNEDORDERTYPE_F4_CDS = await cds.connect.to("ZZ1_PLANNEDORDERTYPE_F4_CDS");
 
 
-    
+
 
 
     // ZZ1_CombinedPlnOrdersAPI - Start
@@ -307,9 +307,9 @@ module.exports = class MainService extends cds.ApplicationService {
             // modifica DL - 22/07/2025 - calcolo campo priorità
             if (item.BaseUnit && item.BaseUnit.toUpperCase() === 'M2') {
               if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
-                  item.priority = 2
+                item.priority = 2
               } else {
-                  item.priority = 1
+                item.priority = 1
               }
             } else {
               item.priority = 3
@@ -319,7 +319,7 @@ module.exports = class MainService extends cds.ApplicationService {
         }
       }
 
-      res.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority)); 
+      res.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority));
 
       return res;
     });
@@ -327,6 +327,9 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom/to_ZZ1_CombPlnOrdersStock", async (req) => {
       // 1. Get base stock data
       // add InventoryStockType eq 1
+      const cplndOrd = req.params.at(-1)?.CplndOrd;
+      const material = req.params.at(-1)?.Material;
+
       let from = {
         ref: [
           {
@@ -345,6 +348,18 @@ module.exports = class MainService extends cds.ApplicationService {
         ]
       };
       const stockData = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from));
+      // modifica MDB - 06/08/2025 - estraggo record selezionato da tabella Componenti - INIZIO
+      const stockByMaterial = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT
+          .from("ZZ1_CombPlnOrdersStockAPI")
+          .columns("*")
+          .where([
+            { ref: ['Material'] }, '=', { val: material },
+            'and',
+            { ref: ['CplndOrd'] }, '=', { val: cplndOrd }
+          ])
+      );
+      // modifica MDB - 06/08/2025 - estraggo record selezionato da tabella Componenti - FINE
       if (!Array.isArray(stockData) || stockData.length === 0) return stockData;
 
       const PlannedCombinedOrder = req.params.at(-1).CplndOrd;
@@ -451,7 +466,7 @@ module.exports = class MainService extends cds.ApplicationService {
       });
 
       // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation
-      if(atpRulesData.length > 0){
+      if (atpRulesData.length > 0) {
         var atpRulesArray = JSON.parse(atpRulesData[0].atp)
         var filteredData = res.filter(item => atpRulesArray.includes(item.StockSegment));
 
@@ -461,20 +476,72 @@ module.exports = class MainService extends cds.ApplicationService {
         // valorizzo campo StockSegmentCode
         var result = filteredData.map(obj => ({
           ...obj,
-          StockSegmentCode: (atpRulesArray.indexOf(obj.StockSegment))+1
+          StockSegmentCode: (atpRulesArray.indexOf(obj.StockSegment)) + 1
         }));
 
         res = result
       }
       // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation - FINE
-      
-      // modifica MDB - 18/007/2025 - filtrare dati per StorageLocation - INIZIO
-      const storageLocations = ['H100', 'P100', 'K100'];
-      res = res.filter(row => storageLocations.includes(row.StorageLocation) && 
-      row.
-      StorageLocationStock !== '0.000');
-      // modifica MDB - 18/007/2025 - filtrare dati per StorageLocation - FINE
 
+      // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto INIZIO
+      const operation = stockByMaterial.map(item => item.Operation_2);
+      const capacityData = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+        SELECT
+          .from('ZZ1_PLOCAPACITYCORD')
+          .columns('*')
+          .where({
+            Operation: operation,
+            fornitore: { '!=': '' },
+            CombinedMasterOrder: cplndOrd
+          })
+      );
+      const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
+      const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
+
+      const storageLocations = ['H100', 'P100', 'K100'];
+      res = res.filter(row =>
+        // se StorageLocation è vuoto → mantieni
+        !row.StorageLocation ||
+        // altrimenti verifica che sia tra quelli ammessi
+        storageLocations.includes(row.StorageLocation)
+      );
+      let preFiltered = res.filter(row => {
+        // 1) Entrambi vuoti → scarta
+        if (!row.Supplier && !row.StorageLocation) {
+          return false;
+        }
+        // 2) Se ho Supplier → applica padding e verifica validità
+        if (row.Supplier) {
+          // Aggiunge zeri a sinistra fino a maxSupplierLength
+          const paddedSupplier = row.Supplier.padStart(maxSupplierLength, '0');
+          row.Supplier = paddedSupplier;        // sostituisci con la versione "zerata"
+          if (!validSuppliers.includes(paddedSupplier)) {
+            return false;                       // scarta se non è valido
+          }
+          return true;                          // mantiene il record con Supplier valido
+        }
+        // 3) Supplier vuoto ma StorageLocation valorizzato → mantieni
+        if (!row.Supplier && row.StorageLocation) {
+          return true;
+        }
+        // 4) Altri casi (teoricamente nessuno) → scarta
+        return false;
+      });
+      // 5) Rimuovi gli zeri di padding dal Supplier prima del return
+      res = res.map(row => {
+        if (row.Supplier) {
+          row.Supplier = row.Supplier.replace(/^0+/, '');
+        }
+        return row;
+      });
+      // 2) Map separato: assegna StorageLocation = Supplier quando manca
+      preFiltered = preFiltered.map(row => {
+        if (!row.StorageLocation && row.Supplier) {
+          row.StorageLocation = row.Supplier;
+        }
+        return row;
+      });
+      // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto FINE
       res['$count'] = res.length.toString();
       return res;
     });
@@ -622,84 +689,84 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on('READ', "ZI_RFM_ATP_RULES", async request => {
-        request.query.SELECT.count = false
-        var data = await ZI_RFM_ATP_RULES_CDS.tx(request).run(request.query);
+      request.query.SELECT.count = false
+      var data = await ZI_RFM_ATP_RULES_CDS.tx(request).run(request.query);
 
-        return data;
+      return data;
     });
 
     this.on("ChangeWorkCenter", async (req) => {
 
-        const object = req.data.Payload;
+      const object = req.data.Payload;
 
-        var payload = {
-          "FSH_CPLND_ORD" : object.CombPlOrder,
-          "MANUFACTURINGORDEROPERATION" : object.Operation,
-          "MANUFACTURINGORDERSEQUENCE" : object.Sequence,
-          "WORKCENTER" : object.WorkCenter
-        }
+      var payload = {
+        "FSH_CPLND_ORD": object.CombPlOrder,
+        "MANUFACTURINGORDEROPERATION": object.Operation,
+        "MANUFACTURINGORDERSEQUENCE": object.Sequence,
+        "WORKCENTER": object.WorkCenter
+      }
 
-        try {
+      try {
 
-            /*const csrfRes = await changeWorkCenter.get("/ZZ1_MFP_WRKC_UPDATE", {
-                headers: { 'X-CSRF-Token': 'fetch' }
-            });
+        /*const csrfRes = await changeWorkCenter.get("/ZZ1_MFP_WRKC_UPDATE", {
+            headers: { 'X-CSRF-Token': 'fetch' }
+        });
 
-            const csrfToken = csrfRes.headers['X-CSRF-Token'];*/
+        const csrfToken = csrfRes.headers['X-CSRF-Token'];*/
 
-            let callCreate = await changeWorkCenter.tx(req).post("/ZZ1_MFP_WRKC_UPDATE", payload)
-            /*let callCreate = await changeWorkCenter.post("/ZZ1_MFP_WRKC_UPDATE", payload, {
-                headers: { 'X-CSRF-Token': csrfToken }
-            });*/
-            console.log("Risultato chiamata " + JSON.stringify(callCreate))
-            //return callCreate
+        let callCreate = await changeWorkCenter.tx(req).post("/ZZ1_MFP_WRKC_UPDATE", payload)
+        /*let callCreate = await changeWorkCenter.post("/ZZ1_MFP_WRKC_UPDATE", payload, {
+            headers: { 'X-CSRF-Token': csrfToken }
+        });*/
+        console.log("Risultato chiamata " + JSON.stringify(callCreate))
+        //return callCreate
 
-            //recupero plannedOrder
-            var plannedOrderNumbers = [];
-            const fixedId = "123"; //id fisso
-            const plannedOrdersCapacity = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
-              SELECT.from("ZZ1_PlannedOrdersCapacity") .where({
-                Sequence: object.Sequence,
-                Operation: object.Operation,
-                CplndOrd: object.CombPlOrder,
-              }) 
-            ); 
-            console.log("Risultato chiamata " + JSON.stringify(plannedOrdersCapacity));
+        //recupero plannedOrder
+        var plannedOrderNumbers = [];
+        const fixedId = "123"; //id fisso
+        const plannedOrdersCapacity = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+          SELECT.from("ZZ1_PlannedOrdersCapacity").where({
+            Sequence: object.Sequence,
+            Operation: object.Operation,
+            CplndOrd: object.CombPlOrder,
+          })
+        );
+        console.log("Risultato chiamata " + JSON.stringify(plannedOrdersCapacity));
 
-            if (plannedOrdersCapacity.length > 0) {
-              plannedOrdersCapacity.forEach((item) => {
-                if (item.PlannedOrder !== undefined) {
-                  plannedOrderNumbers.push(item.PlannedOrder);
-                }
-              });
-              console.log("plannedOrder" + plannedOrderNumbers);
-              var chgwcLines = plannedOrderNumbers.map(number => {
-                    return {
-                      "id": fixedId, // ID fisso per ogni riga
-                      "PlannedOrder": number
-            };
-              });
-              // payload finale con testata e righe
-              var oPayload = {
-                  "id": fixedId, // ID fisso per la testata
-                  "chgwc": chgwcLines 
-              };
-              console.log("Payload per la POST: " + JSON.stringify(oPayload));
-              const result = await externalATPService.tx(req).post("/changewc_header", oPayload);
-              console.log('Risultato della POST:', result);
-                return result
+        if (plannedOrdersCapacity.length > 0) {
+          plannedOrdersCapacity.forEach((item) => {
+            if (item.PlannedOrder !== undefined) {
+              plannedOrderNumbers.push(item.PlannedOrder);
             }
-
-        } catch (error) {
-
-            console.log(error.message)
-            return error.message
+          });
+          console.log("plannedOrder" + plannedOrderNumbers);
+          var chgwcLines = plannedOrderNumbers.map(number => {
+            return {
+              "id": fixedId, // ID fisso per ogni riga
+              "PlannedOrder": number
+            };
+          });
+          // payload finale con testata e righe
+          var oPayload = {
+            "id": fixedId, // ID fisso per la testata
+            "chgwc": chgwcLines
+          };
+          console.log("Payload per la POST: " + JSON.stringify(oPayload));
+          const result = await externalATPService.tx(req).post("/changewc_header", oPayload);
+          console.log('Risultato della POST:', result);
+          return result
         }
+
+      } catch (error) {
+
+        console.log(error.message)
+        return error.message
+      }
     }),
 
-    this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PlannedOrdersCapacity", async (req) => {
-      return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
-    }); 
+      this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PlannedOrdersCapacity", async (req) => {
+        return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+      });
 
     this.on("*", "ZZ1_CombPlannedOrder_F4", async (req) => {
       const newQuery = JSON.parse(JSON.stringify(req.query));
@@ -707,23 +774,23 @@ module.exports = class MainService extends cds.ApplicationService {
         delete newQuery.SELECT.limit;
         delete newQuery.SELECT.offset;
       }
-      const res =  await ZZ1_COMBPLANNEDORDER_F4_CDS.run(newQuery);
+      const res = await ZZ1_COMBPLANNEDORDER_F4_CDS.run(newQuery);
       console.log({ query: JSON.stringify(req.query), res });
       res['$count'] = res.length;
       return res;
-    });  
-    
+    });
+
     this.on("*", "ZZ1_PRODUCTIONPLANT_F4", async (req) => {
-     const newQuery = JSON.parse(JSON.stringify(req.query));
-     if (newQuery.SELECT) {
-       delete newQuery.SELECT.limit;
-       delete newQuery.SELECT.offset;
-     }
-    const res =  await ZZ1_PRODUCTIONPLANT_F4_CDS.run(newQuery);
-    console.log({ query: JSON.stringify(req.query), res });
-    res['$count'] = res.length;
-    return res;
-    }); 
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
+      }
+      const res = await ZZ1_PRODUCTIONPLANT_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
+      return res;
+    });
 
     this.on("*", "ZZ1_MRPCONTROLLER_F4", async (req) => {
       const newQuery = JSON.parse(JSON.stringify(req.query));
@@ -731,11 +798,11 @@ module.exports = class MainService extends cds.ApplicationService {
         delete newQuery.SELECT.limit;
         delete newQuery.SELECT.offset;
       }
-      const res =  await ZZ1_MRPCONTROLLER_F4_CDS.run(newQuery);
+      const res = await ZZ1_MRPCONTROLLER_F4_CDS.run(newQuery);
       console.log({ query: JSON.stringify(req.query), res });
       res['$count'] = res.length;
       return res;
-    }); 
+    });
 
     this.on("*", "ZZ1_WORKCENTER_F4", async (req) => {
       const newQuery = JSON.parse(JSON.stringify(req.query));
@@ -743,7 +810,7 @@ module.exports = class MainService extends cds.ApplicationService {
         delete newQuery.SELECT.limit;
         delete newQuery.SELECT.offset;
       }
-      const res =  await ZZ1_WORKCENTER_F4_CDS.run(newQuery);
+      const res = await ZZ1_WORKCENTER_F4_CDS.run(newQuery);
       console.log({ query: JSON.stringify(req.query), res });
       res['$count'] = res.length;
       return res;
@@ -755,7 +822,7 @@ module.exports = class MainService extends cds.ApplicationService {
         delete newQuery.SELECT.limit;
         delete newQuery.SELECT.offset;
       }
-      const res =  await ZZ1_PRODUCTSEASON_F4_CDS.run(newQuery);
+      const res = await ZZ1_PRODUCTSEASON_F4_CDS.run(newQuery);
       console.log({ query: JSON.stringify(req.query), res });
       res['$count'] = res.length;
       return res;
@@ -767,7 +834,7 @@ module.exports = class MainService extends cds.ApplicationService {
         delete newQuery.SELECT.limit;
         delete newQuery.SELECT.offset;
       }
-      const res =  await ZZ1_PLANNEDORDERTYPE_F4_CDS.run(newQuery);
+      const res = await ZZ1_PLANNEDORDERTYPE_F4_CDS.run(newQuery);
       console.log({ query: JSON.stringify(req.query), res });
       res['$count'] = res.length;
       return res;

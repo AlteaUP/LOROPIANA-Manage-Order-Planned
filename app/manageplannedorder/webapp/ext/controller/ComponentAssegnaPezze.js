@@ -79,6 +79,7 @@ sap.ui.define([
             cells: [
               new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
               new sap.m.Text({ text: "{StockSegment}" }),
+              new sap.m.Text({ text: "{BatchBySupplier}" }),
               new sap.m.Text({ text: "{LGORT}" }),
               new sap.m.Text({ text: "{FABB_TOT_V}" }),
               new sap.m.Text({ text: "{COPERTURA}" }),
@@ -109,6 +110,7 @@ sap.ui.define([
         
         const binding = table.getBinding('items');
         binding.resetChanges();
+        const oODataModel = table.getModel();
         binding.attachDataReceived(async function () {
           await binding.requestContexts(0, 1); // forza la creazione del context
 
@@ -151,7 +153,8 @@ sap.ui.define([
               "SAP_CreatedByUser_Text": "",
               "SAP_LastChangedDateTime": new Date(),
               "SAP_LastChangedByUser": "LASPATAS",
-              "SAP_LastChangedByUser_Text": "X"
+              "SAP_LastChangedByUser_Text": "X",
+              "BatchBySupplier": item.BatchBySupplier
             })
 
             const isPresent = binding.getContexts().some(context => context.getObject().CHARG === _item.Batch);
@@ -162,9 +165,8 @@ sap.ui.define([
             } else {
               console.log("Combined planned order is present in binding.");
             }
-
-
           });
+         // binding.refresh(true);
           table.invalidate(); // Forza il rendering della tabella
         }.bind(this));
         dialog.open();

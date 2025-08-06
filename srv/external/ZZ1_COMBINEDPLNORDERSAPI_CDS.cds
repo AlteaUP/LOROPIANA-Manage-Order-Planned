@@ -1,4 +1,4 @@
-/* checksum : bdd54ee41b0cc24a0086a8b9c2f0f1f5 */
+/* checksum : 11cae1d1843856daca577d76d9866489 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -847,6 +847,11 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.label : 'Seg. Strategy'
   @sap.quickinfo : 'Strategia di segmentazione'
   SegmentationStrategy : String(8);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Operazione o fase'
+  @sap.quickinfo : 'Numero operazione o fase'
+  Operation_2 : String(4);
   to_StorageLocation : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {  };
 };
 
@@ -1720,5 +1725,8 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.label : 'Work Center Text'
   @sap.quickinfo : 'Testo centro di lavoro'
   BOOWorkCenterText : String(40);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'fornitore'
+  fornitore : String(70);
 };
 

@@ -586,6 +586,11 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(UI.LineItem #Capacity: [
         Label: '{i18n>OperationText}',
     },
     {
+        $Type : 'UI.DataField',
+        Value : fornitore,
+        Label : '{i18n>Fornitore}',
+    },
+    {
         $Type: 'UI.DataField',
         Value: OperationLatestStartDate,
         Label: '{i18n>OperationLatestStartDate}',
@@ -680,6 +685,7 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(UI.LineItem #Capacity: [
         Label: '{i18n>OperationWorkCenterInternal}',
         ![@UI.Hidden],
     },
+
 ]);
 
 annotate service.ZZ1_MFP_ASSIGNMENT with @(UI.LineItem #tableAssignment: [
@@ -929,6 +935,11 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Label: '{i18n>BaseUnit}',
         },
         {
+            $Type : 'UI.DataField',
+            Value : Operation_2,
+            Label : 'Operation_2',
+        },
+        {
             $Type: 'UI.DataField',
             Value: Batch,
             Label: '{i18n>Batch}',
@@ -1054,7 +1065,14 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Value: priority,
             Label: 'Priority',
             ![@UI.Hidden],
-        }
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Operation_2,
+            Label : 'Operation_2',
+        },
+
+
     ],
     UI.FieldGroup #QTY              : {
         $Type: 'UI.FieldGroupType',
@@ -1323,7 +1341,6 @@ annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
         $Type: 'UI.DataField',
         Value: Supplier,
         Label: 'Supplier',
-        ![@UI.Hidden]
     },
     {
         $Type: 'UI.DataField',

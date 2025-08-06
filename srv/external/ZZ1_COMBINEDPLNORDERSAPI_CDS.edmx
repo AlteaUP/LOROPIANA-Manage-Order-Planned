@@ -284,6 +284,7 @@
 <Property Name="StockSegment" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Stock Segment" sap:quickinfo="Segmento di stock"/>
 <Property Name="RequirementSegment" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Requirement Segment" sap:quickinfo="Segmento fabbisogno"/>
 <Property Name="SegmentationStrategy" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Seg. Strategy" sap:quickinfo="Strategia di segmentazione"/>
+<Property Name="Operation_2" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Operazione o fase" sap:quickinfo="Numero operazione o fase"/>
 <NavigationProperty Name="to_StorageLocation" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0A5BF57D4E55588B2FA395AF34CAEADA" FromRole="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA" ToRole="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
 </EntityType>
 <EntityType Name="ZZ1_I_PLANNEDORDERType" sap:label="ZZ1_I_PLANNEDORDER" sap:content-version="1">
@@ -535,6 +536,7 @@
 <Property Name="FreeDefinedIndicator1" Type="Edm.Boolean" sap:required-in-filter="false" sap:label="User field indicator" sap:quickinfo="Campo utente: codici di valutazione"/>
 <Property Name="BOOWorkCenterInternalID" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="Object ID" sap:quickinfo="ID oggetto"/>
 <Property Name="BOOWorkCenterText" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Work Center Text" sap:quickinfo="Testo centro di lavoro"/>
+<Property Name="fornitore" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="fornitore"/>
 </EntityType>
 <Association Name="assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>

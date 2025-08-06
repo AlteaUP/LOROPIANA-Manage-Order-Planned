@@ -78,6 +78,7 @@ service MainService {
           ProductCharacteristic2,
           ProductCharacteristic3,
           ProductDescription,
+          Operation_2,
           // StockSegment,
           // RequirementSegment,
           null as CombPlanAllQty     : Decimal(13, 3), // String(20),
@@ -182,7 +183,8 @@ service MainService {
     projection on ZZ1_MFP_ASSIGNMENT_CDS.ZZ1_MFP_ASSIGNMENT {
       *,
       // null as QTY_CALCOLATA : String(20),
-      null as AvaibilityQty : String(40)
+      null as AvaibilityQty : String(40),
+      null as BatchBySupplier : String(40)
     };
 
   @sap.creatable: 'true'
