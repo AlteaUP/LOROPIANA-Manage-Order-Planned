@@ -1,4 +1,4 @@
-/* checksum : 12625cfa8ddb2a8d68c08ad1bda498fb */
+/* checksum : 11a7de31113ca58546e8ec156d50a873 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -267,6 +267,10 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   @sap.label : 'Operazione o fase'
   @sap.quickinfo : 'Numero operazione o fase'
   Operation_2 : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Gruppo di prodotti'
+  ProductGroup : String(9);
   to_ZZ1_CombPlnOrdersStock : Association to many ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {  };
 };
 

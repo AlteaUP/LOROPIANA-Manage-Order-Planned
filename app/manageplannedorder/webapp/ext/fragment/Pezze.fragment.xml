@@ -122,6 +122,12 @@
                             text="Stock Segment"
                         />
                     </Column>
+                    <Column id="columnInventorySpecialStockType">
+                        <Text
+                            id="textInventorySpecialStockType"
+                            text="Special Stock"
+                        />
+                    </Column>
                     <Column id="columnBatchBySupplier">
                     <Text
                             id="textBatchBySupplier"

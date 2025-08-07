@@ -79,6 +79,7 @@ service MainService {
           ProductCharacteristic3,
           ProductDescription,
           Operation_2,
+          ProductGroup,
           // StockSegment,
           // RequirementSegment,
           null as CombPlanAllQty     : Decimal(13, 3), // String(20),
@@ -184,7 +185,8 @@ service MainService {
       *,
       // null as QTY_CALCOLATA : String(20),
       null as AvaibilityQty : String(40),
-      null as BatchBySupplier : String(40)
+      null as BatchBySupplier : String(40),
+      null as SpecialStock : String(1)
     };
 
   @sap.creatable: 'true'

@@ -79,6 +79,7 @@ sap.ui.define([
             cells: [
               new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
               new sap.m.Text({ text: "{StockSegment}" }),
+              new sap.m.Text({ text: "{SpecialStock}" }),
               new sap.m.Text({ text: "{BatchBySupplier}" }),
               new sap.m.Text({ text: "{LGORT}" }),
               new sap.m.Text({ text: "{FABB_TOT_V}" }),
@@ -154,7 +155,8 @@ sap.ui.define([
               "SAP_LastChangedDateTime": new Date(),
               "SAP_LastChangedByUser": "LASPATAS",
               "SAP_LastChangedByUser_Text": "X",
-              "BatchBySupplier": item.BatchBySupplier
+              "BatchBySupplier": item.BatchBySupplier,
+              "SpecialStock": item.InventorySpecialStockType
             })
 
             const isPresent = binding.getContexts().some(context => context.getObject().CHARG === _item.Batch);

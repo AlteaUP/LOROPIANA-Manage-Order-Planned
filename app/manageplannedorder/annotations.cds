@@ -937,7 +937,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : Operation_2,
-            Label : 'Operation_2',
+            Label : 'Operation',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductGroup,
+            Label : 'Product Group',
         },
         {
             $Type: 'UI.DataField',
@@ -1069,7 +1074,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type : 'UI.DataField',
             Value : Operation_2,
-            Label : 'Operation_2',
+            Label : 'Operation',
         },
 
 
@@ -1382,7 +1387,6 @@ annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
         $Type: 'UI.DataField',
         Value: InventorySpecialStockType,
         Label: 'InventorySpecialStockType',
-        ![@UI.Hidden]
     },
     {
         $Type: 'UI.DataField',
