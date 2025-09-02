@@ -186,6 +186,19 @@
                     "selectionLimit": 1,
                     "selectionMode": "Single"
                   }
+                },
+                "to_CombinPlannedOrdersCom/@com.sap.vocabularies.UI.v1.LineItem#Components": {
+                  "columns": {
+                    "IconActiveColumn": {
+                      "position": {
+                        "anchor": "DataField::ProductGroup",
+                        "placement": "After"
+                      },
+                      "template": "manageplannedorder.manageplannedorder.ext.fragment.IconActiveColumn",
+                      "header": "",
+                      "width": "50px"
+                    }
+                  }
                 }
               },
               "variantManagement": "Control"

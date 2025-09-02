@@ -80,6 +80,10 @@
       "ZZ1_MATERIAL_F4_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_MATERIAL_F4_CDS"
+      },
+      "ZZ1_MFP_BATCHCUSTOM_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MFP_BATCHCUSTOM_CDS"
       }
     }
   },

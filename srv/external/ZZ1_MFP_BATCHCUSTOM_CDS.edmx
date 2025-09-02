@@ -1,0 +1,123 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+</edmx:Reference>
+<edmx:DataServices m:DataServiceVersion="2.0">
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZZ1_MFP_BATCHCUSTOM_CDS" xml:lang="it" sap:schema-version="1">
+<EntityType Name="ZZ1_MFP_BATCHCUSTOMType" sap:label="ZZ1_MFP_BATCHCUSTOM" sap:content-version="1">
+<Key>
+<PropertyRef Name="SAP_UUID"/>
+</Key>
+<Property Name="SAP_UUID" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
+<Property Name="Plant" Type="Edm.String" MaxLength="4" sap:label="Werks"/>
+<Property Name="Gruppo_Merce" Type="Edm.String" MaxLength="9" sap:label="Matkl"/>
+<Property Name="Famiglia" Type="Edm.String" MaxLength="3" sap:label="Family"/>
+<Property Name="Cites" Type="Edm.String" MaxLength="1" sap:label="Cites"/>
+<Property Name="Material" Type="Edm.String" MaxLength="40" sap:label="Matnr"/>
+<Property Name="Mandassign" Type="Edm.Boolean" sap:label="Mandassign"/>
+<Property Name="AssignRule" Type="Edm.Boolean" sap:label="AssignRule"/>
+<Property Name="Campo1" Type="Edm.String" MaxLength="40" sap:label="Campo1"/>
+<Property Name="Campo2" Type="Edm.String" MaxLength="40" sap:label="Campo2"/>
+<Property Name="Campo3" Type="Edm.String" MaxLength="40" sap:label="Campo3"/>
+<Property Name="Campo4" Type="Edm.String" MaxLength="40" sap:label="Campo4"/>
+<Property Name="Campo5" Type="Edm.String" MaxLength="40" sap:label="Campo5"/>
+<Property Name="Campo6" Type="Edm.String" MaxLength="40" sap:label="Campo6"/>
+<Property Name="Campo7" Type="Edm.String" MaxLength="40" sap:label="Campo7"/>
+<Property Name="Campo8" Type="Edm.String" MaxLength="40" sap:label="Campo8"/>
+<Property Name="Campo9" Type="Edm.String" MaxLength="40" sap:label="Campo9"/>
+<Property Name="Campo10" Type="Edm.String" MaxLength="40" sap:label="Campo10"/>
+<Property Name="Campo11" Type="Edm.String" MaxLength="40" sap:label="Campo11"/>
+<Property Name="Campo12" Type="Edm.String" MaxLength="40" sap:label="Campo12"/>
+<Property Name="Campo13" Type="Edm.String" MaxLength="40" sap:label="Campo13"/>
+<Property Name="Campo14" Type="Edm.String" MaxLength="40" sap:label="Campo14"/>
+<Property Name="Campo15" Type="Edm.String" MaxLength="40" sap:label="Campo15"/>
+</EntityType>
+<EntityContainer Name="ZZ1_MFP_BATCHCUSTOM_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+<EntitySet Name="ZZ1_MFP_BATCHCUSTOM" EntityType="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType" sap:searchable="true" sap:content-version="1"/>
+<FunctionImport Name="ZZ1_MFP_BATCHCUSTOMSap_upsert" ReturnType="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType" EntitySet="ZZ1_MFP_BATCHCUSTOM" m:HttpMethod="POST">
+<Parameter Name="Plant" Type="Edm.String" Mode="In" MaxLength="4" sap:label="Testo di lunghezza 4"/>
+<Parameter Name="Gruppo_Merce" Type="Edm.String" Mode="In" MaxLength="9" sap:label="Testo di lunghezza 9"/>
+<Parameter Name="Famiglia" Type="Edm.String" Mode="In" MaxLength="3" sap:label="Testo di lunghezza 3"/>
+<Parameter Name="Cites" Type="Edm.String" Mode="In" MaxLength="1" sap:label="Testo di lunghezza 1"/>
+<Parameter Name="Material" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Mandassign" Type="Edm.Boolean" Mode="In" sap:label="VERO"/>
+<Parameter Name="AssignRule" Type="Edm.Boolean" Mode="In" sap:label="VERO"/>
+<Parameter Name="Campo1" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo2" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo3" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo4" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo5" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo6" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo7" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo8" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo9" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo10" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo11" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo12" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo13" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo14" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+<Parameter Name="Campo15" Type="Edm.String" Mode="In" MaxLength="40" sap:label="Testo di lungh. 40"/>
+</FunctionImport>
+</EntityContainer>
+<Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOM_CDS_Entities">
+<Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType/Cites">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType/Famiglia">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType/Gruppo_Merce">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType/Material">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType/Plant">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOMType">
+<Annotation Term="Common.SemanticKey">
+<Collection>
+<PropertyPath>Material</PropertyPath>
+<PropertyPath>Cites</PropertyPath>
+<PropertyPath>Famiglia</PropertyPath>
+<PropertyPath>Gruppo_Merce</PropertyPath>
+<PropertyPath>Plant</PropertyPath>
+</Collection>
+</Annotation>
+</Annotations>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_BATCHCUSTOM_CDS/$metadata"/>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_MFP_BATCHCUSTOM_CDS/$metadata"/>
+</Schema>
+</edmx:DataServices>
+</edmx:Edmx>

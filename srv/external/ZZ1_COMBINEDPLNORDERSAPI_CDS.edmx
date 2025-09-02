@@ -285,6 +285,7 @@
 <Property Name="RequirementSegment" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Requirement Segment" sap:quickinfo="Segmento fabbisogno"/>
 <Property Name="SegmentationStrategy" Type="Edm.String" MaxLength="8" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Seg. Strategy" sap:quickinfo="Strategia di segmentazione"/>
 <Property Name="Operation_2" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Operazione o fase" sap:quickinfo="Numero operazione o fase"/>
+<Property Name="ProductGroup" Type="Edm.String" MaxLength="9" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Gruppo di prodotti"/>
 <NavigationProperty Name="to_StorageLocation" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0A5BF57D4E55588B2FA395AF34CAEADA" FromRole="FromRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA" ToRole="ToRole_assoc_0A5BF57D4E55588B2FA395AF34CAEADA"/>
 </EntityType>
 <EntityType Name="ZZ1_I_PLANNEDORDERType" sap:label="ZZ1_I_PLANNEDORDER" sap:content-version="1">

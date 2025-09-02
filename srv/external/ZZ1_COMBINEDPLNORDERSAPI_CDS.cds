@@ -1,4 +1,4 @@
-/* checksum : 11cae1d1843856daca577d76d9866489 */
+/* checksum : 365e8240a3abb1665edf309eee2acbf0 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -852,6 +852,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.label : 'Operazione o fase'
   @sap.quickinfo : 'Numero operazione o fase'
   Operation_2 : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Gruppo di prodotti'
+  ProductGroup : String(9);
   to_StorageLocation : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {  };
 };
 

@@ -1071,12 +1071,12 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             Label: 'Priority',
             ![@UI.Hidden],
         },
-        {
-            $Type : 'UI.DataField',
-            Value : Operation_2,
-            Label : 'Operation',
+                {
+            $Type: 'UI.DataField',
+            Value: IconActive,
+            Label: 'IconActive',
+            ![@UI.Hidden],
         },
-
 
     ],
     UI.FieldGroup #QTY              : {

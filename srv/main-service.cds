@@ -35,6 +35,17 @@ type WorkCenterChangeActionType     : {
   WorkCenter      : String;
 }
 
+type BatchCustKeys           : {
+  Material          : String;
+  Gruppo_Merce      : String;
+  Plant             : String;
+}
+
+type BatchCustResult         : {
+  Mandassign          : Boolean;
+  AssignRule          : Boolean;
+}
+
 service MainService {
 
   entity ZZ1_Plant                  as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant;
@@ -90,6 +101,8 @@ service MainService {
           null as chart_percent      : Integer,
           null as priority           : Integer,
           null as RequestFinished    : Integer, // String(20),
+
+          null as IconActive : String,
           to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStock
                                          on  Material = $self.Material
                                          and Plant    = $self.Plant
@@ -202,4 +215,7 @@ service MainService {
   action atpPlo(Payload : AtpPloType) returns Boolean;
 
   action ChangeWorkCenter(Payload: WorkCenterChangeActionType) returns String;
+
+  action ReadBatchCust(Payload: BatchCustKeys) returns BatchCustResult ;
 }
+

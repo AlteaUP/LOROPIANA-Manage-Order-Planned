@@ -285,6 +285,24 @@
           }
         }
       },
+       "ZZ1_MFP_BATCHCUSTOM_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MFP_BATCHCUSTOM_CDS",
+        "[hybrid]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata/sap/ZZ1_MFP_BATCHCUSTOM_CDS"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_MFP_BATCHCUSTOM_CDS"
+          }
+        }
+      },
       "ZSD_RFM_ATP_CHANGE_WC": {
         "kind": "odata-v4",
         "model": "srv/external/ZSD_RFM_ATP_CHANGE_WC",

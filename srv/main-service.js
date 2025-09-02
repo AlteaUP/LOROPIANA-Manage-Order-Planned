@@ -20,6 +20,8 @@ module.exports = class MainService extends cds.ApplicationService {
 
     const changeWorkCenter = await cds.connect.to('ZZ1_MFP_WRKC_UPDATE_CDS');
 
+    const ButchCustService = await cds.connect.to('ZZ1_MFP_BATCHCUSTOM_CDS');
+
     const externalATPService = await cds.connect.to("ZSD_RFM_ATP_CHANGE_WC");
 
     const ZZ1_COMBPLANNEDORDER_F4_CDS = await cds.connect.to("ZZ1_COMBPLANNEDORDER_F4_CDS");
@@ -763,10 +765,74 @@ module.exports = class MainService extends cds.ApplicationService {
         return error.message
       }
     }),
-
-      this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PlannedOrdersCapacity", async (req) => {
-        return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+    
+    //action per gestire highlights in tab Componenti
+    this.on("ReadBatchCust", async req => {
+        try {
+          const { Material, Gruppo_merce, Plant } = req.data.Payload;
+          let batch = null;
+   
+          const isEmptyOrN = v => v === undefined || v === null || v === "" || v === "N";
+          // 1) prova solo Material
+          if (Material) {
+            batch = await ButchCustService.run(
+              SELECT.one("*")                              // prendo tutto il record
+                .from("ZZ1_MFP_BATCHCUSTOM")
+                .where({ Material: Material })
+            );
+            if (batch) {
+              // tolgo batch se QUALSIASI degli altri campi è valorizzato
+              const others = ["Gruppo_Merce", "Plant", "Famiglia", "Cites"];
+              if (others.some(key => !isEmptyOrN(batch[key]))) {
+                batch = null;
+              }
+            }
+          }
+          // 2) prova Gruppo + Plant
+          if (!batch && Gruppo_merce && Plant) {
+            batch = await ButchCustService.run(
+              SELECT.one("*")
+                .from("ZZ1_MFP_BATCHCUSTOM")
+                .where({
+                  Gruppo_Merce: Gruppo_merce,
+                  Plant: Plant
+                })
+            );
+            if (batch) {
+              // tolgo batch se Material, Famiglia o Cites sono valorizzati
+              const others = ["Material", "Famiglia", "Cites"];
+              if (others.some(key => !isEmptyOrN(batch[key]))) {
+                batch = null;
+              }
+            }
+          }
+          // 3) prova solo Plant
+          if (!batch && Plant) {
+            batch = await ButchCustService.run(
+              SELECT.one("*")
+                .from("ZZ1_MFP_BATCHCUSTOM")
+                .where({ Plant: Plant })
+            );
+            if (batch) {
+              // tolgo batch se Material, Gruppo_Merce, Famiglia o Cites sono valorizzati
+              const others = ["Material", "Gruppo_Merce", "Famiglia", "Cites"];
+              if (others.some(key => !isEmptyOrN(batch[key]))) {
+                batch = null;
+              }
+            }
+          }
+          return {
+            Mandassign: batch?.Mandassign ?? false,
+            AssignRule: batch?.AssignRule ?? null
+          };
+        }
+        catch (err) {
+          return req.error(500, err.message);
+        }
       });
+    this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PlannedOrdersCapacity", async (req) => {
+      return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+    });
 
     this.on("*", "ZZ1_CombPlannedOrder_F4", async (req) => {
       const newQuery = JSON.parse(JSON.stringify(req.query));
@@ -839,5 +905,52 @@ module.exports = class MainService extends cds.ApplicationService {
       res['$count'] = res.length;
       return res;
     });
+
+    //hook per gestire icona in tab Componenti
+    this.after('READ', "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (each) => {
+      const isEmptyOrN = v => v === undefined || v === null || v === '' || v === 'N';
+      await Promise.all(each.map(async each => {
+        const { Material, Plant, ProductGroup } = each;
+        let batch = null;
+        // 1) prova solo su Material
+        if (Material) {
+          batch = await ButchCustService.run(
+            SELECT.one('*')
+              .from('ZZ1_MFP_BATCHCUSTOM')
+              .where({ Material })
+          );
+          if (batch && ['Gruppo_Merce', 'Plant', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+            batch = null;
+          }
+        }
+        // 2) prova su Gruppo_Merce + Plant
+        if (!batch && ProductGroup && Plant) {
+          batch = await ButchCustService.run(
+            SELECT.one('*')
+              .from('ZZ1_MFP_BATCHCUSTOM')
+              .where({ Gruppo_Merce: ProductGroup, Plant })
+          );
+          if (batch && ['Material', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+            batch = null;
+          }
+        }
+        // 3) prova solo su Plant
+        if (!batch && Plant) {
+          batch = await ButchCustService.run(
+            SELECT.one('*')
+              .from('ZZ1_MFP_BATCHCUSTOM')
+              .where({ Plant })
+          );
+          if (batch && ['Material', 'Gruppo_Merce', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+            batch = null;
+          }
+        }
+        // Assegna icona solo se AssignRule === true
+        each.IconActive = (batch && batch.AssignRule === true)
+          ? 'sap-icon://activate'
+          : '';
+      }));
+    });
+
   }
 };
