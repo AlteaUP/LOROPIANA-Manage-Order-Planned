@@ -451,13 +451,14 @@ module.exports = class MainService extends cds.ApplicationService {
         const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
         const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
         const TotalDeliveryQty = sumValues(deliveryItems, 'TotDeliveryQty');
+        let StorageLocationStock = parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString();
 
         let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) -
           TotalProdAllQty - TotalPlanAllQty - TotalDeliveryQty).toFixed(3).toString();
         if (AvaibilityQty < 0) AvaibilityQty = "0.000";
         return {
           ...item,
-          StorageLocationStock: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
+          StorageLocationStock,
           TotalProdAllQty: TotalProdAllQty.toFixed(3).toString(),
           TotalPlanAllQty: TotalPlanAllQty.toFixed(3).toString(),
           CombPlanAllQty: CombPlanAllQty.toFixed(3).toString(),
@@ -501,51 +502,112 @@ module.exports = class MainService extends cds.ApplicationService {
       const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
 
       const storageLocations = ['H100', 'P100', 'K100'];
-      res = res.filter(row =>
-        // se StorageLocation è vuoto → mantieni
-        !row.StorageLocation ||
-        // altrimenti verifica che sia tra quelli ammessi
-        storageLocations.includes(row.StorageLocation)
-      );
-      let preFiltered = res.filter(row => {
-        // 1) Entrambi vuoti → scarta
-        if (!row.Supplier && !row.StorageLocation) {
-          return false;
-        }
-        // 2) Se ho Supplier → applica padding e verifica validità
-        if (row.Supplier) {
-          // Aggiunge zeri a sinistra fino a maxSupplierLength
-          const paddedSupplier = row.Supplier.padStart(maxSupplierLength, '0');
-          row.Supplier = paddedSupplier;        // sostituisci con la versione "zerata"
-          if (!validSuppliers.includes(paddedSupplier)) {
-            return false;                       // scarta se non è valido
+      res = res
+        // filtra StorageLocation vuoto o valido
+        .filter(row => !row.StorageLocation || storageLocations.includes(row.StorageLocation))
+        // filtra e valida Supplier
+        .filter(row => {
+          if (!row.Supplier && !row.StorageLocation) return false; // entrambi vuoti → scarta
+
+          if (row.Supplier) {
+            const paddedSupplier = row.Supplier.padStart(maxSupplierLength, '0');
+            if (!validSuppliers.includes(paddedSupplier)) return false; // non valido → scarta
+            row.Supplier = row.Supplier.replace(/^0+/, ''); // rimuove padding subito
           }
-          return true;                          // mantiene il record con Supplier valido
-        }
-        // 3) Supplier vuoto ma StorageLocation valorizzato → mantieni
-        if (!row.Supplier && row.StorageLocation) {
           return true;
-        }
-        // 4) Altri casi (teoricamente nessuno) → scarta
-        return false;
+        })
+        // assegna StorageLocation = Supplier quando manca
+        .map(row => {
+          if (!row.StorageLocation && row.Supplier) {
+            row.StorageLocation = row.Supplier;
+          }
+          return row;
+        });
+      res.forEach((rec, idx) => {
+        // Generiamo un valore univoco solo con l'indice
+        const unique = () => `_${idx}`;
+
+        rec.Material = rec.Material || unique();
+        rec.Plant = rec.Plant || unique();
+        rec.StorageLocation = rec.StorageLocation || unique();
+        rec.Batch = rec.Batch || unique();
+        rec.Supplier = rec.Supplier || unique();
+        rec.SDDocument = rec.SDDocument || unique();
+        rec.SDDocumentItem = rec.SDDocumentItem || unique();
+        rec.WBSElementInternalID = rec.WBSElementInternalID || unique();
+        rec.Customer = rec.Customer || unique();
+        rec.SpecialStockIdfgStockOwner = rec.SpecialStockIdfgStockOwner || unique();
+        rec.InventoryStockType = rec.InventoryStockType || unique();
+        rec.InventorySpecialStockType = rec.InventorySpecialStockType || unique();
+        rec.MaterialBaseUnit = rec.MaterialBaseUnit || unique();
+        rec.CostEstimate = rec.CostEstimate || unique();
+        rec.ResourceID = rec.ResourceID || unique();
+
+        // Log leggibile con nomi dei campi
+        console.log(
+          `Index: ${idx}`,
+          `Material: ${rec.Material}`,
+          `Plant: ${rec.Plant}`,
+          `StorageLocation: ${rec.StorageLocation}`,
+          `Batch: ${rec.Batch}`,
+          `Supplier: ${rec.Supplier}`,
+          `SDDocument: ${rec.SDDocument}`,
+          `SDDocumentItem: ${rec.SDDocumentItem}`,
+          `WBSElementInternalID: ${rec.WBSElementInternalID}`,
+          `Customer: ${rec.Customer}`,
+          `SpecialStockIdfgStockOwner: ${rec.SpecialStockIdfgStockOwner}`,
+          `InventoryStockType: ${rec.InventoryStockType}`,
+          `InventorySpecialStockType: ${rec.InventorySpecialStockType}`,
+          `MaterialBaseUnit: ${rec.MaterialBaseUnit}`,
+          `CostEstimate: ${rec.CostEstimate}`,
+          `ResourceID: ${rec.ResourceID}`
+        );
       });
-      // 5) Rimuovi gli zeri di padding dal Supplier prima del return
-      res = res.map(row => {
-        if (row.Supplier) {
-          row.Supplier = row.Supplier.replace(/^0+/, '');
-        }
-        return row;
-      });
-      // 2) Map separato: assegna StorageLocation = Supplier quando manca
-      preFiltered = preFiltered.map(row => {
-        if (!row.StorageLocation && row.Supplier) {
-          row.StorageLocation = row.Supplier;
-        }
-        return row;
-      });
+
       // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto FINE
-      res['$count'] = res.length.toString();
-      return res;
+
+      // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - INIZIO
+      // raggruppamento per StorageLocation + Batch
+      let consolidatedMap = new Map();
+
+      res.forEach(item => {
+        const groupKey = `${item.StorageLocation}|${item.Batch}`;
+
+        if (!consolidatedMap.has(groupKey)) {
+          // Primo record del gruppo - mantieni tutti i campi
+          consolidatedMap.set(groupKey, {
+            ...item,  // Copia tutti i campi dal primo record
+            StorageLocationStock: parseFloat(item.StorageLocationStock)  // Converti a number per la somma
+          });
+        } else {
+          // Record successivi - somma SOLO StorageLocationStock
+          const existingRecord = consolidatedMap.get(groupKey);
+          existingRecord.StorageLocationStock += parseFloat(item.StorageLocationStock);
+        }
+      });
+
+      // Converti Map in array
+      let consolidatedRes = Array.from(consolidatedMap.values());
+
+      //Ricalcolo AvaibilityQty
+      let finalRes = consolidatedRes.map(item => {
+        // Ricalcola AvaibilityQty usando il StorageLocationStock sommato
+        let newAvaibilityQty = (item.StorageLocationStock -
+          parseFloat(item.TotalProdAllQty) -
+          parseFloat(item.TotalPlanAllQty) -
+          parseFloat(item.TotalInDelQty)).toFixed(3).toString();
+
+        if (parseFloat(newAvaibilityQty) < 0) newAvaibilityQty = "0.000";
+
+        return {
+          ...item,
+          StorageLocationStock: item.StorageLocationStock.toFixed(3).toString(), // Riconverti a string
+          AvaibilityQty: newAvaibilityQty
+        };
+      });
+      // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - FINE
+      finalRes['$count'] = finalRes.length.toString();
+      return finalRes;
     });
 
     // Helper functions
@@ -765,13 +827,13 @@ module.exports = class MainService extends cds.ApplicationService {
         return error.message
       }
     }),
-    
-    //action per gestire highlights in tab Componenti
-    this.on("ReadBatchCust", async req => {
+
+      //action per gestire highlights in tab Componenti
+      this.on("ReadBatchCust", async req => {
         try {
           const { Material, Gruppo_merce, Plant } = req.data.Payload;
           let batch = null;
-   
+
           const isEmptyOrN = v => v === undefined || v === null || v === "" || v === "N";
           // 1) prova solo Material
           if (Material) {

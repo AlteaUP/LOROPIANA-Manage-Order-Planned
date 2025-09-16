@@ -8,7 +8,13 @@ sap.ui.define([
   'use strict';
 
   return {
+    //gContext: null,
+    oButtonAssegnaAuto: null,
+    initialButtonState: false,
     onInit: function () {
+      debugger;
+      this.oButtonAssegnaAuto = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock::CustomAction::AssegnaAuto');
+      this.initialButtonState = this.oButtonAssegnaAuto.getEnabled();
       console.log('Pezze controller initialized');
       const idTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable';
       const oTable = sap.ui.getCore().byId(idTable);
@@ -23,7 +29,8 @@ sap.ui.define([
         const oTable = sap.ui.getCore().byId(idTable);
         oEvent.preventDefault();
         const oContext = oEvent.getParameter('listItem');
-        // const selected = oEvent.getParameter('selected')
+        const selected = oEvent.getParameter('selected');
+        const selectedItem = oTable.getSelectedItems();
         const highlight = oContext.getHighlight()
         // se highlight === 'Success' permetto la selezione altrimenti no
         // if (!selected) return
@@ -35,6 +42,16 @@ sap.ui.define([
         //   oTable.removeSelections();
         //   MessageToast.show("Item not selectable");
         // }
+        //se si seleziona record disabilito bottone Assegnazione Auto (se abilitato)
+        if (selected || (!selected && selectedItem.length > 0)) {
+          // Se il bottone era abilitato, disabilitalo
+          if (this.oButtonAssegnaAuto.getEnabled()) {
+            this.oButtonAssegnaAuto.setEnabled(false);
+          }
+        } else {
+          // Deselezione → ripristina lo stato iniziale del bottone
+          this.oButtonAssegnaAuto.setEnabled(this.initialButtonState);
+        }
         if (highlight === 'Error') {
           setTimeout(() => {
             oTable.removeSelections(); // Rimuove selezione visiva
@@ -58,9 +75,10 @@ sap.ui.define([
 
       oTable.attachUpdateFinished(function (oEvent) {
         console.log("Update finished:", oEvent);
-        const idTable = oEvent.getParameter('id');
+        const idTable = oEvent.getParameter('id')
         const oTable = sap.ui.getCore().byId(idTable)
         const aItems = oTable.getItems()
+        //const oContext = this.gContext
         aItems.forEach((item) => {
           const oContext = item.getBindingContext().getObject();
           const { AvaibilityQty, CombPlanAllQty } = oContext;
@@ -94,7 +112,20 @@ sap.ui.define([
     onAfterRendering: function () {
       console.log('Pezze controller after rendering');
     },
-
+    onPageReady: function () {
+      debugger;
+      //abilito-disabilito bottone Assegnazione Auto in base ad icona Active tab component
+      const oTableStock = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable')
+      //oTableStock.getColumns()[0].setVisible(false)
+      //oTableStock.getColumns()[0].getHeader().getText()
+      const oContext = oTableStock.getBindingContext()
+      const obj = oContext.getObject();
+      //uso globale
+      //this.gContext = oContext.getObject();
+      //const oButtonAssegnaAuto = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock::CustomAction::AssegnaAuto');
+      this.oButtonAssegnaAuto.setEnabled(!!obj.IconActive);
+      this.initialButtonState = this.oButtonAssegnaAuto.getEnabled(); 
+    },
     showMessageConfirm: function (action) {
       // capitalize the first letter of the action
       action = action.charAt(0).toUpperCase() + action.slice(1);
