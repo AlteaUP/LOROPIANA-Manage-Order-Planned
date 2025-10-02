@@ -1156,7 +1156,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
             DataPoint: '@UI.DataPoint#PercentageDonut',
         }],
     },
-/*     UI.DataPoint #chart_percent     : {
+ /*     UI.DataPoint #chart_percent     : {
         Value      : chart_percent,
         // TargetValue : chart_percent,
         Criticality: chart_criticality
@@ -1178,7 +1178,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         Value: Material,
         Title: 'Material',
     },
-/*     UI.DataPoint #chart_percent1    : {
+ /*     UI.DataPoint #chart_percent1    : {
         Value      : chart_percent,
         // TargetValue : chart_percent,
         Criticality: chart_criticality,

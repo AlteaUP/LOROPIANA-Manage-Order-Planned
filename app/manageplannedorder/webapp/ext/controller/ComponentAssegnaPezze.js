@@ -130,6 +130,14 @@ sap.ui.define([
             const QTA_ASS_V = Math.min(parseInt(obj.AvailableQuantity), (obj.AvailableQuantity * (COPERTURA / 100)));
 
             const SAP_UUID = crypto.randomUUID()
+            //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+            if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
+              item.InventorySpecialStockType = '';
+            }
+            //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+            if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
+              item.SpecialStock = '';
+            }
 
             const newCreate = structuredClone({
               "SAP_UUID": SAP_UUID,
@@ -325,6 +333,15 @@ sap.ui.define([
               const QTA_ASS_V = Math.min(parseInt(obj.AvailableQuantity), (obj.AvailableQuantity * (COPERTURA / 100)));
 
               const SAP_UUID = crypto.randomUUID()
+
+              //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+              if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
+                item.InventorySpecialStockType = '';
+              }
+              //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+              if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
+                item.SpecialStock = '';
+              }
 
               const newCreate = structuredClone({
                 "SAP_UUID": SAP_UUID,

@@ -8,11 +8,25 @@ sap.ui.define([
   'use strict';
 
   return {
-    //gContext: null,
     oButtonAssegnaAuto: null,
     initialButtonState: false,
+    hiddenColumns: [],
     onInit: function () {
       debugger;
+      var that = this;
+      // Intercetta click sulla value help icon dei filtri (id tipo __boxN-arrow) - dialog
+      $(document).on("click", "span[id$='-arrow'][role='button'].sapMInputBaseIcon", function (event) {
+        var sIconId = $(this).attr("id");
+        var oIcon = sap.ui.getCore().byId(sIconId);
+
+        console.log("Cliccata tendina filtro! ID:", sIconId, "Control:", oIcon);
+
+        // Qui metti la tua logica personalizzata
+        that._onDropdownFilterOpen(oIcon);
+
+        // Esempio: mostra un toast
+        // sap.m.MessageToast.show("Tendina filtro premuta!");
+      });
       this.oButtonAssegnaAuto = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock::CustomAction::AssegnaAuto');
       this.initialButtonState = this.oButtonAssegnaAuto.getEnabled();
       console.log('Pezze controller initialized');
@@ -109,22 +123,245 @@ sap.ui.define([
       //   debugger;
       // });
     },
+    //function che gestisce visibilità campi in tab filtro - dialog
+    _onDropdownFilterOpen: function (oControl) {
+      debugger;
+      // Qui dentro metti la tua logica custom!
+      // oControl è il controllo correlato al value help cliccato
+      console.log("APERTA la tendina filtro su:", oControl, oControl.getMetadata().getName());
+      // Aspetta che il popover si apra
+      var that = this; // Salva il riferimento al controller   console.log("INIZIO - Impostando busy sulla view");
+      setTimeout(function () {
+        var aPopovers = $(".sapMPopover:visible, .sapMDialog:visible");
+
+        if (aPopovers.length > 0) {
+          var $lastPopover = $(aPopovers[aPopovers.length - 1]);
+          console.log("Popover trovato:", $lastPopover);
+          console.log("hiddenColumns:", that.hiddenColumns); // Usa 'that' invece di 'this'
+
+          // Usa l'array hiddenColumns per gestire visibilità
+          $lastPopover.find(".sapMSLI").each(function () {
+            var sText = $(this).text(); // NO trim(), controllo esatto
+
+            // Se la colonna è nell'array hiddenColumns, nascondila
+            if (that.hiddenColumns.includes(sText)) { // that.hiddenColumns
+              $(this).hide();
+              console.log("Nascosta colonna dal filtro:", sText);
+            } else {
+              $(this).show(); // Rendi visibile se non è in hiddenColumns
+              console.log("Mostrata colonna nel filtro:", sText);
+            }
+          });
+        }
+
+      }, 100);
+    },
+    onExit: function () {
+      // Pulisci il delegato quando la view viene distrutta
+      $(document).off("click.filterfieldVH");
+    },
     onAfterRendering: function () {
-      console.log('Pezze controller after rendering');
+      debugger;
+      var oButton = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-settings");
+
+      if (oButton && !oButton.data("listenerAttached")) {
+        oButton.attachPress(this.onPressSettings, this);
+        oButton.data("listenerAttached", true); // evita attach multipli
+      }
+    },
+    onPressSettings: function (oEvent) {
+      var that = this;
+
+      setTimeout(function () {
+        // prendo tutti i dialog aperti
+        var aDialogs = sap.m.InstanceManager.getOpenDialogs();
+        aDialogs.forEach(function (oDialog) {
+          if (oDialog.isA("sap.m.Dialog")) {
+            // cerco la tabella delle colonne
+            var aTables = oDialog.findAggregatedObjects(true, function (oC) {
+              return oC.isA("sap.m.Table");
+            });
+
+            if (aTables.length) {
+              var oTable = aTables[0];
+              var aItems = oTable.getItems();
+              console.log(that.hiddenColumns);
+              // nascondi Batch dal tab Colonne
+              aItems.forEach(oItem => {
+                let sLabel = "";
+                try {
+                  sLabel = oItem.getCells()[0].getItems()[0].getText();
+                } catch (e) {
+                  sLabel = "";
+                }
+
+                if (that.hiddenColumns.includes(sLabel)) {
+                  oItem.setVisible(false);
+                  console.log("Nascosta colonna:", sLabel);
+                }
+              });
+
+              // nascondi/rimuovi Batch da Classifica e Raggruppa
+              oDialog.findAggregatedObjects(true).forEach(function (oCtrl) {
+                if (oCtrl.getText) {
+                  const sText = oCtrl.getText();
+
+                  // Verifica se il testo della colonna è dentro hiddenColumns
+                  if (that.hiddenColumns.includes(sText)) {
+                    // item nelle tendine
+                    if (oCtrl.isA && (
+                      oCtrl.isA("sap.ui.core.Item") ||
+                      oCtrl.isA("sap.ui.core.ListItem")
+                    )) {
+                      const oParent = oCtrl.getParent && oCtrl.getParent();
+                      if (oParent && typeof oParent.removeItem === "function") {
+                        oParent.removeItem(oCtrl);
+                        console.log("Rimossa colonna '" + sText + "' da:", oParent.getMetadata().getName());
+                        return;
+                      }
+                    }
+
+                    // righe di lista/tabella
+                    let oHideTarget = oCtrl;
+                    while (oHideTarget && !oHideTarget.isA("sap.m.ListItemBase")) {
+                      oHideTarget = oHideTarget.getParent ? oHideTarget.getParent() : null;
+                    }
+                    if (oHideTarget && typeof oHideTarget.setVisible === "function") {
+                      oHideTarget.setVisible(false);
+                      console.log("Nascosta riga colonna:", sText);
+                    }
+                  }
+                }
+              });
+              // aggiorna contatore Colonne (X/Y)
+              var nTotali = 0;
+              var nVisibili = 0;
+              for (var i = 0; i < aItems.length; i++) {
+                if (aItems[i].getVisible()) {
+                  nTotali++;
+                  if (aItems[i].getProperty("selected")) nVisibili++;
+                }
+              }
+              var aTextLabels = oDialog.findAggregatedObjects(true, function (oCtrl) {
+                return oCtrl.isA && oCtrl.isA("sap.m.Text") && oCtrl.getText() && oCtrl.getText().startsWith("Colonne (");
+              });
+              if (aTextLabels.length > 0) {
+                aTextLabels[0].setText("Colonne (" + nVisibili + "/" + nTotali + ")");
+              }
+            }
+          }
+        });
+      }, 300);
     },
     onPageReady: function () {
       debugger;
-      //abilito-disabilito bottone Assegnazione Auto in base ad icona Active tab component
-      const oTableStock = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable')
-      //oTableStock.getColumns()[0].setVisible(false)
-      //oTableStock.getColumns()[0].getHeader().getText()
-      const oContext = oTableStock.getBindingContext()
+
+      const that = this;
+
+      // ASPETTA che la pagina sia completamente caricata
+      setTimeout(() => {
+        that._initializePageData();
+      }, 200);
+    },
+    _initializePageData: function () {
+      const that = this;
+
+      const oTableStock = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
+
+      if (!oTableStock) {
+        console.warn("Stock table not found, retrying...");
+        setTimeout(() => {
+          this._initializePageData();
+        }, 500);
+        return;
+      }
+
+      const oContext = oTableStock.getBindingContext();
+
+      if (!oContext) {
+        console.warn("Context not available, retrying...");
+        setTimeout(() => {
+          this._initializePageData();
+        }, 500);
+        return;
+      }
+
       const obj = oContext.getObject();
-      //uso globale
-      //this.gContext = oContext.getObject();
-      //const oButtonAssegnaAuto = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock::CustomAction::AssegnaAuto');
+
+      if (!obj) {
+        console.warn("Context object not available, retrying...");
+        setTimeout(() => {
+          this._initializePageData();
+        }, 500);
+        return;
+      }
+
+      // RIMOZIONE DELLA PARTE PROBLEMATICA - usa direttamente i dati
+      this._processContextData(obj, oTableStock);
+    },
+    _processContextData: function (obj, oTableStock) {
+      const that = this;
+
       this.oButtonAssegnaAuto.setEnabled(!!obj.IconActive);
-      this.initialButtonState = this.oButtonAssegnaAuto.getEnabled(); 
+      this.initialButtonState = this.oButtonAssegnaAuto.getEnabled();
+
+      // ... resto del codice per le colonne dinamiche ...
+      const payload = {
+        'Material': obj.Material,
+        'Gruppo_merce': obj.ProductGroup,
+        'Plant': obj.Plant
+      };
+      //funzione per formattare array colonne
+      /*   function formatHeader(text) {
+          if (text === "Dye Lot") return "Dye_Lot";
+          return text.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+        } */
+
+      // Il resto rimane uguale ma con migliore gestione errori
+      const oModel = this.getOwnerComponent().getModel();
+      const oCtx = oModel.bindContext("/ReadBatchCust(...)");
+      oCtx.setParameter("Payload", payload);
+
+      oTableStock.setBusy(true);
+
+      oCtx.execute()
+        .then(() => {
+          // ... resto del codice esistente ...
+          var oResult = oCtx.getBoundContext().getObject();
+          console.log(oResult);
+
+          const resultFields = Object.keys(oResult)
+            .filter(k => k.startsWith("Campo"))
+            .map(k => oResult[k])
+            .filter(v => v && v !== "");
+
+          that.hiddenColumns = []; // reset array
+
+          oTableStock.getColumns().forEach(col => {
+            let headerText = col.getHeader().getText();
+            //const formattedHeader = formatHeader(headerText);
+            // Controllo se il testo è "InventorySpecialStockType trasformo in "InventorySpecialStoc"
+            if (headerText === "InventorySpecialStockType") {
+              headerText = "InventorySpecialStoc";
+            }
+            if (resultFields.includes(headerText)) {
+              // Colonna autorizzata → assicurati che sia visibile
+              col.setVisible(true);
+            } else {
+              // Colonna non autorizzata → nascondi e aggiungi a hiddenColumns
+              col.setVisible(false);
+              that.hiddenColumns.push(headerText);
+            }
+          });
+          oTableStock.setBusy(false);
+        })
+        .catch(err => {
+          console.error("ReadBatchCust failed:", err);
+          MessageToast.show(err.message || err.value || "Error loading data");
+        })
+        .finally(() => {
+          oTableStock.setBusy(false);
+        });
     },
     showMessageConfirm: function (action) {
       // capitalize the first letter of the action

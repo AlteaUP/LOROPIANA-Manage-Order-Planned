@@ -102,7 +102,6 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // Table - Components
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
-      debugger;
       let from, where;
       from = "ZZ1_CombPlnOrdersStockAPI"
       where = req.query.SELECT.from.ref[0].where //.slice(0, 4)
@@ -120,7 +119,6 @@ module.exports = class MainService extends cds.ApplicationService {
       let TotalProdAllQty = 0;
       if (req.query.SELECT.from.ref[1] && req.query.SELECT.from.ref[1].where && req.query.SELECT.from.ref[1].where.length > 0) {
         // 1. Fetch the data
-        debugger;
         resAll = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(whereAll));
         // const materialWhere = req.query.SELECT.from.ref[1].where.slice(0, 3)
         // where.push(...materialWhere)
@@ -208,14 +206,13 @@ module.exports = class MainService extends cds.ApplicationService {
         // TotalPlanAllQty / AvailableQuantity
         let chart_percent = Math.round(parseFloat(res[0].TotalPlanAllQty) / parseFloat(res[0].AvailableQuantity) * 100);
         let chart_criticality;
-        debugger;
         if (chart_percent >= 100) {
           chart_criticality = 3
         } else if (chart_percent < 100 && chart_percent > 0) {
           chart_criticality = 2
         } else {
           chart_criticality = 1
-          // chart_percent = 100
+          //chart_percent = 100
         }
         res[0].chart_percent = chart_percent;
         res[0].chart_criticality = chart_criticality;
@@ -883,10 +880,11 @@ module.exports = class MainService extends cds.ApplicationService {
               }
             }
           }
-          return {
+/*           return {
             Mandassign: batch?.Mandassign ?? false,
             AssignRule: batch?.AssignRule ?? null
-          };
+          }; */
+          return batch;
         }
         catch (err) {
           return req.error(500, err.message);

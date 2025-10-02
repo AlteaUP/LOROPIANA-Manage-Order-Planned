@@ -14,6 +14,7 @@ using {ZZ1_MRPCONTROLLER_F4_CDS} from './external/ZZ1_MRPCONTROLLER_F4_CDS';
 using {ZZ1_WORKCENTER_F4_CDS} from './external/ZZ1_WORKCENTER_F4_CDS';
 using {ZZ1_PRODUCTSEASON_F4_CDS} from './external/ZZ1_PRODUCTSEASON_F4_CDS';
 using {ZZ1_PLANNEDORDERTYPE_F4_CDS} from './external/ZZ1_PLANNEDORDERTYPE_F4_CDS';
+using {ZZ1_MFP_BATCHCUSTOM_CDS} from './external/ZZ1_MFP_BATCHCUSTOM_CDS';
 
 // using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
 
@@ -62,6 +63,7 @@ service MainService {
   entity   ZZ1_WORKCENTER_F4    as projection on ZZ1_WORKCENTER_F4_CDS.ZZ1_WORKCENTER_F4;
   entity   ZZ1_PRODUCTSEASON_F4    as projection on ZZ1_PRODUCTSEASON_F4_CDS.ZZ1_PRODUCTSEASON_F4;
   entity   ZZ1_PLANNEDORDERTYPE_F4    as projection on ZZ1_PLANNEDORDERTYPE_F4_CDS.ZZ1_PLANNEDORDERTYPE_F4;
+  entity   ZZ1_MFP_BATCHCUSTOM        as projection on ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOM;
 
   // COMPONENTS
   entity ZZ1_CombinPlannedOrdersCom as
@@ -216,6 +218,6 @@ service MainService {
 
   action ChangeWorkCenter(Payload: WorkCenterChangeActionType) returns String;
 
-  action ReadBatchCust(Payload: BatchCustKeys) returns BatchCustResult ;
+  action ReadBatchCust(Payload: BatchCustKeys) returns ZZ1_MFP_BATCHCUSTOM//BatchCustResult ;
 }
 
