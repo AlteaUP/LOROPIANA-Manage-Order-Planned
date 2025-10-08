@@ -25,6 +25,7 @@ sap.ui.define([
     },
     doAssegnaPezze: function (oEvent) {
       debugger;
+      this._bSaldoScorta = false;
       const model = new JSONModel()
       const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
       const obj = this.getBindingContext().getObject()
@@ -55,18 +56,68 @@ sap.ui.define([
 
       this._controller.getView().setModel(model, 'selectedPezze');
 
-      if (!this._fragmentPezze) {
-        this._fragmentPezze = this.loadFragment({
-          id: "fragmentPezze",
-          name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
-          controller: this._controller
+      if (this._fragmentPezze) {
+        this._fragmentPezze.then(function (dialog) {
+          if (dialog) {
+            dialog.destroy();
+          }
         });
       }
+
+      // Ricrea sempre
+      this._fragmentPezze = this.loadFragment({
+        id: "fragmentPezze",
+        name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
+        controller: this._controller
+      });
+
+      /*    if (!this._fragmentPezze) {
+           this._fragmentPezze = this.loadFragment({
+             id: "fragmentPezze",
+             name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
+             controller: this._controller
+           });
+         } */
 
       this._fragmentPezze.then(function (dialog) {
         dialog.setModel(model, 'selected');
         dialog.setModel(oModel);
+        //flag per verificare se è stato fatto il submit
+        dialog.getModel('selected').setProperty('/submitCompleted', false);
+        // Handler per quando il dialog viene chiuso
+        dialog.attachAfterClose(function () {
+          // Resetta tutti i cambiamenti non committati
+          const binding = table.getBinding('items');
+          if (binding) {
+            binding.resetChanges();
+          }
+        });
         const table = dialog.getContent().at(-1);
+
+        var oCheckBox = new sap.m.CheckBox({
+          text: "Saldo/Scorta",
+          selected: this._bSaldoScorta,
+          select: function (oEvent) {
+            debugger;
+            var bChecked = oEvent.getSource().getSelected();
+            this._bSaldoScorta = bChecked;
+
+            // AGGIORNA TUTTI I CONTEXT NEL BINDING (OData V4)
+            const contexts = table.getBinding('items').getContexts();
+            contexts.forEach(context => {
+              context.setProperty("SaldoScorta", bChecked);
+            });
+
+            console.log("Flag set to:", this._bSaldoScorta, typeof this._bSaldoScorta);
+          }.bind(this)
+        });
+        var oCheckboxContainer = new sap.m.HBox({
+          justifyContent: "End",
+          items: [oCheckBox],
+        });
+        dialog.addContent(oCheckboxContainer);
+        /*         this._oCheckBox = oCheckBox;
+                this._oCheckBox.setSelected(this._bSaldoScorta) */
 
 
         table.bindAggregation('items', {
@@ -76,6 +127,18 @@ sap.ui.define([
             new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
           ],
           template: new sap.m.ColumnListItem({
+            highlight: {
+              parts: [
+                'CHARG',
+                'LGORT',
+                'highlight>/assignedRecords'  // Model del Component
+              ],
+              formatter: function (batch, storage, assignedRecords) {
+                const recordKey = batch + '|' + storage;
+                const isAssigned = assignedRecords && assignedRecords.includes(recordKey);
+                return isAssigned ? "Success" : "None";
+              }
+            },
             cells: [
               new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
               new sap.m.Text({ text: "{StockSegment}" }),
@@ -115,7 +178,36 @@ sap.ui.define([
         binding.resetChanges();
         const oODataModel = table.getModel();
         binding.attachDataReceived(async function () {
+          //se il submit è stato completato chiudere
+          const submitCompleted = dialog.getModel('selected').getProperty('/submitCompleted');
+          if (submitCompleted) {
+            console.log("Submit già completato, non ricreo i record");
+            return;
+          }
           await binding.requestContexts(0, 1); // forza la creazione del context
+
+          // 1. Identifica i record GIÀ PRESENTI nella tabella (quelli già assegnati)
+          const existingContexts = binding.getContexts();
+          const existingKeys = existingContexts.map(context => {
+            const obj = context.getObject();
+            if (obj) { // Aggiungi un controllo per sicurezza
+              return obj.CHARG + '|' + obj.LGORT;
+            }
+            return null;
+          }).filter(key => key !== null); // Rimuovi eventuali nulli
+          // 2. Prendi o crea il modello di highlight condiviso
+          const oComponent = this._controller.getOwnerComponent();
+          let highlightModel = oComponent.getModel('highlight');
+          if (!highlightModel) {
+            highlightModel = new sap.ui.model.json.JSONModel({
+              assignedRecords: []
+            });
+            oComponent.setModel(highlightModel, 'highlight');
+          }
+          // 3. Imposta i record già assegnati nel modello condiviso
+          // Usiamo 'Set' per evitare duplicati se riapri il dialog più volte
+          const allAssignedRecords = [...new Set([...highlightModel.getProperty('/assignedRecords'), ...existingKeys])];
+          highlightModel.setProperty('/assignedRecords', allAssignedRecords);
 
           // sommatoria AvaibilityQty 
           const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
@@ -166,19 +258,25 @@ sap.ui.define([
               "SAP_LastChangedByUser": "LASPATAS",
               "SAP_LastChangedByUser_Text": "X",
               "BatchBySupplier": item.BatchBySupplier,
-              "SpecialStock": item.InventorySpecialStockType
+              "SpecialStock": item.InventorySpecialStockType,
+              "SaldoScorta": !!this._bSaldoScorta
             })
 
             const isPresent = binding.getContexts().some(context =>
               context.getObject().CHARG === _item.Batch &&
-              context.getObject().StorageLocation === _item.StorageLocation
+              context.getObject().LGORT === _item.StorageLocation
             );
-
             if (!isPresent) {
               console.warn("Combined planned order is not present in binding.");
               binding.create(newCreate, false, false, false);
             } else {
               console.log("Combined planned order is present in binding.");
+              const recordKey = _item.Batch + '|' + _item.StorageLocation;
+              if (!highlightModel.getProperty('/assignedRecords').includes(recordKey)) {
+                const currentAssigned = highlightModel.getProperty('/assignedRecords');
+                currentAssigned.push(recordKey);
+                highlightModel.setProperty('/assignedRecords', currentAssigned);
+              }
             }
           });
           // binding.refresh(true);
@@ -189,6 +287,7 @@ sap.ui.define([
     },
     AssegnaAuto: function (oEvent) {
       debugger;
+      this._bSaldoScorta = false;
       const model = new JSONModel();
       const oModel = this._controller.getOwnerComponent().getModel()
       const idTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable';
@@ -245,7 +344,6 @@ sap.ui.define([
         }
 
         //Aggiunta codice per assegnazione 
-
         let TotCombPlanAllQty = 0;
         let OpenQty = 0;
         for (let i = 0; i < _selectedItems.length; i++) {
@@ -264,19 +362,66 @@ sap.ui.define([
 
         this._controller.getView().setModel(model, 'selectedPezze');
 
-        if (!this._fragmentPezze) {
-          this._fragmentPezze = this.loadFragment({
-            id: "fragmentPezze",
-            name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
-            controller: this._controller
+        if (this._fragmentPezze) {
+          this._fragmentPezze.then(function (dialog) {
+            if (dialog) {
+              dialog.destroy();
+            }
           });
         }
+
+        // Ricrea sempre
+        this._fragmentPezze = this.loadFragment({
+          id: "fragmentPezze",
+          name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
+          controller: this._controller
+        });
+        /* 
+                if (!this._fragmentPezze) {
+                  this._fragmentPezze = this.loadFragment({
+                    id: "fragmentPezze",
+                    name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
+                    controller: this._controller
+                  });
+                } */
 
         this._fragmentPezze.then(function (dialog) {
           dialog.setModel(model, 'selected');
           dialog.setModel(oModel);
+          //flag per verificare se è stato fatto il submit
+          dialog.getModel('selected').setProperty('/submitCompleted', false);
+          // Handler per quando il dialog viene chiuso
+          dialog.attachAfterClose(function () {
+            // Resetta tutti i cambiamenti non committati
+            const binding = table.getBinding('items');
+            if (binding) {
+              binding.resetChanges();
+            }
+          });
           const table = dialog.getContent().at(-1);
 
+          var oCheckBox = new sap.m.CheckBox({
+            text: "Saldo/Scorta",
+            selected: this._bSaldoScorta,
+            select: function (oEvent) {
+              debugger;
+              var bChecked = oEvent.getSource().getSelected();
+              this._bSaldoScorta = bChecked;
+
+              // AGGIORNA TUTTI I CONTEXT NEL BINDING (OData V4)
+              const contexts = table.getBinding('items').getContexts();
+              contexts.forEach(context => {
+                context.setProperty("SaldoScorta", bChecked);
+              });
+
+              console.log("Flag set to:", this._bSaldoScorta, typeof this._bSaldoScorta);
+            }.bind(this)
+          });
+          var oCheckboxContainer = new sap.m.HBox({
+            justifyContent: "End",
+            items: [oCheckBox],
+          });
+          dialog.addContent(oCheckboxContainer);
 
           table.bindAggregation('items', {
             path: '/ZZ1_MFP_ASSIGNMENT',
@@ -285,6 +430,18 @@ sap.ui.define([
               new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
             ],
             template: new sap.m.ColumnListItem({
+              highlight: {
+                parts: [
+                  'CHARG',
+                  'LGORT',
+                  'highlight>/assignedRecords'  // Model del Component
+                ],
+                formatter: function (batch, storage, assignedRecords) {
+                  const recordKey = batch + '|' + storage;
+                  const isAssigned = assignedRecords && assignedRecords.includes(recordKey);
+                  return isAssigned ? "Success" : "None";
+                }
+              },
               cells: [
                 new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
                 new sap.m.Text({ text: "{StockSegment}" }),
@@ -318,7 +475,36 @@ sap.ui.define([
           binding.resetChanges();
           const oODataModel = table.getModel();
           binding.attachDataReceived(async function () {
+            //se il submit è stato completato chiudere
+            const submitCompleted = dialog.getModel('selected').getProperty('/submitCompleted');
+            if (submitCompleted) {
+              console.log("Submit già completato, non ricreo i record");
+              return;
+            }
             await binding.requestContexts(0, 1); // forza la creazione del context
+
+            // 1. Identifica i record GIÀ PRESENTI nella tabella (quelli già assegnati)
+            const existingContexts = binding.getContexts();
+            const existingKeys = existingContexts.map(context => {
+              const obj = context.getObject();
+              if (obj) { // Aggiungi un controllo per sicurezza
+                return obj.CHARG + '|' + obj.LGORT;
+              }
+              return null;
+            }).filter(key => key !== null); // Rimuovi eventuali nulli
+            // 2. Prendi o crea il modello di highlight condiviso
+            const oComponent = this._controller.getOwnerComponent();
+            let highlightModel = oComponent.getModel('highlight');
+            if (!highlightModel) {
+              highlightModel = new sap.ui.model.json.JSONModel({
+                assignedRecords: []
+              });
+              oComponent.setModel(highlightModel, 'highlight');
+            }
+            // 3. Imposta i record già assegnati nel modello condiviso
+            // Usiamo 'Set' per evitare duplicati se riapri il dialog più volte
+            const allAssignedRecords = [...new Set([...highlightModel.getProperty('/assignedRecords'), ...existingKeys])];
+            highlightModel.setProperty('/assignedRecords', allAssignedRecords);
 
             // sommatoria AvaibilityQty 
             const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
@@ -370,7 +556,8 @@ sap.ui.define([
                 "SAP_LastChangedByUser": "LASPATAS",
                 "SAP_LastChangedByUser_Text": "X",
                 "BatchBySupplier": item.BatchBySupplier,
-                "SpecialStock": item.InventorySpecialStockType
+                "SpecialStock": item.InventorySpecialStockType,
+                "SaldoScorta": !!this._bSaldoScorta
               })
 
               const isPresent = binding.getContexts().some(context =>

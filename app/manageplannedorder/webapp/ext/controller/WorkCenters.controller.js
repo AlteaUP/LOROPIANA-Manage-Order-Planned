@@ -51,7 +51,7 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                         return;
                     }
                     if (oResult.Mandassign === true) {
-                        const match = parseFloat(itm.RequiredQuantity) === parseFloat(itm.CombPlanAllQty);
+                        const match = parseFloat(itm.CombPlanAllQty) >= parseFloat(itm.RequiredQuantity);
                         oRow.setHighlight(match ? "Success" : "Error");
                         oRow.setHighlightText(
                             match

@@ -129,17 +129,17 @@
                         />
                     </Column>
                     <Column id="columnBatchBySupplier">
-                    <Text
+                        <Text
                             id="textBatchBySupplier"
                             text="Batch By Supplier"
                         />
-                    </Column>
-                    <!-- <Column id="columnMaterial">
+                    </Column> 
+               <!--      <Column id="columnMaterial">
                         <Text
                             id="textMaterial"
                             text="Material"
                         />
-                    </Column> -->
+                    </Column>  -->
                     <Column id="columnStorageLocation">
                         <Text
                             id="textStorageLocation"
@@ -170,12 +170,6 @@
                             text="Quantity to Assign"
                         />
                     </Column>
-                    <!--<Column id="columnBatchBySupplier">
-                        <Text
-                            id="textBatchBySupplier"
-                            text="Batch By Supplier"
-                        />
-                    </Column>-->
                     <!-- <Column id="columnQTY_CALCOLATA">
                         <Text
                             id="textQTY_CALCOLATA"

@@ -28,7 +28,7 @@ sap.ui.define([
         // sap.m.MessageToast.show("Tendina filtro premuta!");
       });
       this.oButtonAssegnaAuto = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock::CustomAction::AssegnaAuto');
-      this.initialButtonState = this.oButtonAssegnaAuto.getEnabled();
+      //this.initialButtonState = this.oButtonAssegnaAuto.getEnabled();
       console.log('Pezze controller initialized');
       const idTable = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable';
       const oTable = sap.ui.getCore().byId(idTable);
@@ -382,10 +382,33 @@ sap.ui.define([
       const oModel = this.getOwnerComponent().getModel();
       const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
       const oTableBinding = oTable.getBinding("items");
-
       this.showMessageConfirm("assign").then(function () {
         BusyIndicator.show(0);
+
         oModel.submitBatch("CreatePezzeBatch").then((a, b, c) => {
+          // Recupera il model condiviso dal Component
+          const highlightModel = this.getOwnerComponent().getModel('highlight');
+
+          if (highlightModel) {
+            const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
+            const binding = oTable.getBinding('items');
+            const contexts = binding.getContexts();
+
+            const newAssignedKeys = contexts.map(context => {
+              const obj = context.getObject();
+              return obj.CHARG + '|' + obj.LGORT;
+            });
+
+            // Aggiorna il model condiviso
+            const existingRecords = highlightModel.getProperty('/assignedRecords') || [];
+            const allRecords = [...existingRecords, ...newAssignedKeys];
+            highlightModel.setProperty('/assignedRecords', allRecords);
+          }
+          
+          const oDialog = sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze');
+          if (oDialog && oDialog.getModel('selected')) {
+            oDialog.getModel('selected').setProperty('/submitCompleted', true);
+          }
           const oStockTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable');
           MessageToast.show("Do Assemble completed.");
           sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze').close();
@@ -405,6 +428,10 @@ sap.ui.define([
           // });
           BusyIndicator.hide();
         }).catch((oError, err, err1) => {
+          const oDialog = sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze');
+          if (oDialog && oDialog.getModel('selected')) {
+            oDialog.getModel('selected').setProperty('/submitCompleted', true);
+          }
           MessageToast.show("Do Assemble error.");
           console.error("Error", oError);
           BusyIndicator.hide();
