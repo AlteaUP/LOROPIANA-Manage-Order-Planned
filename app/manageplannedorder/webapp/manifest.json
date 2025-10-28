@@ -108,6 +108,16 @@
           "target": "ZZ1_CombinedPlnOrdersAPIMain"
         },
         {
+          "name": "ComponentsPage",
+          "pattern": "/ZZ1_CombinPlannedOrdersComClone",
+          "target": "ComponentsPage"
+        },
+        {
+          "name": "StockPage",
+          "pattern": "/ZZ1_CombinPlannedOrdersComClone({Keys}):?query:",
+          "target": "StockPage"
+        },
+        {
           "name": "ZZ1_CombinedPlnOrdersAPIObjectPage",
           "pattern": "ZZ1_CombinedPlnOrdersAPI({ZZ1_CombinedPlnOrdersAPIKey}):?query:",
           "target": "ZZ1_CombinedPlnOrdersAPIObjectPage"
@@ -306,6 +316,30 @@
               "variantManagement": "Control"
             }
           }
+        },
+        "ComponentsPage": {
+          "type": "Component",
+          "id": "ComponentsPage",
+          "name": "sap.fe.core.fpm",
+          "options": {
+            "settings": {
+              "contextPath": "/ZZ1_CombinPlannedOrdersComClone",
+              "viewName": "manageplannedorder.manageplannedorder.ext.view.Components",
+              "navigation": {}
+            }
+          }
+        },
+        "StockPage": {
+          "type": "Component",
+          "id": "StockPage",
+          "name": "sap.fe.core.fpm",
+          "options": {
+            "settings": {
+              "contextPath": "/ZZ1_CombinPlannedOrdersComClone",
+              "viewName": "manageplannedorder.manageplannedorder.ext.view.Stock",
+              "navigation": {}
+            }
+          }
         }
       }
     },
@@ -313,8 +347,7 @@
       "extensions": {
         "sap.ui.controllerExtensions": {
           "sap.fe.templates.ObjectPage.ObjectPageController#manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage": {
-            "controllerName":
-              "manageplannedorder.manageplannedorder.ext.controller.Pezze"
+            "controllerName": "manageplannedorder.manageplannedorder.ext.controller.Pezze"
           },
           "sap.fe.templates.ObjectPage.ObjectPageController": {
             "controllerName": "manageplannedorder.manageplannedorder.ext.controller.CombinedDetail"

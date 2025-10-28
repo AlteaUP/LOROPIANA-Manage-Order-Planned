@@ -6,7 +6,8 @@ sap.ui.define(
         'sap/ui/model/FilterOperator',
         "sap/m/MessageBox",
         "sap/m/MessageToast",
-        "sap/ui/core/BusyIndicator"
+        "sap/ui/core/Fragment",
+        "sap/ui/core/BusyIndicator",
     ],
     function (PageController, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, BusyIndicator) {
         'use strict';
@@ -30,6 +31,7 @@ sap.ui.define(
                 ));
             },
             pressFragment: function (e) {
+                debugger;
                 const idTable = e.getParameter('id').split('::').slice(0, -2).join("::")
                 const oTable = sap.ui.getCore().byId(idTable)._oTable;
                 // remove latest element
@@ -121,10 +123,38 @@ sap.ui.define(
                     dialog.open();
                 }.bind(this));
             },
-            onCloseDialog: function (oEvent) {
-                const oDialog = oEvent.getSource().getParent();
-                oDialog.close();
-                // oDialog.destroy();
+            pressComponenti: async function (e) {
+                debugger
+                try {
+                    const aSelectedContexts = this.byId("TableCombined").getSelectedContexts();
+                    if(aSelectedContexts.length <= 1) {
+                        MessageToast.show("Select at least two item");
+                        return;
+                    }
+                    const _oContext = [];
+                    const aKeys = aSelectedContexts.map(ctx => {
+                        const o = ctx.getObject();
+                        _oContext.push(o);
+                        return `CplndOrd=${o.CplndOrd},CrossPlantConfigurableProduct='${o.CrossPlantConfigurableProduct}'`;
+                    });
+
+                    sessionStorage.setItem("selectedOrders", JSON.stringify(aKeys));
+                    sessionStorage.setItem("selectedContextsOrders", JSON.stringify(_oContext));
+                    const oComponent = this.getOwnerComponent().getExtensionComponent();
+                    const oRouter = oComponent.getRouter();
+                    oRouter.navTo("ComponentsPage");
+                
+                } catch (err) {
+                    console.error("Errore", err);
+                }
+            },
+            formatCriticality: function (criticality) {
+                switch (criticality) {
+                    case 1: return "Error";
+                    case 2: return "Critical";
+                    case 3: return "Good";
+                    default: return "Neutral";
+                }
             },
             doConvert: function (oEvent) {
                 const oModel = this.getOwnerComponent().getModel();
@@ -158,6 +188,11 @@ sap.ui.define(
                 console.log(value)
                 const _value = value.replace(',', '.')
                 return _value
+            },
+            onCloseDialog: function (oEvent) {
+                const oDialog = oEvent.getSource().getParent();
+                oDialog.close();
+                // oDialog.destroy();
             },
             onTypeOrderLiveChange: function (oEvent) {
                 console.log("onTypeOrderLiveChange", oEvent);

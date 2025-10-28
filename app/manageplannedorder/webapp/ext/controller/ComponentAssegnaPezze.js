@@ -338,7 +338,15 @@ sap.ui.define([
       if (selected) {
         // 3. Se contiene più di un indice → era un aggregato
         if (selected.indices.length > 1) {
-          _selectedItems = selected.indices.map(i => items[i]); // ricostruisco da items originali
+          // Ricostruisco gli item originali
+          let reconstructed = selected.indices.map(i => items[i]);
+
+          // Filtro quelli che hanno StorageLocationStock > RequiredQty
+          const filtered = reconstructed.filter(item => Number(item.StorageLocationStock) > RequiredQty);
+
+          // Se esiste almeno un record che rispetta la condizione, prendo solo quelli
+          // altrimenti lascio la lista completa originale
+          _selectedItems = filtered.length > 0 ? filtered : reconstructed;
         } else {
           _selectedItems = [items[selected.indices[0]]]; // solo 1 record originale
         }
@@ -584,6 +592,7 @@ sap.ui.define([
       }
     },
     doDisassignPezze: async function (oEvent) {
+      debugger
       const obj = this.getBindingContext().getObject()
       const oModel = this._controller.getOwnerComponent().getModel();
 
@@ -641,6 +650,7 @@ sap.ui.define([
         MessageToast.show("Disassemble completed successfully.");
         oStockTable.refreshItems();
         oStockTable.getBinding('items').refresh();
+        oStockTable.removeSelections();
 
         // refresh header facet
         const oDataPoint = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::HeaderFacet::KeyFigure::TotalProdAllQty');

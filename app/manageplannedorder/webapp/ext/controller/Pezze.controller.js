@@ -14,18 +14,14 @@ sap.ui.define([
     onInit: function () {
       debugger;
       var that = this;
-      // Intercetta click sulla value help icon dei filtri (id tipo __boxN-arrow) - dialog
+      // Intercetto click sulla value help icon dei filtri (id tipo __boxN-arrow) - dialog
       $(document).on("click", "span[id$='-arrow'][role='button'].sapMInputBaseIcon", function (event) {
         var sIconId = $(this).attr("id");
         var oIcon = sap.ui.getCore().byId(sIconId);
 
         console.log("Cliccata tendina filtro! ID:", sIconId, "Control:", oIcon);
 
-        // Qui metti la tua logica personalizzata
         that._onDropdownFilterOpen(oIcon);
-
-        // Esempio: mostra un toast
-        // sap.m.MessageToast.show("Tendina filtro premuta!");
       });
       this.oButtonAssegnaAuto = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock::CustomAction::AssegnaAuto');
       //this.initialButtonState = this.oButtonAssegnaAuto.getEnabled();
@@ -157,7 +153,6 @@ sap.ui.define([
       }, 100);
     },
     onExit: function () {
-      // Pulisci il delegato quando la view viene distrutta
       $(document).off("click.filterfieldVH");
     },
     onAfterRendering: function () {
@@ -296,7 +291,6 @@ sap.ui.define([
         return;
       }
 
-      // RIMOZIONE DELLA PARTE PROBLEMATICA - usa direttamente i dati
       this._processContextData(obj, oTableStock);
     },
     _processContextData: function (obj, oTableStock) {
@@ -316,8 +310,6 @@ sap.ui.define([
           if (text === "Dye Lot") return "Dye_Lot";
           return text.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
         } */
-
-      // Il resto rimane uguale ma con migliore gestione errori
       const oModel = this.getOwnerComponent().getModel();
       const oCtx = oModel.bindContext("/ReadBatchCust(...)");
       oCtx.setParameter("Payload", payload);
@@ -380,8 +372,7 @@ sap.ui.define([
     doAssign: function (oEvent) {
       debugger;
       const oModel = this.getOwnerComponent().getModel();
-      const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
-      const oTableBinding = oTable.getBinding("items");
+      //const oTableBinding = oTable.getBinding("items");
       this.showMessageConfirm("assign").then(function () {
         BusyIndicator.show(0);
 
@@ -404,7 +395,7 @@ sap.ui.define([
             const allRecords = [...existingRecords, ...newAssignedKeys];
             highlightModel.setProperty('/assignedRecords', allRecords);
           }
-          
+
           const oDialog = sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze');
           if (oDialog && oDialog.getModel('selected')) {
             oDialog.getModel('selected').setProperty('/submitCompleted', true);
@@ -482,6 +473,7 @@ sap.ui.define([
 
     },
     onDesassembly: function () {
+      debugger
       const id = 'fragmentPezze--selectedItemsTableWhereUsed';
       const selectedItems = sap.ui.getCore().byId(id).getSelectedItems();
       const oModel = this.getOwnerComponent().getModel();

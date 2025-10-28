@@ -1,0 +1,109 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+>
+    <Dialog
+        id="_IDGenDialogWhereUsedA"
+        stretch="true"
+        resizable="false"
+        type="Message"
+        state="Information"
+        icon="sap-icon://ai"
+        title="Where Used {selected>/Material}"
+    >
+        <content>
+            <form:SimpleForm
+                id="SimpleFormWhereUsedA"
+                singleContainerFullSize="true"
+                layout="ColumnLayout"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                labelSpanL="12"
+                labelSpanM="12"
+                labelSpanS="12"
+                columnsL="3"
+                columnsM="3"
+                columnsXL="3"
+            >
+                <Label
+                    id="labelMaterialWhereUsedA"
+                    text="Material"
+                />
+                <Text
+                    id="inputMaterialWhereUsedA"
+                    text="{selected>/Material}"
+                />
+                <Label
+                    id="labelPlantWhereUsedA"
+                    text="Plant"
+                />
+                <Text
+                    id="inputPlantWhereUsedA"
+                    text="{selected>/Plant}"
+                />
+                <Label
+                    id="labelStorageLocationWhereUsedA"
+                    text="StorageLocation"
+                />
+                <Text
+                    id="inputStorageLocationWhereUsedA"
+                    text="{selected>/StorageLocation}"
+                />
+            </form:SimpleForm>
+            <!-- <Table
+                id="selectedItemsTableWhereUsedFake"
+                mode="MultiSelect"
+            >
+                <columns>
+                    <Column id="columnCplndOrdWhereUsedFake">
+                        <Text
+                            id="textCplndOrdWhereUsedFake"
+                            text="Combined Planned Order"
+                        />
+                    </Column>
+                    <Column id="columnQtyWhereUsedFake">
+                        <Text
+                            id="textQtyWhereUsedFake"
+                            text="flag"
+                        />
+                    </Column>
+                </columns>
+            </Table> -->
+            <Table
+                id="selectedItemsTableWhereUsedA"
+                mode="MultiSelect"
+            >
+                <columns>
+                    <Column id="columnCplndOrdWhereUsedA">
+                        <Text
+                            id="textCplndOrdWhereUsedA"
+                            text="Combined Planned Order"
+                        />
+                    </Column>
+                    <Column id="columnQtyWhereUsedA">
+                        <Text
+                            id="textQtyWhereUsedA"
+                            text="Available Quantity"
+                        />
+                    </Column>
+                </columns>
+            </Table>
+        </content>
+        <buttons>
+            <Button
+                id="_IDGenBtnCancelWhereUsedA"
+                text="Chiudi"
+                type="Back"
+                press="onCloseDialog"
+            />
+            <Button
+                id="_IDGenBtnDesassemblyWhereUsedA"
+                text="Desassembly"
+                type="Accept"
+                press="pressDesassembly"
+            />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

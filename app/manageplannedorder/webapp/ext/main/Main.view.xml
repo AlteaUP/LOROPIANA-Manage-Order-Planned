@@ -46,6 +46,13 @@
                         placement="After"
                         key="act1"
                     />
+                    <table:Action
+                        id="componentBtn"
+                        text="Componenti"
+                        press=".pressComponenti"
+                        placement="Before"
+                        key="act2"
+                    />
                     <!-- requiresSelection="true" -->
                 </macros:actions>
                 <!-- <rowCount /> -->

@@ -93,12 +93,9 @@ module.exports = class MainService extends cds.ApplicationService {
       return res;
     });
 
-
-
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_MFI_CR_TYPE_PLA", async (req) => {
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
-
 
     // Table - Components
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (req) => {
@@ -321,6 +318,444 @@ module.exports = class MainService extends cds.ApplicationService {
       res.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority));
 
       return res;
+    });
+
+    this.on("*", "ZZ1_CombinPlannedOrdersComClone", async (req) => {
+      const from = "ZZ1_CombPlnOrdersStockAPI";
+      const where = req.
+        query.SELECT?.where;
+
+      if (!where) {
+        return [];
+      }
+
+      const keys = {
+        CplndOrd: [],
+        CrossPlantConfigurableProduct: []
+      };
+
+      let currentField = null;
+
+      const walk = (node) => {
+        if (!node) return;
+
+        if (Array.isArray(node)) {
+          node.forEach(walk);
+        } else if (typeof node === "object") {
+          if (node.ref && node.ref[0]) {
+            // trovato il nome del campo
+            currentField = node.ref[0];
+          } else if (node.val !== undefined && currentField) {
+            // trovato il valore per l'ultimo campo visto
+            if (keys[currentField]) {
+              keys[currentField].push(node.val);
+            }
+            currentField = null; // resetto per sicurezza
+          } else {
+            // scendo nei figli
+            Object.values(node).forEach(walk);
+          }
+        }
+      };
+
+      walk(where);
+
+      console.log("Valori trovati:", keys);
+
+      let res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT.from(from).where({
+          CplndOrd: { in: keys.CplndOrd },
+          CrossPlantConfigurableProduct: { in: keys.CrossPlantConfigurableProduct }
+        })
+      );
+
+      // mappo Batch se vuoto
+      res = res.map((r, i) => ({
+        ...r,
+        Batch: r.Batch && r.Batch.trim() !== "" ? r.Batch : `TEMP-Batch-${i}`
+      }));
+
+
+      // Calculate TotalPlanAllQty and CombPlanAllQty for each record
+      if (Array.isArray(res) && res.length > 0) {
+        const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
+
+        // Batch query to get all assignment data
+        const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+          SELECT.from('ZZ1_MFP_ASSIGNMENT')
+            .where({
+              WERKS: { in: res.map(i => i.Plant) },
+              MATNR: { in: res.map(i => i.Material) }
+            })
+        );
+
+        // Create lookup maps
+        const allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
+
+        // If we have a specific combined order, get its assignments too
+        let combPlanAssignmentsMap = {};
+        if (PlannedCombinedOrder) {
+          const combPlanAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+            SELECT.from('ZZ1_MFP_ASSIGNMENT')
+              .where({
+                FSH_MPLO_ORD: PlannedCombinedOrder,
+                WERKS: { in: res.map(i => i.Plant) },
+                MATNR: { in: res.map(i => i.Material) }
+              })
+          );
+          combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
+        }
+
+        res.forEach(item => {
+          const { Plant, Material } = item;
+          const key = `${Plant}|${Material}`;
+
+          const allAssignments = allAssignmentsMap[key] || [];
+          const combPlanAssignments = combPlanAssignmentsMap[key] || [];
+
+          const TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V');
+          const CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V');
+
+          item.TotalPlanAllQty = TotalPlanAllQty.toFixed(3);
+          item.CombPlanAllQty = CombPlanAllQty.toFixed(3);
+          // AvailableQuantity / RequiredQuantity
+          let chart_percent = Math.round(parseFloat(item.AvailableQuantity) / parseFloat(item.RequiredQuantity) * 100);
+          let chart_criticality;
+          if (chart_percent >= 100) {
+            chart_criticality = 3
+          } else if (chart_percent < 100 && chart_percent > 0) {
+            chart_criticality = 2
+          } else {
+            chart_criticality = 1
+            chart_percent = 100
+          }
+          item.chart_percent = chart_percent; // Components
+          item.chart_criticality = chart_criticality; // Components
+          // Finished product qty: (Required Quantity (del componente) / Planned Total Qty) * Comb Plan All qty;
+          if (parseInt(item.TotalPlanAllQty) > 0 && parseInt(item.CombPlanAllQty) > 0) {
+            item.FinishedProductQty = (parseFloat(item.RequiredQuantity) / parseFloat(item.TotalPlanAllQty) * parseFloat(item.CombPlanAllQty)).toFixed(3);
+          } else {
+            item.FinishedProductQty = parseInt("0").toFixed(3);
+          }
+          // modifica DL - 22/07/2025 - calcolo campo priorità
+          if (item.BaseUnit && item.BaseUnit.toUpperCase() === 'M2') {
+            if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
+              item.priority = 2
+            } else {
+              item.priority = 1
+            }
+          } else {
+            item.priority = 3
+          }
+          // modifica DL - 22/07/2025 - calcolo campo priorità - FINE
+        });
+      }
+      res.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority));
+
+      // 🔑 raggruppo per Material
+      const grouped = {};
+      for (const row of res) {
+        const mat = row.Material;
+
+        if (!grouped[mat]) {
+          grouped[mat] = {
+            ...row,
+            RequiredQuantity: 0,
+            CombPlanAllQty: 0,
+            AvailableQuantity: 0
+          };
+        }
+
+        grouped[mat].RequiredQuantity += Number(row.RequiredQuantity || 0);
+        grouped[mat].CombPlanAllQty += Number(row.CombPlanAllQty || 0);
+        grouped[mat].AvailableQuantity += Number(row.AvailableQuantity || 0);
+      }
+
+      // converto di nuovo in array e riporto i numeri come stringhe
+      const aggregated = Object.values(grouped).map(g => ({
+        ...g,
+        RequiredQuantity: String(g.RequiredQuantity),
+        CombPlanAllQty: String(g.CombPlanAllQty),
+        AvailableQuantity: String(g.AvailableQuantity)
+      }));
+
+      return aggregated;
+      //return res;
+    });
+
+    this.on("*", "ZZ1_CombinPlannedOrdersComClone/to_ZZ1_CombPlnOrdersStock", async (req) => {
+      const cplndOrd = req.params.at(-1)?.CplndOrd;
+      const material = req.params.at(-1)?.Material;
+      if (req.params.at(-1)) {
+        req.params.at(-1).Batch = '';
+      }
+      const parentKeys = req.params.at(-1) || {};
+      const where = {
+        Material: parentKeys.Material,
+        Plant: parentKeys.Plant
+      };
+
+      const stockData = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT.from("ZZ1_CombPlnOrdersStock").where(where)
+      );
+      // modifica MDB - 06/08/2025 - estraggo record selezionato da tabella Componenti - INIZIO
+      const stockByMaterial = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT
+          .from("ZZ1_CombPlnOrdersStockAPI")
+          .columns("*")
+          .where([
+            { ref: ['Material'] }, '=', { val: material },
+            'and',
+            { ref: ['CplndOrd'] }, '=', { val: cplndOrd }
+          ])
+      );
+      // modifica MDB - 06/08/2025 - estraggo record selezionato da tabella Componenti - FINE
+      if (!Array.isArray(stockData) || stockData.length === 0) return stockData;
+
+      const PlannedCombinedOrder = req.params.at(-1).CplndOrd;
+
+      // 2. Extract all unique combinations for batch queries
+      const materialPlantBatchLocations = stockData.map(item => ({
+        Plant: item.Plant,
+        Material: item.Material,
+        StorageLocation: item.StorageLocation,
+        Batch: item.Batch
+      }));
+
+      // 3. Batch query for TotalProdAllQty
+      const prodAllQtyPromise = ZZ1_I_ARUN_BDBSSUMQTY_CDS.run(
+        SELECT.from('ZZ1_I_ARUN_BDBSSUMQTY_CDS')
+          .where({
+            Plant: { in: stockData.map(i => i.Plant) },
+            Material: { in: stockData.map(i => i.Material) }
+          })
+      );
+
+
+      // 4. Batch query for TotalPlanAllQty
+      const planAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
+
+      // 5. Batch query for CombPlanAllQty with the specific planned order
+      const combPlanAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            FSH_MPLO_ORD: PlannedCombinedOrder,
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
+
+      // 6. Batch query for TotalDeliveryQty
+      const deliveryQtyPromise = ZZ1_I_SUMQTYDELIVERY_T_CDS.run(
+        SELECT.from('ZZ1_I_SUMQTYDELIVERY_T')
+          .where({
+            Material: { in: stockData.map(i => i.Material) },
+            StorLoc: { in: stockData.map(i => i.StorageLocation) }
+          })
+      );
+
+      // modifica DL - 10/06/2025 - recupero atp
+      const atpRulesPromise = ZI_RFM_ATP_RULES_CDS.run(
+        SELECT.from('ZI_RFM_ATP_RULES')
+          .where({
+            CplndOrd: req.params.at(-1).CplndOrd,
+            CrossPlantConfigurableProduct: req.params.at(-1).CrossPlantConfigurableProduct,
+            Material: req.params.at(-1).Material,
+            Plant: req.params.at(-1).Plant,
+            StorageLocation: req.params.at(-1).StorageLocation,
+            Batch: req.params.at(-1).Batch,
+            BillOfMaterialItemNumber_2: req.params.at(-1).BillOfMaterialItemNumber_2
+          })
+      );
+      // modifica DL - 10/06/2025 - recupero atp - FINE
+
+      // 7. Execute all queries in parallel
+      const [prodAllQtyData, planAllQtyData, combPlanAllQtyData, deliveryQtyData, atpRulesData] =
+        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise, atpRulesPromise]);
+
+      // 8. Create lookup maps for faster association
+      const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
+      const planAllQtyMap = createLookupMap(planAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
+
+      // 9. Process results with maps instead of additional queries
+      var res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
+        const { Plant, Material, StorageLocation, Batch } = item;
+        const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+
+        const prodItems = prodAllQtyMap[key] || [];
+        const planItems = planAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+        const combPlanItems = combPlanAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+        const deliveryItems = deliveryQtyMap[`${Material}|${StorageLocation}|${Batch}`] || [];
+
+        const TotalProdAllQty = sumValues(prodItems, 'TotalAllocQty');
+        const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
+        const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+        const TotalDeliveryQty = sumValues(deliveryItems, 'TotDeliveryQty');
+        let StorageLocationStock = parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString();
+
+        let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) -
+          TotalProdAllQty - TotalPlanAllQty - TotalDeliveryQty).toFixed(3).toString();
+        if (AvaibilityQty < 0) AvaibilityQty = "0.000";
+        return {
+          ...item,
+          StorageLocationStock,
+          TotalProdAllQty: TotalProdAllQty.toFixed(3).toString(),
+          TotalPlanAllQty: TotalPlanAllQty.toFixed(3).toString(),
+          CombPlanAllQty: CombPlanAllQty.toFixed(3).toString(),
+          AvaibilityQty,
+          TotalInDelQty: TotalDeliveryQty.toFixed(3).toString(),
+          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString()
+        };
+      });
+
+      // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation
+      if (atpRulesData.length > 0) {
+        var atpRulesArray = JSON.parse(atpRulesData[0].atp)
+        var filteredData = res.filter(item => atpRulesArray.includes(item.StockSegment));
+
+        // sorto per valori atpRulesData
+        filteredData.sort((a, b) => atpRulesArray.indexOf(a.StockSegment) - atpRulesArray.indexOf(b.StockSegment));
+
+        // valorizzo campo StockSegmentCode
+        var result = filteredData.map(obj => ({
+          ...obj,
+          StockSegmentCode: (atpRulesArray.indexOf(obj.StockSegment)) + 1
+        }));
+
+        res = result
+      }
+      // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation - FINE
+
+      // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto INIZIO
+      const operation = stockByMaterial.map(item => item.Operation_2);
+      const capacityData = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+        SELECT
+          .from('ZZ1_PLOCAPACITYCORD')
+          .columns('*')
+          .where({
+            Operation: operation,
+            fornitore: { '!=': '' },
+            CombinedMasterOrder: cplndOrd
+          })
+      );
+      const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
+      const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
+
+      const storageLocations = ['H100', 'P100', 'K100'];
+      res = res
+        // filtra StorageLocation vuoto o valido
+        .filter(row => !row.StorageLocation || storageLocations.includes(row.StorageLocation))
+        // filtra e valida Supplier
+        .filter(row => {
+          if (!row.Supplier && !row.StorageLocation) return false; // entrambi vuoti → scarta
+
+          if (row.Supplier) {
+            const paddedSupplier = row.Supplier.padStart(maxSupplierLength, '0');
+            if (!validSuppliers.includes(paddedSupplier)) return false; // non valido → scarta
+            row.Supplier = row.Supplier.replace(/^0+/, ''); // rimuove padding subito
+          }
+          return true;
+        })
+        // assegna StorageLocation = Supplier quando manca
+        .map(row => {
+          if (!row.StorageLocation && row.Supplier) {
+            row.StorageLocation = row.Supplier;
+          }
+          return row;
+        });
+      res.forEach((rec, idx) => {
+        // Generiamo un valore univoco solo con l'indice
+        const unique = () => `_${idx}`;
+
+        rec.Material = rec.Material || unique();
+        rec.Plant = rec.Plant || unique();
+        rec.StorageLocation = rec.StorageLocation || unique();
+        rec.Batch = rec.Batch || unique();
+        rec.Supplier = rec.Supplier || unique();
+        rec.SDDocument = rec.SDDocument || unique();
+        rec.SDDocumentItem = rec.SDDocumentItem || unique();
+        rec.WBSElementInternalID = rec.WBSElementInternalID || unique();
+        rec.Customer = rec.Customer || unique();
+        rec.SpecialStockIdfgStockOwner = rec.SpecialStockIdfgStockOwner || unique();
+        rec.InventoryStockType = rec.InventoryStockType || unique();
+        rec.InventorySpecialStockType = rec.InventorySpecialStockType || unique();
+        rec.MaterialBaseUnit = rec.MaterialBaseUnit || unique();
+        rec.CostEstimate = rec.CostEstimate || unique();
+        rec.ResourceID = rec.ResourceID || unique();
+
+        // Log leggibile con nomi dei campi
+        console.log(
+          `Index: ${idx}`,
+          `Material: ${rec.Material}`,
+          `Plant: ${rec.Plant}`,
+          `StorageLocation: ${rec.StorageLocation}`,
+          `Batch: ${rec.Batch}`,
+          `Supplier: ${rec.Supplier}`,
+          `SDDocument: ${rec.SDDocument}`,
+          `SDDocumentItem: ${rec.SDDocumentItem}`,
+          `WBSElementInternalID: ${rec.WBSElementInternalID}`,
+          `Customer: ${rec.Customer}`,
+          `SpecialStockIdfgStockOwner: ${rec.SpecialStockIdfgStockOwner}`,
+          `InventoryStockType: ${rec.InventoryStockType}`,
+          `InventorySpecialStockType: ${rec.InventorySpecialStockType}`,
+          `MaterialBaseUnit: ${rec.MaterialBaseUnit}`,
+          `CostEstimate: ${rec.CostEstimate}`,
+          `ResourceID: ${rec.ResourceID}`
+        );
+      });
+
+      // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto FINE
+
+      // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - INIZIO
+      // raggruppamento per StorageLocation + Batch
+      let consolidatedMap = new Map();
+
+      res.forEach(item => {
+        const groupKey = `${item.StorageLocation}|${item.Batch}`;
+
+        if (!consolidatedMap.has(groupKey)) {
+          // Primo record del gruppo - mantieni tutti i campi
+          consolidatedMap.set(groupKey, {
+            ...item,  // Copia tutti i campi dal primo record
+            StorageLocationStock: parseFloat(item.StorageLocationStock)  // Converti a number per la somma
+          });
+        } else {
+          // Record successivi - somma SOLO StorageLocationStock
+          const existingRecord = consolidatedMap.get(groupKey);
+          existingRecord.StorageLocationStock += parseFloat(item.StorageLocationStock);
+        }
+      });
+
+      // Converti Map in array
+      let consolidatedRes = Array.from(consolidatedMap.values());
+
+      //Ricalcolo AvaibilityQty
+      let finalRes = consolidatedRes.map(item => {
+        // Ricalcola AvaibilityQty usando il StorageLocationStock sommato
+        let newAvaibilityQty = (item.StorageLocationStock -
+          parseFloat(item.TotalProdAllQty) -
+          parseFloat(item.TotalPlanAllQty) -
+          parseFloat(item.TotalInDelQty)).toFixed(3).toString();
+
+        if (parseFloat(newAvaibilityQty) < 0) newAvaibilityQty = "0.000";
+
+        return {
+          ...item,
+          StorageLocationStock: item.StorageLocationStock.toFixed(3).toString(), // Riconverti a string
+          AvaibilityQty: newAvaibilityQty
+        };
+      });
+      // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - FINE
+      finalRes['$count'] = finalRes.length.toString();
+      return finalRes;
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom/to_ZZ1_CombPlnOrdersStock", async (req) => {
@@ -627,7 +1062,7 @@ module.exports = class MainService extends cds.ApplicationService {
     }
 
     // ZZ1_CombinedPlnOrdersAPI - End
-    // ZZ1_MASTERPLANNEDORDERAPI - Start
+    // ZZ1_MASTERPLANNEDORDERAPI - Startr
     this.on("*", "ZZ1_MasterPlannedOrderAPI", async (req) => {
       return ZZ1_MASTERPLANNEDORDERAPI_CDS.run(req.query);
     })
@@ -880,10 +1315,10 @@ module.exports = class MainService extends cds.ApplicationService {
               }
             }
           }
-/*           return {
-            Mandassign: batch?.Mandassign ?? false,
-            AssignRule: batch?.AssignRule ?? null
-          }; */
+          /*           return {
+                      Mandassign: batch?.Mandassign ?? false,
+                      AssignRule: batch?.AssignRule ?? null
+                    }; */
           return batch;
         }
         catch (err) {
@@ -1008,6 +1443,61 @@ module.exports = class MainService extends cds.ApplicationService {
         // Assegna icona solo se AssignRule === true
         each.IconActive = (batch && batch.AssignRule === true)
           ? 'sap-icon://activate'
+          : '';
+
+        // Assegna flagHighlights se Mandassign === true
+        each.flagHighlights = (batch && batch.Mandassign === true)
+          ? 'X'
+          : '';
+      }));
+    });
+
+    this.after('READ', "ZZ1_CombinPlannedOrdersComClone", async (each) => {
+      const isEmptyOrN = v => v === undefined || v === null || v === '' || v === 'N';
+      await Promise.all(each.map(async each => {
+        const { Material, Plant, ProductGroup } = each;
+        let batch = null;
+        // 1) prova solo su Material
+        if (Material) {
+          batch = await ButchCustService.run(
+            SELECT.one('*')
+              .from('ZZ1_MFP_BATCHCUSTOM')
+              .where({ Material })
+          );
+          if (batch && ['Gruppo_Merce', 'Plant', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+            batch = null;
+          }
+        }
+        // 2) prova su Gruppo_Merce + Plant
+        if (!batch && ProductGroup && Plant) {
+          batch = await ButchCustService.run(
+            SELECT.one('*')
+              .from('ZZ1_MFP_BATCHCUSTOM')
+              .where({ Gruppo_Merce: ProductGroup, Plant })
+          );
+          if (batch && ['Material', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+            batch = null;
+          }
+        }
+        // 3) prova solo su Plant
+        if (!batch && Plant) {
+          batch = await ButchCustService.run(
+            SELECT.one('*')
+              .from('ZZ1_MFP_BATCHCUSTOM')
+              .where({ Plant })
+          );
+          if (batch && ['Material', 'Gruppo_Merce', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+            batch = null;
+          }
+        }
+        // Assegna icona solo se AssignRule === true
+        each.IconActive = (batch && batch.AssignRule === true)
+          ? 'sap-icon://activate'
+          : '';
+
+        // Assegna flagHighlights se Mandassign === true
+        each.flagHighlights = (batch && batch.Mandassign === true)
+          ? 'X'
           : '';
       }));
     });

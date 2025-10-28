@@ -1195,6 +1195,448 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
 
 
 );
+annotate service.ZZ1_CombinPlannedOrdersComClone with @(
+    UI.SelectionFields#tableMacro: [CplndOrd],
+    UI.LineItem #componenti         : [
+        {
+            $Type: 'UI.DataField',
+            Value: CplndOrd,
+            Label: 'CplndOrd',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Material,
+            Label: 'Material',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Plant,
+            Label: 'Plant',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: StorageLocation,
+            Label: 'StorageLocation',
+        },
+    ],
+    UI.Facets                       : [{
+        $Type : 'UI.ReferenceFacet',
+        Label : 'Stock',
+        ID    : 'Stock',
+        Target: 'to_ZZ1_CombPlnOrdersStock/@UI.LineItem#Stock',
+    }],
+    UI.LineItem #stock              : [{
+        $Type: 'UI.DataField',
+        Value: Material,
+        Label: 'Material',
+    }],
+    UI.HeaderFacets                 : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'CplndOrd',
+            Target: '@UI.DataPoint#CplndOrd',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'Material',
+            Target: '@UI.DataPoint#Material',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'ProductDescription',
+            Target: '@UI.DataPoint#ProductDescription',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'Plant',
+            Target: '@UI.DataPoint#Plant',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'TotalProdAllQty',
+            Target: '@UI.DataPoint#TotalProdAllQty',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'TotalAllocQty',
+            Target: '@UI.DataPoint#TotalAllocQty',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'FinishedProductQty',
+            Target: '@UI.DataPoint#FinishedProductQty',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'GeneralInfo',
+            Target: '@UI.FieldGroup#GeneralInfo',
+            Label : '{i18n>Quantity}',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'chart_percent',
+            Target: '@UI.Chart#PercentageDonut',
+        },
+    ],
+    UI.FieldGroup #GeneralInfo      : {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: AvailableQuantity,
+                Label: '{i18n>AvailableQuantity}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: RequiredQuantity,
+                Label: '{i18n>RequiredQuantity}',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: WithdrawnQuantity,
+                Label: '{i18n>WithdrawnQuantity}',
+                ![@UI.Hidden],
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: BaseUnit,
+                Label: '{i18n>BaseUnit}',
+            },
+        ],
+    },
+    UI.HeaderInfo                   : {
+        Title         : {
+            $Type: 'UI.DataField',
+            Value: Material,
+        },
+        TypeName      : '',
+        TypeNamePlural: '',
+        Initials      : Material,
+    },
+    UI.DataPoint #CplndOrd          : {
+        $Type: 'UI.DataPointType',
+        Value: CplndOrd,
+        Title: '{i18n>CplndOrd}',
+    },
+    UI.DataPoint #Material          : {
+        $Type: 'UI.DataPointType',
+        Value: Material,
+        Title: '{i18n>Material}',
+    },
+    UI.DataPoint #Plant             : {
+        $Type: 'UI.DataPointType',
+        Value: Plant,
+        Title: '{i18n>Plant}',
+    },
+    UI.LineItem #Components         : [
+        {
+            $Type: 'UI.DataField',
+            Value: Material,
+            Label: '{i18n>Material}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: ProductDescription,
+            Label: '{i18n>Productdescription}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: RequiredQuantity,
+            Label: '{i18n>RequiredQuantity}',
+        },
+        {
+            $Type : 'UI.DataFieldForAnnotation',
+            Target: '@UI.Chart#PercentageDonut',
+            Label : '{i18n>AvailableQuantityRequired}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: TotalAllocQty,
+            Label: '{i18n>TotalAllocQty}',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: AvailableQuantity,
+            Label: '{i18n>AvailableQuantity}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: CombPlanAllQty,
+            Label: '{i18n>TotAssignedComb}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: WithdrawnQuantity,
+            Label: '{i18n>WithdrawnQuantity}',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: BaseUnit,
+            Label: '{i18n>BaseUnit}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : Operation_2,
+            Label : 'Operation',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ProductGroup,
+            Label : 'Product Group',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Batch,
+            Label: '{i18n>Batch}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: BillOfMaterialCategory,
+            Label: '{i18n>BillOfMaterialCategory}',
+            ![@UI.Hidden]
+        },
+
+        {
+            $Type: 'UI.DataField',
+            Value: BOMItemDescription,
+            Label: '{i18n>BomItemDescription}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: CplndOrd,
+            Label: '{i18n>CplndOrd}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: CrossPlantConfigurableProduct,
+            Label: '{i18n>CrossPlantConfigurableProduct}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: MatlCompRequirementDate,
+            Label: '{i18n>MatlCompRequirementdate}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: MRPController,
+            Label: '{i18n>MrpController}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: MRPControllerName,
+            Label: '{i18n>MrpControllerName}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: Plant,
+            Label: '{i18n>Plant}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: PlantName,
+            Label: '{i18n>PlantName}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: ProductCharacteristic1,
+            Label: '{i18n>ProductCharacteristic1}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: ProductCharacteristic2,
+            Label: '{i18n>ProductCharacteristic2}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: ProductCharacteristic3,
+            Label: '{i18n>ProductCharacteristic3}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: StorageLocation,
+            Label: '{i18n>StorageLocation}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: TotalProdAllQty,
+            Label: '{i18n>TotalProdAllQty}',
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: TotalPlanAllQty,
+            Label: '{i18n>TotalPlanAllQty}',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: FinishedProductQty,
+            Label: '{i18n>FinishedProductQty}',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: chart_criticality,
+            Label: 'chart_criticality',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: chart_percent,
+            Label: 'chart_percent',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: to_ZZ1_CombPlnOrdersStock.StockSegment,
+            Label: 'StockSegment',
+            ![@UI.Hidden],
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: priority,
+            Label: 'Priority',
+            ![@UI.Hidden],
+        },
+                {
+            $Type: 'UI.DataField',
+            Value: IconActive,
+            Label: 'IconActive',
+            ![@UI.Hidden],
+        },
+
+    ],
+    UI.FieldGroup #QTY              : {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: AvailableQuantity,
+                Label: 'Available Quantity',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: RequiredQuantity,
+                Label: 'Required Quantity',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: WithdrawnQuantity,
+                Label: 'Withdrawn Quantity',
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: BaseUnit,
+                Label: 'Base Unit',
+            },
+        ],
+    },
+    UI.DataPoint #Material1         : {
+        $Type: 'UI.DataPointType',
+        Value: Material,
+        Title: 'Material',
+    },
+    UI.DataPoint #Plant1            : {
+        $Type: 'UI.DataPointType',
+        Value: Plant,
+        Title: 'Plant',
+    },
+    UI.DataPoint #PlantName         : {
+        $Type: 'UI.DataPointType',
+        Value: PlantName,
+        Title: 'Plant Name',
+    },
+    UI.DataPoint #TotalProdAllQty   : {
+        $Type: 'UI.DataPointType',
+        Value: TotalPlanAllQty,
+        Title: '{i18n>CombPlanAllQty}',
+    },
+    UI.DataPoint #TotalAllocQty     : {
+        $Type: 'UI.DataPointType',
+        Value: RequestFinished,
+        Title: '{i18n>FinishedProductAtpQty}',
+    },
+    UI.DataPoint #FinishedProductQty: {
+        $Type: 'UI.DataPointType',
+        Value: FinishedProductQty,
+        Title: '{i18n>FinishedFeasibleProductQty}',
+    },
+    UI.DataPoint #ProductDescription: {
+        $Type: 'UI.DataPointType',
+        Value: ProductDescription,
+        Title: '{i18n>Productdescription}',
+    },
+    UI.DataPoint #PercentageDonut  : {
+        Value      : chart_percent,
+        // TargetValue : AvailableQuantity,
+        Criticality: chart_criticality
+    },
+    UI.Chart #PercentageDonut      : {
+        Title            : '{i18n>AvailableQuantityRequired}',
+        Description      : '',
+        ChartType        : #Donut,
+        Measures         : [chart_percent],
+        MeasureAttributes: [{
+            $Type    : 'UI.ChartMeasureAttributeType',
+            Measure  : chart_percent,
+            Role     : #Axis1,
+            DataPoint: '@UI.DataPoint#PercentageDonut',
+        }],
+    },
+ /*     UI.DataPoint #chart_percent     : {
+        Value      : chart_percent,
+        // TargetValue : chart_percent,
+        Criticality: chart_criticality
+    },
+    UI.Chart #chart_percent         : {
+        Title            : '{i18n>AvailableQuantityRequired}',
+        Description      : '',
+        ChartType        : #Donut,
+        Measures         : [chart_percent],
+        MeasureAttributes: [{
+            $Type    : 'UI.ChartMeasureAttributeType',
+            DataPoint: '@UI.DataPoint#chart_percent',
+            Role     : #Axis1,
+            Measure  : chart_percent,
+        }, ],
+    }, */
+    UI.DataPoint #Material2         : {
+        $Type: 'UI.DataPointType',
+        Value: Material,
+        Title: 'Material',
+    },
+ /*     UI.DataPoint #chart_percent1    : {
+        Value      : chart_percent,
+        // TargetValue : chart_percent,
+        Criticality: chart_criticality,
+    },
+    UI.Chart #chart_percent1        : {
+        ChartType        : #Donut,
+        Measures         : [chart_percent, ],
+        MeasureAttributes: [{
+            DataPoint: '@UI.DataPoint#chart_percent1',
+            Role     : #Axis1,
+            Measure  : chart_percent,
+        }, ],
+    }, */
+
+
+);
 
 
 annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
@@ -1204,6 +1646,241 @@ annotate ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom with @(
 
 // #/ZZ1_CombinedPlnOrdersAPI(CplndOrd='<>',CrossPlantConfigurableProduct='<>')/to_CombinPlannedOrdersCom(Material='<>',Batch='<>',CplndOrd='<>',CrossPlantConfigurableProduct='<>',Plant='<>',StorageLocation='<>')
 annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
+    {
+        $Type: 'UI.DataField',
+        Value: Batch,
+        Label: 'Batch',
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : Material,
+        Label                : 'Material',
+        ![@UI.Hidden],
+        ![@HTML5.CssDefaults]: {width: '10rem',
+        },
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Plant,
+        Label: 'Plant',
+        ![@UI.Hidden]
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : StorageLocation,
+        Label                : 'Storage Location',
+        ![@HTML5.CssDefaults]: {width: '5rem',
+        },
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: StorageLocationStock,
+        Label: 'Storage Location Stock'
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : MaterialBaseUnit,
+        Label                : 'Base Unit',
+        ![@HTML5.CssDefaults]: {width: '5rem',
+        },
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : dye_lot,
+        Label                : 'Dye Lot',
+        ![@HTML5.CssDefaults]: {width: '5rem',
+        },
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : choice,
+        Label                : 'Leather grade',
+        ![@HTML5.CssDefaults]: {width: '5rem',
+        },
+    },
+    {
+        $Type                : 'UI.DataField',
+        Value                : CERTIFICATO,
+        Label                : 'Certificato',
+        ![@HTML5.CssDefaults]: {width: '9rem',
+        }
+    },
+
+    {
+        $Type: 'UI.DataField',
+        Value: AvaibilityQty,
+        Label: 'Avaibility Qty'
+    },
+
+    {
+        $Type: 'UI.DataField',
+        Value: TotalProdAllQty,
+        Label: 'Tot Assigned PrO'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: TotalPlanAllQty,
+        Label: 'Tot Assigned PlO'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: CombPlanAllQty,
+        Label: 'Tot Assigned Comb'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: TotalInDelQty,
+        Label: 'Tot Delivery Qty'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: StockSegment,
+        Label: 'Stock Segment',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: StockSegmentCode,
+        Label: 'Stock Segment Code',
+    },
+    
+    {
+        $Type: 'UI.DataField',
+        Value: BatchBySupplier,
+        Label: 'Batch By Supplier',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: GROSS_LENGHT,
+        Label: 'GROSS_LENGHT',
+        ![@UI.Hidden],
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: NET_HEIGHT,
+        Label: 'NET_HEIGHT',
+        ![@UI.Hidden],
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: DEROGA,
+        Label: 'DEROGA',
+        ![@UI.Hidden],
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: PDF_RATING_ID,
+        Label: 'PDF_RATING_ID',
+        ![@UI.Hidden],
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: SERIALE_MATRICOLA,
+        Label: 'SERIALE_MATRICOLA',
+        ![@UI.Hidden],
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: ALTEZZA_STANDARD,
+        Label: 'ALTEZZA_STANDARD',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Supplier,
+        Label: 'Supplier',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: SDDocument,
+        Label: 'SDDocument',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: SDDocumentItem,
+        Label: 'SDDocumentItem',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: WBSElementInternalID,
+        Label: 'WBSElementInternalID',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Customer,
+        Label: 'Customer',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: SpecialStockIdfgStockOwner,
+        Label: 'SpecialStockIdfgStockOwner',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: InventoryStockType,
+        Label: 'InventoryStockType',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: InventorySpecialStockType,
+        Label: 'InventorySpecialStockType',
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: CostEstimate,
+        Label: 'CostEstimate',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: ResourceID,
+        Label: 'ResourceID',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: CompanyCode,
+        Label: 'CompanyCode',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: MatlWrhsStkQtyInMatlBaseUnit,
+        Label: 'MatlWrhsStkQtyInMatlBaseUnit',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: MatlCnsmpnQtyInMatlBaseUnit,
+        Label: 'MatlCnsmpnQtyInMatlBaseUnit',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: MatlStkIncrQtyInMatlBaseUnit,
+        Label: 'MatlStkIncrQtyInMatlBaseUnit',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: MatlStkDecrQtyInMatlBaseUnit,
+        Label: 'MatlStkDecrQtyInMatlBaseUnit',
+        ![@UI.Hidden]
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: CustomQty,
+        Label: 'CustomQty',
+        ![@UI.Hidden]
+    },
+]);
+
+annotate service.ZZ1_CombPlnOrdersStockClone with @(UI.LineItem #Stock: [
     {
         $Type: 'UI.DataField',
         Value: Batch,

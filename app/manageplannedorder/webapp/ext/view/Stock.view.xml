@@ -1,0 +1,39 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:table="sap.fe.macros.table" xmlns="sap.m" xmlns:macros="sap.fe.macros" xmlns:html="http://www.w3.org/1999/xhtml" controllerName="manageplannedorder.manageplannedorder.ext.view.Stock">
+    <Page id="stock" title="Stock ({stocksModel/>tableCount})">
+        <content>
+        <Title id="_IDGenTitle" text="Stock ({stocksModel>/tableCount})" level="H3" class="sapUiSmallMarginBegin"/>
+            <macros:Table id="TableStock" metaPath="to_ZZ1_CombPlnOrdersStock/@com.sap.vocabularies.UI.v1.LineItem#Stock" type="ResponsiveTable" selectionMode="ForceMulti">
+             <macros:actions>
+                    <table:Action
+                        id="assegna"
+                        press="pressAssegna"
+                        text="Assegna"
+                        placement="Before"
+                        key="assegna"
+                    />
+                       <table:Action
+                        id="assegnaAuto"
+                        press="pressAssegnaAuto"
+                        text="Assegna Auto"
+                        placement="After"
+                        key="assegnaAuto"
+                    />
+                    <table:Action
+                        id="disassegna"
+                        text="Disassegna"
+                        press="pressDisassegna"
+                        placement="After"
+                        key="disassegna"
+                    />
+                       <table:Action
+                        id="whereUsed"
+                        press="pressWhereUsed"
+                        text="Where Used"
+                        placement="After"
+                        key="whereUsed"
+                    />
+                </macros:actions>
+            </macros:Table>       
+        </content>
+    </Page>
+</mvc:View> 
