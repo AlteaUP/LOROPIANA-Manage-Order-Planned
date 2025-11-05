@@ -1,4 +1,4 @@
-/* checksum : 365e8240a3abb1665edf309eee2acbf0 */
+/* checksum : 92e2c53076e9529317bf22a096c1b33c */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -12,14 +12,14 @@ service ZZ1_COMBINEDPLNORDERSAPI_CDS {};
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Categoria capacità'
+@sap.label : 'Capacity Category'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityCategory {
   @sap.display.format : 'UpperCase'
   @sap.text : 'CapacityCategoryCode_Text'
-  @sap.label : 'Categoria capacità'
+  @sap.label : 'Capacity Category'
   key CapacityCategoryCode : String(3) not null;
-  @sap.label : 'Desc. tipo capacità'
-  @sap.quickinfo : 'Descrizione del tipo di capacità'
+  @sap.label : 'Capacity Cat. Name'
+  @sap.quickinfo : 'Description of a Capacity Category'
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   CapacityCategoryCode_Text : String(20);
@@ -31,65 +31,61 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityCategory {
 @sap.updatable : 'false'
 @sap.deletable : 'false'
 @sap.content.version : '1'
-@sap.label : 'Testata fabbisogno di capacità'
+@sap.label : 'Capacity Requirement Header'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirement {
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Fabbisogno capacità'
-  @sap.quickinfo : 'ID del record fabbisogno capacità'
+  @sap.label : 'Capacity Requirement'
+  @sap.quickinfo : 'ID of the Capacity Requirements Record'
   key CapacityRequirement : String(12) not null;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Orig. fabb. capacità'
-  @sap.quickinfo : 'Origine del fabbisogno di capacità'
+  @sap.label : 'Capacity Requirement Origin'
   CapacityRequirementOrigin : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine pianificato'
+  @sap.label : 'Planned Order'
   PlannedOrder : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine'
-  @sap.quickinfo : 'Numero ordine'
+  @sap.label : 'Order'
+  @sap.quickinfo : 'Order Number'
   OrderID : String(12);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'ID interno ordine'
-  @sap.quickinfo : 'ID interno dell''ordine'
+  @sap.label : 'Order Internal ID'
   OrderInternalID : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine SOP'
-  @sap.quickinfo : 'Ordine pianificazione operazioni commerciali'
+  @sap.label : 'SOP Order'
+  @sap.quickinfo : 'Sales Operations Planning Order'
   SalesOperationsPlanningOrder : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo ciclo'
+  @sap.label : 'Task List Type'
   BillOfOperationsType : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Gruppo'
-  @sap.quickinfo : 'Chiave per gruppo di cicli'
+  @sap.label : 'Group'
+  @sap.quickinfo : 'Key for Task List Group'
   BillOfOperationsGroup : String(8);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Cont. gruppi cicli'
-  @sap.quickinfo : 'Contatore gruppi cicli'
+  @sap.label : 'Group Counter'
   BillOfOperations : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo schedulazione'
-  @sap.quickinfo : 'Tipo di schedulazione'
+  @sap.label : 'Scheduling Type'
   SchedulingType : String(1);
   @sap.display.format : 'Date'
-  @sap.label : 'Inizio schedulato'
+  @sap.label : 'Scheduled start'
   ScheduledBasicStartDate : Date;
-  @sap.label : 'Ora inizio + presto'
-  @sap.quickinfo : 'Inizio al più presto schedulato: esecuzione (ora)'
+  @sap.label : 'Earliest start time'
+  @sap.quickinfo : 'Earliest scheduled start: Execution (time)'
   ScheduledBasicStartTime : Time;
   @sap.display.format : 'Date'
-  @sap.label : 'Fine schedulata'
+  @sap.label : 'Scheduled finish'
   ScheduledBasicEndDate : Date;
-  @sap.label : 'Fine al più presto'
-  @sap.quickinfo : 'Fine al più presto operazione (ora)'
+  @sap.label : 'Earliest finish'
+  @sap.quickinfo : 'Earliest finish of operation (time)'
   ScheduledBasicEndTime : Time;
   @sap.display.format : 'Date'
-  @sap.label : 'Schedul. il'
-  @sap.quickinfo : 'Data dell''ultima schedulazione'
+  @sap.label : 'Scheduled on'
+  @sap.quickinfo : 'Date of the Last Scheduling'
   LastScheduledDate : Date;
   @sap.display.format : 'Date'
-  @sap.label : 'Data esplosione'
-  @sap.quickinfo : 'Data dell''esplosione ciclo'
+  @sap.label : 'Explosion Date'
+  @sap.quickinfo : 'Date for Routing Explosion'
   BOOExplosionDate : Date;
 };
 
@@ -99,16 +95,16 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirement {
 @sap.updatable : 'false'
 @sap.deletable : 'false'
 @sap.content.version : '1'
-@sap.label : 'Posizione fabbisogno di capacità'
+@sap.label : 'Capacity Requirement Item'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirementItem {
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Fabbisogno capacità'
-  @sap.quickinfo : 'ID del record fabbisogno capacità'
+  @sap.label : 'Capacity Requirement'
+  @sap.quickinfo : 'ID of the Capacity Requirements Record'
   @sap.value.list : 'standard'
   key CapacityRequirement : String(12) not null;
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Contatore'
-  @sap.quickinfo : 'Contatore interno'
+  @sap.label : 'Counter'
+  @sap.quickinfo : 'Internal counter'
   key CapacityRequirementItem : String(8) not null;
   to_CapacityRequirement : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirement {  };
 };
@@ -120,12 +116,12 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirementItem {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Testata fabbisogno di capacità'
+@sap.label : 'Capacity Requirement Header'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirementStdVH {
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Fabbisogno capacità'
-  @sap.quickinfo : 'ID del record fabbisogno capacità'
+  @sap.label : 'Capacity Requirement'
+  @sap.quickinfo : 'ID of the Capacity Requirements Record'
   key CapacityRequirement : String(12) not null;
 };
 
@@ -136,16 +132,15 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirementStdVH {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Testata capacità'
+@sap.label : 'Capacity Header'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityStdVH {
   @sap.display.format : 'NonNegative'
   @sap.text : 'CapacityInternalID_Text'
-  @sap.label : 'ID capacità'
-  @sap.quickinfo : 'ID della capacità'
+  @sap.label : 'Capacity ID'
   key CapacityInternalID : String(8) not null;
-  @sap.label : 'Testo per capacità'
-  @sap.quickinfo : 'Testo breve capacità'
+  @sap.label : 'Capacity Text'
+  @sap.quickinfo : 'Capacity Short Text'
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   CapacityInternalID_Text : String(40);
@@ -158,115 +153,115 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityStdVH {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Cliente'
+@sap.label : 'Customer'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Customer_VH {
   @sap.display.format : 'UpperCase'
   @sap.text : 'BPCustomerName'
-  @sap.label : 'Cliente'
-  @sap.quickinfo : 'Codice cliente'
+  @sap.label : 'Customer'
+  @sap.quickinfo : 'Customer Number'
   key Customer : String(10) not null;
-  @sap.label : 'Nome cliente 1'
-  @sap.quickinfo : 'Nome 1'
+  @sap.label : 'Customer Name 1'
+  @sap.quickinfo : 'Name 1'
   OrganizationBPName1 : String(35);
-  @sap.label : 'Nome business partner 1'
-  @sap.quickinfo : 'Nome 1'
+  @sap.label : 'Business Partner Name 1'
+  @sap.quickinfo : 'Name 1'
   BusinessPartnerName1 : String(40);
-  @sap.label : 'Nome cliente 2'
-  @sap.quickinfo : 'Nome 2'
+  @sap.label : 'Customer Name 2'
+  @sap.quickinfo : 'Name 2'
   OrganizationBPName2 : String(35);
-  @sap.label : 'Nome business partner 2'
-  @sap.quickinfo : 'Nome 2'
+  @sap.label : 'Business Partner Name 2'
+  @sap.quickinfo : 'Name 2'
   BusinessPartnerName2 : String(40);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Paese/Regione'
-  @sap.quickinfo : 'Chiave paese/regione'
+  @sap.label : 'Country/Region'
+  @sap.quickinfo : 'Country/Region Key'
   Country : String(3);
-  @sap.label : 'Città'
+  @sap.label : 'City'
   CityName : String(35);
-  @sap.label : 'Indirizzo business partner - città'
-  @sap.quickinfo : 'Località'
+  @sap.label : 'Business Partner Address City'
+  @sap.quickinfo : 'City'
   BPAddrCityName : String(40);
-  @sap.label : 'Via'
-  @sap.quickinfo : 'Via e numero civico'
+  @sap.label : 'Street'
+  @sap.quickinfo : 'Street and House Number'
   StreetName : String(35);
-  @sap.label : 'Indirizzo business partner - via'
-  @sap.quickinfo : 'Via'
+  @sap.label : 'Business Partner Address Street'
+  @sap.quickinfo : 'Street'
   BPAddrStreetName : String(60);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Codice di avviamento postale'
+  @sap.label : 'Postal Code'
   PostalCode : String(10);
-  @sap.label : 'Nome del cliente'
+  @sap.label : 'Customer Name'
+  @sap.quickinfo : 'Name of Customer'
   CustomerName : String(80);
-  @sap.label : 'Nome del cliente business partner'
-  @sap.quickinfo : 'Nome del cliente'
+  @sap.label : 'Business Partner Customer Name'
+  @sap.quickinfo : 'Customer Name'
   BPCustomerName : String(81);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Gruppo conti'
-  @sap.quickinfo : 'Gruppo conti cliente'
+  @sap.label : 'Account group'
+  @sap.quickinfo : 'Customer Account Group'
   CustomerAccountGroup : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Autorizzazione'
-  @sap.quickinfo : 'Gruppo di autorizzazione'
+  @sap.label : 'Authorization'
+  @sap.quickinfo : 'Authorization Group'
   AuthorizationGroup : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Indicatore scopo raggiunto'
-  @sap.quickinfo : 'Indicatore per obiettivo commerciale raggiunto'
+  @sap.label : 'Purpose Complete Flag'
+  @sap.quickinfo : 'Business Purpose Completed Flag'
   IsBusinessPurposeCompleted : String(1);
-  @sap.label : 'Concorrente'
-  @sap.quickinfo : 'Codice: concorrente'
+  @sap.label : 'Competitors'
+  @sap.quickinfo : 'Indicator: Competitor'
   IsCompetitor : Boolean;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Business partner'
-  @sap.quickinfo : 'Numero business partner'
+  @sap.label : 'Business Partner'
+  @sap.quickinfo : 'Business Partner Number'
   BusinessPartner : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo di business partner'
-  @sap.quickinfo : 'Tipo business partner'
+  @sap.label : 'Business Partner Type'
   BusinessPartnerType : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Imp. TitTrattDt'
-  @sap.quickinfo : 'BP: indicatore per impostare i titolari del trattamento dati'
+  @sap.label : 'Data Ctrlr. Set'
+  @sap.quickinfo : 'BP: Data Controller Set Flag'
   DataControllerSet : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController1 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController2 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController3 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController4 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController5 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController6 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController7 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController8 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController9 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController10 : String(30);
 };
 
@@ -277,11 +272,11 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Customer_VH {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Ordine pianificato'
+@sap.label : 'Planned Order'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlannedOrderStdVH {
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine pianificato'
+  @sap.label : 'Planned Order'
   key PlannedOrder : String(10) not null;
 };
 
@@ -292,57 +287,58 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_PlannedOrderStdVH {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Divisione'
+@sap.label : 'Plant'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {
   @sap.display.format : 'UpperCase'
   @sap.text : 'PlantName'
-  @sap.label : 'Divisione'
+  @sap.label : 'Plant'
   key Plant : String(4) not null;
-  @sap.label : 'Nome divisione'
+  @sap.label : 'Plant Name'
   PlantName : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Area valorizzazione'
+  @sap.label : 'Valuation Area'
   ValuationArea : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Cd. cliente div.'
-  @sap.quickinfo : 'Cd.cliente della divisione'
+  @sap.label : 'Customer No Plant'
+  @sap.quickinfo : 'Customer Number of Plant'
   @sap.value.list : 'standard'
   PlantCustomer : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Cd.forn.div.'
-  @sap.quickinfo : 'Codice fornitore della divisione'
+  @sap.label : 'Sppl. No. Plnt'
+  @sap.quickinfo : 'Supplier Number of Plant'
   @sap.value.list : 'standard'
   PlantSupplier : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Calendario fabbrica'
-  @sap.quickinfo : 'Chiave calendario di fabbrica'
+  @sap.label : 'Factory Calendar'
+  @sap.quickinfo : 'Factory calendar key'
   FactoryCalendar : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Org. acquisti'
-  @sap.quickinfo : 'Organizzazione acquisti'
+  @sap.label : 'Purch. Organization'
+  @sap.quickinfo : 'Purchasing Organization'
   DefaultPurchasingOrganization : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Org.comm. fatt. int.'
-  @sap.quickinfo : 'Organizzazione commerciale per fatturazione interna'
+  @sap.label : 'Sls Organization ICB'
+  @sap.quickinfo : 'Sales Organization for Intercompany Billing'
   SalesOrganization : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Indirizzo'
+  @sap.label : 'Address'
   AddressID : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Cat. div.'
+  @sap.label : 'Plant Cat.'
+  @sap.quickinfo : 'Plant category'
   PlantCategory : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Canale distribuzione'
-  @sap.quickinfo : 'Canale di distribuzione per fatturazione interna'
+  @sap.label : 'Distrib.Channel'
+  @sap.quickinfo : 'Distribution Channel for Intercompany billing'
   DistributionChannel : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Sett. fattur.interna'
-  @sap.quickinfo : 'Settore per fatturazione interna'
+  @sap.label : 'Interco. Billing Div'
+  @sap.quickinfo : 'Division for Intercompany Billing'
   Division : String(2);
-  @sap.label : 'Chiave lingua'
+  @sap.label : 'Language Key'
   Language : String(2);
-  @sap.label : 'Ind. archiviazione'
-  @sap.quickinfo : 'Marcatore archiviazione centrale per record anagrafico'
+  @sap.label : 'Archiving Flag'
+  @sap.quickinfo : 'Central archiving marker for master record'
   IsMarkedForArchiving : Boolean;
 };
 
@@ -353,39 +349,38 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Magazzino'
+@sap.label : 'Storage Location'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {
   @sap.display.format : 'UpperCase'
   @sap.text : 'to_Plant/PlantName'
-  @sap.label : 'Divisione'
+  @sap.label : 'Plant'
   @sap.value.list : 'standard'
   key Plant : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.text : 'StorageLocationName'
-  @sap.label : 'Magazzino'
+  @sap.label : 'Storage Location'
   key StorageLocation : String(4) not null;
-  @sap.label : 'Nome del magazzino'
+  @sap.label : 'Storage Loc. Name'
+  @sap.quickinfo : 'Storage Location Name'
   StorageLocationName : String(16);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Org. commerciale'
-  @sap.quickinfo : 'Organizzazione commerciale'
+  @sap.label : 'Sales Organization'
   SalesOrganization : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Canale distribuzione'
-  @sap.quickinfo : 'Canale di distribuzione'
+  @sap.label : 'Distribution Channel'
   DistributionChannel : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Settore merceologico'
+  @sap.label : 'Division'
   Division : String(2);
-  @sap.label : 'Controllo autorizz.'
-  @sap.quickinfo : 'Autorizzazione mag. logico per movimenti merci attiva'
+  @sap.label : 'Authorization check'
+  @sap.quickinfo : 'Storage location authorization for goods movements active'
   IsStorLocAuthznCheckActive : Boolean;
-  @sap.label : 'UdM obbl.'
-  @sap.quickinfo : 'Handling Unit obbligatoria'
+  @sap.label : 'HU reqmnt'
+  @sap.quickinfo : 'Handling unit requirement'
   HandlingUnitIsRequired : Boolean;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Validità'
-  @sap.quickinfo : 'Identificazione di inserimenti obsoleti'
+  @sap.label : 'Validity'
+  @sap.quickinfo : 'Deprecated Entries'
   ConfigDeprecationCode : String(1);
   to_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Plant {  };
 };
@@ -397,85 +392,84 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Fornitore'
+@sap.label : 'Supplier'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VH {
   @sap.display.format : 'UpperCase'
   @sap.text : 'BPSupplierName'
-  @sap.label : 'Fornitore'
-  @sap.quickinfo : 'Numero conto del fornitore'
+  @sap.label : 'Supplier'
+  @sap.quickinfo : 'Account Number of Supplier'
   key Supplier : String(10) not null;
-  @sap.label : 'Nome del fornitore 1'
-  @sap.quickinfo : 'Nome del fornitore'
+  @sap.label : 'Supplier Name1'
+  @sap.quickinfo : 'Supplier Name'
   SupplierName : String(35);
-  @sap.label : 'Nome business partner 1'
+  @sap.label : 'Business Partner Name1'
   BusinessPartnerName1 : String(40);
-  @sap.label : 'Nome del fornitore business partner'
-  @sap.quickinfo : 'Nome del fornitore'
+  @sap.label : 'Business Partner Supplier Name'
+  @sap.quickinfo : 'Supplier Name'
   BPSupplierName : String(81);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Autorizzazione'
-  @sap.quickinfo : 'Gruppo di autorizzazione'
+  @sap.label : 'Authorization'
+  @sap.quickinfo : 'Authorization Group'
   AuthorizationGroup : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Gruppo conti'
-  @sap.quickinfo : 'Gruppo conti fornitori'
+  @sap.label : 'Account group'
+  @sap.quickinfo : 'Vendor account group'
   SupplierAccountGroup : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Obiettivo raggiunto'
-  @sap.quickinfo : 'Indicatore per obiettivo commerciale raggiunto'
+  @sap.label : 'Purpose Completed'
+  @sap.quickinfo : 'Business Purpose Completed Flag'
   IsBusinessPurposeCompleted : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Business partner'
-  @sap.quickinfo : 'Numero business partner'
+  @sap.label : 'Business Partner'
+  @sap.quickinfo : 'Business Partner Number'
   BusinessPartner : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo di business partner'
-  @sap.quickinfo : 'Tipo business partner'
+  @sap.label : 'Business Partner Type'
   BusinessPartnerType : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Imp. TitTrattDt'
-  @sap.quickinfo : 'BP: indicatore per impostare i titolari del trattamento dati'
+  @sap.label : 'Data Ctrlr. Set'
+  @sap.quickinfo : 'BP: Data Controller Set Flag'
   DataControllerSet : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController1 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController2 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController3 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController4 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController5 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController6 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController7 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController8 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController9 : String(30);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tit. tratt. dei dati'
-  @sap.quickinfo : 'BP: titolare del trattamento dati (solo utilizzo interno)'
+  @sap.label : 'Data Controller'
+  @sap.quickinfo : 'BP: Data Controller (Internal Use Only)'
   DataController10 : String(30);
 };
 
@@ -486,20 +480,19 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VH {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
-@sap.label : 'Centro di lavoro'
+@sap.label : 'Work Center'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_WorkCenterStdVH {
   @sap.display.format : 'NonNegative'
   @sap.text : 'WorkCenterInternalID_Text'
-  @sap.label : 'ID oggetto'
-  @sap.quickinfo : 'ID oggetto della risorsa'
+  @sap.label : 'Object ID'
+  @sap.quickinfo : 'Object ID of the resource'
   key WorkCenterInternalID : String(8) not null;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo oggetto'
-  @sap.quickinfo : 'CIM Resource Object Type'
+  @sap.label : 'Object Type'
+  @sap.quickinfo : 'Object types of the CIM resource'
   key WorkCenterTypeCode : String(2) not null;
-  @sap.label : 'Testo centro lavoro'
-  @sap.quickinfo : 'Testo centro di lavoro'
+  @sap.label : 'Work Center Text'
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   WorkCenterInternalID_Text : String(40);
@@ -516,22 +509,20 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Combined Plnd. Order'
-  @sap.quickinfo : 'Ordine pianificato combinato principale'
+  @sap.quickinfo : 'Combined Master Planned Order'
   key CplndOrd : String(12) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Cross-plant CP'
-  @sap.quickinfo : 'Prodotto configurabile valido per tutte le divisioni'
+  @sap.quickinfo : 'Cross-Plant Configurable Product'
   key CrossPlantConfigurableProduct : String(40) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Planned Order Type'
-  @sap.quickinfo : 'Tipo di ordine pianificato'
   PlannedOrderType : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Planned Order Category'
-  @sap.quickinfo : 'Categoria ordine pianificato'
   PlannedOrderCategory : String(1);
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
@@ -540,88 +531,78 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Planning Plant'
-  @sap.quickinfo : 'Divisione di pianificazione'
   @sap.value.list : 'standard'
   MRPPlant : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'MRP Area'
-  @sap.quickinfo : 'Area pian. MRP'
   MRPArea : String(10);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'MRP Controller'
-  @sap.quickinfo : 'Responsabile MRP'
   MRPController : String(3);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Procurement Category'
-  @sap.quickinfo : 'Categoria approvvigionamento materiale'
+  @sap.quickinfo : 'Material Procurement Category'
   MaterialProcurementCategory : String(1);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Procurement Type'
-  @sap.quickinfo : 'Tipo di approvvigionamento materiale'
+  @sap.quickinfo : 'Material Procurement Type'
   MaterialProcurementType : String(1);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Storage Location'
-  @sap.quickinfo : 'Magazzino'
   StorageLocation : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Type'
-  @sap.quickinfo : 'Tipo distinta delle operazioni'
+  @sap.quickinfo : 'Bill of Operations Type'
   BillOfOperationsType : String(1);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Bill of Operations'
-  @sap.quickinfo : 'ID distinta delle operazioni'
+  @sap.quickinfo : 'Bill of Operations ID'
   BillOfOperations : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Group'
-  @sap.quickinfo : 'Gruppo distinte delle operazioni'
+  @sap.quickinfo : 'Bill of Operations Group'
   BillOfOperationsGroup : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Variant'
-  @sap.quickinfo : 'Variante distinta delle operazioni'
+  @sap.quickinfo : 'Bill of Operations Variant'
   BillOfOperationsVariant : String(2);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Alternative BOM'
-  @sap.quickinfo : 'Distinta base alternativa'
   BillOfMaterialVariant : String(2);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOM Usage'
-  @sap.quickinfo : 'Utilizzo della distinta base'
   BillOfMaterialVariantUsage : String(1);
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOM Status'
-  @sap.quickinfo : 'Stato della distinta base'
+  @sap.quickinfo : 'Bill of Material Status'
   BillOfMaterialStatus : String(2);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOM Version'
-  @sap.quickinfo : 'Versione Db'
   BillOfMaterialVersion : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Production Plant'
-  @sap.quickinfo : 'Divisione di produzione'
   ProductionPlant : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Production Supervisor'
-  @sap.quickinfo : 'Responsabile di produzione'
   ProductionSupervisor : String(3);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Production Version'
-  @sap.quickinfo : 'Versione di produzione'
   ProductionVersion : String(4);
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
@@ -657,7 +638,6 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   PlndOrderBaseToEntryQtyDnmntr : Integer;
   @sap.required.in.filter : 'false'
   @sap.label : 'Base Unit of Measure'
-  @sap.quickinfo : 'Unità di misura di base'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
   @sap.required.in.filter : 'false'
@@ -679,31 +659,28 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Season'
-  @sap.quickinfo : 'Stagione'
   ProductSeason : String(10);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Collection'
-  @sap.quickinfo : 'Collezione fashion'
+  @sap.quickinfo : 'Fashion Collection'
   ProductCollection : String(10);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Season Year'
-  @sap.quickinfo : 'Esercizio stagionale'
   ProductSeasonYear : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Theme'
-  @sap.quickinfo : 'Tema fashion'
+  @sap.quickinfo : 'Fashion Theme'
   ProductTheme : String(10);
   @sap.required.in.filter : 'false'
   @sap.label : 'Product Description'
-  @sap.quickinfo : 'Descrizione prodotto'
   ProductDescription : String(40);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Product'
-  @sap.quickinfo : 'Codice prodotto'
+  @sap.quickinfo : 'Product Number'
   Product : String(40);
   @sap.required.in.filter : 'false'
   @sap.label : 'Order type'
@@ -715,8 +692,23 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Stock Segment'
-  @sap.quickinfo : 'Segmento di stock'
   StockSegment : String(40);
+  @sap.required.in.filter : 'false'
+  @sap.unit : 'ConfirmedQuantity_U'
+  @sap.label : 'Confirmed Quantity Value'
+  ConfirmedQuantity_V : Decimal(15, 3);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Confirmed Quantity UoM'
+  @sap.semantics : 'unit-of-measure'
+  ConfirmedQuantity_U : String(3);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Assign From Other Segments'
+  @sap.quickinfo : 'Data element for domain BOOLE: TRUE (=''X'') and FALSE (='' '')'
+  AssignFromOtherSegments : Boolean;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Latest Component Production Date'
+  LatestCompProductionDate : Date;
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_I_PLANNEDORDER : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
@@ -739,39 +731,36 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Combined Plnd. Order'
-  @sap.quickinfo : 'Ordine pianificato combinato principale'
+  @sap.quickinfo : 'Combined Master Planned Order'
   key CplndOrd : String(12) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Cross-plant CP'
-  @sap.quickinfo : 'Prodotto configurabile valido per tutte le divisioni'
+  @sap.quickinfo : 'Cross-Plant Configurable Product'
   key CrossPlantConfigurableProduct : String(40) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Material'
-  @sap.quickinfo : 'Codice materiale'
+  @sap.quickinfo : 'Material Number'
   key Material : String(40) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Plant'
-  @sap.quickinfo : 'Divisione'
   key Plant : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.text : 'to_StorageLocation/StorageLocationName'
   @sap.label : 'Storage Location'
-  @sap.quickinfo : 'Magazzino'
   @sap.value.list : 'standard'
   key StorageLocation : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Batch'
-  @sap.quickinfo : 'Numero partita'
+  @sap.quickinfo : 'Batch Number'
   key Batch : String(10) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Bill Of Material Item Number'
-  @sap.quickinfo : 'Numero di posizione distinta base'
   key BillOfMaterialItemNumber_2 : String(4) not null;
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
@@ -779,41 +768,37 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   MatlCompRequirementDate : Date;
   @sap.required.in.filter : 'false'
   @sap.label : 'Item Text'
-  @sap.quickinfo : 'Testo posizione distinta base (riga 1)'
+  @sap.quickinfo : 'BOM Item Text (Line 1)'
   BOMItemDescription : String(40);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOM Category'
-  @sap.quickinfo : 'Codice categoria distinta base'
+  @sap.quickinfo : 'Bill of Material Category Code'
   BillOfMaterialCategory : String(1);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'MRP Controller'
-  @sap.quickinfo : 'Responsabile MRP'
   MRPController : String(3);
   @sap.required.in.filter : 'false'
   @sap.label : 'Plant Name'
-  @sap.quickinfo : 'Nome divisione'
   PlantName : String(30);
   @sap.required.in.filter : 'false'
   @sap.label : 'MRP Controller Name'
-  @sap.quickinfo : 'Nome responsabile MRP'
   MRPControllerName : String(18);
   @sap.required.in.filter : 'false'
   @sap.label : 'Color'
-  @sap.quickinfo : 'Valore caratteristica per colori in caso di varianti'
+  @sap.quickinfo : 'Characteristic Value for Colors of Variants'
   ProductCharacteristic1 : String(18);
   @sap.required.in.filter : 'false'
   @sap.label : 'Main Size'
-  @sap.quickinfo : 'Valore caratteristica per la dimens. princ. nelle varianti'
+  @sap.quickinfo : 'Characteristic Value for Main Sizes of Variants'
   ProductCharacteristic2 : String(18);
   @sap.required.in.filter : 'false'
   @sap.label : 'Second Size'
-  @sap.quickinfo : 'Valore caratt. per la seconda dimensione nelle varianti'
+  @sap.quickinfo : 'Characteristic Value for Second Size for Variants'
   ProductCharacteristic3 : String(18);
   @sap.required.in.filter : 'false'
   @sap.label : 'Base Unit of Measure'
-  @sap.quickinfo : 'Unità di misura di base'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
   @sap.required.in.filter : 'false'
@@ -835,27 +820,29 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Stock Segment'
-  @sap.quickinfo : 'Segmento di stock'
   StockSegment : String(40);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Requirement Segment'
-  @sap.quickinfo : 'Segmento fabbisogno'
   RequirementSegment : String(40);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Seg. Strategy'
-  @sap.quickinfo : 'Strategia di segmentazione'
+  @sap.quickinfo : 'Segmentation Strategy'
   SegmentationStrategy : String(8);
-  @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Operazione o fase'
-  @sap.quickinfo : 'Numero operazione o fase'
   Operation_2 : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Gruppo di prodotti'
+  @sap.quickinfo : 'Product Group'
   ProductGroup : String(9);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Theme'
+  @sap.quickinfo : 'Fashion Theme'
+  ProductTheme : String(10);
   to_StorageLocation : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {  };
 };
 
@@ -868,355 +855,341 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
 @sap.label : 'ZZ1_I_PLANNEDORDER'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine pianificato'
+  @sap.label : 'Planned Order'
   key PlannedOrder : String(10) not null;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ord. pian. princ.'
-  @sap.quickinfo : 'Numero ordine pianificato principale'
+  @sap.label : 'Master Plnd Ord.'
+  @sap.quickinfo : 'Master Planned Order Number'
   FshMplndOrd : String(12);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ord. pian. combinato'
-  @sap.quickinfo : 'Ordine pianificato combinato principale'
+  @sap.label : 'Combined Plnd. Order'
+  @sap.quickinfo : 'Combined Master Planned Order'
   CplndOrd : String(12);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Creato da'
-  @sap.quickinfo : 'Utente autore dell''oggetto'
+  @sap.label : 'Created by'
+  @sap.quickinfo : 'User Who Created the Object'
   CreateUser : String(12);
   @sap.display.format : 'Date'
-  @sap.label : 'Data creazione'
-  @sap.quickinfo : 'Data di creazione dell''oggetto'
+  @sap.label : 'Created On'
+  @sap.quickinfo : 'Date on Which the Object Was Created'
   Createdate : Date;
-  @sap.label : 'Ora di creazione'
-  @sap.quickinfo : 'Ora in cui è stato creato l''oggetto'
+  @sap.label : 'Created at'
+  @sap.quickinfo : 'Time at Which the Object Was Created'
   Createtime : Time;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Autore modifica'
-  @sap.quickinfo : 'Autore dell''ultima modifica dell''oggetto'
+  @sap.label : 'Changed by'
+  @sap.quickinfo : 'Last User to Change the Object'
   Changeuser : String(12);
   @sap.display.format : 'Date'
-  @sap.label : 'Data modifica'
-  @sap.quickinfo : 'Data di ultima modifica dell''oggetto'
+  @sap.label : 'Changed on'
+  @sap.quickinfo : 'Date on Which the Object Was Last Changed'
   Changedate : Date;
-  @sap.label : 'Ora di modifica'
-  @sap.quickinfo : 'Ora dell''ultima modifica dell''oggetto'
+  @sap.label : 'Changed at'
+  @sap.quickinfo : 'Time at Which the Object Was Last Changed'
   Changetime : Time;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine pianificato'
+  @sap.label : 'Planned Order'
   POId : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo ordine pian.'
-  @sap.quickinfo : 'Tipo di ordine pianificato'
+  @sap.label : 'Planned Order Type'
   PlannedOrderType : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Categoria ordine pianificato'
+  @sap.label : 'Planned Order Category'
   PlannedOrderCategory : String(1);
   @sap.display.format : 'Date'
-  @sap.label : 'Data modifica'
-  @sap.quickinfo : 'Data dell''ultima modifica'
+  @sap.label : 'Changed On'
+  @sap.quickinfo : 'Last Changed On'
   LastChangeDate : Date;
   @odata.Type : 'Edm.DateTimeOffset'
-  @sap.label : 'Mod. timestamp'
-  @sap.quickinfo : 'Ultima modifica ordine pianificato: timestamp'
+  @sap.label : 'Change Time Stamp'
+  @sap.quickinfo : 'Last Change to Planned Order: Time Stamp'
   LastChangeDateTime : DateTime;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Utente'
-  @sap.quickinfo : 'Ultima modifica ordine pianificato: utente'
+  @sap.label : 'User'
+  @sap.quickinfo : 'Last Change to Planned Order: User'
   LastChangedByUser : String(12);
-  @sap.label : 'Testo ord. pian.'
-  @sap.quickinfo : 'Testo ordine pianificato'
+  @sap.label : 'Planned Order Text'
   PlannedOrderLongText : String(255);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Materiale'
-  @sap.quickinfo : 'Materiale pianif.'
+  @sap.label : 'Material'
+  @sap.quickinfo : 'Planning material'
   Material : String(40);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Prodotto'
-  @sap.quickinfo : 'Codice prodotto'
+  @sap.label : 'Product'
+  @sap.quickinfo : 'Product Number'
   Product : String(40);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Divisione pian.'
-  @sap.quickinfo : 'Divisione di pianificazione'
+  @sap.label : 'Planning Plant'
   MRPPlant : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Area pian. MRP'
+  @sap.label : 'MRP Area'
   MRPArea : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Responsabile MRP'
+  @sap.label : 'MRP Controller'
   MRPController : String(3);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Cat. approvv.'
-  @sap.quickinfo : 'Categoria approvvigionamento materiale'
+  @sap.label : 'Procurement Category'
+  @sap.quickinfo : 'Material Procurement Category'
   MaterialProcurementCategory : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo approvv.'
-  @sap.quickinfo : 'Tipo di approvvigionamento materiale'
+  @sap.label : 'Procurement Type'
+  @sap.quickinfo : 'Material Procurement Type'
   MaterialProcurementType : String(1);
-  @sap.label : 'Durata dell''entrata merci di materiale'
-  @sap.quickinfo : 'Durata in giorni dell''entrata merci di materiale'
+  @sap.label : 'Material Goods Receipt Duration'
+  @sap.quickinfo : 'Material Goods Receipt Duration in Days'
   MaterialGoodsReceiptDuration : Decimal(3, 0);
-  @sap.label : 'Durata consegna'
-  @sap.quickinfo : 'Durata consegna pianificata del materiale in giorni'
+  @sap.label : 'Delivery Duration'
+  @sap.quickinfo : 'Material Planned Delivery Duration in Days'
   MaterialPlannedDeliveryDurn : Decimal(3, 0);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Magazzino'
+  @sap.label : 'Storage Location'
   StorageLocation : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tp. stock speciale'
-  @sap.quickinfo : 'Tipo di stock inventario speciale'
+  @sap.label : 'Special Stock Type'
+  @sap.quickinfo : 'Inventory Special Stock Type'
   InventorySpecialStockType : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Registr. consumo'
-  @sap.quickinfo : 'Registrazione consumo'
+  @sap.label : 'Consumption Posting'
   ConsumptionPosting : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Mat. costruttore'
-  @sap.quickinfo : 'Numero componente costruttore del materiale'
+  @sap.label : 'Maufacturer Material'
+  @sap.quickinfo : 'Maufacturer Part Number Material'
   ManufacturerMaterial : String(40);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Mag. di provenienza'
-  @sap.quickinfo : 'Magazzino di provenienza per ordine di trasf.'
+  @sap.label : 'Issuing Storage Loc.'
+  @sap.quickinfo : 'Issuing Storage Location for Stock Transport Order'
   IssuingStorageLocation : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo DO'
-  @sap.quickinfo : 'Tipo distinta delle operazioni'
+  @sap.label : 'BOO Type'
+  @sap.quickinfo : 'Bill of Operations Type'
   BillOfOperationsType : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Distinta operazioni'
-  @sap.quickinfo : 'ID distinta delle operazioni'
+  @sap.label : 'Bill of Operations'
+  @sap.quickinfo : 'Bill of Operations ID'
   BillOfOperations : String(8);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Gruppo dist. oper.'
-  @sap.quickinfo : 'Gruppo distinte delle operazioni'
+  @sap.label : 'BOO Group'
+  @sap.quickinfo : 'Bill of Operations Group'
   BillOfOperationsGroup : String(8);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Variante DO'
-  @sap.quickinfo : 'Variante distinta delle operazioni'
+  @sap.label : 'BOO Variant'
+  @sap.quickinfo : 'Bill of Operations Variant'
   BillOfOperationsVariant : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Distinta base alt.'
-  @sap.quickinfo : 'Distinta base alternativa'
+  @sap.label : 'Alternative BOM'
   BillOfMaterialVariant : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Util. distinta base'
-  @sap.quickinfo : 'Utilizzo della distinta base'
+  @sap.label : 'BOM Usage'
   BillOfMaterialVariantUsage : String(1);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Stato dist. base'
-  @sap.quickinfo : 'Stato della distinta base'
+  @sap.label : 'BOM Status'
+  @sap.quickinfo : 'Bill of Material Status'
   BillOfMaterialStatus : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Versione Db'
+  @sap.label : 'BOM Version'
   BillOfMaterialVersion : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'ID data esplosione'
-  @sap.quickinfo : 'ID data esplosione per distinta base'
+  @sap.label : 'Explosion Date ID'
+  @sap.quickinfo : 'Bill of Material Explosion Date ID'
   BOMExplosionDateID : String(8);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Div. di produzione'
-  @sap.quickinfo : 'Divisione di produzione'
+  @sap.label : 'Production Plant'
   ProductionPlant : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Responsabile di produzione'
+  @sap.label : 'Production Supervisor'
   ProductionSupervisor : String(3);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Versione di prod.'
-  @sap.quickinfo : 'Versione di produzione'
+  @sap.label : 'Production Version'
   ProductionVersion : String(4);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Scenario pian.'
-  @sap.quickinfo : 'Scenario di pianificazione nella pian. a lungo termine'
+  @sap.label : 'Planning Scenario'
+  @sap.quickinfo : 'Planning Scenario in Long-Term Planning'
   MRPPlanningScenario : String(3);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Impegno'
-  @sap.quickinfo : 'Numero dell''impegno / del fabbisogno dipendente'
+  @sap.label : 'Reservation'
+  @sap.quickinfo : 'Number of reservation/dependent requirements'
   Reservation : String(10);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Prenotazione di liquidazione'
+  @sap.label : 'Settlement Reservation'
   SettlementReservation : String(10);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Posizione impegno per liquidazione'
+  @sap.label : 'Settlement Reservation Item'
   SettlementReservationItem : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Org. acquisti'
-  @sap.quickinfo : 'Organizzazione acquisti'
+  @sap.label : 'Purch. Organization'
+  @sap.quickinfo : 'Purchasing Organization'
   PurchasingOrganization : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Accordo di acquisto'
-  @sap.quickinfo : 'Schedulazione piano di consegna/contratto quadro'
+  @sap.label : 'Purchase Agreement'
+  @sap.quickinfo : 'Purchase Schedule/Outline Agreement'
   PurchasingDocument : String(10);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Pos. contratto'
-  @sap.quickinfo : 'Schedulazione piano di consegna/posizione contratto quadro'
+  @sap.label : 'Agreement Item'
+  @sap.quickinfo : 'Purchase Schedule/Outline Agreement Item'
   PurchasingDocumentItem : String(5);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Sudd. in quote'
-  @sap.quickinfo : 'Suddivisione in quote'
+  @sap.label : 'Quota Arrangement'
   QuotaArrangement : String(10);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Pos. suddivisione'
-  @sap.quickinfo : 'Posizione suddivisione in quote'
+  @sap.label : 'Quota Arrangement Item'
   QuotaArrangementItem : String(3);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Fornitore fisso'
+  @sap.label : 'Fixed Vendor'
   FixedSupplier : String(10);
-  @sap.label : 'Forn. lav. esterna'
-  @sap.quickinfo : 'Fornitore lavorazione esterna'
+  @sap.label : 'SC Supplier'
+  @sap.quickinfo : 'Subcontracting Supplier'
   SupplierIsSubcontractor : Boolean;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Cliente'
-  @sap.quickinfo : 'Codice cliente'
+  @sap.label : 'Customer'
+  @sap.quickinfo : 'Customer Number'
   Customer : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Ordine di vendita'
+  @sap.label : 'Sales Order'
   SalesOrder : String(10);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Pos. ordine vendita'
-  @sap.quickinfo : 'Posizione ordine di vendita'
+  @sap.label : 'Sales Order Item'
   SalesOrderItem : String(6);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Elemento WBS interno'
-  @sap.quickinfo : 'ID interno dell''elemento WBS'
+  @sap.label : 'WBS Element Internal'
+  @sap.quickinfo : 'Work Breakdown Structure Element Internal ID'
   WBSElementInternalID : String(24);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'ID interno WBS'
-  @sap.quickinfo : 'Elemento WBS'
+  @sap.label : 'WBS Internal ID'
+  @sap.quickinfo : 'WBS Element'
   WBSElementInternalID_2 : String(8);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Fabbisogno capacità'
-  @sap.quickinfo : 'ID del record fabbisogno capacità'
+  @sap.label : 'Capacity Requirement'
+  @sap.quickinfo : 'ID of the Capacity Requirements Record'
   CapacityRequirement : String(12);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo schedulazione'
-  @sap.quickinfo : 'Tipo di schedulazione'
+  @sap.label : 'Scheduling Type'
   SchedulingType : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Err. schedulazione'
-  @sap.quickinfo : 'Errore di schedulazione'
+  @sap.label : 'Scheduling Error'
   SchedulingError : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Numero di modifica'
+  @sap.label : 'Change Number'
   ChangeNumber : String(12);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Stato di revisione'
+  @sap.label : 'Revision Level'
   MaterialRevisionLevel : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Stato di revisione'
+  @sap.label : 'Revision Level'
   MaterialRevisionLevel_2 : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Categoria di contabilizzazione'
+  @sap.label : 'Account Assignment Category'
   AccountAssignmentCategory : String(1);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Tipo di elaborazione d''assemblaggio'
+  @sap.label : 'Assembly Processing Type'
   AssemblyProcessingType : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Chiave distribuzione'
-  @sap.quickinfo : 'Chiave distribuzione per la quantità prodotta'
+  @sap.label : 'Distribution Key'
+  @sap.quickinfo : 'Distribution key for quantity produced'
   QuantityDistributionKey : String(4);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Valutazione std'
-  @sap.quickinfo : 'Valutazione validità/valutazione standard'
+  @sap.label : 'Standard Variant'
+  @sap.quickinfo : 'Parameter Variant/Standard Variant'
   EffectivityParameterVariant : String(12);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Piano fabbisogni'
+  @sap.label : 'Requirements Plan'
   RequirementPlan : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Tipo di controllo disponibilità'
+  @sap.label : 'Availability Check Type'
+  @sap.quickinfo : 'Type of Availability Check'
   ProductAvailabilityCheckType : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Contratto centrale'
+  @sap.label : 'Central Contract'
   CentralContract : String(10);
   @sap.display.format : 'NonNegative'
-  @sap.label : 'Pos. contr. centr.'
-  @sap.quickinfo : 'Numero di posizione del contratto centrale'
+  @sap.label : 'Cent. Contract Item'
+  @sap.quickinfo : 'Central Contract Item Number'
   CentralContractItem : String(10);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Contr. attività'
-  @sap.quickinfo : 'Controllo operazione: elaborazione ordine pianificato'
+  @sap.label : 'Action Control'
+  @sap.quickinfo : 'Action Control: Planned Order Processing'
   PlannedOrderActionControl : String(2);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Azione elab. dell''ordine pianificato'
-  @sap.quickinfo : 'Azione in elaborazione dell''ordine pianificato'
+  @sap.label : 'Planned Order Processing Action'
+  @sap.quickinfo : 'Action in Planned Order Processing'
   PlannedOrderProcgAction : String(4);
   @sap.display.format : 'Date'
-  @sap.label : 'Data dell''azione'
-  @sap.quickinfo : 'Data dell''azione: ordine pianificato'
+  @sap.label : 'Date of Action'
+  @sap.quickinfo : 'Date of Action: Planned Order'
   PlannedOrderLastActionDate : Date;
-  @sap.label : 'Ora azione'
-  @sap.quickinfo : 'Ora dell''azione: elaborazione ordine pianificato'
+  @sap.label : 'Action Time'
+  @sap.quickinfo : 'Time of Action: Planned Order Processing'
   PlannedOrderLastActionTime : Time;
-  @sap.label : 'Cd. fissazione'
-  @sap.quickinfo : 'Codice di fissazione per dati ordine pianificato'
+  @sap.label : 'Firming Indicator'
+  @sap.quickinfo : 'Firming Indicator for Planned Order Data'
   PlannedOrderIsFirm : Boolean;
-  @sap.label : 'Codice fiss.dist.bse'
-  @sap.quickinfo : 'Codice di fissazione per esplosione distinta base'
+  @sap.label : 'BOM Fixing Indicator'
+  @sap.quickinfo : 'Fixing Indicator for BOM Explosion'
   PlannedOrderBOMIsFixed : Boolean;
-  @sap.label : 'Indic. conversione'
-  @sap.quickinfo : 'Indicatore conversione dell''ordine pianificato'
+  @sap.label : 'Conversion Indicator'
+  @sap.quickinfo : 'Planned Order Conversion Indicator'
   PlannedOrderIsConvertible : Boolean;
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Prod. ripet.'
-  @sap.quickinfo : 'Codice: produzione ripetitiva'
+  @sap.label : 'Repet. Manufacturing'
+  @sap.quickinfo : 'Repetitive Manufacturing indicator'
   PlndOrderIsCreatedForRptvMfg : String(1);
   @sap.display.format : 'UpperCase'
-  @sap.label : 'Approvv. produzione'
-  @sap.quickinfo : 'Tipo di approvvigionamento produzione'
+  @sap.label : 'Kanban Indicator'
   PlndOrderReplnmtElmntType : String(1);
-  @sap.label : 'Indicatore di elaborazione assemblaggio'
-  @sap.quickinfo : 'Indicatore: per elaborazione assemblaggio'
+  @sap.label : 'Assembly Processing Indicator'
+  @sap.quickinfo : 'Indicator: For Assembly Processing'
   PlndOrdIsCrtedForAssemblyProcg : Boolean;
-  @sap.label : 'Capacità pianificata'
-  @sap.quickinfo : 'Codice: capacità per ordine di pianificazione è pianificata'
+  @sap.label : 'Capacity Dispatched'
+  @sap.quickinfo : 'Indicator: Capacity for Planned Order is Dispatched'
   PlannedOrderCapacityIsDsptchd : Boolean;
-  @sap.label : 'Schedulazione'
-  @sap.quickinfo : 'Codice di schedulazione'
+  @sap.label : 'Scheduling'
+  @sap.quickinfo : 'Scheduling indicator'
   OrderIsScheduled : Boolean;
-  @sap.label : 'Pianificazione senza assemblaggio finale'
-  @sap.quickinfo : 'Indicatore: pianificazione senza assemblaggio finale'
+  @sap.label : 'Planning Without Final Assembly'
+  @sap.quickinfo : 'Indicator: Planning Without Final Assembly'
   IsPlannedWithoutFinalAssembly : Boolean;
-  @sap.label : 'Network degli ordini'
-  @sap.quickinfo : 'L''ordine fa parte del network di ordini'
+  @sap.label : 'Collective Order'
+  @sap.quickinfo : 'Order is Part of Collective Order'
   PlannedOrderIsPartOfCollvOrder : Boolean;
   @sap.display.format : 'Date'
-  @sap.label : 'Data d''inizio ordine'
-  @sap.quickinfo : 'Data d''inizio dell''ordine pianificato'
+  @sap.label : 'Order Start Date'
+  @sap.quickinfo : 'Planned Order Start Date'
   PlndOrderPlannedStartDate : Date;
-  @sap.label : 'Ora inizio ordine'
-  @sap.quickinfo : 'Ora d''inizio dell''ordine pianificato'
+  @sap.label : 'Order Start Time'
+  @sap.quickinfo : 'Planned Order Start Time'
   PlndOrderPlannedStartTime : Time;
   @sap.display.format : 'Date'
-  @sap.label : 'Data fine ordine'
-  @sap.quickinfo : 'Data di fine dell''ordine pianificato'
+  @sap.label : 'Order End Date'
+  @sap.quickinfo : 'Planned Order End Date'
   PlndOrderPlannedEndDate : Date;
-  @sap.label : 'Ora fine ordine'
-  @sap.quickinfo : 'Ora di fine dell''ordine pianificato'
+  @sap.label : 'Order End Time'
+  @sap.quickinfo : 'Planned Order End Time'
   PlndOrderPlannedEndTime : Time;
   @sap.display.format : 'Date'
-  @sap.label : 'Data apertura ordine'
-  @sap.quickinfo : 'Data apertura pianificata nell''ordine pianificato'
+  @sap.label : 'Order Opening Date'
+  @sap.quickinfo : 'Planned Opening Date in Planned Order'
   PlannedOrderOpeningDate : Date;
   @sap.display.format : 'Date'
-  @sap.label : 'Data conferma'
-  @sap.quickinfo : 'Data impegno totale ord. pianificato in base a controllo ATP'
+  @sap.label : 'Commitment Date'
+  @sap.quickinfo : 'Planned Order Total Commitment Date According to ATP Check'
   PlndOrderTotalCmtmtDate : Date;
   @sap.display.format : 'Date'
-  @sap.label : 'Data di inizio prod.'
-  @sap.quickinfo : 'Data di inizio produzione'
+  @sap.label : 'Production Start Dte'
+  @sap.quickinfo : 'Start Date for Production'
   ProductionStartDate : Date;
   @sap.display.format : 'Date'
-  @sap.label : 'Data fine prod.'
-  @sap.quickinfo : 'Data di fine produzione'
+  @sap.label : 'Production End Date'
+  @sap.quickinfo : 'End Date for Production'
   ProductionEndDate : Date;
   @sap.display.format : 'Date'
-  @sap.label : 'Data esplosione'
+  @sap.label : 'Explosion Date'
   BOMExplosionDate : Date;
-  @sap.label : 'Contatore'
-  @sap.quickinfo : 'Contatore per la conversione in unità di mis. di base'
+  @sap.label : 'Numerator'
+  @sap.quickinfo : 'Numerator for Conversion to Base Units of Measure'
   PlndOrderBaseToEntryQtyNmrtr : Decimal(5, 0);
-  @sap.label : 'Denominatore'
-  @sap.quickinfo : 'Denom. per la conversione in unità di misura di base'
+  @sap.label : 'Denominator'
+  @sap.quickinfo : 'Denominator for conversion to base units of measure'
   PlndOrderBaseToEntryQtyDnmntr : Decimal(5, 0);
-  @sap.label : 'Unità misura base'
-  @sap.quickinfo : 'Unità di misura di base'
+  @sap.label : 'Base Unit of Measure'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
 };
@@ -1232,11 +1205,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Master Plnd Ord.'
-  @sap.quickinfo : 'Numero ordine pianificato principale'
+  @sap.quickinfo : 'Master Planned Order Number'
   key FshMplndOrd : String(12) not null;
   @sap.required.in.filter : 'false'
   @sap.label : 'Base Unit of Measure'
-  @sap.quickinfo : 'Unità di misura di base'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
   @sap.required.in.filter : 'false'
@@ -1254,11 +1226,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Combined Plnd. Order'
-  @sap.quickinfo : 'Ordine pianificato combinato principale'
+  @sap.quickinfo : 'Combined Master Planned Order'
   CplndOrd : String(12);
   @sap.required.in.filter : 'false'
   @sap.label : 'Product Description'
-  @sap.quickinfo : 'Descrizione prodotto'
   ProductDescription : String(40);
 };
 
@@ -1278,8 +1249,8 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   Code_Text : String(60);
-  @sap.label : 'È disattivato'
-  @sap.quickinfo : 'Campo personalizzato: indicatore codice disattivato'
+  @sap.label : 'Is Disabled'
+  @sap.quickinfo : 'Custom Field: Code Disabled Indicator'
   IsDisabled : Boolean;
 };
 
@@ -1294,114 +1265,105 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCapacity {
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity Requirement'
-  @sap.quickinfo : 'ID del record fabbisogno capacità'
+  @sap.quickinfo : 'ID of the Capacity Requirements Record'
   @sap.value.list : 'standard'
   key CapacityRequirement : String(12) not null;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity Requirement Item'
-  @sap.quickinfo : 'Posizione fabbisogno di capacità'
   @sap.value.list : 'standard'
   key CapacityRequirementItem : String(8) not null;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity Requirement Item Capacity'
-  @sap.quickinfo : 'Capacità singola di una posizione del fabbisogno capacità'
+  @sap.quickinfo : 'Individual Capacity of a Capacity Requirement Item'
   key CapacityRqmtItemCapacity : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Planned Order'
-  @sap.quickinfo : 'Ordine pianificato'
   @sap.value.list : 'standard'
   PlannedOrder : String(10);
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center ID'
-  @sap.quickinfo : 'ID centro di lavoro'
   @sap.value.list : 'standard'
   WorkCenterInternalID : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center Type'
-  @sap.quickinfo : 'Tipo di centro di lavoro'
   WorkCenterType : String(2);
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity ID'
-  @sap.quickinfo : 'ID della capacità'
   @sap.value.list : 'standard'
   CapacityInternalID : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.text : 'to_CapacityCategory/CapacityCategoryCode_Text'
   @sap.label : 'Capacity Category'
-  @sap.quickinfo : 'Categoria capacità'
   @sap.value.list : 'standard'
   CapacityCategory : String(3);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Sequence'
-  @sap.quickinfo : 'Sequenza'
   Sequence : String(6);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.text : 'OperationText'
   @sap.label : 'Operation or Phase'
-  @sap.quickinfo : 'Numero operazione o fase'
+  @sap.quickinfo : 'Operation or Phase Number'
   Operation : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.text : 'OperationText'
   @sap.label : 'Suboperation or Secondary Resource'
-  @sap.quickinfo : 'Numero sotto-operazione o risorsa secondaria'
+  @sap.quickinfo : 'Sub-Operation or Secondary Resource Number'
   SubOperation : String(4);
   @sap.required.in.filter : 'false'
   @sap.label : 'Operation Short Text'
-  @sap.quickinfo : 'Operazione testo breve'
   OperationText : String(40);
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
   @sap.label : 'Latest Start Date'
-  @sap.quickinfo : 'Ultima data d''inizio'
   OperationLatestStartDate : Date;
   @sap.required.in.filter : 'false'
   @sap.label : 'Scheduled Setup'
-  @sap.quickinfo : 'Fabbisogni di capacità pianificati per attrezzaggio'
+  @sap.quickinfo : 'Scheduled Capacity Requirements for Setup'
   ScheduledCapReqOpSegSetupDurn : Double;
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity Unit'
-  @sap.quickinfo : 'Unità di misura per fabbisogni di capacità'
+  @sap.quickinfo : 'Unit of Measure for Capacity Requirements'
   @sap.semantics : 'unit-of-measure'
   CapacityRequirementUnit : String(3);
   @sap.required.in.filter : 'false'
   @sap.label : 'Remaining Setup'
-  @sap.quickinfo : 'Fabbisogni di capacità residui per attrezzaggio'
+  @sap.quickinfo : 'Remaining Capacity Requirements for Setup'
   RemainingCapReqOpSegSetupDurn : Double;
   @sap.required.in.filter : 'false'
   @sap.label : 'Scheduled Processing'
-  @sap.quickinfo : 'Fabbisogni di capacità pianificati per lavorazione'
+  @sap.quickinfo : 'Scheduled Capacity Requirements for Processing'
   ScheduledCapReqOpSegProcgDurn : Double;
   @sap.required.in.filter : 'false'
   @sap.label : 'Remaining Processing'
-  @sap.quickinfo : 'Fabbisogni di capacità residui per lavorazione'
+  @sap.quickinfo : 'Remaining Capacity Requirements for Processing'
   RemainingCapReqOpSegProcgDurn : Double;
   @sap.required.in.filter : 'false'
   @sap.label : 'Scheduled Teardown'
-  @sap.quickinfo : 'Fabbisogni di capacità pianificati per disattrezzaggio'
+  @sap.quickinfo : 'Scheduled Capacity Requirements for the Teardown'
   ScheduledCapReqOpSegTrdwnDurn : Double;
   @sap.required.in.filter : 'false'
   @sap.label : 'Remaining Teardown'
-  @sap.quickinfo : 'Fabbisogni di capacità residui per disattrezzaggio'
+  @sap.quickinfo : 'Remaining Capacity Requirements for Teardown'
   RemainingCapReqOpSegTrdwnDurn : Double;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Ord. pian. princ.'
-  @sap.quickinfo : 'Numero ordine pianificato principale'
+  @sap.quickinfo : 'Master Planned Order Number'
   FshMplndOrd : String(12);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Ord. pian. combinato'
-  @sap.quickinfo : 'Ordine pianificato combinato principale'
+  @sap.quickinfo : 'Combined Master Planned Order'
   CplndOrd : String(12);
   to_CapacityCategory : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityCategory {  };
   to_CapacityRequirementItem : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_CapacityRequirementItem {  };
@@ -1418,102 +1380,96 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Stock Material'
-  @sap.quickinfo : 'Materiale in riferimento al quale viene gestito lo stock'
+  @sap.quickinfo : 'Material in Respect of Which Stock is Managed'
   key Material : String(40) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Plant'
-  @sap.quickinfo : 'Divisione'
   key Plant : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Storage Location'
-  @sap.quickinfo : 'Magazzino'
   key StorageLocation : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Batch SID'
-  @sap.quickinfo : 'N. partita (identificatore stock)'
+  @sap.quickinfo : 'Batch Number (Stock Identifier)'
   key Batch : String(10) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Supplier SID'
-  @sap.quickinfo : 'Fornitore per stock speciale'
+  @sap.quickinfo : 'Supplier for Special Stock'
   key Supplier : String(10) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Sales order'
-  @sap.quickinfo : 'N. ordine cliente dello stock ordine cliente valorizzato'
+  @sap.quickinfo : 'Sales order number of valuated sales order stock'
   key SDDocument : String(10) not null;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Sales order item'
-  @sap.quickinfo : 'Pos. ordine cliente dello stock ordine cliente valorizzato'
+  @sap.quickinfo : 'Sales Order Item of Valuated Sales Order Stock'
   key SDDocumentItem : String(6) not null;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'WBS Internal ID'
-  @sap.quickinfo : 'Elemento WBS'
+  @sap.quickinfo : 'WBS Element'
   key WBSElementInternalID : String(8) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Customer SID'
-  @sap.quickinfo : 'Cliente per stock speciale'
+  @sap.quickinfo : 'Customer for Special Stock'
   key Customer : String(10) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Add. Supplier for Special Stock'
-  @sap.quickinfo : 'Altro fornitore per stock speciale'
   key SpecialStockIdfgStockOwner : String(10) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Stock Type'
-  @sap.quickinfo : 'Tipo di stock del movimento merci (identificatore stock)'
+  @sap.quickinfo : 'Stock Type of Goods Movement (Stock Identifier)'
   key InventoryStockType : String(2) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Special Stock Type'
-  @sap.quickinfo : 'Tipo di stock speciale'
   key InventorySpecialStockType : String(1) not null;
   @sap.required.in.filter : 'false'
   @sap.label : 'Base Unit of Measure'
-  @sap.quickinfo : 'Unità di misura di base'
   @sap.semantics : 'unit-of-measure'
   key MaterialBaseUnit : String(3) not null;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'ProdCostEst.No.'
-  @sap.quickinfo : 'Numero calcolo costi - calcolo costi del prodotto'
+  @sap.quickinfo : 'Cost Estimate Number - Product Costing'
   key CostEstimate : String(12) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Resource Name'
-  @sap.quickinfo : 'Nome della risorsa (identificatore stock)'
+  @sap.quickinfo : 'Resource Name (Stock Identifier)'
   key ResourceID : String(40) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Company Code'
-  @sap.quickinfo : 'Società'
   CompanyCode : String(4);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlWrhsStkQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Quantità stock'
+  @sap.quickinfo : 'Stock Quantity'
   MatlWrhsStkQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlCnsmpnQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Quantità di consumo'
+  @sap.quickinfo : 'Consumption Quantity'
   MatlCnsmpnQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkIncrQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Quantità aumento stock'
+  @sap.quickinfo : 'Stock Increase Quantity'
   MatlStkIncrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkDecrQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Quantità riduzione stock'
+  @sap.quickinfo : 'Stock Decrease Quantity'
   MatlStkDecrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.label : 'choice'
@@ -1553,71 +1509,66 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant {
   @sap.required.in.filter : 'false'
   @sap.text : 'PlantName'
   @sap.label : 'Plant'
-  @sap.quickinfo : 'Divisione'
   key Plant : String(4) not null;
   @sap.required.in.filter : 'false'
   @sap.label : 'Plant Name'
-  @sap.quickinfo : 'Nome divisione'
   PlantName : String(30);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Valuation Area'
-  @sap.quickinfo : 'Area valorizzazione'
   ValuationArea : String(4);
   @sap.required.in.filter : 'false'
   @sap.label : 'Archiving Flag'
-  @sap.quickinfo : 'Marcatore archiviazione centrale per record anagrafico'
+  @sap.quickinfo : 'Central archiving marker for master record'
   IsMarkedForArchiving : Boolean;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Customer No Plant'
-  @sap.quickinfo : 'Cd.cliente della divisione'
+  @sap.quickinfo : 'Customer Number of Plant'
   @sap.value.list : 'standard'
   PlantCustomer : String(10);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Sppl. No. Plnt'
-  @sap.quickinfo : 'Codice fornitore della divisione'
+  @sap.quickinfo : 'Supplier Number of Plant'
   @sap.value.list : 'standard'
   PlantSupplier : String(10);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Factory Calendar'
-  @sap.quickinfo : 'Chiave calendario di fabbrica'
+  @sap.quickinfo : 'Factory calendar key'
   FactoryCalendar : String(2);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Purch. Organization'
-  @sap.quickinfo : 'Organizzazione acquisti'
+  @sap.quickinfo : 'Purchasing Organization'
   DefaultPurchasingOrganization : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Sls Organization ICB'
-  @sap.quickinfo : 'Organizzazione commerciale per fatturazione interna'
+  @sap.quickinfo : 'Sales Organization for Intercompany Billing'
   SalesOrganization : String(4);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Address'
-  @sap.quickinfo : 'Indirizzo'
   AddressID : String(10);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Plant Cat.'
-  @sap.quickinfo : 'Cat. div.'
+  @sap.quickinfo : 'Plant category'
   PlantCategory : String(1);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Distrib.Channel'
-  @sap.quickinfo : 'Canale di distribuzione per fatturazione interna'
+  @sap.quickinfo : 'Distribution Channel for Intercompany billing'
   DistributionChannel : String(2);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Interco. Billing Div'
-  @sap.quickinfo : 'Settore per fatturazione interna'
+  @sap.quickinfo : 'Division for Intercompany Billing'
   Division : String(2);
   @sap.required.in.filter : 'false'
   @sap.label : 'Language Key'
-  @sap.quickinfo : 'Chiave lingua'
   Language : String(2);
 };
 
@@ -1632,46 +1583,40 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Combined Plnd. Order'
-  @sap.quickinfo : 'Ordine pianificato combinato principale'
+  @sap.quickinfo : 'Combined Master Planned Order'
   key CombinedMasterOrder : String(12) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Sequence'
-  @sap.quickinfo : 'Sequenza'
   key Sequence : String(6) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Operation or Phase'
-  @sap.quickinfo : 'Numero operazione o fase'
+  @sap.quickinfo : 'Operation or Phase Number'
   key Operation : String(4) not null;
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Suboperation or Secondary Resource'
-  @sap.quickinfo : 'Numero sotto-operazione o risorsa secondaria'
+  @sap.quickinfo : 'Sub-Operation or Secondary Resource Number'
   key SubOperation : String(4) not null;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center ID'
-  @sap.quickinfo : 'ID centro di lavoro'
   WorkCenterInternalID : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center Type'
-  @sap.quickinfo : 'Tipo di centro di lavoro'
   WorkCenterType : String(2);
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity ID'
-  @sap.quickinfo : 'ID della capacità'
   CapacityInternalID : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity Category'
-  @sap.quickinfo : 'Categoria capacità'
   CapacityCategory : String(3);
   @sap.required.in.filter : 'false'
   @sap.label : 'Operation Short Text'
-  @sap.quickinfo : 'Operazione testo breve'
   OperationText : String(40);
   @sap.display.format : 'Date'
   @sap.required.in.filter : 'false'
@@ -1679,7 +1624,7 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   OperationLatestStartDate : Date;
   @sap.required.in.filter : 'false'
   @sap.label : 'Capacity Unit'
-  @sap.quickinfo : 'Unità di misura per fabbisogni di capacità'
+  @sap.quickinfo : 'Unit of Measure for Capacity Requirements'
   @sap.semantics : 'unit-of-measure'
   CapacityRequirementUnit : String(3);
   @sap.required.in.filter : 'false'
@@ -1709,25 +1654,23 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Group'
-  @sap.quickinfo : 'Chiave per gruppo di cicli'
+  @sap.quickinfo : 'Key for Task List Group'
   BillOfOperationsGroup : String(8);
   @sap.display.format : 'UpperCase'
   @sap.required.in.filter : 'false'
   @sap.label : 'BOO Type'
-  @sap.quickinfo : 'Tipo ciclo'
+  @sap.quickinfo : 'Task List Type'
   BillOfOperationsType : String(1);
   @sap.required.in.filter : 'false'
   @sap.label : 'User field indicator'
-  @sap.quickinfo : 'Campo utente: codici di valutazione'
+  @sap.quickinfo : 'User-defined field: Indicator for reports'
   FreeDefinedIndicator1 : Boolean;
   @sap.display.format : 'NonNegative'
   @sap.required.in.filter : 'false'
   @sap.label : 'Object ID'
-  @sap.quickinfo : 'ID oggetto'
   BOOWorkCenterInternalID : String(8);
   @sap.required.in.filter : 'false'
   @sap.label : 'Work Center Text'
-  @sap.quickinfo : 'Testo centro di lavoro'
   BOOWorkCenterText : String(40);
   @sap.required.in.filter : 'false'
   @sap.label : 'fornitore'

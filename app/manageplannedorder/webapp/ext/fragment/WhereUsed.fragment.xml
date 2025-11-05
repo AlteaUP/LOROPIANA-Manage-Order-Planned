@@ -82,6 +82,48 @@
                             text="Combined Planned Order"
                         />
                     </Column>
+                    <Column id="columnWorkCenterInternalIDWhereUsed">
+                        <Text
+                            id="textWorkCenterInternalIDWhereUsed"
+                            text="Work Center Internal ID"
+                        />
+                    </Column>
+                    <Column id="columnWorkCenterTextWhereUsed">
+                        <Text
+                            id="textWorkCenterTextWhereUsed"
+                            text="Operation Work Center Text"
+                        />
+                    </Column> 
+                    <Column id="columnMRPControllerWhereUsed">
+                        <Text
+                            id="textMRPControllerWhereUsed"
+                            text="MRPController"
+                        />
+                    </Column>
+                    <Column id="columnCrossPlantConfigurableProductWhereUsed">
+                        <Text
+                            id="textCrossPlantConfigurableProductWhereUsed"
+                            text="Product"
+                        />
+                    </Column>
+                    <Column id="columnProductDescriptionWhereUsed">
+                        <Text
+                            id="textProductDescriptionWhereUsed"
+                            text="Product Description"
+                        />
+                    </Column>
+                    <Column id="columnProductThemeWhereUsed">
+                        <Text
+                            id="textProductThemeWhereUsed"
+                            text="Fashion Theme"
+                        />
+                    </Column>
+                    <Column id="columnzzbusiWhereUsed">
+                        <Text
+                            id="textzzbusiWhereUsed"
+                            text="Business"
+                        />
+                    </Column>
                     <Column id="columnQtyWhereUsed">
                         <Text
                             id="textQtyWhereUsed"

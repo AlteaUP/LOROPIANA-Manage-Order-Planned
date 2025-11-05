@@ -1705,13 +1705,16 @@ annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
         ![@HTML5.CssDefaults]: {width: '9rem',
         }
     },
-
+    {
+        $Type: 'UI.DataField',
+        Value: Scorta,
+        Label: 'Scorta'
+    },
     {
         $Type: 'UI.DataField',
         Value: AvaibilityQty,
         Label: 'Avaibility Qty'
     },
-
     {
         $Type: 'UI.DataField',
         Value: TotalProdAllQty,
@@ -1940,7 +1943,11 @@ annotate service.ZZ1_CombPlnOrdersStockClone with @(UI.LineItem #Stock: [
         ![@HTML5.CssDefaults]: {width: '9rem',
         }
     },
-
+    {
+        $Type: 'UI.DataField',
+        Value: Scorta,
+        Label: 'Scorta'
+    },
     {
         $Type: 'UI.DataField',
         Value: AvaibilityQty,
@@ -2114,7 +2121,6 @@ annotate service.ZZ1_CombPlnOrdersStockClone with @(UI.LineItem #Stock: [
         ![@UI.Hidden]
     },
 ]);
-
 
 annotate service.ZZ1_MFP_ASSIGNMENT with @(UI.LineItem #tablePezze: [
     {

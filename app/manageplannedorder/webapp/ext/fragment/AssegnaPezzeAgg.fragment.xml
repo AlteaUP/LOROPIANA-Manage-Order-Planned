@@ -146,6 +146,12 @@
                             text="Copertura (%)"
                         />
                     </Column>
+                    <Column id="columnScortaA">
+                        <Text
+                            id="textScortaA"
+                            text="Scorta"
+                        />
+                    </Column>
                     <Column id="columnCustomQty1">
                         <Text
                             id="textCustomQty1"

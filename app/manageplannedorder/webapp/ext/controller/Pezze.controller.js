@@ -371,29 +371,120 @@ sap.ui.define([
     },
     doAssign: function (oEvent) {
       debugger;
+      //model per quantità surplus
       const oModel = this.getOwnerComponent().getModel();
-      //const oTableBinding = oTable.getBinding("items");
-      this.showMessageConfirm("assign").then(function () {
-        BusyIndicator.show(0);
+      const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
+      const binding = oTable.getBinding('items');
+      const contexts = binding.getContexts();
+      const requiredQty = Number(
+        sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
+      );
+      const remainingQty = Number(
+        sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
+      );
+      const rows = contexts
+        .map(ctx => ({ ctx, obj: ctx.getObject() }))
+        .filter(r => r.obj && r.obj.Scorta !== "X" && r.obj._origProposedQty !== undefined);
 
-        oModel.submitBatch("CreatePezzeBatch").then((a, b, c) => {
-          // Recupera il model condiviso dal Component
-          const highlightModel = this.getOwnerComponent().getModel('highlight');
+      const sumQtyUser = rows.reduce((acc, r) => acc + Number(r.obj.QTA_ASS_V), 0);
+      const saldoScortaEnabled = rows.some(r => r.obj.SaldoScorta === true);
 
-          if (highlightModel) {
-            const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
-            const binding = oTable.getBinding('items');
-            const contexts = binding.getContexts();
+      console.log("RemainingQt:", remainingQty, "| Somma Utente:", sumQtyUser);
+      if (remainingQty <= 0) {
+        MessageToast.show("Quantità rimanente insufficiente");
+        return;
+      } else {
+        if (!saldoScortaEnabled) {
+          if (sumQtyUser > remainingQty) {
+            MessageToast.show("Quantità rimanente insufficiente");
+            return;
+          }
+        }
+        if (saldoScortaEnabled && sumQtyUser > remainingQty) {
 
-            const newAssignedKeys = contexts.map(context => {
-              const obj = context.getObject();
-              return obj.CHARG + '|' + obj.LGORT;
+          const surplus = (sumQtyUser - remainingQty).toFixed(3);
+          console.log("Surplus =", surplus);
+
+          // surplus sul batch con CHARG più piccolo
+          rows.sort((a, b) => Number(a.obj.CHARG) - Number(b.obj.CHARG));
+          const { obj: surplusObjSource } = rows[0];
+
+          // CASO 1: prima assegnazione → ripristino quantità originali
+          if (remainingQty === requiredQty) {
+            rows.forEach(({ ctx, obj }) =>
+              ctx.setProperty("QTA_ASS_V", Number(obj._origProposedQty).toFixed(3))
+            );
+          }
+          // CASO 2: riassegnazione → spalmare remaining equamente
+          else {
+            const quotaPerRow = remainingQty / rows.length;
+            rows.forEach(({ ctx }) =>
+              ctx.setProperty("QTA_ASS_V", quotaPerRow.toFixed(3))
+            );
+          }
+
+          // CREAZIONE / UPDATE surplus
+          const surplusCtx = binding.getContexts().find(c => {
+            const o = c.getObject();
+            return o &&
+              o.CHARG === surplusObjSource.CHARG &&
+              o.LGORT === surplusObjSource.LGORT &&
+              String(o.FSH_MPLO_ORD).startsWith(surplusObjSource.FSH_MPLO_ORD + "_O");
+          });
+
+          if (surplusCtx) {
+            const updated = (
+              Number(surplusCtx.getObject().QTA_ASS_V) + Number(surplus)
+            ).toFixed(3);
+            surplusCtx.setProperty("QTA_ASS_V", updated);
+            console.log("PATCH surplus →", updated);
+          } else {
+            const newRec = structuredClone(surplusObjSource);
+            newRec.QTA_ASS_V = surplus;
+            newRec.SAP_UUID = crypto.randomUUID();
+            newRec.Scorta = "X";
+            newRec.FSH_MPLO_ORD = surplusObjSource.FSH_MPLO_ORD + "_O";
+
+            Object.keys(newRec).forEach(k => {
+              if (k.startsWith("to_") || typeof newRec[k] === "object") delete newRec[k];
             });
 
-            // Aggiorna il model condiviso
-            const existingRecords = highlightModel.getProperty('/assignedRecords') || [];
-            const allRecords = [...existingRecords, ...newAssignedKeys];
-            highlightModel.setProperty('/assignedRecords', allRecords);
+            console.log("CREATE surplus →", newRec);
+            binding.create(newRec, false, false, false);
+          }
+        }
+      }
+      console.log("Contesti dopo create:", binding.getContexts().map(c => c.getObject()));
+
+      this.showMessageConfirm("assign").then(function () {
+        BusyIndicator.show(0);
+        //ELIMINO record surplus con qty 0
+        binding.getContexts().forEach(ctx => {
+          const obj = ctx.getObject();
+          if (!obj) return;
+
+          // Cancello solo surplus già salvati (SAP_UUID) con qty = 0
+          if (obj.Scorta === "X" && Number(obj.QTA_ASS_V) === 0 && !!obj.SAP_UUID) {
+            console.log("DELETE surplus con qty zero:", obj.CHARG, obj.SAP_UUID);
+
+            try {
+              ctx.delete("CreatePezzeBatch"); // DELETE nel batch
+            } catch (e) {
+              console.error("Errore durante delete surplus zero:", e);
+            }
+          }
+        });
+        oModel.submitBatch("CreatePezzeBatch").then((a, b, c) => {
+          const oTable = sap.ui.getCore().byId('fragmentPezze--selectedItemsTable');
+          const binding = oTable.getBinding('items');
+          const highlightModel = this.getOwnerComponent().getModel('highlight');
+          if (highlightModel) {
+            const assigned = binding.getContexts()
+              .map(ctx => ctx.getObject().SAP_UUID)
+              .filter(Boolean);
+
+            const uniqueAssigned = [...new Set(assigned)];
+            highlightModel.setProperty('/assignedRecords', uniqueAssigned);
           }
 
           const oDialog = sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze');

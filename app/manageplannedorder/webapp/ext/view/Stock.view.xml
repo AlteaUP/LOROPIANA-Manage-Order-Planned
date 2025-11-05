@@ -25,7 +25,7 @@
                         placement="After"
                         key="disassegna"
                     />
-                       <table:Action
+                   <table:Action
                         id="whereUsed"
                         press="pressWhereUsed"
                         text="Where Used"

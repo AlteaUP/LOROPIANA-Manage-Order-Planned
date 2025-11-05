@@ -152,7 +152,13 @@ module.exports = class MainService extends cds.ApplicationService {
         // where.pop()
       }
 
-      const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
+      let res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(SELECT.from(from).where(where))
+      //rimuovi eventuali duplicati usando solo MATERIAL come chiave
+      const key = item => item.Material;
+
+      res = Array.from(
+        new Map(res.map(item => [key(item), item])).values()
+      );
       res['$count'] = res.length.toString();
       // if the res is array of one row
       if (Array.isArray(res) && res.length === 1) {
@@ -368,7 +374,11 @@ module.exports = class MainService extends cds.ApplicationService {
           CrossPlantConfigurableProduct: { in: keys.CrossPlantConfigurableProduct }
         })
       );
-
+      //togli duplicati usando Material + CplndOrd
+      const key = item => `${item.Material}|${item.CplndOrd}`;
+      res = Array.from(
+        new Map(res.map(item => [key(item), item])).values()
+      );
       // mappo Batch se vuoto
       res = res.map((r, i) => ({
         ...r,
@@ -377,82 +387,36 @@ module.exports = class MainService extends cds.ApplicationService {
 
 
       // Calculate TotalPlanAllQty and CombPlanAllQty for each record
-      if (Array.isArray(res) && res.length > 0) {
-        const PlannedCombinedOrder = req.params.at(-1)?.CplndOrd;
+      const PlannedCombinedOrders = Array.isArray(keys.CplndOrd)
+        ? keys.CplndOrd
+        : [keys.CplndOrd];
 
-        // Batch query to get all assignment data
-        const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+      // Batch query to get all assignment data
+      const allAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            WERKS: { in: res.map(i => i.Plant) },
+            MATNR: { in: res.map(i => i.Material) }
+          })
+      );
+
+      // Create lookup maps
+      const allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
+
+      // If we have a specific combined order, get its assignments too
+      let combPlanAssignmentsMap = {};
+      if (PlannedCombinedOrders) {
+        const combPlanAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
           SELECT.from('ZZ1_MFP_ASSIGNMENT')
             .where({
+              FSH_MPLO_ORD: { in: PlannedCombinedOrders },
               WERKS: { in: res.map(i => i.Plant) },
               MATNR: { in: res.map(i => i.Material) }
             })
         );
-
-        // Create lookup maps
-        const allAssignmentsMap = createLookupMap(allAssignmentData, 'WERKS', 'MATNR');
-
-        // If we have a specific combined order, get its assignments too
-        let combPlanAssignmentsMap = {};
-        if (PlannedCombinedOrder) {
-          const combPlanAssignmentData = await ZZ1_MFP_ASSIGNMENT_CDS.run(
-            SELECT.from('ZZ1_MFP_ASSIGNMENT')
-              .where({
-                FSH_MPLO_ORD: PlannedCombinedOrder,
-                WERKS: { in: res.map(i => i.Plant) },
-                MATNR: { in: res.map(i => i.Material) }
-              })
-          );
-          combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
-        }
-
-        res.forEach(item => {
-          const { Plant, Material } = item;
-          const key = `${Plant}|${Material}`;
-
-          const allAssignments = allAssignmentsMap[key] || [];
-          const combPlanAssignments = combPlanAssignmentsMap[key] || [];
-
-          const TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V');
-          const CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V');
-
-          item.TotalPlanAllQty = TotalPlanAllQty.toFixed(3);
-          item.CombPlanAllQty = CombPlanAllQty.toFixed(3);
-          // AvailableQuantity / RequiredQuantity
-          let chart_percent = Math.round(parseFloat(item.AvailableQuantity) / parseFloat(item.RequiredQuantity) * 100);
-          let chart_criticality;
-          if (chart_percent >= 100) {
-            chart_criticality = 3
-          } else if (chart_percent < 100 && chart_percent > 0) {
-            chart_criticality = 2
-          } else {
-            chart_criticality = 1
-            chart_percent = 100
-          }
-          item.chart_percent = chart_percent; // Components
-          item.chart_criticality = chart_criticality; // Components
-          // Finished product qty: (Required Quantity (del componente) / Planned Total Qty) * Comb Plan All qty;
-          if (parseInt(item.TotalPlanAllQty) > 0 && parseInt(item.CombPlanAllQty) > 0) {
-            item.FinishedProductQty = (parseFloat(item.RequiredQuantity) / parseFloat(item.TotalPlanAllQty) * parseFloat(item.CombPlanAllQty)).toFixed(3);
-          } else {
-            item.FinishedProductQty = parseInt("0").toFixed(3);
-          }
-          // modifica DL - 22/07/2025 - calcolo campo priorità
-          if (item.BaseUnit && item.BaseUnit.toUpperCase() === 'M2') {
-            if (parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty)) {
-              item.priority = 2
-            } else {
-              item.priority = 1
-            }
-          } else {
-            item.priority = 3
-          }
-          // modifica DL - 22/07/2025 - calcolo campo priorità - FINE
-        });
+        combPlanAssignmentsMap = createLookupMap(combPlanAssignmentData, 'WERKS', 'MATNR');
       }
-      res.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority));
-
-      // 🔑 raggruppo per Material
+      //raggruppo per material
       const grouped = {};
       for (const row of res) {
         const mat = row.Material;
@@ -471,13 +435,58 @@ module.exports = class MainService extends cds.ApplicationService {
         grouped[mat].AvailableQuantity += Number(row.AvailableQuantity || 0);
       }
 
-      // converto di nuovo in array e riporto i numeri come stringhe
-      const aggregated = Object.values(grouped).map(g => ({
-        ...g,
-        RequiredQuantity: String(g.RequiredQuantity),
-        CombPlanAllQty: String(g.CombPlanAllQty),
-        AvailableQuantity: String(g.AvailableQuantity)
-      }));
+      const aggregated = Object.values(grouped);
+
+      aggregated.forEach(item => {
+        const { Plant, Material } = item;
+        const key = `${Plant}|${Material}`;
+
+        const allAssignments = allAssignmentsMap[key] || [];
+        const combPlanAssignments = combPlanAssignmentsMap[key] || [];
+
+        const TotalPlanAllQty = sumValues(allAssignments, 'QTA_ASS_V');
+        const CombPlanAllQty = sumValues(combPlanAssignments, 'QTA_ASS_V');
+
+        item.TotalPlanAllQty = TotalPlanAllQty.toFixed(3);
+        item.CombPlanAllQty = CombPlanAllQty.toFixed(3);
+
+        let chart_percent = Math.round(parseFloat(item.AvailableQuantity) / parseFloat(item.RequiredQuantity) * 100);
+        let chart_criticality;
+        if (chart_percent >= 100) {
+          chart_criticality = 3;
+        } else if (chart_percent > 0) {
+          chart_criticality = 2;
+        } else {
+          chart_criticality = 1;
+          chart_percent = 100;
+        }
+        item.chart_percent = chart_percent;
+        item.chart_criticality = chart_criticality;
+
+        if (parseFloat(item.TotalPlanAllQty) > 0 && parseFloat(item.CombPlanAllQty) > 0) {
+          item.FinishedProductQty = (
+            parseFloat(item.RequiredQuantity) /
+            parseFloat(item.TotalPlanAllQty) *
+            parseFloat(item.CombPlanAllQty)
+          ).toFixed(3);
+        } else {
+          item.FinishedProductQty = "0.000";
+        }
+
+        if (item.BaseUnit && item.BaseUnit.toUpperCase() === 'M2') {
+          item.priority = parseFloat(item.RequiredQuantity) === parseFloat(item.CombPlanAllQty) ? 2 : 1;
+        } else {
+          item.priority = 3;
+        }
+      });
+
+      aggregated.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority));
+
+      aggregated.forEach(g => {
+        g.RequiredQuantity = String(g.RequiredQuantity);
+        g.CombPlanAllQty = String(g.CombPlanAllQty);
+        g.AvailableQuantity = String(g.AvailableQuantity);
+      });
 
       return aggregated;
       //return res;
@@ -545,7 +554,7 @@ module.exports = class MainService extends cds.ApplicationService {
       const combPlanAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
         SELECT.from('ZZ1_MFP_ASSIGNMENT')
           .where({
-            FSH_MPLO_ORD: PlannedCombinedOrder,
+            //FSH_MPLO_ORD: PlannedCombinedOrder,
             WERKS: { in: stockData.map(i => i.Plant) },
             MATNR: { in: stockData.map(i => i.Material) }
           })
@@ -835,6 +844,14 @@ module.exports = class MainService extends cds.ApplicationService {
           })
       );
 
+      const combPlanAllQtyO_Promise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            FSH_MPLO_ORD: `${PlannedCombinedOrder}_O`,
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
       // 6. Batch query for TotalDeliveryQty
       const deliveryQtyPromise = ZZ1_I_SUMQTYDELIVERY_T_CDS.run(
         SELECT.from('ZZ1_I_SUMQTYDELIVERY_T')
@@ -860,14 +877,15 @@ module.exports = class MainService extends cds.ApplicationService {
       // modifica DL - 10/06/2025 - recupero atp - FINE
 
       // 7. Execute all queries in parallel
-      const [prodAllQtyData, planAllQtyData, combPlanAllQtyData, deliveryQtyData, atpRulesData] =
-        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise, atpRulesPromise]);
+      const [prodAllQtyData, planAllQtyData, combPlanAllQtyData, deliveryQtyData, atpRulesData, combPlanAllQtyO_Data] =
+        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise, atpRulesPromise, combPlanAllQtyO_Promise]);
 
       // 8. Create lookup maps for faster association
       const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
       const planAllQtyMap = createLookupMap(planAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
+      const combPlanAllQtyO_Map = createLookupMap(combPlanAllQtyO_Data, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
 
       // 9. Process results with maps instead of additional queries
       var res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
@@ -878,11 +896,15 @@ module.exports = class MainService extends cds.ApplicationService {
         const planItems = planAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
         const combPlanItems = combPlanAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
         const deliveryItems = deliveryQtyMap[`${Material}|${StorageLocation}|${Batch}`] || [];
+        const combPlanO_Items = combPlanAllQtyO_Map[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
 
         const TotalProdAllQty = sumValues(prodItems, 'TotalAllocQty');
         const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
         const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
         const TotalDeliveryQty = sumValues(deliveryItems, 'TotDeliveryQty');
+        const Scorta = combPlanO_Items.length > 0
+          ? combPlanO_Items[0].Scorta
+          : "";
         let StorageLocationStock = parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString();
 
         let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) -
@@ -896,7 +918,8 @@ module.exports = class MainService extends cds.ApplicationService {
           CombPlanAllQty: CombPlanAllQty.toFixed(3).toString(),
           AvaibilityQty,
           TotalInDelQty: TotalDeliveryQty.toFixed(3).toString(),
-          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString()
+          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
+          Scorta
         };
       });
 
@@ -1076,14 +1099,70 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // ZZ1_COMBPLNORDERSSTOCKAPI - Start
     this.on("*", "ZZ1_CombPlnOrdersStockAPI", async (req) => {
-      return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query)
+      const where = req.query.SELECT.where;
+      if (!where) return [];
+
+      const res = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT.from('ZZ1_CombPlnOrdersStockAPI').columns('*').where(where)
+      );
+
+      if (!res || res.length === 0) return [];
+
+      //Estraggo gli ordini ESISTENTI IN RES (con filtro !=)
+      const norm = v => String(v ?? '').trim();
+      const orderList = [...new Set(res.map(r => norm(r.CplndOrd)))];
+
+      console.log("Ordini effettivi da RES:", orderList);
+
+      const whereCapacity =
+        orderList.length === 1
+          ? { CombinedMasterOrder: orderList[0], FreeDefinedIndicator1: true }
+          : { CombinedMasterOrder: { in: orderList }, FreeDefinedIndicator1: true };
+
+      const capacityData = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+        SELECT.from('ZZ1_PLOCAPACITYCORD').columns('*').where(whereCapacity)
+      );
+
+      const capacityMap = {};
+      if (capacityData?.length > 0) {
+        for (const c of capacityData) {
+          capacityMap[norm(c.CombinedMasterOrder)] = {
+            BOOWorkCenterInternalID: c.BOOWorkCenterInternalID ?? '',
+            BOOWorkCenterText: c.BOOWorkCenterText ?? ''
+          };
+        }
+      }
+
+      const productData = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+        SELECT.from('ZZ1_CombinedPlnOrdersAPI')
+          .columns('CplndOrd', 'ProductDescription')
+          .where({ CplndOrd: orderList })
+      );
+
+      const productMap = {};
+      if (productData?.length > 0) {
+        for (const p of productData) {
+          productMap[norm(p.CplndOrd)] = p.ProductDescription ?? '';
+        }
+      }
+
+      for (const item of res) {
+        const match = capacityMap[norm(item.CplndOrd)];
+        item.BOOWorkCenterInternalID = match?.BOOWorkCenterInternalID ?? '';
+        item.BOOWorkCenterText = match?.BOOWorkCenterText ?? '';
+        item.ProductDescription = productMap[norm(item.CplndOrd)] ?? '';
+      }
+
+      return res;
     });
+
     this.on("*", "ZZ1_CombPlnOrdersStock", async (req) => {
       return ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(req.query);
     });
     // ZZ1_COMBPLNORDERSSTOCKAPI - End
     this.on('INSERT', 'ZZ1_MFP_ASSIGNMENT', async (req) => {
       console.log('[INSERT]*************')
+      console.log("Insert backend:", req.data);
       return ZZ1_MFP_ASSIGNMENT_CDS.run(req.query);
     });
 
@@ -1100,10 +1179,40 @@ module.exports = class MainService extends cds.ApplicationService {
 
     this.on("READ", "ZZ1_MFP_ASSIGNMENT", async (req) => {
       console.log('[GET]*************')
-      const res = await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query)
-      return res;
+      const where = req.query?.SELECT?.where;
+      let res;
 
+      if (!where) {
+        res = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+          SELECT.from('ZZ1_MFP_ASSIGNMENT')
+        );
+      } else {
+        res = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+          SELECT.from('ZZ1_MFP_ASSIGNMENT').where(where)
+        );
+      }
+
+      return res;
     });
+
+    this.after("READ", "ZZ1_MFP_ASSIGNMENT", async (data) => {
+      console.log('[GET]*************')
+      if (Array.isArray(data)) {
+        data.sort((a, b) => {
+          // Estrai l’ordine (prima del "_O")
+          const ordA = Number(String(a.FSH_MPLO_ORD).split("_")[0]) || 0;
+          const ordB = Number(String(b.FSH_MPLO_ORD).split("_")[0]) || 0;
+
+          if (ordA !== ordB) return ordA - ordB;
+
+          const chargA = Number(a.CHARG) || 0;
+          const chargB = Number(b.CHARG) || 0;
+
+          return chargA - chargB;
+        });
+      }
+    });
+
     this.on("DELETE", "ZZ1_MFP_ASSIGNMENT", async (req) => {
       console.log('[DELETE]*************')
       const res = await ZZ1_MFP_ASSIGNMENT_CDS.run(req.query)
@@ -1402,9 +1511,9 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     //hook per gestire icona in tab Componenti
-    this.after('READ', "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (each) => {
+    this.after('READ', "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (data) => {
       const isEmptyOrN = v => v === undefined || v === null || v === '' || v === 'N';
-      await Promise.all(each.map(async each => {
+      const processRecord = async each => {
         const { Material, Plant, ProductGroup } = each;
         let batch = null;
         // 1) prova solo su Material
@@ -1414,7 +1523,8 @@ module.exports = class MainService extends cds.ApplicationService {
               .from('ZZ1_MFP_BATCHCUSTOM')
               .where({ Material })
           );
-          if (batch && ['Gruppo_Merce', 'Plant', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+          if (batch && ['Gruppo_Merce', 'Plant', 'Famiglia', 'Cites']
+            .some(k => !isEmptyOrN(batch[k]))) {
             batch = null;
           }
         }
@@ -1425,7 +1535,8 @@ module.exports = class MainService extends cds.ApplicationService {
               .from('ZZ1_MFP_BATCHCUSTOM')
               .where({ Gruppo_Merce: ProductGroup, Plant })
           );
-          if (batch && ['Material', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+          if (batch && ['Material', 'Famiglia', 'Cites']
+            .some(k => !isEmptyOrN(batch[k]))) {
             batch = null;
           }
         }
@@ -1436,7 +1547,8 @@ module.exports = class MainService extends cds.ApplicationService {
               .from('ZZ1_MFP_BATCHCUSTOM')
               .where({ Plant })
           );
-          if (batch && ['Material', 'Gruppo_Merce', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+          if (batch && ['Material', 'Gruppo_Merce', 'Famiglia', 'Cites']
+            .some(k => !isEmptyOrN(batch[k]))) {
             batch = null;
           }
         }
@@ -1444,17 +1556,27 @@ module.exports = class MainService extends cds.ApplicationService {
         each.IconActive = (batch && batch.AssignRule === true)
           ? 'sap-icon://activate'
           : '';
-
         // Assegna flagHighlights se Mandassign === true
         each.flagHighlights = (batch && batch.Mandassign === true)
           ? 'X'
           : '';
-      }));
-    });
+      };
+      if (Array.isArray(data)) {
+        await Promise.all(data.map(processRecord));
 
-    this.after('READ', "ZZ1_CombinPlannedOrdersComClone", async (each) => {
+        data.sort((a, b) => {
+          const pA = a.flagHighlights === 'X' ? 0 : 1;
+          const pB = b.flagHighlights === 'X' ? 0 : 1;
+          return pA - pB;
+        });
+
+      } else if (data) {
+        await processRecord(data);
+      }
+    });
+    this.after('READ', "ZZ1_CombinPlannedOrdersComClone", async (data) => {
       const isEmptyOrN = v => v === undefined || v === null || v === '' || v === 'N';
-      await Promise.all(each.map(async each => {
+      const processRecord = async each => {
         const { Material, Plant, ProductGroup } = each;
         let batch = null;
         // 1) prova solo su Material
@@ -1464,7 +1586,8 @@ module.exports = class MainService extends cds.ApplicationService {
               .from('ZZ1_MFP_BATCHCUSTOM')
               .where({ Material })
           );
-          if (batch && ['Gruppo_Merce', 'Plant', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+          if (batch && ['Gruppo_Merce', 'Plant', 'Famiglia', 'Cites']
+            .some(k => !isEmptyOrN(batch[k]))) {
             batch = null;
           }
         }
@@ -1475,7 +1598,8 @@ module.exports = class MainService extends cds.ApplicationService {
               .from('ZZ1_MFP_BATCHCUSTOM')
               .where({ Gruppo_Merce: ProductGroup, Plant })
           );
-          if (batch && ['Material', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+          if (batch && ['Material', 'Famiglia', 'Cites']
+            .some(k => !isEmptyOrN(batch[k]))) {
             batch = null;
           }
         }
@@ -1486,7 +1610,8 @@ module.exports = class MainService extends cds.ApplicationService {
               .from('ZZ1_MFP_BATCHCUSTOM')
               .where({ Plant })
           );
-          if (batch && ['Material', 'Gruppo_Merce', 'Famiglia', 'Cites'].some(k => !isEmptyOrN(batch[k]))) {
+          if (batch && ['Material', 'Gruppo_Merce', 'Famiglia', 'Cites']
+            .some(k => !isEmptyOrN(batch[k]))) {
             batch = null;
           }
         }
@@ -1494,13 +1619,23 @@ module.exports = class MainService extends cds.ApplicationService {
         each.IconActive = (batch && batch.AssignRule === true)
           ? 'sap-icon://activate'
           : '';
-
         // Assegna flagHighlights se Mandassign === true
         each.flagHighlights = (batch && batch.Mandassign === true)
           ? 'X'
           : '';
-      }));
-    });
+      };
+      if (Array.isArray(data)) {
+        await Promise.all(data.map(processRecord));
 
+        data.sort((a, b) => {
+          const pA = a.flagHighlights === 'X' ? 0 : 1;
+          const pB = b.flagHighlights === 'X' ? 0 : 1;
+          return pA - pB;
+        });
+
+      } else if (data) {
+        await processRecord(data);
+      }
+    });
   }
 };

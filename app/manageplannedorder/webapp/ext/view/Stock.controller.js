@@ -34,7 +34,7 @@ sap.ui.define(
                 if (this._sLastRoute === "StockPage" && sNextRoute !== "StockPage") {
                     console.log("Uscita da StockPage, faccio detach");
                     this._detachTableEvents();
-                     window.onpopstate = null;
+                    window.onpopstate = null;
                 }
             },
             _detachTableEvents: function () {
@@ -60,7 +60,7 @@ sap.ui.define(
                 };
 
                 window.onpopstate = this._fnBackHandler;
- 
+
                 const oStocksModel = new sap.ui.model.json.JSONModel({
                     tableCount: 0
                 });
@@ -217,34 +217,22 @@ sap.ui.define(
                     dialog.getModel('selected').setProperty('/submitCompleted', false);
                     // Handler per quando il dialog viene chiuso
                     dialog.attachAfterClose(function () {
-                        // Resetta tutti i cambiamenti non committati
                         const binding = table.getBinding('items');
                         const selectedModel = dialog.getModel('selected');
                         const submitCompleted = selectedModel?.getProperty('/submitCompleted');
                         const oStockTable = this.getView().byId("TableStock");
                         const oInnerTableStock = oStockTable.getMDCTable()._oTable;
+                        const highlightModel = this.getOwnerComponent().getModel("highlight");
 
                         if (binding) {
-                            const contexts = binding.getContexts();
-
                             if (!submitCompleted) {
-                                contexts.forEach(ctx => {
-                                    if (ctx.isTransient && typeof ctx.delete === "function") {
-                                        ctx.delete();
-                                    }
-                                });
+                                binding.resetChanges();
                             }
-
-                            binding.resetChanges();
                         }
 
-                        // Gestione del modello highlight
-                        const highlightModel = this.getOwnerComponent().getModel("highlight");
-                        if (highlightModel) {
-                            if (!submitCompleted) {
-                                highlightModel.setProperty('/assignedRecords', []);
-                                oInnerTableStock.removeSelections();
-                            }
+                        if (highlightModel && !submitCompleted) {
+                            highlightModel.setProperty('/assignedRecords', []);
+                            oInnerTableStock.removeSelections();
                         }
                     }.bind(this));
                     const table = dialog.getContent().at(-1);
@@ -281,29 +269,31 @@ sap.ui.define(
                             new sap.ui.model.Filter({
                                 filters: (oContextOrders || [])
                                     .filter(o => o.CplndOrd)
-                                    .map(o =>
+                                    .flatMap(o => [
                                         new sap.ui.model.Filter(
                                             "FSH_MPLO_ORD",
-                                            sap.ui.model.FilterOperator.Contains,
+                                            sap.ui.model.FilterOperator.EQ,
                                             o.CplndOrd
+                                        ),
+                                        new sap.ui.model.Filter(
+                                            "FSH_MPLO_ORD",
+                                            sap.ui.model.FilterOperator.StartsWith,
+                                            o.CplndOrd + "_O"
                                         )
-                                    ),
-                                and: false
+                                    ]),
+                                and: false // OR
                             }),
-                            new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, oContextComponent.Material)
+                            new sap.ui.model.Filter(
+                                "MATNR",
+                                sap.ui.model.FilterOperator.EQ,
+                                oContextComponent.Material
+                            )
                         ],
                         template: new sap.m.ColumnListItem({
                             highlight: {
-                                parts: [
-                                    'CHARG',
-                                    'LGORT',
-                                    'highlight>/assignedRecords'  // Model del Component
-                                ],
-                                formatter: function (batch, storage, assignedRecords) {
-                                    if (!batch || !storage) return "None";
-                                    const recordKey = batch + '|' + storage;
-                                    const isAssigned = assignedRecords && assignedRecords.includes(recordKey);
-                                    return isAssigned ? "Success" : "None";
+                                parts: ['SAP_UUID', 'highlight>/assignedRecords'],
+                                formatter: function (uuid, assignedRecords) {
+                                    return assignedRecords?.includes(uuid) ? "Success" : "None";
                                 }
                             },
                             cells: [
@@ -315,6 +305,7 @@ sap.ui.define(
                                 new sap.m.Text({ text: "{LGORT}" }),
                                 new sap.m.Text({ text: "{FABB_TOT_V}" }),
                                 new sap.m.Text({ text: "{COPERTURA}" }),
+                                new sap.m.Text({ text: "{Scorta}" }),
                                 //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
                                 new sap.m.Input({
                                     value: "{QTA_ASS_V}", change: function (oEvent) {
@@ -324,7 +315,7 @@ sap.ui.define(
 
                                         var requiredQty = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRequiredQuantityA").getText()
 
-                                        sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA").setText(Number(requiredQty) - Number(sNewValue));
+                                        //sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA").setText(Number(requiredQty) - Number(sNewValue));
                                     }
                                 }),
                                 //new sap.m.Text({ text: "{BatchBySupplier}" })
@@ -333,8 +324,8 @@ sap.ui.define(
                         templateShareable: false,
                         parameters: { $$updateGroupId: 'CreatePezzeBatch' },
                     });
-                    const RemainingQty = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA");
-                    RemainingQty.setText(dialog.getModel("selected").oData.OpenQty);
+                    //const RemainingQty = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA");
+                    //RemainingQty.setText(dialog.getModel("selected").oData.OpenQty);
                     const binding = table.getBinding('items');
                     binding.resetChanges();
                     const oODataModel = table.getModel();
@@ -347,28 +338,49 @@ sap.ui.define(
                         }
                         await binding.requestContexts(0, 1); // forza la creazione del context
 
-                        // 1. Identifica i record GIÀ PRESENTI nella tabella (quelli già assegnati)
-                        const existingContexts = binding.getContexts();
-                        const existingKeys = existingContexts.map(context => {
-                            const obj = context.getObject();
-                            if (obj) { // Aggiungi un controllo per sicurezza
-                                return obj.CHARG + '|' + obj.LGORT;
-                            }
-                            return null;
-                        }).filter(key => key !== null); // Rimuovi eventuali nulli
-                        // 2. Prendi o crea il modello di highlight condiviso
                         const oComponent = this.getOwnerComponent();
                         let highlightModel = oComponent.getModel('highlight');
+
                         if (!highlightModel) {
-                            highlightModel = new sap.ui.model.json.JSONModel({
-                                assignedRecords: []
-                            });
+                            highlightModel = new sap.ui.model.json.JSONModel({ assignedRecords: [] });
                             oComponent.setModel(highlightModel, 'highlight');
                         }
-                        // 3. Imposta i record già assegnati nel modello condiviso
-                        // Uso 'Set' per evitare duplicati se riapro il dialog più volte
-                        const allAssignedRecords = [...new Set([...highlightModel.getProperty('/assignedRecords'), ...existingKeys])];
-                        highlightModel.setProperty('/assignedRecords', allAssignedRecords);
+
+                        const alreadyAssigned = binding.getContexts()
+                            .filter(ctx => !ctx.isTransient())
+                            .map(ctx => ctx.getObject())
+                            .filter(obj => obj && obj.SAP_UUID)
+                            .map(obj => obj.SAP_UUID);
+
+                        const assignedObjects = binding.getContexts()
+                            .filter(ctx => !ctx.isTransient())
+                            .map(ctx => ctx.getObject())
+                            .filter(obj =>
+                                obj &&
+                                obj.SAP_UUID &&
+                                obj.Scorta !== "X"
+                            );
+
+                        const assignedQty = assignedObjects.reduce((acc, obj) => {
+                            return acc + (Number(obj.QTA_ASS_V) || 0);
+                        }, 0);
+
+                        const requiredQty = Number(
+                            sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRequiredQuantityA").getText()
+                        );
+
+                        // Remaining Qty deve considerare SOLO gli originali
+                        const remainingQty = (requiredQty - assignedQty).toFixed(3);
+
+                        sap.ui.getCore()
+                            .byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA")
+                            .setText(remainingQty);
+
+                        console.log("RemainingQty aggiornata:", remainingQty);
+
+
+                        //Highlight SOLO quelli già assegnati in backend
+                        highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
 
                         // sommatoria AvaibilityQty 
                         const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
@@ -434,9 +446,10 @@ sap.ui.define(
                                     "SAP_LastChangedByUser_Text": "X",
                                     "BatchBySupplier": item.BatchBySupplier,
                                     "SpecialStock": item.InventorySpecialStockType,
-                                    "SaldoScorta": !!this._bSaldoScorta
+                                    "SaldoScorta": !!this._bSaldoScorta,
+                                    "Scorta": ""
                                 })
-
+                                newCreate._origProposedQty = qtaArray[index];
                                 const isPresent = binding.getContexts().some(context =>
                                     context.getObject().CHARG === _item.Batch &&
                                     context.getObject().LGORT === _item.StorageLocation &&
@@ -554,7 +567,7 @@ sap.ui.define(
                     // Ricrea sempre
                     this._fragmentPezze = this.loadFragment({
                         id: "fragmentPezze1",
-                        name: "manageplannedorder.manageplannedorder.ext.fragment.AssegnaPezze",
+                        name: "manageplannedorder.manageplannedorder.ext.fragment.AssegnaPezzeAgg",
                         controller: this._controller
                     });
                     /* 
@@ -567,40 +580,26 @@ sap.ui.define(
                             } */
 
                     this._fragmentPezze.then(function (dialog) {
+                        this._oDialogPezze = dialog;
                         dialog.setModel(model, 'selected');
                         dialog.setModel(oModel);
                         //flag per verificare se è stato fatto il submit
                         dialog.getModel('selected').setProperty('/submitCompleted', false);
                         // Handler per quando il dialog viene chiuso
                         dialog.attachAfterClose(function () {
-                            // Resetta tutti i cambiamenti non committati
                             const binding = table.getBinding('items');
                             const selectedModel = dialog.getModel('selected');
                             const submitCompleted = selectedModel?.getProperty('/submitCompleted');
-                            const oStockTable = this.getView().byId("TableStock");
-                            const oInnerTableStock = oStockTable.getMDCTable()._oTable;
+                            const highlightModel = this.getOwnerComponent().getModel("highlight");
 
                             if (binding) {
-                                const contexts = binding.getContexts();
-
                                 if (!submitCompleted) {
-                                    contexts.forEach(ctx => {
-                                        if (ctx.isTransient && typeof ctx.delete === "function") {
-                                            ctx.delete();
-                                        }
-                                    });
+                                    binding.resetChanges();
                                 }
-
-                                binding.resetChanges();
                             }
 
-                            // Gestione del modello highlight
-                            const highlightModel = this.getOwnerComponent().getModel("highlight");
-                            if (highlightModel) {
-                                if (!submitCompleted) {
-                                    highlightModel.setProperty('/assignedRecords', []);
-                                    oInnerTableStock.removeSelections();
-                                }
+                            if (highlightModel && !submitCompleted) {
+                                highlightModel.setProperty('/assignedRecords', []);
                             }
                         }.bind(this));
                         const table = dialog.getContent().at(-1);
@@ -634,28 +633,31 @@ sap.ui.define(
                                 new sap.ui.model.Filter({
                                     filters: (oContextOrders || [])
                                         .filter(o => o.CplndOrd)
-                                        .map(o =>
+                                        .flatMap(o => [
                                             new sap.ui.model.Filter(
                                                 "FSH_MPLO_ORD",
-                                                sap.ui.model.FilterOperator.Contains,
+                                                sap.ui.model.FilterOperator.EQ,
                                                 o.CplndOrd
+                                            ),
+                                            new sap.ui.model.Filter(
+                                                "FSH_MPLO_ORD",
+                                                sap.ui.model.FilterOperator.StartsWith,
+                                                o.CplndOrd + "_O"
                                             )
-                                        ),
-                                    and: false
+                                        ]),
+                                    and: false // OR
                                 }),
-                                new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, oContextComponent.Material)
+                                new sap.ui.model.Filter(
+                                    "MATNR",
+                                    sap.ui.model.FilterOperator.EQ,
+                                    oContextComponent.Material
+                                )
                             ],
                             template: new sap.m.ColumnListItem({
                                 highlight: {
-                                    parts: [
-                                        'CHARG',
-                                        'LGORT',
-                                        'highlight>/assignedRecords'  // Model del Component
-                                    ],
-                                    formatter: function (batch, storage, assignedRecords) {
-                                        const recordKey = batch + '|' + storage;
-                                        const isAssigned = assignedRecords && assignedRecords.includes(recordKey);
-                                        return isAssigned ? "Success" : "None";
+                                    parts: ['SAP_UUID', 'highlight>/assignedRecords'],
+                                    formatter: function (uuid, assignedRecords) {
+                                        return assignedRecords?.includes(uuid) ? "Success" : "None";
                                     }
                                 },
                                 cells: [
@@ -667,6 +669,7 @@ sap.ui.define(
                                     new sap.m.Text({ text: "{LGORT}" }),
                                     new sap.m.Text({ text: "{FABB_TOT_V}" }),
                                     new sap.m.Text({ text: "{COPERTURA}" }),
+                                    new sap.m.Text({ text: "{Scorta}" }),
                                     //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
                                     new sap.m.Input({
                                         value: "{QTA_ASS_V}", change: function (oEvent) {
@@ -699,28 +702,22 @@ sap.ui.define(
                             }
                             await binding.requestContexts(0, 1); // forza la creazione del context
 
-                            // 1. Identifica i record GIÀ PRESENTI nella tabella (quelli già assegnati)
-                            const existingContexts = binding.getContexts();
-                            const existingKeys = existingContexts.map(context => {
-                                const obj = context.getObject();
-                                if (obj) { // Aggiungi un controllo per sicurezza
-                                    return obj.CHARG + '|' + obj.LGORT;
-                                }
-                                return null;
-                            }).filter(key => key !== null); // Rimuovi eventuali nulli
-                            // 2. Prendi o crea il modello di highlight condiviso
                             const oComponent = this.getOwnerComponent();
                             let highlightModel = oComponent.getModel('highlight');
+
                             if (!highlightModel) {
-                                highlightModel = new sap.ui.model.json.JSONModel({
-                                    assignedRecords: []
-                                });
+                                highlightModel = new sap.ui.model.json.JSONModel({ assignedRecords: [] });
                                 oComponent.setModel(highlightModel, 'highlight');
                             }
-                            // 3. Imposta i record già assegnati nel modello condiviso
-                            // Uso 'Set' per evitare duplicati se riapro il dialog più volte
-                            const allAssignedRecords = [...new Set([...highlightModel.getProperty('/assignedRecords'), ...existingKeys])];
-                            highlightModel.setProperty('/assignedRecords', allAssignedRecords);
+
+                            const alreadyAssigned = binding.getContexts()
+                                .filter(ctx => !ctx.isTransient())
+                                .map(ctx => ctx.getObject())
+                                .filter(obj => obj && obj.SAP_UUID)
+                                .map(obj => obj.SAP_UUID);
+
+                            //Highlight SOLO quelli già assegnati in backend
+                            highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
 
                             // sommatoria AvaibilityQty 
                             const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
@@ -785,7 +782,8 @@ sap.ui.define(
                                         "SAP_LastChangedByUser_Text": "X",
                                         "BatchBySupplier": item.BatchBySupplier,
                                         "SpecialStock": item.InventorySpecialStockType,
-                                        "SaldoScorta": !!this._bSaldoScorta
+                                        "SaldoScorta": !!this._bSaldoScorta,
+                                        "Scorta": ""
                                     })
 
                                     const isPresent = binding.getContexts().some(context =>
@@ -897,39 +895,85 @@ sap.ui.define(
             pressDoAssign: function (oEvent) {
                 debugger
                 var that = this
+                const oContextOrders = JSON.parse(sessionStorage.getItem("selectedContextsOrders") || "[]"); //ordine selezionato
                 const oModel = this.getOwnerComponent().getModel();
                 const oTable = that.getView().byId('fragmentPezze1--selectedItemsTable1');
                 const binding = oTable.getBinding('items');
-                const _oContext = [];
                 const contexts = binding.getContexts();
+
+                const requiredQty = Number(
+                    sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRequiredQuantityA").getText()
+                );
+
                 contexts.forEach(ctx => {
                     const obj = ctx.getObject();
                     if (!obj) return;
-                    _oContext.push(obj);
+                    //SURPLUS → solo PATCH, NO split
+                    if (obj.Scorta === "X") {
+                        console.log("Surplus già esistente --> no split", obj.CHARG);
+                        return;
+                    }
 
+                    const qty = Number(obj.QTA_ASS_V);
+                    const saldoScortaEnabled = obj.SaldoScorta === true;
+
+                    if (!saldoScortaEnabled || qty <= requiredQty) return;
+
+                    console.log("🔹 Split su:", obj.CHARG, qty, "Req:", requiredQty);
+
+                    const surplus = qty - requiredQty;
+                    ctx.setProperty("QTA_ASS_V", requiredQty.toFixed(3));
+
+                    // Cerca se esiste già un surplus record
+                    const surplusCtx = binding.getContexts().find(c => {
+                        const o = c.getObject();
+                        return o.CHARG === obj.CHARG &&
+                            o.LGORT === obj.LGORT &&
+                            String(o.FSH_MPLO_ORD).startsWith(obj.FSH_MPLO_ORD + "_O");
+                    });
+
+                    if (surplusCtx) {
+                        //UPDATE - Sommo al record già creato in precedenza
+                        const existingQty = Number(surplusCtx.getObject().QTA_ASS_V);
+                        const updatedQty = (existingQty + surplus).toFixed(3);
+
+                        console.log("PATCH surplus:", updatedQty);
+                        surplusCtx.setProperty("QTA_ASS_V", updatedQty);
+                    }
+                    else {
+                        //CREATE - Nuovo surplus record
+                        const newRecord = structuredClone(obj);
+                        newRecord.QTA_ASS_V = surplus.toFixed(3);
+                        newRecord.Scorta = "X";
+                        newRecord.SAP_UUID = crypto.randomUUID();
+                        newRecord.FSH_MPLO_ORD = obj.FSH_MPLO_ORD + "_O";
+                        //pulisco record per evitare errori in chiamata
+                        Object.keys(newRecord).forEach(key => {
+                            if (key.startsWith("to_") || typeof newRecord[key] === "object") {
+                                delete newRecord[key];
+                            }
+                        });
+
+                        console.log("CREATE surplus:", newRecord);
+                        binding.create(newRecord, false, false, false);
+                    }
                 });
+                console.log("Contesti dopo create:", binding.getContexts().map(c => c.getObject()));
                 this.showMessageConfirm("assign").then(function () {
                     //console.log("BusyIndicator:", BusyIndicator);
                     sap.ui.core.BusyIndicator.show(0);
 
                     oModel.submitBatch("CreatePezzeBatch").then(async (a, b, c) => {
-                        // Recupera il model condiviso dal Component
+                        const oTable = that.getView().byId('fragmentPezze1--selectedItemsTable1');
+                        const binding = oTable.getBinding('items');
                         const highlightModel = this.getOwnerComponent().getModel('highlight');
-
                         if (highlightModel) {
-                            const oTable = that.getView().byId('fragmentPezze1--selectedItemsTable1');
-                            const binding = oTable.getBinding('items');
-                            const contexts = binding.getContexts();
+                            const assigned = binding.getContexts()
+                                .map(ctx => ctx.getObject().SAP_UUID)
+                                .filter(Boolean);
 
-                            const newAssignedKeys = contexts.map(context => {
-                                const obj = context.getObject();
-                                return obj.CHARG + '|' + obj.LGORT + '|' + obj.FSH_MPLO_ORD;
-                            });
-
-                            // Aggiorna il model condiviso
-                            const existingRecords = highlightModel.getProperty('/assignedRecords') || [];
-                            const allRecords = [...new Set([...existingRecords, ...newAssignedKeys])];
-                            highlightModel.setProperty('/assignedRecords', allRecords);
+                            const uniqueAssigned = [...new Set(assigned)];
+                            highlightModel.setProperty('/assignedRecords', uniqueAssigned);
                         }
 
                         const oDialog = this._oDialogPezze;
@@ -1006,12 +1050,12 @@ sap.ui.define(
                                     .map(o =>
                                         new sap.ui.model.Filter(
                                             "CplndOrd",
-                                            sap.ui.model.FilterOperator.Contains,
+                                            sap.ui.model.FilterOperator.NE,
                                             o.CplndOrd
                                         )
                                     ),
-                                and: false
-                            }), ,
+                                and: true
+                            }),
                             new sap.ui.model.Filter("Material", sap.ui.model.FilterOperator.EQ, oContextComponent.Material),
                             new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, oContextComponent.Plant),
                         ],
@@ -1019,6 +1063,27 @@ sap.ui.define(
                             cells: [
                                 new sap.m.ObjectIdentifier({
                                     title: "{CplndOrd}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{BOOWorkCenterInternalID}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{BOOWorkCenterText}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{MRPController}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{CrossPlantConfigurableProduct}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{ProductDescription}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{ProductTheme}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{zzbusi}"
                                 }),
                                 new sap.m.Text({
                                     text: "{AvailableQuantity}"

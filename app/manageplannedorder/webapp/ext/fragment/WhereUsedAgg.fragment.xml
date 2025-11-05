@@ -76,10 +76,52 @@
                 mode="MultiSelect"
             >
                 <columns>
-                    <Column id="columnCplndOrdWhereUsedA">
+                   <Column id="columnCplndOrdWhereUsedA">
                         <Text
                             id="textCplndOrdWhereUsedA"
                             text="Combined Planned Order"
+                        />
+                    </Column>
+                    <Column id="columnWorkCenterInternalIDWhereUsedA">
+                        <Text
+                            id="textWorkCenterInternalIDWhereUsedA"
+                            text="Work Center Internal ID"
+                        />
+                    </Column>
+                    <Column id="columnWorkCenterTextWhereUsedA">
+                        <Text
+                            id="textWorkCenterTextWhereUsedA"
+                            text="Operation Work Center Text"
+                        />
+                    </Column> 
+                    <Column id="columnMRPControllerWhereUsedA">
+                        <Text
+                            id="textMRPControllerWhereUsedA"
+                            text="MRPController"
+                        />
+                    </Column>
+                    <Column id="columnCrossPlantConfigurableProductWhereUsedA">
+                        <Text
+                            id="textCrossPlantConfigurableProductWhereUsedA"
+                            text="Product"
+                        />
+                    </Column>
+                    <Column id="columnProductDescriptionWhereUsedA">
+                        <Text
+                            id="textProductDescriptionWhereUsedA"
+                            text="Product Description"
+                        />
+                    </Column>
+                    <Column id="columnProductThemeWhereUsedA">
+                        <Text
+                            id="textProductThemeWhereUsedA"
+                            text="Fashion Theme"
+                        />
+                    </Column>
+                    <Column id="columnzzbusiWhereUsedA">
+                        <Text
+                            id="textzzbusiWhereUsedA"
+                            text="Business"
                         />
                     </Column>
                     <Column id="columnQtyWhereUsedA">

@@ -86,12 +86,27 @@ sap.ui.define([
         dialog.getModel('selected').setProperty('/submitCompleted', false);
         // Handler per quando il dialog viene chiuso
         dialog.attachAfterClose(function () {
-          // Resetta tutti i cambiamenti non committati
           const binding = table.getBinding('items');
+          const selectedModel = dialog.getModel('selected');
+          const submitCompleted = selectedModel?.getProperty('/submitCompleted');
+          const oStockTable = this._view.byId(id);
+          const highlightModel = this._controller.getOwnerComponent().getModel("highlight");
+
           if (binding) {
-            binding.resetChanges();
+            if (!submitCompleted) {
+              binding.resetChanges();
+            }
           }
-        });
+
+          if (highlightModel && !submitCompleted) {
+            highlightModel.setProperty('/assignedRecords', []);
+            oStockTable.removeSelections();
+          }
+          //braso quantità rimanente
+          sap.ui.getCore()
+            .byId("fragmentPezze--inputRemainingQty")
+            .setText("");
+        }.bind(this));
         const table = dialog.getContent().at(-1);
 
         var oCheckBox = new sap.m.CheckBox({
@@ -123,20 +138,20 @@ sap.ui.define([
         table.bindAggregation('items', {
           path: '/ZZ1_MFP_ASSIGNMENT',
           filters: [
-            new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+            new sap.ui.model.Filter({
+              filters: [
+                new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+                new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.StartsWith, obj.CplndOrd + "_O")
+              ],
+              and: false // OR → mostra sia originali che surplus
+            }),
             new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
           ],
           template: new sap.m.ColumnListItem({
             highlight: {
-              parts: [
-                'CHARG',
-                'LGORT',
-                'highlight>/assignedRecords'  // Model del Component
-              ],
-              formatter: function (batch, storage, assignedRecords) {
-                const recordKey = batch + '|' + storage;
-                const isAssigned = assignedRecords && assignedRecords.includes(recordKey);
-                return isAssigned ? "Success" : "None";
+              parts: ['SAP_UUID', 'highlight>/assignedRecords'],
+              formatter: function (uuid, assignedRecords) {
+                return assignedRecords?.includes(uuid) ? "Success" : "None";
               }
             },
             cells: [
@@ -147,6 +162,7 @@ sap.ui.define([
               new sap.m.Text({ text: "{LGORT}" }),
               new sap.m.Text({ text: "{FABB_TOT_V}" }),
               new sap.m.Text({ text: "{COPERTURA}" }),
+              new sap.m.Text({ text: "{Scorta}" }),
               //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
               new sap.m.Input({
                 value: "{QTA_ASS_V}", change: function (oEvent) {
@@ -157,7 +173,7 @@ sap.ui.define([
                   var remainingQty = sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
                   var requiredQty = sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
 
-                  sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
+                  //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
 
                   // Esempio: aggiornare un'altra proprietà
                   // oContext.getModel().setProperty(oContext.getPath() + "/SomeField", sNewValue);
@@ -171,7 +187,7 @@ sap.ui.define([
         });
 
         // modifica DL - aggiungo campo con quantità rimamente
-        sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(dialog.getModel("selected").oData.OpenQty);
+        //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(dialog.getModel("selected").oData.OpenQty);
         // modifica DL - aggiungo campo con quantità rimamente - FINE
 
         const binding = table.getBinding('items');
@@ -184,30 +200,50 @@ sap.ui.define([
             console.log("Submit già completato, non ricreo i record");
             return;
           }
-          await binding.requestContexts(0, 1); // forza la creazione del context
+          await binding.requestContexts(0, 1);
 
-          // 1. Identifica i record GIÀ PRESENTI nella tabella (quelli già assegnati)
-          const existingContexts = binding.getContexts();
-          const existingKeys = existingContexts.map(context => {
-            const obj = context.getObject();
-            if (obj) { // Aggiungi un controllo per sicurezza
-              return obj.CHARG + '|' + obj.LGORT;
-            }
-            return null;
-          }).filter(key => key !== null); // Rimuovi eventuali nulli
-          // 2. Prendi o crea il modello di highlight condiviso
           const oComponent = this._controller.getOwnerComponent();
           let highlightModel = oComponent.getModel('highlight');
+
           if (!highlightModel) {
-            highlightModel = new sap.ui.model.json.JSONModel({
-              assignedRecords: []
-            });
+            highlightModel = new sap.ui.model.json.JSONModel({ assignedRecords: [] });
             oComponent.setModel(highlightModel, 'highlight');
           }
-          // 3. Imposta i record già assegnati nel modello condiviso
-          // Usiamo 'Set' per evitare duplicati se riapri il dialog più volte
-          const allAssignedRecords = [...new Set([...highlightModel.getProperty('/assignedRecords'), ...existingKeys])];
-          highlightModel.setProperty('/assignedRecords', allAssignedRecords);
+
+          const alreadyAssigned = binding.getContexts()
+            .filter(ctx => !ctx.isTransient())
+            .map(ctx => ctx.getObject())
+            .filter(obj => obj && obj.SAP_UUID)
+            .map(obj => obj.SAP_UUID);
+
+          const assignedObjects = binding.getContexts()
+            .filter(ctx => !ctx.isTransient())
+            .map(ctx => ctx.getObject())
+            .filter(obj =>
+              obj &&
+              obj.SAP_UUID &&
+              obj.Scorta !== "X"
+            );
+
+          const assignedQty = assignedObjects.reduce((acc, obj) => {
+            return acc + (Number(obj.QTA_ASS_V) || 0);
+          }, 0);
+
+          const requiredQty = Number(
+            sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
+          );
+
+          // Remaining Qty deve considerare SOLO gli originali
+          const remainingQty = (requiredQty - assignedQty).toFixed(3);
+
+          sap.ui.getCore()
+            .byId("fragmentPezze--inputRemainingQty")
+            .setText(remainingQty);
+
+          console.log("RemainingQty aggiornata:", remainingQty);
+
+          //Highlight SOLO quelli già assegnati in backend
+          highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
 
           // sommatoria AvaibilityQty 
           const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
@@ -259,9 +295,10 @@ sap.ui.define([
               "SAP_LastChangedByUser_Text": "X",
               "BatchBySupplier": item.BatchBySupplier,
               "SpecialStock": item.InventorySpecialStockType,
-              "SaldoScorta": !!this._bSaldoScorta
+              "SaldoScorta": !!this._bSaldoScorta,
+              "Scorta": ""
             })
-
+            newCreate._origProposedQty = QTA_ASS_V;
             const isPresent = binding.getContexts().some(context =>
               context.getObject().CHARG === _item.Batch &&
               context.getObject().LGORT === _item.StorageLocation
@@ -271,12 +308,6 @@ sap.ui.define([
               binding.create(newCreate, false, false, false);
             } else {
               console.log("Combined planned order is present in binding.");
-              const recordKey = _item.Batch + '|' + _item.StorageLocation;
-              if (!highlightModel.getProperty('/assignedRecords').includes(recordKey)) {
-                const currentAssigned = highlightModel.getProperty('/assignedRecords');
-                currentAssigned.push(recordKey);
-                highlightModel.setProperty('/assignedRecords', currentAssigned);
-              }
             }
           });
           // binding.refresh(true);
@@ -400,12 +431,21 @@ sap.ui.define([
           dialog.getModel('selected').setProperty('/submitCompleted', false);
           // Handler per quando il dialog viene chiuso
           dialog.attachAfterClose(function () {
-            // Resetta tutti i cambiamenti non committati
             const binding = table.getBinding('items');
+            const selectedModel = dialog.getModel('selected');
+            const submitCompleted = selectedModel?.getProperty('/submitCompleted');
+            const highlightModel = this.getOwnerComponent().getModel("highlight");
+
             if (binding) {
-              binding.resetChanges();
+              if (!submitCompleted) {
+                binding.resetChanges();
+              }
             }
-          });
+
+            if (highlightModel && !submitCompleted) {
+              highlightModel.setProperty('/assignedRecords', []);
+            }
+          }.bind(this));
           const table = dialog.getContent().at(-1);
 
           var oCheckBox = new sap.m.CheckBox({
@@ -434,20 +474,20 @@ sap.ui.define([
           table.bindAggregation('items', {
             path: '/ZZ1_MFP_ASSIGNMENT',
             filters: [
-              new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+              new sap.ui.model.Filter({
+                filters: [
+                  new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+                  new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.StartsWith, obj.CplndOrd + "_O")
+                ],
+                and: false // OR → mostra sia originali che surplus
+              }),
               new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
             ],
             template: new sap.m.ColumnListItem({
               highlight: {
-                parts: [
-                  'CHARG',
-                  'LGORT',
-                  'highlight>/assignedRecords'  // Model del Component
-                ],
-                formatter: function (batch, storage, assignedRecords) {
-                  const recordKey = batch + '|' + storage;
-                  const isAssigned = assignedRecords && assignedRecords.includes(recordKey);
-                  return isAssigned ? "Success" : "None";
+                parts: ['SAP_UUID', 'highlight>/assignedRecords'],
+                formatter: function (uuid, assignedRecords) {
+                  return assignedRecords?.includes(uuid) ? "Success" : "None";
                 }
               },
               cells: [
@@ -458,6 +498,7 @@ sap.ui.define([
                 new sap.m.Text({ text: "{LGORT}" }),
                 new sap.m.Text({ text: "{FABB_TOT_V}" }),
                 new sap.m.Text({ text: "{COPERTURA}" }),
+                new sap.m.Text({ text: "{Scorta}" }),
                 //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
                 new sap.m.Input({
                   value: "{QTA_ASS_V}", change: function (oEvent) {
@@ -468,7 +509,7 @@ sap.ui.define([
                     var remainingQty = sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
                     var requiredQty = sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
 
-                    sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
+                    //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
                   }
                 }),
               ]
@@ -491,29 +532,48 @@ sap.ui.define([
             }
             await binding.requestContexts(0, 1); // forza la creazione del context
 
-            // 1. Identifica i record GIÀ PRESENTI nella tabella (quelli già assegnati)
-            const existingContexts = binding.getContexts();
-            const existingKeys = existingContexts.map(context => {
-              const obj = context.getObject();
-              if (obj) { // Aggiungi un controllo per sicurezza
-                return obj.CHARG + '|' + obj.LGORT;
-              }
-              return null;
-            }).filter(key => key !== null); // Rimuovi eventuali nulli
-            // 2. Prendi o crea il modello di highlight condiviso
             const oComponent = this._controller.getOwnerComponent();
             let highlightModel = oComponent.getModel('highlight');
+
             if (!highlightModel) {
-              highlightModel = new sap.ui.model.json.JSONModel({
-                assignedRecords: []
-              });
+              highlightModel = new sap.ui.model.json.JSONModel({ assignedRecords: [] });
               oComponent.setModel(highlightModel, 'highlight');
             }
-            // 3. Imposta i record già assegnati nel modello condiviso
-            // Usiamo 'Set' per evitare duplicati se riapri il dialog più volte
-            const allAssignedRecords = [...new Set([...highlightModel.getProperty('/assignedRecords'), ...existingKeys])];
-            highlightModel.setProperty('/assignedRecords', allAssignedRecords);
 
+            const alreadyAssigned = binding.getContexts()
+              .filter(ctx => !ctx.isTransient())
+              .map(ctx => ctx.getObject())
+              .filter(obj => obj && obj.SAP_UUID)
+              .map(obj => obj.SAP_UUID);
+
+            const assignedObjects = binding.getContexts()
+              .filter(ctx => !ctx.isTransient())
+              .map(ctx => ctx.getObject())
+              .filter(obj =>
+                obj &&
+                obj.SAP_UUID &&  
+                obj.Scorta !== "X"  
+              );
+
+            const assignedQty = assignedObjects.reduce((acc, obj) => {
+              return acc + (Number(obj.QTA_ASS_V) || 0);
+            }, 0);
+
+            const requiredQty = Number(
+              sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
+            );
+
+            // Remaining Qty deve considerare SOLO gli originali
+            const remainingQty = (requiredQty - assignedQty).toFixed(3);
+
+            sap.ui.getCore()
+              .byId("fragmentPezze--inputRemainingQty")
+              .setText(remainingQty);
+
+            console.log("RemainingQty aggiornata:", remainingQty);
+
+            //Highlight SOLO quelli già assegnati in backend
+            highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
             // sommatoria AvaibilityQty 
             const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
             console.log("Total Availability Quantity: ", TotAvaibilityQty);
@@ -565,9 +625,10 @@ sap.ui.define([
                 "SAP_LastChangedByUser_Text": "X",
                 "BatchBySupplier": item.BatchBySupplier,
                 "SpecialStock": item.InventorySpecialStockType,
-                "SaldoScorta": !!this._bSaldoScorta
+                "SaldoScorta": !!this._bSaldoScorta,
+                "Scorta": ""
               })
-
+              newCreate._origProposedQty = QTA_ASS_V;
               const isPresent = binding.getContexts().some(context =>
                 context.getObject().CHARG === _item.Batch &&
                 context.getObject().StorageLocation === _item.StorageLocation
@@ -597,9 +658,15 @@ sap.ui.define([
       const oModel = this._controller.getOwnerComponent().getModel();
 
       const oList = oModel.bindList("/ZZ1_MFP_ASSIGNMENT");
-      const filterCombined = new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd)
+      const filterFSH = new sap.ui.model.Filter({
+        filters: [
+          new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+          new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.StartsWith, obj.CplndOrd + "_O")
+        ],
+        and: false // OR
+      });
       const filterMatnr = new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
-      oList.filter([filterCombined, filterMatnr]);
+      oList.filter([filterFSH, filterMatnr]);
 
       BusyIndicator.show(0);
 
@@ -696,6 +763,27 @@ sap.ui.define([
             cells: [
               new sap.m.ObjectIdentifier({
                 title: "{CplndOrd}"
+              }),
+              new sap.m.Text({
+                text: "{BOOWorkCenterInternalID}"
+              }),
+              new sap.m.Text({
+                text: "{BOOWorkCenterText}"
+              }),
+              new sap.m.Text({
+                text: "{MRPController}"
+              }),
+              new sap.m.Text({
+                text: "{CrossPlantConfigurableProduct}"
+              }),
+              new sap.m.Text({
+                text: "{ProductDescription}"
+              }),
+              new sap.m.Text({
+                text: "{ProductTheme}"
+              }),
+              new sap.m.Text({
+                text: "{zzbusi}"
               }),
               new sap.m.Text({
                 text: "{AvailableQuantity}"

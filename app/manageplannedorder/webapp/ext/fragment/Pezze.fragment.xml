@@ -158,12 +158,12 @@
                             text="Copertura (%)"
                         />
                     </Column>
-                    <!--<Column id="columnCOPERTURAEditable">
+                    <Column id="columnScorta">
                         <Text
-                            id="textCOPERTURAEditable"
-                            text="Copertura (%)"
+                            id="textScorta"
+                            text="Scorta"
                         />
-                    </Column>-->
+                    </Column>
                     <Column id="columnCustomQty">
                         <Text
                             id="textCustomQty"

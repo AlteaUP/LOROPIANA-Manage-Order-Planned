@@ -137,8 +137,7 @@ sap.ui.define(
                        } else {
                            row.setType("Active");
                        } */
-                }
-
+                } 
                 // Righe cliccabili
                 if (!this._bPressAttached) {
                     oInnerTable.attachItemPress(this.onRowPress, this);
@@ -228,15 +227,15 @@ sap.ui.define(
                     `BillOfMaterialItemNumber_2='${oData.BillOfMaterialItemNumber_2}'`
                 );
             },
-            onSearchChange: function (oEvent) {
-                debugger
-                const sQuery = oEvent.getParameter("newValue") || oEvent.getParameter("query");
-                const oTable = this.byId("TableComponents");
-                if (oTable && oTable.setSearch) {
-                    oTable.setSearch(sQuery);
-                    oTable.rebind();
-                }
-            }
+            /*   onSearchChange: function (oEvent) {
+                  debugger
+                  const sQuery = oEvent.getParameter("newValue") || oEvent.getParameter("query");
+                  const oTable = this.byId("TableComponents");
+                  if (oTable && oTable.setSearch) {
+                      oTable.setSearch(sQuery);
+                      oTable.rebind();
+                  }
+              } */
         });
     }
 );

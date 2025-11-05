@@ -145,7 +145,8 @@ service MainService {
       null as TotalInDelQty        : Decimal(13, 3), // String(20), // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
       null as chart_percent        : Integer,
       null as chart_criticality    : Integer,
-      null as StockSegmentCode     : String
+      null as StockSegmentCode     : String,
+      null as Scorta               : String(1)
     };
 
 
@@ -223,7 +224,8 @@ service MainService {
       null as TotalInDelQty        : Decimal(13, 3), // String(20), // somma ZZ1_I_SUMQTYDELIVERY_T.TOTDELIVERYQTY accedendo con MATERIAL, STORLOC, BATCH
       null as chart_percent        : Integer,
       null as chart_criticality    : Integer,
-      null as StockSegmentCode     : String
+      null as StockSegmentCode     : String,
+      null as Scorta               : String(1)
     };
 
   entity ZI_RFM_ATP_RULES                as projection on ZI_RFM_ATP_RULES_CDS.ZI_RFM_ATP_RULES;
