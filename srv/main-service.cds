@@ -172,6 +172,8 @@ service MainService {
       // null as PlndOrderCommittedQty : Integer,
       null as committed_criticality      : Integer,
       null as committed_percent          : Integer,
+      null as confirmed_criticality      : Integer,
+      null as confirmed_percent          : Integer,
       // master planned orders
       to_ZZ1_MasterPlannedOrders         : Composition of many ZZ1_MasterPlannedOrders
                                              on CplndOrd = $self.CplndOrd,

@@ -66,6 +66,16 @@ sap.ui.define(
                 });
                 this.getView().setModel(oStocksModel, "stocksModel");
                 const oMacroTable = this.byId("TableStock");
+                //nascondo action delete
+                const oMDCTable = oMacroTable.getMDCTable();
+                const aActions = oMDCTable.getActions()
+                aActions.forEach((oAction) => {
+                    const sId = oAction.getId();
+                    if (sId?.includes("StandardAction::Delete")) {
+                        oAction.setVisible(false);
+                    }
+                });
+
                 if (!oMacroTable) return;
 
                 const oInnerTable = oMacroTable.getMDCTable()._oTable;
@@ -86,7 +96,6 @@ sap.ui.define(
                 const oContextComponent = JSON.parse(sessionStorage.getItem("selectedContextComponent") || "[]");
                 //gestione visibilità action assegna Auto
                 const idBtnAssegnaAuto = "manageplannedorder.manageplannedorder::StockPage--TableStock-content::CustomAction::assegnaAuto"
-
                 this.oButtonAssegnaAuto = sap.ui.getCore().byId(idBtnAssegnaAuto);
                 if (oContextComponent.IconActive != "") {
                     this.oButtonAssegnaAuto.setEnabled(true);
@@ -298,7 +307,7 @@ sap.ui.define(
                             },
                             cells: [
                                 new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
-                                new sap.m.Text({ text: "{FSH_MPLO_ORD}" }),
+                                //new sap.m.Text({ text: "{FSH_MPLO_ORD}" }),
                                 new sap.m.Text({ text: "{StockSegment}" }),
                                 new sap.m.Text({ text: "{SpecialStock}" }),
                                 new sap.m.Text({ text: "{BatchBySupplier}" }),
@@ -388,79 +397,64 @@ sap.ui.define(
 
                         _selectedItems.forEach((_item) => {
                             const item = structuredClone(_item)
-                            oContextOrders.forEach((order, index) => {
-                                // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
-                                const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
-                                // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
-                                // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-                                const QTA_ASS_V = Math.min(parseInt(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
+                            // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
+                            const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+                            // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
+                            // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
+                            const QTA_ASS_V = Math.min(parseInt(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
 
-                                //splitto quantità
-                                let qtaArray = [];
+                            const SAP_UUID = crypto.randomUUID()
+                            //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+                            if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
+                                item.InventorySpecialStockType = '';
+                            }
+                            //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+                            if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
+                                item.SpecialStock = '';
+                            }
 
-                                // Se QTA_ASS_V è valido, dividilo in parti uguali
-                                if (!isNaN(QTA_ASS_V) && QTA_ASS_V > 0 && Array.isArray(oContextOrders) && oContextOrders.length > 1) {
-                                    const splitValue = QTA_ASS_V / oContextOrders.length;
-                                    qtaArray = Array(oContextOrders.length).fill(splitValue);
-                                } else {
-                                    // Altrimenti un solo valore
-                                    qtaArray = [QTA_ASS_V];
-                                }
-
-                                const SAP_UUID = crypto.randomUUID()
-                                //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
-                                if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
-                                    item.InventorySpecialStockType = '';
-                                }
-                                //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
-                                if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
-                                    item.SpecialStock = '';
-                                }
-
-                                const newCreate = structuredClone({
-                                    "SAP_UUID": SAP_UUID,
-                                    "WERKS": item.Plant,
-                                    "LGORT": item.StorageLocation || "X",
-                                    "FSH_MPLO_ORD": order.CplndOrd,
-                                    "BAGNI": item.dye_lot || "X",
-                                    "MATNR": item.Material,
-                                    "CHARG": item.Batch,
-                                    "Bagno": item.dye_lot,
-                                    //"BatchBySupplier": 12345,
-                                    "QTA_ASS_V": (qtaArray[index] || 0).toFixed(3).toString(),
-                                    //"QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
-                                    "QTA_ASS_U": "",
-                                    "QTA_ASS_U_Text": "",
-                                    "FABB_TOT_V": item.AvaibilityQty || 0,
-                                    "FABB_TOT_U": "",
-                                    "FABB_TOT_U_Text": "",
-                                    "COPERTURA": COPERTURA,
-                                    //"COPERTURA_EDITABLE": COPERTURA,
-                                    "SORT": 0,
-                                    "StockSegment": item.StockSegment,
-                                    "SAP_CreatedDateTime": new Date(),
-                                    "SAP_CreatedByUser": "LASPATAS",
-                                    "SAP_CreatedByUser_Text": "",
-                                    "SAP_LastChangedDateTime": new Date(),
-                                    "SAP_LastChangedByUser": "LASPATAS",
-                                    "SAP_LastChangedByUser_Text": "X",
-                                    "BatchBySupplier": item.BatchBySupplier,
-                                    "SpecialStock": item.InventorySpecialStockType,
-                                    "SaldoScorta": !!this._bSaldoScorta,
-                                    "Scorta": ""
-                                })
-                                newCreate._origProposedQty = qtaArray[index];
-                                const isPresent = binding.getContexts().some(context =>
-                                    context.getObject().CHARG === _item.Batch &&
-                                    context.getObject().LGORT === _item.StorageLocation &&
-                                    context.getObject().FSH_MPLO_ORD === order.CplndOrd
-                                );
-                                if (!isPresent) {
-                                    console.warn("Combined planned order is not present in binding.");
-                                    binding.create(newCreate, false, false, false);
-                                } else {
-                                }
-                            });
+                            const newCreate = structuredClone({
+                                "SAP_UUID": SAP_UUID,
+                                "WERKS": item.Plant,
+                                "LGORT": item.StorageLocation || "X",
+                                "FSH_MPLO_ORD": "",
+                                "BAGNI": item.dye_lot || "X",
+                                "MATNR": item.Material,
+                                "CHARG": item.Batch,
+                                "Bagno": item.dye_lot,
+                                //"BatchBySupplier": 12345,
+                                "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
+                                //"QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
+                                "QTA_ASS_U": "",
+                                "QTA_ASS_U_Text": "",
+                                "FABB_TOT_V": item.AvaibilityQty || 0,
+                                "FABB_TOT_U": "",
+                                "FABB_TOT_U_Text": "",
+                                "COPERTURA": COPERTURA,
+                                //"COPERTURA_EDITABLE": COPERTURA,
+                                "SORT": 0,
+                                "StockSegment": item.StockSegment,
+                                "SAP_CreatedDateTime": new Date(),
+                                "SAP_CreatedByUser": "LASPATAS",
+                                "SAP_CreatedByUser_Text": "",
+                                "SAP_LastChangedDateTime": new Date(),
+                                "SAP_LastChangedByUser": "LASPATAS",
+                                "SAP_LastChangedByUser_Text": "X",
+                                "BatchBySupplier": item.BatchBySupplier,
+                                "SpecialStock": item.InventorySpecialStockType,
+                                "SaldoScorta": !!this._bSaldoScorta,
+                                "Scorta": ""
+                            })
+                            newCreate._origProposedQty = QTA_ASS_V;
+                            const isPresent = binding.getContexts().some(context =>
+                                context.getObject().CHARG === _item.Batch &&
+                                context.getObject().LGORT === _item.StorageLocation
+                            );
+                            if (!isPresent) {
+                                console.warn("Combined planned order is not present in binding.");
+                                binding.create(newCreate, false, false, false);
+                            } else {
+                            }
                         });
                         // binding.refresh(true);
                         table.invalidate(); // Forza il rendering della tabella
@@ -662,7 +656,6 @@ sap.ui.define(
                                 },
                                 cells: [
                                     new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
-                                    new sap.m.Text({ text: "{FSH_MPLO_ORD}" }),
                                     new sap.m.Text({ text: "{StockSegment}" }),
                                     new sap.m.Text({ text: "{SpecialStock}" }),
                                     new sap.m.Text({ text: "{BatchBySupplier}" }),
@@ -716,6 +709,32 @@ sap.ui.define(
                                 .filter(obj => obj && obj.SAP_UUID)
                                 .map(obj => obj.SAP_UUID);
 
+                            const assignedObjects = binding.getContexts()
+                                .filter(ctx => !ctx.isTransient())
+                                .map(ctx => ctx.getObject())
+                                .filter(obj =>
+                                    obj &&
+                                    obj.SAP_UUID &&
+                                    obj.Scorta !== "X"
+                                );
+
+                            const assignedQty = assignedObjects.reduce((acc, obj) => {
+                                return acc + (Number(obj.QTA_ASS_V) || 0);
+                            }, 0);
+
+                            const requiredQty = Number(
+                                sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRequiredQuantityA").getText()
+                            );
+
+                            // Remaining Qty deve considerare SOLO gli originali
+                            const remainingQty = (requiredQty - assignedQty).toFixed(3);
+
+                            sap.ui.getCore()
+                                .byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA")
+                                .setText(remainingQty);
+
+                            console.log("RemainingQty aggiornata:", remainingQty);
+
                             //Highlight SOLO quelli già assegnati in backend
                             highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
 
@@ -725,80 +744,66 @@ sap.ui.define(
 
                             _selectedItems.forEach((_item) => {
                                 const item = structuredClone(_item)
-                                oContextOrders.forEach((order, index) => {
-                                    // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
-                                    const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
-                                    // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
-                                    // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-                                    const QTA_ASS_V = Math.min(parseInt(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
+                                // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
+                                const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+                                // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
+                                // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
+                                const QTA_ASS_V = Math.min(parseInt(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
 
-                                    //splitto quantità
-                                    let qtaArray = [];
+                                const SAP_UUID = crypto.randomUUID()
+                                //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+                                if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
+                                    item.InventorySpecialStockType = '';
+                                }
+                                //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+                                if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
+                                    item.SpecialStock = '';
+                                }
 
-                                    // Se QTA_ASS_V è valido, dividilo in parti uguali
-                                    if (!isNaN(QTA_ASS_V) && QTA_ASS_V > 0 && Array.isArray(oContextOrders) && oContextOrders.length > 1) {
-                                        const splitValue = QTA_ASS_V / oContextOrders.length;
-                                        qtaArray = Array(oContextOrders.length).fill(splitValue);
-                                    } else {
-                                        // Altrimenti un solo valore
-                                        qtaArray = [QTA_ASS_V];
-                                    }
+                                const newCreate = structuredClone({
+                                    "SAP_UUID": SAP_UUID,
+                                    "WERKS": item.Plant,
+                                    "LGORT": item.StorageLocation || "X",
+                                    "FSH_MPLO_ORD": "",
+                                    "BAGNI": item.dye_lot || "X",
+                                    "MATNR": item.Material,
+                                    "CHARG": item.Batch,
+                                    "Bagno": item.dye_lot,
+                                    //"BatchBySupplier": 12345,
+                                    "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
+                                    "QTA_ASS_U": "",
+                                    "QTA_ASS_U_Text": "",
+                                    "FABB_TOT_V": item.AvaibilityQty || 0,
+                                    "FABB_TOT_U": "",
+                                    "FABB_TOT_U_Text": "",
+                                    "COPERTURA": COPERTURA,
+                                    //"COPERTURA_EDITABLE": COPERTURA,
+                                    "SORT": 0,
+                                    "StockSegment": item.StockSegment,
+                                    "SAP_CreatedDateTime": new Date(),
+                                    "SAP_CreatedByUser": "LASPATAS",
+                                    "SAP_CreatedByUser_Text": "",
+                                    "SAP_LastChangedDateTime": new Date(),
+                                    "SAP_LastChangedByUser": "LASPATAS",
+                                    "SAP_LastChangedByUser_Text": "X",
+                                    "BatchBySupplier": item.BatchBySupplier,
+                                    "SpecialStock": item.InventorySpecialStockType,
+                                    "SaldoScorta": !!this._bSaldoScorta,
+                                    "Scorta": ""
+                                })
+                                newCreate._origProposedQty = QTA_ASS_V;
+                                const isPresent = binding.getContexts().some(context =>
+                                    context.getObject().CHARG === _item.Batch &&
+                                    context.getObject().LGORT === _item.StorageLocation
+                                );
 
-                                    const SAP_UUID = crypto.randomUUID()
-                                    //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
-                                    if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
-                                        item.InventorySpecialStockType = '';
-                                    }
-                                    //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
-                                    if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
-                                        item.SpecialStock = '';
-                                    }
+                                if (!isPresent) {
+                                    console.warn("Combined planned order is not present in binding.");
+                                    binding.create(newCreate, false, false, false);
+                                } else {
+                                    console.log("Combined planned order is present in binding.");
+                                }
 
-                                    const newCreate = structuredClone({
-                                        "SAP_UUID": SAP_UUID,
-                                        "WERKS": item.Plant,
-                                        "LGORT": item.StorageLocation || "X",
-                                        "FSH_MPLO_ORD": order.CplndOrd,
-                                        "BAGNI": item.dye_lot || "X",
-                                        "MATNR": item.Material,
-                                        "CHARG": item.Batch,
-                                        "Bagno": item.dye_lot,
-                                        //"BatchBySupplier": 12345,
-                                        "QTA_ASS_V": (qtaArray[index] || 0).toFixed(3).toString(),
-                                        "QTA_ASS_U": "",
-                                        "QTA_ASS_U_Text": "",
-                                        "FABB_TOT_V": item.AvaibilityQty || 0,
-                                        "FABB_TOT_U": "",
-                                        "FABB_TOT_U_Text": "",
-                                        "COPERTURA": COPERTURA,
-                                        //"COPERTURA_EDITABLE": COPERTURA,
-                                        "SORT": 0,
-                                        "StockSegment": item.StockSegment,
-                                        "SAP_CreatedDateTime": new Date(),
-                                        "SAP_CreatedByUser": "LASPATAS",
-                                        "SAP_CreatedByUser_Text": "",
-                                        "SAP_LastChangedDateTime": new Date(),
-                                        "SAP_LastChangedByUser": "LASPATAS",
-                                        "SAP_LastChangedByUser_Text": "X",
-                                        "BatchBySupplier": item.BatchBySupplier,
-                                        "SpecialStock": item.InventorySpecialStockType,
-                                        "SaldoScorta": !!this._bSaldoScorta,
-                                        "Scorta": ""
-                                    })
-
-                                    const isPresent = binding.getContexts().some(context =>
-                                        context.getObject().CHARG === _item.Batch &&
-                                        context.getObject().LGORT === _item.StorageLocation &&
-                                        context.getObject().FSH_MPLO_ORD === order.CplndOrd
-                                    );
-
-                                    if (!isPresent) {
-                                        console.warn("Combined planned order is not present in binding.");
-                                        binding.create(newCreate, false, false, false);
-                                    } else {
-                                        console.log("Combined planned order is present in binding.");
-                                    }
-                                });
                             });
                             // binding.refresh(true);
                             table.invalidate(); // Forza il rendering della tabella
@@ -826,21 +831,31 @@ sap.ui.define(
                     filters: (oContextOrders || [])
                         .filter(o => o.CplndOrd)
                         .map(o =>
-                            new sap.ui.model.Filter(
-                                "FSH_MPLO_ORD",
-                                sap.ui.model.FilterOperator.Contains,
-                                o.CplndOrd
-                            )
+                            new sap.ui.model.Filter({
+                                filters: [
+                                    new sap.ui.model.Filter(
+                                        "FSH_MPLO_ORD",
+                                        sap.ui.model.FilterOperator.Contains,
+                                        o.CplndOrd
+                                    ),
+                                    new sap.ui.model.Filter(
+                                        "FSH_MPLO_ORD",
+                                        sap.ui.model.FilterOperator.Contains,
+                                        `${o.CplndOrd}_O`
+                                    )
+                                ],
+                                and: false // OR tra i due filtri
+                            })
                         ),
-                    and: false
+                    and: false // OR tra tutti gli ordini
                 });
                 const filterMatnr = new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, oContextComponent.Material)
                 oList.filter([filterCombined, filterMatnr]);
 
                 //BusyIndicator.show(0);
-
                 var pContexts = await oList.requestContexts(0, 20)
                 var aContexts = pContexts.map(oContext => oContext)
+                const iTotalToDisassemble = aContexts.length;
 
                 if (!aContexts.length) {
                     MessageToast.show("No items to disassemble.");
@@ -864,11 +879,11 @@ sap.ui.define(
                         return batchSelected.includes(oData.CHARG);
                     });
                     aContexts = aContextsToKeep
+                    const iTotalToDisassemble = aContexts.length;
                 }
                 // modifica DL - 29/07/2025 - disassegno solo record selezionati - FINE
-
                 try {
-                    await this.showMessageConfirm(`disassemble (${aContexts.length})`)
+                    await this.showMessageConfirm(`Disassemble (${iTotalToDisassemble})`)
                 } catch (error) {
                     MessageToast.show("Disassemble cancelled.");
                     BusyIndicator.hide(0);
@@ -882,15 +897,27 @@ sap.ui.define(
 
                 const oData = await oModel.submitBatch(sGroupId)
                 BusyIndicator.hide(0);
-                const oStockTable = oMacroTable.getMDCTable()._oTable;
-                if (!oData) {
-                    MessageToast.show("Disassemble completed successfully.");
-                    oStockTable.refreshItems();
-                    oStockTable.getBinding('items').refresh();
-                    oStockTable.removeSelections();
-                } else {
-                    MessageToast.show("Disassemble failed.");
+                oList.refresh();
+
+                // SECONDO GIRO AUTOMATICO
+                var pContexts2 = await oList.requestContexts(0, 20);
+                var aContexts2 = pContexts2.map(o => o);
+
+                if (aContexts2.length > 0) {
+                    const sGroupSecond = 'DisassemblePezzeBatch2';
+                    aContexts2.forEach(ctx => ctx.delete(sGroupSecond));
+                    await oModel.submitBatch(sGroupSecond);
                 }
+
+                // REFRESH UI
+                oList.refresh();
+                const oStockTable = this.byId("TableStock").getMDCTable()._oTable;
+                oStockTable.refreshItems();
+                oStockTable.getBinding("items").refresh();
+                oStockTable.removeSelections();
+
+                MessageToast.show("Disassemble completed successfully.");
+                BusyIndicator.hide(0)
             },
             pressDoAssign: function (oEvent) {
                 debugger
@@ -904,61 +931,223 @@ sap.ui.define(
                 const requiredQty = Number(
                     sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRequiredQuantityA").getText()
                 );
+                let remainingQty = Number(
+                    sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA").getText()
+                );
 
-                contexts.forEach(ctx => {
-                    const obj = ctx.getObject();
-                    if (!obj) return;
-                    //SURPLUS → solo PATCH, NO split
-                    if (obj.Scorta === "X") {
-                        console.log("Surplus già esistente --> no split", obj.CHARG);
+                if (remainingQty <= 0) {
+                    MessageToast.show("Quantità rimanente insufficiente");
+                    return;
+                }
+
+                const validRows = contexts
+                    .map(ctx => ({ ctx, obj: ctx.getObject() }))
+                    .filter(r => r.obj && r.obj._origProposedQty !== undefined);
+
+                const ordersCount = oContextOrders.length;
+                if (ordersCount === 0) {
+                    console.log("Nessun ordine selezionato, nessuno split eseguito");
+                    return;
+                }
+
+                console.log("Ordini selezionati:", oContextOrders);
+                console.log("Righe valide da splittare:", validRows);
+
+                const sumQtyUser = validRows.reduce(
+                    (acc, { obj }) => acc + Number(obj.QTA_ASS_V || 0),
+                    0
+                );
+                const saldoScortaEnabled = validRows.some(({ obj }) => obj.SaldoScorta === true);
+
+                console.log("Somma quantità utente:", sumQtyUser, "| Remaining:", remainingQty);
+
+                //LOGICA BLOCCO/GESTIONE SURPLUS GLOBALE
+                if (remainingQty <= 0) {
+                    MessageToast.show("Quantità rimanente insufficiente");
+                    return;
+                }
+
+                // PRIMA ASSEGNAZIONE → remaining == required
+                if (remainingQty === requiredQty) {
+
+                    if (saldoScortaEnabled && sumQtyUser > remainingQty) {
+                        // Surplus globale
+                        const surplus = (sumQtyUser - remainingQty).toFixed(3);
+                        console.log("SURPLUS (prima assegnazione) =", surplus);
+
+                        // Ordina i batch per CHARG crescente
+                        validRows.sort((a, b) => Number(a.obj.CHARG) - Number(b.obj.CHARG));
+
+                        // Trova il primo record che può gestire il surplus
+                        let surplusObjSource = validRows.find(row => Number(row.obj.FABB_TOT_V) >= surplus);
+                        surplusObjSource = surplusObjSource.obj
+                        // Se nessun record ha AvailabilityQty sufficiente, usa comunque quello con CHARG più piccolo
+                        if (!surplusObjSource) {
+                            console.warn("Nessun record con AvailabilityQty >= surplus, uso CHARG più piccolo di default");
+                            surplusObjSource = validRows[0].obj;
+                        }
+
+                        console.log("Record selezionato per surplus:", surplusObjSource.CHARG, "AvailabilityQty:", surplusObjSource.FABB_TOT_V);
+
+                        // Ripristino quantità proposte su tutti i batch
+                        validRows.forEach(({ ctx, obj }) => {
+                            const q = Number(obj._origProposedQty || 0).toFixed(3);
+                            ctx.setProperty("QTA_ASS_V", q);
+                            obj.QTA_ASS_V = q; // sync in memoria
+                        });
+
+                        // Surplus su ordine più piccolo
+                        const smallestOrder = Math.min(
+                            ...oContextOrders.map(o => Number(o.CplndOrd))
+                        );
+                        const surplusKey = smallestOrder + "_O";
+
+                        // Cerca surplus esistente
+                        const existing = binding.getContexts().find(c => {
+                            const o = c.getObject();
+                            return (
+                                o &&
+                                o.CHARG === surplusObjSource.CHARG &&
+                                o.LGORT === surplusObjSource.LGORT &&
+                                String(o.FSH_MPLO_ORD) === surplusKey
+                            );
+                        });
+
+                        if (existing) {
+                            const updated = (
+                                Number(existing.getObject().QTA_ASS_V) + Number(surplus)
+                            ).toFixed(3);
+                            console.log("UPDATE surplus:", updated);
+                            existing.setProperty("QTA_ASS_V", updated);
+                        } else {
+                            const surplusRec = structuredClone(surplusObjSource);
+                            surplusRec.QTA_ASS_V = surplus;
+                            surplusRec.SAP_UUID = crypto.randomUUID();
+                            surplusRec.Scorta = "X";
+                            surplusRec.FSH_MPLO_ORD = surplusKey;
+
+                            Object.keys(surplusRec).forEach(k => {
+                                if (k.startsWith("to_") || typeof surplusRec[k] === "object") {
+                                    delete surplusRec[k];
+                                }
+                            });
+
+                            console.log("CREATE surplus:", surplusRec);
+                            binding.create(surplusRec, false, false, false);
+                        }
+
+                        // remaining resta = required (consumato dai proposti)
+                        remainingQty = 0;
+                    }
+                    // se NO flag o somma <= remaining → nessun surplus
+                }
+
+                // SECONDA ASSEGNAZIONE IN POI → remaining < required && > 0
+                else if (remainingQty < requiredQty && remainingQty > 0) {
+
+                    if (!saldoScortaEnabled && sumQtyUser > remainingQty) {
+                        // senza flag non posso superare remaining
+                        MessageToast.show("Quantità rimanente insufficiente");
                         return;
                     }
 
-                    const qty = Number(obj.QTA_ASS_V);
-                    const saldoScortaEnabled = obj.SaldoScorta === true;
+                    if (saldoScortaEnabled && sumQtyUser > remainingQty) {
+                        // Surplus globale
+                        const surplus = (sumQtyUser - remainingQty).toFixed(3);
+                        console.log("SURPLUS (riassegnazione) =", surplus);
 
-                    if (!saldoScortaEnabled || qty <= requiredQty) return;
+                        // Batch con CHARG più piccolo
+                        validRows.sort((a, b) => Number(a.obj.CHARG) - Number(b.obj.CHARG));
+                        const surplusObjSource = validRows[0].obj;
 
-                    console.log("🔹 Split su:", obj.CHARG, qty, "Req:", requiredQty);
+                        // Spalma remaining equamente tra tutti i batch (ignora _origProposedQty)
+                        const quota = (remainingQty / validRows.length).toFixed(3);
+                        validRows.forEach(({ ctx, obj }) => {
+                            ctx.setProperty("QTA_ASS_V", quota);
+                            obj.QTA_ASS_V = quota;
+                        });
 
-                    const surplus = qty - requiredQty;
-                    ctx.setProperty("QTA_ASS_V", requiredQty.toFixed(3));
+                        // Surplus su ordine più piccolo
+                        const smallestOrder = Math.min(
+                            ...oContextOrders.map(o => Number(o.CplndOrd))
+                        );
+                        const surplusKey = smallestOrder + "_O";
 
-                    // Cerca se esiste già un surplus record
-                    const surplusCtx = binding.getContexts().find(c => {
-                        const o = c.getObject();
-                        return o.CHARG === obj.CHARG &&
-                            o.LGORT === obj.LGORT &&
-                            String(o.FSH_MPLO_ORD).startsWith(obj.FSH_MPLO_ORD + "_O");
-                    });
+                        const existing = binding.getContexts().find(c => {
+                            const o = c.getObject();
+                            return (
+                                o &&
+                                o.CHARG === surplusObjSource.CHARG &&
+                                o.LGORT === surplusObjSource.LGORT &&
+                                String(o.FSH_MPLO_ORD) === surplusKey
+                            );
+                        });
 
-                    if (surplusCtx) {
-                        //UPDATE - Sommo al record già creato in precedenza
-                        const existingQty = Number(surplusCtx.getObject().QTA_ASS_V);
-                        const updatedQty = (existingQty + surplus).toFixed(3);
+                        if (existing) {
+                            const updated = (
+                                Number(existing.getObject().QTA_ASS_V) + Number(surplus)
+                            ).toFixed(3);
+                            console.log("UPDATE surplus:", updated);
+                            existing.setProperty("QTA_ASS_V", updated);
+                        } else {
+                            const surplusRec = structuredClone(surplusObjSource);
+                            surplusRec.QTA_ASS_V = surplus;
+                            surplusRec.SAP_UUID = crypto.randomUUID();
+                            surplusRec.Scorta = "X";
+                            surplusRec.FSH_MPLO_ORD = surplusKey;
 
-                        console.log("PATCH surplus:", updatedQty);
-                        surplusCtx.setProperty("QTA_ASS_V", updatedQty);
+                            Object.keys(surplusRec).forEach(k => {
+                                if (k.startsWith("to_") || typeof surplusRec[k] === "object") {
+                                    delete surplusRec[k];
+                                }
+                            });
+
+                            console.log("CREATE surplus:", surplusRec);
+                            binding.create(surplusRec, false, false, false);
+                        }
+
+                        remainingQty = 0;
                     }
-                    else {
-                        //CREATE - Nuovo surplus record
-                        const newRecord = structuredClone(obj);
-                        newRecord.QTA_ASS_V = surplus.toFixed(3);
-                        newRecord.Scorta = "X";
-                        newRecord.SAP_UUID = crypto.randomUUID();
-                        newRecord.FSH_MPLO_ORD = obj.FSH_MPLO_ORD + "_O";
-                        //pulisco record per evitare errori in chiamata
-                        Object.keys(newRecord).forEach(key => {
-                            if (key.startsWith("to_") || typeof newRecord[key] === "object") {
-                                delete newRecord[key];
+                }
+
+                //FASE 2: SPLIT PER ORDINI (dopo surplus)
+                validRows.forEach(({ ctx, obj }) => {
+                    const usedQty = Number(obj.QTA_ASS_V || 0);
+                    if (usedQty <= 0) return;
+
+                    const qtyPerOrder = (usedQty / ordersCount).toFixed(3);
+                    console.log(
+                        `Split finale batch ${obj.CHARG} → ${ordersCount} righe da ${qtyPerOrder}`
+                    );
+
+                    // prima riga per il primo ordine
+                    ctx.setProperty("QTA_ASS_V", qtyPerOrder);
+                    ctx.setProperty("FSH_MPLO_ORD", oContextOrders[0].CplndOrd);
+
+                    // gemelli per gli altri ordini
+                    for (let i = 1; i < ordersCount; i++) {
+                        const ord = oContextOrders[i].CplndOrd;
+
+                        const twin = structuredClone(obj);
+                        twin.QTA_ASS_V = qtyPerOrder;
+                        twin.SAP_UUID = crypto.randomUUID();
+                        twin.FSH_MPLO_ORD = ord;
+
+                        Object.keys(twin).forEach(k => {
+                            if (k.startsWith("to_") || typeof twin[k] === "object") {
+                                delete twin[k];
                             }
                         });
 
-                        console.log("CREATE surplus:", newRecord);
-                        binding.create(newRecord, false, false, false);
+                        console.log("CREATE gemello:", twin);
+                        binding.create(twin, false, false, false);
                     }
                 });
-                console.log("Contesti dopo create:", binding.getContexts().map(c => c.getObject()));
+                console.log(
+                    "Contesti dopo create:",
+                    binding.getContexts().map(c => c.getObject())
+                );
+                console.log("Nuovo RemainingQty = ", remainingQty);
                 this.showMessageConfirm("assign").then(function () {
                     //console.log("BusyIndicator:", BusyIndicator);
                     sap.ui.core.BusyIndicator.show(0);
@@ -1038,7 +1227,6 @@ sap.ui.define(
                     dialog.setModel(model, 'selected');
                     dialog.setModel(oModel)
 
-                    // const fakeTabella = dialog.getContent().at(-2);
                     const tabella = dialog.getContent().at(-1);
 
                     tabella.bindAggregation('items', {

@@ -14,6 +14,10 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         Value      : committed_percent,
         Criticality: committed_criticality,
     },
+        UI.DataPoint #radialChartConfirmed                  : {
+        Value      : confirmed_percent,
+        Criticality: confirmed_criticality,
+    },
     UI.Chart #radialChart                      : {
         Title            : 'committed_percent',
         Description      : 'committed_percent',
@@ -24,6 +28,18 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Measure  : committed_percent,
             Role     : #Axis1,
             DataPoint: '@UI.DataPoint#radialChart',
+        }]
+    },
+     UI.Chart #radialChartConfirmed                      : {
+        Title            : 'confirmed_percent',
+        Description      : 'confirmed_percent',
+        ChartType        : #Donut,
+        Measures         : [confirmed_percent],
+        MeasureAttributes: [{
+            $Type    : 'UI.ChartMeasureAttributeType',
+            Measure  : confirmed_percent,
+            Role     : #Axis1,
+            DataPoint: '@UI.DataPoint#radialChartConfirmed',
         }]
     },
     UI.LineItem #tableMacro                    : [
@@ -80,6 +96,23 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Label                : '{i18n>OverallConversionStatus}',
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
+        },
+        {
+            $Type                : 'UI.DataFieldForAnnotation',
+            Target               : '@UI.Chart#radialChartConfirmed',
+            Label                : 'Ultimo Comp SedApta',
+            ![@HTML5.CssDefaults]: {width: '5rem',
+            },
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : LatestCompProductionDate,
+            Label : 'QTA SedApta',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : AssignFromOtherSegments,
+            Label : 'Assign Other Segments',
         },
         {
             $Type                            : 'UI.DataField',
@@ -329,6 +362,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type: 'UI.DataField',
             Value: StorageLocation,
             Label: 'StorageLocation',
+            ![@UI.Hidden],
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ConfirmedQuantity_V,
+            Label : 'ConfirmedQuantity_V',
             ![@UI.Hidden],
         },
     ],

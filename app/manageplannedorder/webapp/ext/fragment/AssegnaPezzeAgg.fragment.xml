@@ -104,12 +104,12 @@
                             text="Batch"
                         />
                     </Column>
-                    <Column id="columnCplndOrd">
+            <!--         <Column id="columnCplndOrd">
                         <Text
                             id="textCplndOrd"
                             text="Comb Pl Order"
                         />
-                    </Column>
+                    </Column> -->
                     <Column id="columnStockSegment1">
                         <Text
                             id="textStockSegment1"

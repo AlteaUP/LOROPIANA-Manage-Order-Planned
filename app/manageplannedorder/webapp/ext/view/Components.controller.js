@@ -49,6 +49,15 @@ sap.ui.define(
                 debugger
                 const oFilterBar = this.byId("orderComponentFilter");
                 const oMacroTable = this.byId("TableComponents");
+                    //nascondo action delete
+                const oMDCTable = oMacroTable.getMDCTable();
+                const aActions = oMDCTable.getActions()
+                aActions.forEach((oAction) => {
+                    const sId = oAction.getId();
+                    if (sId?.includes("StandardAction::Delete")) {
+                        oAction.setVisible(false);
+                    }
+                });
                 if (!oMacroTable || !oFilterBar) return;
 
                 oFilterBar.setVisible(false);
@@ -128,8 +137,6 @@ sap.ui.define(
                         row.setHighlight?.(match ? "Success" : "Error");
                         row.setHighlightText?.(match ? "Quantity matches" : "Quantity does not match");
                     }
-
-                    // Riga attiva → sfondo tenue + tipo Navigation
                     /*    if (itm.IconActive) {
                            row.addStyleClass("row--iconactive");
                            //row.setType("Detail");
@@ -137,7 +144,7 @@ sap.ui.define(
                        } else {
                            row.setType("Active");
                        } */
-                } 
+                }
                 // Righe cliccabili
                 if (!this._bPressAttached) {
                     oInnerTable.attachItemPress(this.onRowPress, this);

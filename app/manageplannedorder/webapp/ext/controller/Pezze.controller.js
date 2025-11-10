@@ -382,6 +382,7 @@ sap.ui.define([
       const remainingQty = Number(
         sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
       );
+
       const rows = contexts
         .map(ctx => ({ ctx, obj: ctx.getObject() }))
         .filter(r => r.obj && r.obj.Scorta !== "X" && r.obj._origProposedQty !== undefined);
@@ -390,70 +391,104 @@ sap.ui.define([
       const saldoScortaEnabled = rows.some(r => r.obj.SaldoScorta === true);
 
       console.log("RemainingQt:", remainingQty, "| Somma Utente:", sumQtyUser);
+
+      // Se remaining è insufficiente → blocca sempre
       if (remainingQty <= 0) {
         MessageToast.show("Quantità rimanente insufficiente");
         return;
-      } else {
-        if (!saldoScortaEnabled) {
-          if (sumQtyUser > remainingQty) {
-            MessageToast.show("Quantità rimanente insufficiente");
-            return;
-          }
-        }
+      }
+
+      let skipSurplus = false;
+
+      // PRIMA ASSEGNAZIONE
+      if (remainingQty === requiredQty) {
+
         if (saldoScortaEnabled && sumQtyUser > remainingQty) {
-
-          const surplus = (sumQtyUser - remainingQty).toFixed(3);
-          console.log("Surplus =", surplus);
-
-          // surplus sul batch con CHARG più piccolo
-          rows.sort((a, b) => Number(a.obj.CHARG) - Number(b.obj.CHARG));
-          const { obj: surplusObjSource } = rows[0];
-
-          // CASO 1: prima assegnazione → ripristino quantità originali
-          if (remainingQty === requiredQty) {
-            rows.forEach(({ ctx, obj }) =>
-              ctx.setProperty("QTA_ASS_V", Number(obj._origProposedQty).toFixed(3))
-            );
-          }
-          // CASO 2: riassegnazione → spalmare remaining equamente
-          else {
-            const quotaPerRow = remainingQty / rows.length;
-            rows.forEach(({ ctx }) =>
-              ctx.setProperty("QTA_ASS_V", quotaPerRow.toFixed(3))
-            );
-          }
-
-          // CREAZIONE / UPDATE surplus
-          const surplusCtx = binding.getContexts().find(c => {
-            const o = c.getObject();
-            return o &&
-              o.CHARG === surplusObjSource.CHARG &&
-              o.LGORT === surplusObjSource.LGORT &&
-              String(o.FSH_MPLO_ORD).startsWith(surplusObjSource.FSH_MPLO_ORD + "_O");
-          });
-
-          if (surplusCtx) {
-            const updated = (
-              Number(surplusCtx.getObject().QTA_ASS_V) + Number(surplus)
-            ).toFixed(3);
-            surplusCtx.setProperty("QTA_ASS_V", updated);
-            console.log("PATCH surplus →", updated);
-          } else {
-            const newRec = structuredClone(surplusObjSource);
-            newRec.QTA_ASS_V = surplus;
-            newRec.SAP_UUID = crypto.randomUUID();
-            newRec.Scorta = "X";
-            newRec.FSH_MPLO_ORD = surplusObjSource.FSH_MPLO_ORD + "_O";
-
-            Object.keys(newRec).forEach(k => {
-              if (k.startsWith("to_") || typeof newRec[k] === "object") delete newRec[k];
-            });
-
-            console.log("CREATE surplus →", newRec);
-            binding.create(newRec, false, false, false);
-          }
+          console.log("Prima assegnazione CON saldo scorta → surplus necessario");
+          // si va al surplus sotto
+        } else {
+          console.log("Prima assegnazione libera → nessun surplus, nessun blocco");
+          skipSurplus = true; //continua il flusso!
         }
       }
+
+      // SECONDA ASSEGNAZIONE IN POI
+      else if (remainingQty < requiredQty && remainingQty > 0) {
+
+        if (!saldoScortaEnabled && sumQtyUser > remainingQty) {
+          MessageToast.show("Quantità rimanente insufficiente");
+          return; //blocca
+        }
+
+        if (saldoScortaEnabled && sumQtyUser <= remainingQty) {
+          console.log("Secondo giro con flag ma nessun surplus necessario");
+          skipSurplus = true; continua
+        }
+      }
+
+      // SURPLUS SOLO SE SERVE
+      if (!skipSurplus && saldoScortaEnabled && sumQtyUser > remainingQty) {
+
+        const surplus = (sumQtyUser - remainingQty).toFixed(3);
+        console.log("Surplus =", surplus);
+
+        // Ordina i batch per CHARG crescente
+        rows.sort((a, b) => Number(a.obj.CHARG) - Number(b.obj.CHARG));
+
+        // Trova il primo record che può gestire il surplus
+        let surplusObjSource = rows.find(row => Number(row.obj.FABB_TOT_V) >= surplus);
+        surplusObjSource = surplusObjSource.obj
+        // Se nessun record ha AvailabilityQty sufficiente, usa comunque quello con CHARG più piccolo
+        if (!surplusObjSource) {
+          console.warn("Nessun record con AvailabilityQty >= surplus, uso CHARG più piccolo di default");
+          surplusObjSource = rows[0].obj;
+        }
+
+        console.log("Record selezionato per surplus:", surplusObjSource.CHARG, "AvailabilityQty:", surplusObjSource.FABB_TOT_V);
+        /*    rows.sort((a, b) => Number(a.obj.CHARG) - Number(b.obj.CHARG));
+           const { obj: surplusObjSource } = rows[0]; */
+
+        if (remainingQty === requiredQty) {
+          rows.forEach(({ ctx, obj }) =>
+            ctx.setProperty("QTA_ASS_V", Number(obj._origProposedQty).toFixed(3))
+          );
+        } else {
+          const quotaPerRow = remainingQty / rows.length;
+          rows.forEach(({ ctx }) =>
+            ctx.setProperty("QTA_ASS_V", quotaPerRow.toFixed(3))
+          );
+        }
+
+        const surplusCtx = binding.getContexts().find(c => {
+          const o = c.getObject();
+          return o &&
+            o.CHARG === surplusObjSource.CHARG &&
+            o.LGORT === surplusObjSource.LGORT &&
+            String(o.FSH_MPLO_ORD).startsWith(surplusObjSource.FSH_MPLO_ORD + "_O");
+        });
+
+        if (surplusCtx) {
+          const updated = (
+            Number(surplusCtx.getObject().QTA_ASS_V) + Number(surplus)
+          ).toFixed(3);
+          surplusCtx.setProperty("QTA_ASS_V", updated);
+          console.log("PATCH surplus →", updated);
+        } else {
+          const newRec = structuredClone(surplusObjSource);
+          newRec.QTA_ASS_V = surplus;
+          newRec.SAP_UUID = crypto.randomUUID();
+          newRec.Scorta = "X";
+          newRec.FSH_MPLO_ORD = surplusObjSource.FSH_MPLO_ORD + "_O";
+
+          Object.keys(newRec).forEach(k => {
+            if (k.startsWith("to_") || typeof newRec[k] === "object") delete newRec[k];
+          });
+
+          console.log("CREATE surplus →", newRec);
+          binding.create(newRec, false, false, false);
+        }
+      }
+
       console.log("Contesti dopo create:", binding.getContexts().map(c => c.getObject()));
 
       this.showMessageConfirm("assign").then(function () {
