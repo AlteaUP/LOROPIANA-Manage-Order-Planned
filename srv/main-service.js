@@ -55,7 +55,7 @@ module.exports = class MainService extends cds.ApplicationService {
         let committed_percent = item.PlndOrderCommittedQty / item.PlannedTotalQtyInBaseUnit * 100
         let committed_criticality;
         //valorizzo campi per chart confirmed
-        let confirmed_percent = item.PlndOrderCommittedQty / Number(item.ConfirmedQuantity_V) * 100;
+        let confirmed_percent = Number(item.ConfirmedQuantity_V) / item.PlannedTotalQtyInBaseUnit * 100;
         let confirmed_criticality;
         if (committed_percent === 100) {
           committed_criticality = 3
@@ -1233,8 +1233,11 @@ module.exports = class MainService extends cds.ApplicationService {
         item.BOOWorkCenterText = match?.BOOWorkCenterText ?? '';
         item.ProductDescription = productMap[norm(item.CplndOrd)] ?? '';
       }
+      const uniqueRes = Array.from(
+        new Map(res.map(item => [item.CplndOrd, item])).values()
+      );
 
-      return res;
+      return uniqueRes;
     });
 
     this.on("*", "ZZ1_CombPlnOrdersStock", async (req) => {

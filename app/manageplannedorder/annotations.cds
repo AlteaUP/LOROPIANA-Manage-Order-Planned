@@ -100,14 +100,14 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type                : 'UI.DataFieldForAnnotation',
             Target               : '@UI.Chart#radialChartConfirmed',
-            Label                : 'Ultimo Comp SedApta',
+            Label                : 'QTA Conf Sedapta',
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
         },
         {
             $Type : 'UI.DataField',
             Value : LatestCompProductionDate,
-            Label : 'QTA SedApta',
+            Label : 'Ultimo Comp SedApta',
         },
         {
             $Type : 'UI.DataField',
