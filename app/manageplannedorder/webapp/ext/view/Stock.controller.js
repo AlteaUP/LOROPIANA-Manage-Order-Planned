@@ -478,7 +478,16 @@ sap.ui.define(
 
                 for (let i = 0; i < aRows.length; i++) {
                     const oObj = aRows[i].getBindingContext().getObject()
-                    items.push(oObj)
+                    //Escludi i record con AvaibilityQty === 0 e CombPlanAllQty === 0
+                    const AvaibilityQty = parseFloat(oObj.AvaibilityQty);
+                    const CombPlanAllQty = parseFloat(oObj.CombPlanAllQty);
+
+                    // Se ENTRAMBI sono zero → salta questo record
+                    if (AvaibilityQty === 0 && CombPlanAllQty === 0) {
+                        continue; // salta il push
+                    }
+
+                    items.push(oObj);
                 }
 
                 let RequiredQty = Number(oContextComponent.RequiredQuantity);

@@ -395,6 +395,7 @@
 <Property Name="PlndOrderBaseToEntryQtyNmrtr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Numerator" sap:quickinfo="Numerator for Conversion to Base Units of Measure"/>
 <Property Name="PlndOrderBaseToEntryQtyDnmntr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Denominator" sap:quickinfo="Denominator for conversion to base units of measure"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+<Property Name="zsed_priority" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Sedapta Priority"/>
 </EntityType>
 <EntityType Name="ZZ1_MasterPlannedOrdersType" sap:label="Master Planned Orders" sap:content-version="1">
 <Key>

@@ -84,6 +84,7 @@ sap.ui.define([
       }, this);
 
       oTable.attachUpdateFinished(function (oEvent) {
+        debugger;
         console.log("Update finished:", oEvent);
         const idTable = oEvent.getParameter('id')
         const oTable = sap.ui.getCore().byId(idTable)
@@ -318,7 +319,6 @@ sap.ui.define([
 
       oCtx.execute()
         .then(() => {
-          // ... resto del codice esistente ...
           var oResult = oCtx.getBoundContext().getObject();
           console.log(oResult);
 

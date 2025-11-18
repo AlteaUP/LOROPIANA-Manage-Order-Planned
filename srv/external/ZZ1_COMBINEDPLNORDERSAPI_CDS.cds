@@ -1,4 +1,4 @@
-/* checksum : 92e2c53076e9529317bf22a096c1b33c */
+/* checksum : 2bca9e77539073f5164b0e21ee1d0716 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -1192,6 +1192,9 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
   @sap.label : 'Base Unit of Measure'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sedapta Priority'
+  zsed_priority : String(15);
 };
 
 @cds.external : true

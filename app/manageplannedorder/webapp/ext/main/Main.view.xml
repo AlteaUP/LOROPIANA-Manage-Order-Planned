@@ -53,6 +53,13 @@
                         placement="Before"
                         key="act2"
                     />
+                    <table:Action
+                        id="fissazioneBtn"
+                        text="Fissazione"
+                        press=".pressFissazione"
+                        placement="Before"
+                        key="act3"
+                    />
                     <!-- requiresSelection="true" -->
                 </macros:actions>
                 <!-- <rowCount /> -->

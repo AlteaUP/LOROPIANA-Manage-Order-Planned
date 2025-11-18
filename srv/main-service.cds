@@ -15,6 +15,7 @@ using {ZZ1_WORKCENTER_F4_CDS} from './external/ZZ1_WORKCENTER_F4_CDS';
 using {ZZ1_PRODUCTSEASON_F4_CDS} from './external/ZZ1_PRODUCTSEASON_F4_CDS';
 using {ZZ1_PLANNEDORDERTYPE_F4_CDS} from './external/ZZ1_PLANNEDORDERTYPE_F4_CDS';
 using {ZZ1_MFP_BATCHCUSTOM_CDS} from './external/ZZ1_MFP_BATCHCUSTOM_CDS';
+using {ZZ1_ALT_LAB_CDS} from './external/ZZ1_ALT_LAB_CDS';
 
 // using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
 
@@ -45,6 +46,18 @@ type BatchCustKeys              : {
 type BatchCustResult            : {
   Mandassign : Boolean;
   AssignRule : Boolean;
+}
+
+type FissazioneType            : {
+  CplndOrd : String(12);
+}
+
+type AltLabType            : {
+  Operation : String(4);
+  WorkCenterInternalID : String(8);
+  CombinedMasterOrder : String(12);
+  ProductionPlant : String(4); // Represents the production plant identifier, limited to 4 characters.
+  Product : String(40);
 }
 
 service MainService {
@@ -121,19 +134,19 @@ service MainService {
   entity ZZ1_CombinPlannedOrdersComClone as
     projection on ZZ1_CombinPlannedOrdersCom {
       *,
-      to_ZZ1_CombPlnOrdersStock  : Composition of many ZZ1_CombPlnOrdersStockClone
-                                         on  Material = $self.Material
-                                         and Plant    = $self.Plant
-                                         and CplndOrd = $self.CplndOrd
+      to_ZZ1_CombPlnOrdersStock : Composition of many ZZ1_CombPlnOrdersStockClone
+                                    on  Material = $self.Material
+                                    and Plant    = $self.Plant
+                                    and CplndOrd = $self.CplndOrd
 
     };
   //clone entity stock
- /*  entity ZZ1_CombPlnOrdersStockClone as
-    projection on ZZ1_CombPlnOrdersStock {
-      *,
-    }; */
+  /*  entity ZZ1_CombPlnOrdersStockClone as
+     projection on ZZ1_CombPlnOrdersStock {
+       *,
+     }; */
 
-   entity ZZ1_CombPlnOrdersStockClone          as
+  entity ZZ1_CombPlnOrdersStockClone     as
     projection on ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
       *,
       null as StorageLocationStock : Decimal(13, 3), //String(20),
@@ -158,6 +171,8 @@ service MainService {
 
   entity ZZ1_PlannedOrdersCapacity       as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCapacity;
 
+  entity ZZ1_ALT_LAB                     as projection on ZZ1_ALT_LAB_CDS.ZZ1_ALT_LAB;
+
   // COMBINED PLANNED ORDER
   @cds.query.limit: {
     default: 1000,
@@ -170,41 +185,49 @@ service MainService {
       // cast(PlndOrderCommittedQty as Integer) as ZPlndOrderCommittedQty,
       // null as PlannedTotalQtyInBaseUnit : Integer,
       // null as PlndOrderCommittedQty : Integer,
-      null as committed_criticality      : Integer,
-      null as committed_percent          : Integer,
-      null as confirmed_criticality      : Integer,
-      null as confirmed_percent          : Integer,
+      null                                         as committed_criticality  : Integer,
+      null                                         as committed_percent      : Integer,
+      null                                         as confirmed_criticality  : Integer,
+      null                                         as confirmed_percent      : Integer,
+      null                                         as zsed_priority          : String(15),
+      null                                         as PlannedOrderBOMIsFixed : Boolean,
       // master planned orders
-      to_ZZ1_MasterPlannedOrders         : Composition of many ZZ1_MasterPlannedOrders
-                                             on CplndOrd = $self.CplndOrd,
+      to_ZZ1_MasterPlannedOrders                                             : Composition of many ZZ1_MasterPlannedOrders
+                                                                                 on CplndOrd = $self.CplndOrd,
       // componenti
-      to_CombinPlannedOrdersCom          : Composition of many ZZ1_CombinPlannedOrdersCom
-                                             on  CplndOrd                      = $self.CplndOrd
-                                             and CrossPlantConfigurableProduct = $self.to_CombinPlannedOrdersCom.CrossPlantConfigurableProduct,
+      to_CombinPlannedOrdersCom                                              : Composition of many ZZ1_CombinPlannedOrdersCom
+                                                                                 on  CplndOrd                      = $self.CplndOrd
+                                                                                 and CrossPlantConfigurableProduct = $self.to_CombinPlannedOrdersCom.CrossPlantConfigurableProduct,
       //to_ZZ1_CombinPlannedOrdersComClone : Composition of many ZZ1_CombinPlannedOrdersCom
-                                             //on  CplndOrd                      = $self.CplndOrd,
+      //on  CplndOrd                      = $self.CplndOrd,
       // null as combinplannedorderscomcount,
       // capacità
-      to_ZZ1_PLOCAPACITYCORD             : Composition of many ZZ1_PLOCAPACITYCORD
-                                             on CplndOrd = $self.CplndOrd,
+      to_ZZ1_PLOCAPACITYCORD                                                 : Composition of many ZZ1_PLOCAPACITYCORD
+                                                                                 on CplndOrd = $self.CplndOrd,
       // null as plocapacitycordcount
 
-      to_ZZ1_PLOCAPACITYCORD_TEXT        : Composition of one ZZ1_PLOCAPACITYCORD_TEXT
-                                             on CplndOrd = $self.CplndOrd,
+      to_ZZ1_PLOCAPACITYCORD_TEXT                                            : Composition of one ZZ1_PLOCAPACITYCORD_TEXT
+                                                                                 on CplndOrd = $self.CplndOrd,
 
-      to_ZZ1_Plant                       : Composition of many ZZ1_Plant
-                                             on MRPPlant = $self.MRPPlant,
+      to_ZZ1_Plant                                                           : Composition of many ZZ1_Plant
+                                                                                 on MRPPlant = $self.MRPPlant,
 
-      to_ZZ1_PlannedOrdersCapacity       : Composition of many ZZ1_PlannedOrdersCapacity
-                                             on CplndOrd = $self.CplndOrd,
+      to_ZZ1_PlannedOrdersCapacity                                           : Composition of many ZZ1_PlannedOrdersCapacity
+                                                                                 on CplndOrd = $self.CplndOrd,
 
-      to_ZZ1_MFI_CR_TYPE_PLA             : Composition of one ZZ1_MFI_CR_TYPE_V
-                                             on  MRPController = $self.MRPController
-                                             and MRPPlant      = $self.MRPPlant,
+      to_ZZ1_MFI_CR_TYPE_PLA                                                 : Composition of one ZZ1_MFI_CR_TYPE_V
+                                                                                 on  MRPController = $self.MRPController
+                                                                                 and MRPPlant      = $self.MRPPlant,
+      to_ZZ1_I_PLANNEDORDER                                                  : Composition of many ZZ1_I_PLANNEDORDER
+                                                                                 on CplndOrd = $self.CplndOrd
     };
 
   // add count of master
   // Combined Planned Order - End
+  entity ZZ1_I_PLANNEDORDER              as
+    projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
+      *
+    };
 
   // Master Planned Order - Start
   entity ZZ1_MasterPlannedOrderAPI       as projection on ZZ1_MASTERPLANNEDORDERAPI_CDS.ZZ1_MasterPlannedOrderAPI;
@@ -267,5 +290,9 @@ service MainService {
 
   action ReadBatchCust(Payload: BatchCustKeys)                 returns ZZ1_MFP_BATCHCUSTOM; //BatchCustResult
 
-  //action GetComponentsForOrders(orders: array of String)       returns many ZZ1_CombinPlannedOrdersCom;
+  action AltLabAction(Payload: AltLabType)                 returns array of ZZ1_ALT_LAB;
+
+  action Fissazione(Payload: FissazioneType)                 returns String;
+
+//action GetComponentsForOrders(orders: array of String)       returns many ZZ1_CombinPlannedOrdersCom;
 }

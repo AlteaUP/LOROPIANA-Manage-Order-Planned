@@ -84,6 +84,18 @@
       "ZZ1_MFP_BATCHCUSTOM_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_MFP_BATCHCUSTOM_CDS"
+      },
+      "ZZ1_ALT_LAB_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_ALT_LAB_CDS"
+      },
+      "ZZ1_PLO_OPERATIONS_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_PLO_OPERATIONS_CDS"
+      },
+      "ZZ1_MARA_CUSTOM_FIELDS_API_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MARA_CUSTOM_FIELDS_API_CDS"
       }
     }
   },

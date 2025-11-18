@@ -127,7 +127,7 @@ sap.ui.define(
                 debugger
                 try {
                     const aSelectedContexts = this.byId("TableCombined").getSelectedContexts();
-                    if(aSelectedContexts.length <= 1) {
+                    if (aSelectedContexts.length <= 1) {
                         MessageToast.show("Select at least two item");
                         return;
                     }
@@ -143,20 +143,59 @@ sap.ui.define(
                     const oComponent = this.getOwnerComponent().getExtensionComponent();
                     const oRouter = oComponent.getRouter();
                     oRouter.navTo("ComponentsPage");
-                
+
                 } catch (err) {
                     console.error("Errore", err);
                 }
             },
-            formatCriticality: function (criticality) {
-                switch (criticality) {
-                    case 1: return "Error";
-                    case 2: return "Critical";
-                    case 3: return "Good";
-                    default: return "Neutral";
+            pressFissazione: async function (oEvent) {
+                debugger;
+                const oMacroTable = this.byId("TableCombined");
+                const oModel = this.getOwnerComponent().getModel();
+                const aSelectedContexts = this.byId("TableCombined").getSelectedContexts();
+                if (aSelectedContexts.length === 0) {
+                    MessageToast.show("Select at least one item");
+                    return;
                 }
+                let _oContext = [];
+                for (let i = 0; i < aSelectedContexts.length; i++) {
+                    const oObj = aSelectedContexts[i].getObject()
+                    _oContext.push(oObj)
+                }
+                const payload = {
+                    CplndOrd: _oContext.map(item => item.CplndOrd)
+                };
+                const oCtx = oModel.bindContext("/Fissazione(...)");
+                oCtx.setParameter("Payload", payload);
+
+                oCtx.execute()
+                    .then(() => {
+                        console.log("successo");
+                        try {
+                            const oBinding = oMacroTable.getRowBinding();
+                            if (oBinding && oBinding.isA("sap.ui.model.odata.v4.ODataListBinding")) {
+                                oBinding.refresh();
+                            }
+                        } catch (err) {
+                            console.warn("Refresh binding fallito:", err);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+                //REFRESH entity ZZ1_CombinedPlnOrdersAPI
+                try {
+                    const oBinding = oMacroTable.getRowBinding();
+                    if (oBinding && oBinding.isA("sap.ui.model.odata.v4.ODataListBinding")) {
+                        oBinding.refresh();
+                    }
+                } catch (err) {
+                    console.warn("Refresh binding fallito:", err);
+                }
+
             },
             doConvert: function (oEvent) {
+                debugger
                 const oModel = this.getOwnerComponent().getModel();
                 // const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
                 // const oTableBinding = oTable.getBinding("items");
@@ -167,7 +206,7 @@ sap.ui.define(
                 this.showMessageConfirm("convert").then(function () {
                     MessageToast.show("Do Convert invoked.");
 
-                    BusyIndicator.show(0);
+                    //BusyIndicator.show(0);
                     debugger;
                     oModel.submitBatch("CreateConvertPLO").then(function (e) {
                         console.log("Convert response", e);
@@ -178,7 +217,7 @@ sap.ui.define(
                     }.bind(this)).catch((oError) => {
                         MessageToast.show("Do Convert error.");
                         console.error("Error", oError);
-                        BusyIndicator.hide();
+                        //BusyIndicator.hide();
                     });
                 }.bind(this)).catch((e) => {
                     MessageToast.show("Do Convert cancelled. " + JSON.stringify(e));

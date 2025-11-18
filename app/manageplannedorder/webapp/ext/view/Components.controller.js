@@ -82,10 +82,7 @@ sap.ui.define(
                 try {
                     const oBinding = oMacroTable.getRowBinding();
                     if (oBinding && oBinding.isA("sap.ui.model.odata.v4.ODataListBinding")) {
-                        // Forza reload reale dei dati
                         oBinding.refresh();
-                    } else if (oBinding && oBinding.refresh) {
-                        oBinding.refresh(true);
                     }
                 } catch (err) {
                     console.warn("Refresh binding fallito:", err);

@@ -1,22 +1,31 @@
 sap.ui.define([
-    "sap/m/MessageToast"
-], function (MessageToast) {
+    "sap/m/MessageToast",
+    "sap/ui/model/json/JSONModel"
+], function (MessageToast, JSONModel) {
     'use strict';
 
     return {
         doChangeWorkCenter: function (oEvent) {
-            debugger;
             const idTableCapacity = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_ZZ1_PLOCAPACITYCORD::LineItem::Capacity-innerTable";
             const selectedItems = this._view.byId(idTableCapacity).getSelectedItems();
-            var oResourceBundle = this._controller.getOwnerComponent().getModel("i18n").getResourceBundle();
-            var sMessage = oResourceBundle.getText("SelectOnlyOneRecord");
+            const oContext = this.getBindingContext().getObject();
+            const objectItem = selectedItems[0].getBindingContext().getObject();
+            const oModel = this.getModel();
 
             if (selectedItems.length > 1) {
-                MessageToast.show(sMessage);
+                MessageToast.show(this._controller.getOwnerComponent().getModel("i18n").getResourceBundle().getText("SelectOnlyOneRecord"));
                 return;
             }
 
-            //apro fragment
+            // payload
+            const payload = {
+                "Operation": objectItem.Operation,
+                "WorkCenterInternalID": objectItem.WorkCenterInternalID,
+                "CombinedMasterOrder": objectItem.CombinedMasterOrder,
+                "ProductionPlant": oContext.ProductionPlant,
+                "Product": oContext.Product
+            };
+
             if (!this._fragmentWorkCenter) {
                 this._fragmentWorkCenter = this.loadFragment({
                     id: "fragmentWorkCenter",
@@ -25,26 +34,71 @@ sap.ui.define([
                 });
             }
 
-            this._fragmentWorkCenter.then(function (dialog) {
+            this._fragmentWorkCenter.then(dialog => {
+
                 const table = dialog.getContent().at(-1);
 
-                table.bindAggregation('items', {
-                    path: '/ZZ1_PLOCAPACITYCORD_TEXT',
-                    template: new sap.m.ColumnListItem({
-                        cells: [
-                            new sap.m.Text({ text: "{BOOWorkCenterInternalID}" }),
-                            new sap.m.Text({ text: "{BOOWorkCenterText}" })
-                        ]
-                    }),
-                    templateShareable: false,
-                    //parameters: { $$updateGroupId: 'CreatePezzeBatch' },
-                });
-
-                const binding = table.getBinding('items');
-                binding.resetChanges();
                 dialog.open();
-            }.bind(this));
+                table.setNoDataText("Caricamento...");
 
+                if (!dialog._cleanupAttached) {
+                    dialog.attachAfterClose(() => {
+                        const t = dialog.getContent().at(-1);
+                        t.setNoDataText("");
+                    });
+                    dialog._cleanupAttached = true;
+                }
+
+                table.unbindItems();
+
+                const oCtx = oModel.bindContext("/AltLabAction(...)");
+                oCtx.setParameter("Payload", payload);
+
+                oCtx.execute()
+                    .then(() => {
+                        const oResult = oCtx.getBoundContext().getObject();
+                        const records = oResult.value || [];
+
+                        const lifnrList = records
+                            .map(r => r.LIFNR)
+                            .filter(Boolean)
+                            .map(l => l.toString().padStart(10, "0"));
+
+                        let finalFilter;
+                        if (lifnrList.length === 0) {
+                            finalFilter = new sap.ui.model.Filter("fornitore", sap.ui.model.FilterOperator.EQ, "__NO_MATCH__");
+                        } else {
+                            const filters = lifnrList.map(l =>
+                                new sap.ui.model.Filter("fornitore", sap.ui.model.FilterOperator.EQ, l)
+                            );
+                            finalFilter = new sap.ui.model.Filter({ filters, and: false });
+                        }
+
+                        table.bindAggregation("items", {
+                            path: "/ZZ1_PLOCAPACITYCORD_TEXT",
+                            filters: [finalFilter],
+                            template: new sap.m.ColumnListItem({
+                                cells: [
+                                    new sap.m.Text({ text: "{BOOWorkCenterInternalID}" }),
+                                    new sap.m.Text({ text: "{BOOWorkCenterText}" })
+                                ]
+                            }),
+                            templateShareable: false
+                        });
+
+                        if (lifnrList.length === 0) {
+                            table.setNoDataText("Nessun record trovato");
+                        }
+                        const binding = table.getBinding("items");
+                        if (binding) binding.resetChanges();
+
+                    })
+                    .catch(err => {
+                        console.error("AltLabAction failed:", err);
+                        table.setNoDataText("Errore durante il caricamento");
+                    });
+
+            });
         }
     };
 });

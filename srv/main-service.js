@@ -30,6 +30,9 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZZ1_WORKCENTER_F4_CDS = await cds.connect.to("ZZ1_WORKCENTER_F4_CDS");
     const ZZ1_PRODUCTSEASON_F4_CDS = await cds.connect.to("ZZ1_PRODUCTSEASON_F4_CDS");
     const ZZ1_PLANNEDORDERTYPE_F4_CDS = await cds.connect.to("ZZ1_PLANNEDORDERTYPE_F4_CDS");
+    const ZZ1_ALT_LAB_CDS = await cds.connect.to("ZZ1_ALT_LAB_CDS");
+    const ZZ1_PLO_OPERATIONS_CDS = await cds.connect.to("ZZ1_PLO_OPERATIONS_CDS");
+    const ZZ1_MARA_CUSTOM_FIELDS_API_CDS = await cds.connect.to("ZZ1_MARA_CUSTOM_FIELDS_API_CDS");
 
 
 
@@ -37,43 +40,63 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
-      //const where = req.query?.SELECT?.where;
-      //const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
-      /*  const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
-         SELECT.from('ZZ1_CombinedPlnOrdersAPI').where(where)
-       ); */
-      req.query.SELECT.columns.push({ ref: ['ConfirmedQuantity_V'] });
-
-      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
-      // console.log(res)
-      // check res is an array
-      if (!Array.isArray(res)) {
-        return res;
+      const cols = req.query.SELECT.columns || [];
+      if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
+        req.query.SELECT.columns.push({ ref: ['ConfirmedQuantity_V'] });
+      }
+      if (!cols.some(c => c.ref && c.ref[0] === 'BillOfOperationsGroup')) {
+        req.query.SELECT.columns.push({ ref: ['BillOfOperationsGroup'] });
       }
 
-      return res.map((item => {
-        let committed_percent = item.PlndOrderCommittedQty / item.PlannedTotalQtyInBaseUnit * 100
-        let committed_criticality;
-        //valorizzo campi per chart confirmed
-        let confirmed_percent = Number(item.ConfirmedQuantity_V) / item.PlannedTotalQtyInBaseUnit * 100;
-        let confirmed_criticality;
-        if (committed_percent === 100) {
-          committed_criticality = 3
-        } else if (committed_percent < 100 && committed_percent > 0) {
-          committed_criticality = 2
-        } else {
-          committed_criticality = 1
-          committed_percent = 100
+      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+      const records = Array.isArray(res) ? res : [res];
+
+      if (records.length === 0) return res;
+
+      // 3) prendi le chiavi per entrare in ZZ1_I_PLANNEDORDER
+      const keys = [...new Set(records.map(r => r.CplndOrd).filter(Boolean))];
+      let childByKey = new Map();
+
+      if (keys.length) {
+        const childRows = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+          SELECT.from('ZZ1_I_PLANNEDORDER')
+            .columns(['CplndOrd', 'zsed_priority', 'PlannedOrderBOMIsFixed'])
+            .where({ CplndOrd: { in: keys } })
+        );
+
+        // se ci sono più righe per stesso CplndOrd, tiengo il primo record
+        for (const row of (childRows || [])) {
+          if (!childByKey.has(row.CplndOrd)) {
+            childByKey.set(row.CplndOrd, {
+              zsed_priority: row.zsed_priority ?? null,
+              PlannedOrderBOMIsFixed: row.PlannedOrderBOMIsFixed ?? null
+            });
+          }
         }
-        //cgar confirmed
-        if (confirmed_percent === 100) {
-          confirmed_criticality = 3
-        } else if (confirmed_percent < 100 && confirmed_percent > 0) {
-          confirmed_criticality = 2
-        } else {
-          confirmed_criticality = 1
-          confirmed_percent = 100
-        }
+      }
+
+      for (const rec of records) {
+        const child = childByKey.get(rec.CplndOrd);
+        rec.zsed_priority = child?.zsed_priority ?? null;
+        rec.PlannedOrderBOMIsFixed = child?.PlannedOrderBOMIsFixed ?? null;
+      }
+
+      const processed = records.map(item => {
+        const total = Number(item.PlannedTotalQtyInBaseUnit) || 0;
+        const committed = Number(item.PlndOrderCommittedQty) || 0;
+        const confirmed = Number(item.ConfirmedQuantity_V) || 0;
+
+        let committed_percent = total ? (committed / total) * 100 : 0;
+        let confirmed_percent = total ? (confirmed / total) * 100 : 0;
+
+        const committed_criticality =
+          committed_percent === 100 ? 3 : (committed_percent > 0 ? 2 : 1);
+        const confirmed_criticality =
+          confirmed_percent === 100 ? 3 : (confirmed_percent > 0 ? 2 : 1);
+
+
+        if (committed_percent === 0) committed_percent = 100;
+        if (confirmed_percent === 0) confirmed_percent = 100;
 
         return {
           ...item,
@@ -81,8 +104,10 @@ module.exports = class MainService extends cds.ApplicationService {
           committed_criticality,
           confirmed_percent,
           confirmed_criticality
-        }
-      }));
+        };
+      });
+
+      return Array.isArray(res) ? processed : processed[0];
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_MasterPlannedOrders", async (req) => {
@@ -110,7 +135,17 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_PLOCAPACITYCORD_TEXT", async (req) => {
 
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
-      return res;
+      const unique = Object.values(
+        res.reduce((acc, item) => {
+          const key = item.BOOWorkCenterInternalID;
+          if (!acc[key]) {
+            acc[key] = item; // prendi il primo e basta
+          }
+          return acc;
+        }, {})
+      );
+
+      return unique;
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_MFI_CR_TYPE_PLA", async (req) => {
@@ -731,6 +766,10 @@ module.exports = class MainService extends cds.ApplicationService {
             CombinedMasterOrder: cplndOrd
           })
       );
+      const wasEmpty = new WeakSet();
+      for (const row of res) {
+        if (!row.StorageLocation) wasEmpty.add(row);
+      }
       const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
       const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
 
@@ -756,6 +795,27 @@ module.exports = class MainService extends cds.ApplicationService {
           }
           return row;
         });
+      for (const row of res) {
+        if (wasEmpty.has(row) && row.StorageLocation) {
+          const { Plant, Material, StorageLocation, Batch } = row;
+
+          const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+
+          const planItems = planAllQtyMap[key] || [];
+          const combPlanItems = combPlanAllQtyMap[key] || [];
+          const combPlanO_Items = combPlanAllQtyO_Map[key] || [];
+
+          const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+          const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
+          const Scorta = combPlanO_Items.length > 0
+            ? combPlanO_Items[0].Scorta
+            : "";
+
+          row.CombPlanAllQty = CombPlanAllQty;
+          row.TotalPlanAllQty = TotalPlanAllQty;
+          row.Scorta = Scorta;
+        }
+      }
       res.forEach((rec, idx) => {
         // Generiamo un valore univoco solo con l'indice
         const unique = () => `_${idx}`;
@@ -1034,6 +1094,10 @@ module.exports = class MainService extends cds.ApplicationService {
             CombinedMasterOrder: cplndOrd
           })
       );
+      const wasEmpty = new WeakSet();
+      for (const row of res) {
+        if (!row.StorageLocation) wasEmpty.add(row);
+      }
       const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
       const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
 
@@ -1059,6 +1123,27 @@ module.exports = class MainService extends cds.ApplicationService {
           }
           return row;
         });
+      for (const row of res) {
+        if (wasEmpty.has(row) && row.StorageLocation) {
+          const { Plant, Material, StorageLocation, Batch } = row;
+
+          const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+
+          const planItems = planAllQtyMap[key] || [];
+          const combPlanItems = combPlanAllQtyMap[key] || [];
+          const combPlanO_Items = combPlanAllQtyO_Map[key] || [];
+
+          const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+          const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
+          const Scorta = combPlanO_Items.length > 0
+            ? combPlanO_Items[0].Scorta
+            : "";
+
+          row.CombPlanAllQty = CombPlanAllQty;
+          row.TotalPlanAllQty = TotalPlanAllQty;
+          row.Scorta = Scorta;
+        }
+      }
       res.forEach((rec, idx) => {
         // Generiamo un valore univoco solo con l'indice
         const unique = () => `_${idx}`;
@@ -1416,6 +1501,29 @@ module.exports = class MainService extends cds.ApplicationService {
       return data;
     });
 
+    this.on("Fissazione", async (req) => {
+      const object = req.data.Payload;
+      var plannedOrderNumbers = [];
+      const fixedId = "1"; //id fisso
+      object.CplndOrd.forEach(item => {
+        if (item !== undefined) {
+          plannedOrderNumbers.push(item);
+        }
+      });
+      console.log("plannedOrder" + plannedOrderNumbers);
+      var to_array = plannedOrderNumbers.map(number => {
+        return {
+          "id": fixedId, // ID fisso per ogni riga
+          "PlannedOrder": number
+        };
+      });
+      // payload finale con testata e righe
+      var oPayload = {
+        "id": fixedId, // ID fisso per la testata
+        "to_array": to_array
+      };
+    })
+
     this.on("ChangeWorkCenter", async (req) => {
 
       const object = req.data.Payload;
@@ -1483,73 +1591,168 @@ module.exports = class MainService extends cds.ApplicationService {
         console.log(error.message)
         return error.message
       }
-    }),
+    });
 
-      //action per gestire highlights in tab Componenti
-      this.on("ReadBatchCust", async req => {
-        try {
-          const { Material, Gruppo_merce, Plant } = req.data.Payload;
-          let batch = null;
+    this.on("AltLabAction", async (req) => {
+      const object = req.data.Payload;
 
-          const isEmptyOrN = v => v === undefined || v === null || v === "" || v === "N";
-          // 1) prova solo Material
-          if (Material) {
-            batch = await ButchCustService.run(
-              SELECT.one("*")                              // prendo tutto il record
-                .from("ZZ1_MFP_BATCHCUSTOM")
-                .where({ Material: Material })
-            );
-            if (batch) {
-              // tolgo batch se QUALSIASI degli altri campi è valorizzato
-              const others = ["Gruppo_Merce", "Plant", "Famiglia", "Cites"];
-              if (others.some(key => !isEmptyOrN(batch[key]))) {
-                batch = null;
-              }
-            }
-          }
-          // 2) prova Gruppo + Plant
-          if (!batch && Gruppo_merce && Plant) {
-            batch = await ButchCustService.run(
-              SELECT.one("*")
-                .from("ZZ1_MFP_BATCHCUSTOM")
-                .where({
-                  Gruppo_Merce: Gruppo_merce,
-                  Plant: Plant
-                })
-            );
-            if (batch) {
-              // tolgo batch se Material, Famiglia o Cites sono valorizzati
-              const others = ["Material", "Famiglia", "Cites"];
-              if (others.some(key => !isEmptyOrN(batch[key]))) {
-                batch = null;
-              }
-            }
-          }
-          // 3) prova solo Plant
-          if (!batch && Plant) {
-            batch = await ButchCustService.run(
-              SELECT.one("*")
-                .from("ZZ1_MFP_BATCHCUSTOM")
-                .where({ Plant: Plant })
-            );
-            if (batch) {
-              // tolgo batch se Material, Gruppo_Merce, Famiglia o Cites sono valorizzati
-              const others = ["Material", "Gruppo_Merce", "Famiglia", "Cites"];
-              if (others.some(key => !isEmptyOrN(batch[key]))) {
-                batch = null;
-              }
-            }
-          }
-          /*           return {
-                      Mandassign: batch?.Mandassign ?? false,
-                      AssignRule: batch?.AssignRule ?? null
-                    }; */
-          return batch;
+      const isEmpty = v => v === undefined || v === null || v === "";
+
+      try {
+        const plannedPromise = ZZ1_PLANNEDORDERSAPI_CDS.run(
+          SELECT
+            .columns('BillOfOperationsGroup')
+            .from('ZZ1_PlannedOrdersAPI')
+            .where({ CplndOrd: object.CombinedMasterOrder })
+            .limit(1)
+        );
+
+        // attendo SOLO la prima
+        const PlannedOrdersAPI = await plannedPromise;
+
+        if (!PlannedOrdersAPI || PlannedOrdersAPI.length === 0) {
+          return [];
         }
-        catch (err) {
-          return req.error(500, err.message);
+
+        const BillOfOperationsGroup = PlannedOrdersAPI[0].BillOfOperationsGroup;
+
+        const ploPromise = ZZ1_PLO_OPERATIONS_CDS.run(
+          SELECT
+            .columns('Matkl')
+            .from('ZZ1_PLO_OPERATIONS')
+            .where({
+              Plnnr: BillOfOperationsGroup,
+              Arbid: object.WorkCenterInternalID
+            })
+            .limit(1)
+        );
+
+        const maraPromise = ZZ1_MARA_CUSTOM_FIELDS_API_CDS.run(
+          SELECT
+            .columns('zzproj', 'zzcolor')
+            .from('ZZ1_MARA_CUSTOM_FIELDS_API')
+            .where({ Product: object.Product })
+            .limit(1)
+        );
+
+        const altLabPromise = ZZ1_ALT_LAB_CDS.run(
+          SELECT.from("ZZ1_ALT_LAB")
+            .columns(
+              "*"
+            )
+            .where({
+              // Plant: object.ProductionPlant,
+              MATKL: { "!=": null }
+            })
+        );
+
+        const [PloOperations, MaraCustomFields, allAltLab] =
+          await Promise.all([ploPromise, maraPromise, altLabPromise]);
+
+        // estraggo valori
+        const matkl = PloOperations?.[0]?.Matkl;
+        const zzproj = MaraCustomFields?.[0]?.zzproj;
+        const zzcolor = MaraCustomFields?.[0]?.zzcolor;
+
+        if (!matkl) return [];
+
+        const seq1 = allAltLab.filter(r =>
+          r.MATKL === matkl &&
+          r.ZMD_PROJCODE === zzproj &&
+          r.ZMD_COLORCODE === zzcolor
+        );
+
+        if (seq1.length > 0) return seq1;
+
+        const seq2 = allAltLab.filter(r =>
+          r.MATKL === matkl &&
+          r.ZMD_PROJCODE === zzproj &&
+          isEmpty(r.ZMD_COLORCODE)
+        );
+
+        if (seq2.length > 0) return seq2;
+
+        const seq3 = allAltLab.filter(r =>
+          r.MATKL === matkl &&
+          isEmpty(r.ZMD_PROJCODE) &&
+          isEmpty(r.ZMD_COLORCODE)
+        );
+
+        if (seq3.length > 0) return seq3;
+
+        return [];
+
+      } catch (err) {
+        return req.error(500, err.message);
+      }
+    });
+    //action per gestire highlights in tab Componenti
+    this.on("ReadBatchCust", async req => {
+      try {
+        const { Material, Gruppo_merce, Plant } = req.data.Payload;
+        let batch = null;
+
+        const isEmptyOrN = v => v === undefined || v === null || v === "" || v === "N";
+
+        const q1 = Material
+          ? ButchCustService.run(
+            SELECT.one("*")
+              .from("ZZ1_MFP_BATCHCUSTOM")
+              .where({ Material: Material })
+          )
+          : Promise.resolve(null);
+
+        const q2 = (Gruppo_merce && Plant)
+          ? ButchCustService.run(
+            SELECT.one("*")
+              .from("ZZ1_MFP_BATCHCUSTOM")
+              .where({ Gruppo_Merce: Gruppo_merce, Plant: Plant })
+          )
+          : Promise.resolve(null);
+
+        const q3 = Plant
+          ? ButchCustService.run(
+            SELECT.one("*")
+              .from("ZZ1_MFP_BATCHCUSTOM")
+              .where({ Plant: Plant })
+          )
+          : Promise.resolve(null);
+
+        let [res1, res2, res3] = await Promise.all([q1, q2, q3]);
+        // 1) prova solo Material
+        if (res1) {
+          const others = ["Gruppo_Merce", "Plant", "Famiglia", "Cites"];
+          if (others.some(key => !isEmptyOrN(res1[key]))) {
+            res1 = null;
+          }
         }
-      });
+        if (res1) return res1;
+
+        // 2) prova Gruppo + Plant
+        if (res2) {
+          const others = ["Material", "Famiglia", "Cites"];
+          if (others.some(key => !isEmptyOrN(res2[key]))) {
+            res2 = null;
+          }
+        }
+        if (res2) return res2;
+
+        // 3) prova solo Plant
+        if (res3) {
+          const others = ["Material", "Gruppo_Merce", "Famiglia", "Cites"];
+          if (others.some(key => !isEmptyOrN(res3[key]))) {
+            res3 = null;
+          }
+        }
+        if (res3) return res3;
+
+        return null;
+
+      } catch (err) {
+        return req.error(500, err.message);
+      }
+    });
+
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PlannedOrdersCapacity", async (req) => {
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
@@ -1567,14 +1770,23 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("*", "ZZ1_PRODUCTIONPLANT_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
+      // Cerca eventuale Symbol(original)
+      const symbols = Object.getOwnPropertySymbols(req.query);
+      const symOriginal = symbols.find(s => s.toString() === 'Symbol(original)');
+
+      let select;
+
+      if (symOriginal && req.query[symOriginal] && req.query[symOriginal].SELECT) {
+        select = req.query[symOriginal];
+      } else {
+        select = req.query;
       }
+      const newQuery = JSON.parse(JSON.stringify(select));
+      delete newQuery.SELECT.limit;
+      delete newQuery.SELECT.offset;
+      //delete newQuery.offset;
       const res = await ZZ1_PRODUCTIONPLANT_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
+      res.$count = res.length;
       return res;
     });
 

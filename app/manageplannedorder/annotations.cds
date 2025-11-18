@@ -115,6 +115,16 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Label : 'Assign Other Segments',
         },
         {
+            $Type : 'UI.DataField',
+            Value : zsed_priority,
+            Label : 'SedApta priority',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : PlannedOrderBOMIsFixed,
+            Label : 'Fissazione',
+        },
+        {
             $Type                            : 'UI.DataField',
             Value                            : PlannedTotalQtyInBaseUnit,
             Label                            : '{i18n>PlannedTotalQtyIn}',

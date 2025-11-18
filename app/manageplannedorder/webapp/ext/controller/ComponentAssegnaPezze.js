@@ -329,8 +329,18 @@ sap.ui.define([
       let _selectedItems = [];
 
       for (let i = 0; i < aRows.length; i++) {
-        const oObj = aRows[i].getBindingContext().getObject()
-        items.push(oObj)
+        const oObj = aRows[i].getBindingContext().getObject();
+
+        //Escludi i record con AvaibilityQty === 0 e CombPlanAllQty === 0
+        const AvaibilityQty = parseFloat(oObj.AvaibilityQty);
+        const CombPlanAllQty = parseFloat(oObj.CombPlanAllQty);
+
+        // Se ENTRAMBI sono zero → salta questo record
+        if (AvaibilityQty === 0 && CombPlanAllQty === 0) {
+          continue; // salta il push
+        }
+
+        items.push(oObj);
       }
 
       let RequiredQty = Number(obj.RequiredQuantity);
@@ -434,7 +444,7 @@ sap.ui.define([
             const binding = table.getBinding('items');
             const selectedModel = dialog.getModel('selected');
             const submitCompleted = selectedModel?.getProperty('/submitCompleted');
-            const highlightModel = this.getOwnerComponent().getModel("highlight");
+            const highlightModel = this._controller.getOwnerComponent().getModel("highlight");
 
             if (binding) {
               if (!submitCompleted) {
@@ -551,8 +561,8 @@ sap.ui.define([
               .map(ctx => ctx.getObject())
               .filter(obj =>
                 obj &&
-                obj.SAP_UUID &&  
-                obj.Scorta !== "X"  
+                obj.SAP_UUID &&
+                obj.Scorta !== "X"
               );
 
             const assignedQty = assignedObjects.reduce((acc, obj) => {
