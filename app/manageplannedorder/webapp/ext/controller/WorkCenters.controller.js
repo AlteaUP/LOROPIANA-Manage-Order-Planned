@@ -184,31 +184,36 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
             dialog.close();
         },
         onSubmitChangeWorkCenter: function (oEvent) {
+            debugger
             //recuper workCenter selezionato
+            sap.ui.core.BusyIndicator.show(0);
+            const idTabCapacity =
+                "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_ZZ1_PLOCAPACITYCORD::LineItem::Capacity-innerTable";
+            const oTableCapacity = sap.ui.getCore().byId(idTabCapacity);
             const idWorkCenter = "fragmentWorkCenter--workCenterTable";
+            const oDialog = sap.ui.getCore().byId('fragmentWorkCenter--_IDGenDialogChangeWorkCenter');
             const selectedItemWorkCenter = sap.ui.getCore().byId(idWorkCenter).getSelectedItems();
             var oResourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             var sMessage = oResourceBundle.getText("SelectOnlyOneRecord");
             if (selectedItemWorkCenter.length > 1 || selectedItemWorkCenter.length === 0) {
+                sap.ui.core.BusyIndicator.hide();
                 MessageToast.show(sMessage);
                 return;
             }
             const oBjWorkCenter = selectedItemWorkCenter[0].getBindingContext().getObject();
-            var workCenterSelected = oBjWorkCenter.BOOWorkCenterInternalID;
+            var workCenterSelected = oBjWorkCenter.WorkCenterInternalID;
 
             //recupero record selezionato tabella Capacity
-            const idTabCapacity =
-                "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_ZZ1_PLOCAPACITYCORD::LineItem::Capacity-innerTable";
             const oBjRecordCapacity = sap.ui.getCore().byId(idTabCapacity).getSelectedItems();
             const selectedRecordCapacity = oBjRecordCapacity[0].getBindingContext().getObject();
 
-            //recupero campo CombPLOrder 
-            var combPlOrder = selectedRecordCapacity.CombinedMasterOrder;
+            var combPlOrder = String(selectedRecordCapacity.CombinedMasterOrder).padStart(12, '0');
+            var Sequence = String(selectedRecordCapacity.Sequence).padStart(6, '0');
 
             var payload = {
                 "CombPlOrder": combPlOrder,
                 "Operation": selectedRecordCapacity.Operation,
-                "Sequence": selectedRecordCapacity.Sequence,
+                "Sequence": Sequence,
                 "WorkCenter": workCenterSelected
             }
 
@@ -220,9 +225,16 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
             );
 
             oBindingContext.execute().then((oResult) => {
-                MessageToast.show("Successo")
+                MessageToast.show("Work Center aggiornato");
+                sap.ui.core.BusyIndicator.hide();
+                oDialog.close();
+                let bindingInfo = oTableCapacity.getBindingInfo("items");
+                oTableCapacity.unbindItems();
+                oTableCapacity.bindItems(bindingInfo);
             }).catch((oError) => {
-                MessageToast.show(oError.value)
+                MessageToast.show(oError.value);
+                sap.ui.core.BusyIndicator.hide();
+                oDialog.close();
             });
         }
 

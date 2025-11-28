@@ -52,7 +52,7 @@ sap.ui.define(
 
                 if (!this._fragmentConvert) {
                     this._fragmentConvert = this.loadFragment({
-                        id: "fragmentPezze",
+                        id: "fragmentConverti",
                         name: "manageplannedorder.manageplannedorder.ext.fragment.Converti",
                         controller: this
                     });
@@ -151,75 +151,80 @@ sap.ui.define(
             pressFissazione: async function (oEvent) {
                 debugger;
                 const oMacroTable = this.byId("TableCombined");
+
+                sap.ui.core.BusyIndicator.show(0);
+
                 const oModel = this.getOwnerComponent().getModel();
                 const aSelectedContexts = this.byId("TableCombined").getSelectedContexts();
+
                 if (aSelectedContexts.length === 0) {
+                    sap.ui.core.BusyIndicator.hide();
                     MessageToast.show("Select at least one item");
                     return;
                 }
+
                 let _oContext = [];
                 for (let i = 0; i < aSelectedContexts.length; i++) {
                     const oObj = aSelectedContexts[i].getObject()
                     _oContext.push(oObj)
                 }
+
                 const payload = {
                     CplndOrd: _oContext.map(item => item.CplndOrd)
                 };
+
                 const oCtx = oModel.bindContext("/Fissazione(...)");
                 oCtx.setParameter("Payload", payload);
 
-                oCtx.execute()
-                    .then(() => {
-                        console.log("successo");
-                        try {
-                            const oBinding = oMacroTable.getRowBinding();
-                            if (oBinding && oBinding.isA("sap.ui.model.odata.v4.ODataListBinding")) {
-                                oBinding.refresh();
-                            }
-                        } catch (err) {
-                            console.warn("Refresh binding fallito:", err);
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
-                //REFRESH entity ZZ1_CombinedPlnOrdersAPI
                 try {
+                    await oCtx.execute();
                     const oBinding = oMacroTable.getRowBinding();
-                    if (oBinding && oBinding.isA("sap.ui.model.odata.v4.ODataListBinding")) {
-                        oBinding.refresh();
+
+                    if (oBinding?.isA("sap.ui.model.odata.v4.ODataListBinding")) {
+                        await oBinding.refresh();
+
+                        const oInnerTable = oMacroTable.getAggregation("content")._oTable;
+                        oInnerTable.removeSelections(true);
                     }
                 } catch (err) {
-                    console.warn("Refresh binding fallito:", err);
+                    console.error(err);
+                } finally {
+                    sap.ui.core.BusyIndicator.hide();
                 }
-
             },
             doConvert: function (oEvent) {
                 debugger
                 const oModel = this.getOwnerComponent().getModel();
+                const oDialogConvert = this.getView().byId('fragmentConverti--_IDGenDialogConversion');
                 // const oTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--selectedItemsTableCombined');
                 // const oTableBinding = oTable.getBinding("items");
+                const oTable = this.getView().byId('fragmentConverti--selectedItemsTableCombined');
+                const binding = oTable.getBinding('items');
+                const contexts = binding.getContexts();
+
+                const rows = contexts
+                    .map(ctx => ({ ctx, obj: ctx.getObject() })); 
 
                 const oMainTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--TableCombined-content');
                 const oMainTableBinding = oMainTable._oTable.getBinding('items')
 
                 this.showMessageConfirm("convert").then(function () {
                     MessageToast.show("Do Convert invoked.");
-
-                    //BusyIndicator.show(0);
-                    debugger;
+                    sap.ui.core.BusyIndicator.show(0);
                     oModel.submitBatch("CreateConvertPLO").then(function (e) {
                         console.log("Convert response", e);
                         MessageToast.show("Do Convert completed.");
-                        sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--_IDGenDialogConversion').close();
-                        BusyIndicator.hide();
+                        //sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--_IDGenDialogConversion').close();
+                        sap.ui.core.BusyIndicator.hide();
+                        oDialogConvert.close();
                         oMainTableBinding.refresh();
                     }.bind(this)).catch((oError) => {
+                        sap.ui.core.BusyIndicator.hide();
                         MessageToast.show("Do Convert error.");
                         console.error("Error", oError);
-                        //BusyIndicator.hide();
                     });
                 }.bind(this)).catch((e) => {
+                    sap.ui.core.BusyIndicator.hide();
                     MessageToast.show("Do Convert cancelled. " + JSON.stringify(e));
                 });
             },

@@ -30,23 +30,29 @@
 <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
 </edmx:Reference>
 <edmx:DataServices m:DataServiceVersion="2.0">
-<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZZ1_PRODUCTIONPLANT_F4_CDS" xml:lang="en" sap:schema-version="1">
-<EntityType Name="ZZ1_PRODUCTIONPLANT_F4Type" sap:label="PRODUCTION PLANT F4" sap:content-version="1">
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZZ1_RFM_WRKCHARVAL_F4_CDS" xml:lang="en" sap:schema-version="1">
+<EntityType Name="ZZ1_RFM_WRKCHARVAL_F4Type" sap:label="ZZ1_RFM_WRKCHARVAL_F4" sap:content-version="1">
 <Key>
-<PropertyRef Name="Plant"/>
+<PropertyRef Name="workcenter"/>
+<PropertyRef Name="WorkCenterInternalID"/>
+<PropertyRef Name="workcentertext"/>
+<PropertyRef Name="plant"/>
 </Key>
-<Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
-<Property Name="PlantName" Type="Edm.String" MaxLength="30" sap:required-in-filter="false" sap:label="Plant Name"/>
+<Property Name="workcenter" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Work Center"/>
+<Property Name="WorkCenterInternalID" Type="Edm.String" Nullable="false" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="Object ID" sap:quickinfo="Object ID of the resource"/>
+<Property Name="workcentertext" Type="Edm.String" Nullable="false" MaxLength="40" sap:required-in-filter="false" sap:label="Work Center Text"/>
+<Property Name="plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Plant"/>
+<Property Name="fornitore" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="fornitore"/>
 </EntityType>
-<EntityContainer Name="ZZ1_PRODUCTIONPLANT_F4_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
-<EntitySet Name="ZZ1_PRODUCTIONPLANT_F4" EntityType="ZZ1_PRODUCTIONPLANT_F4_CDS.ZZ1_PRODUCTIONPLANT_F4Type" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+<EntityContainer Name="ZZ1_RFM_WRKCHARVAL_F4_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+<EntitySet Name="ZZ1_RFM_WRKCHARVAL_F4" EntityType="ZZ1_RFM_WRKCHARVAL_F4_CDS.ZZ1_RFM_WRKCHARVAL_F4Type" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
 </EntityContainer>
 <Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
-<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_PRODUCTIONPLANT_F4_CDS.ZZ1_PRODUCTIONPLANT_F4_CDS_Entities">
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_RFM_WRKCHARVAL_F4_CDS.ZZ1_RFM_WRKCHARVAL_F4_CDS_Entities">
 <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
 </Annotations>
-<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_PRODUCTIONPLANT_F4_CDS/$metadata"/>
-<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_PRODUCTIONPLANT_F4_CDS/$metadata"/>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_RFM_WRKCHARVAL_F4_CDS/$metadata"/>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_RFM_WRKCHARVAL_F4_CDS/$metadata"/>
 </Schema>
 </edmx:DataServices>
 </edmx:Edmx>

@@ -541,7 +541,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label                   : '{i18n>ProductionPlant}',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_PRODUCTIONPLANT_F4',
+            CollectionPath: 'ZC_RFM_PRODUCTION_PLANT_F4',
+            SearchSupported: true,
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: ProductionPlant,
@@ -552,11 +553,10 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.ValueListWithFixedValues: false,
     )
 };
-
-annotate service.ZZ1_PRODUCTIONPLANT_F4 with @(Capabilities.SearchRestrictions: {
+/* annotate service.ZZ1_MRP_PLANT_F4 with @(Capabilities.SearchRestrictions: {
   Searchable: false
-});
-
+}); */  
+ 
 annotate service.ZZ1_MasterPlannedOrders with @(
     UI.LineItem #MasterPlannedOrder                    : [
         {
@@ -621,7 +621,7 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(UI.LineItem #Capacity: [
     },
     {
         $Type: 'UI.DataField',
-        Value: BOOWorkCenterText,
+        Value: WorkCenterText,
         Label: '{i18n>OperationWorkCenterText}',
     },
     {
@@ -733,7 +733,7 @@ annotate service.ZZ1_PLOCAPACITYCORD with @(UI.LineItem #Capacity: [
         Value: BOOWorkCenterInternalID,
         Label: '{i18n>OperationWorkCenterInternal}',
         ![@UI.Hidden],
-    },
+    }
 
 ]);
 
@@ -2238,11 +2238,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
     )
 };
 
-annotate service.ZZ1_MRPCONTROLLER_F4 with @(Capabilities.SearchRestrictions: {
-  Searchable: false
-});
-
-
 annotate service.ZZ1_CombinedPlnOrdersAPI with {};
 annotate service.ZZ1_CombinedPlnOrdersAPI with {};
 annotate service.ZZ1_CombinedPlnOrdersAPI with {};
@@ -2390,7 +2385,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
 annotate service.ZZ1_MFI_CR_TYPE_V with {
     Code @Common.Text: Code_Text
 };
-annotate service.ZZ1_PRODUCTIONPLANT_F4 with {
+annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
     Plant @Common.Text : {
         $value : PlantName,
         ![@UI.TextArrangement] : #TextLast,

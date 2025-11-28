@@ -15,6 +15,7 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZZ1_I_SUMQTYDELIVERY_T_CDS = await cds.connect.to("ZZ1_I_SUMQTYDELIVERY_T_CDS");
 
     const ZMPF_ASS_BATCH_SRV = await cds.connect.to('ZMPF_ASS_BATCH_SRV');
+    const zmfp_plo_firming = await cds.connect.to('zmfp_plo_firming');
 
     const ZI_RFM_ATP_RULES_CDS = await cds.connect.to('ZI_RFM_ATP_RULES_CDS');
 
@@ -33,6 +34,10 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZZ1_ALT_LAB_CDS = await cds.connect.to("ZZ1_ALT_LAB_CDS");
     const ZZ1_PLO_OPERATIONS_CDS = await cds.connect.to("ZZ1_PLO_OPERATIONS_CDS");
     const ZZ1_MARA_CUSTOM_FIELDS_API_CDS = await cds.connect.to("ZZ1_MARA_CUSTOM_FIELDS_API_CDS");
+    const ZZ1_MRP_PLANT_F4_CDS = await cds.connect.to("ZZ1_MRP_PLANT_F4_CDS");
+    const zmfp_mrp_plant_f4 = await cds.connect.to("zmfp_mrp_plant_f4");
+    const ZZ1_RFM_WRKCHARVAL_F4_CDS = await cds.connect.to("ZZ1_RFM_WRKCHARVAL_F4_CDS");
+
 
 
 
@@ -121,19 +126,24 @@ module.exports = class MainService extends cds.ApplicationService {
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD", async (req) => {
-
+      const cols = req.query.SELECT.columns || [];
+      if (!cols.some(c => c.ref && c.ref[0] === 'BOOWorkCenterInternalID')) {
+        req.query.SELECT.columns.push({ ref: ['BOOWorkCenterInternalID'] });
+      }
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       return res;
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD_TEXT", async (req) => {
-
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       return res;
     });
 
     this.on("*", "ZZ1_PLOCAPACITYCORD_TEXT", async (req) => {
-
+      const cols = req.query.SELECT.columns || [];
+      if (!cols.some(c => c.ref && c.ref[0] === 'fornitore')) {
+        req.query.SELECT.columns.push({ ref: ['fornitore'] });
+      }
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
       const unique = Object.values(
         res.reduce((acc, item) => {
@@ -146,6 +156,25 @@ module.exports = class MainService extends cds.ApplicationService {
       );
 
       return unique;
+    });
+
+    this.on("*", "ZZ1_RFM_WRKCHARVAL_F4", async (req) => {
+      /*  const cols = req.query.SELECT.columns || [];
+       if (!cols.some(c => c.ref && c.ref[0] === 'fornitore')) {
+         req.query.SELECT.columns.push({ ref: ['fornitore'] });
+       } */
+      const res = await ZZ1_RFM_WRKCHARVAL_F4_CDS.run(req.query)
+      /*  const unique = Object.values(
+         res.reduce((acc, item) => {
+           const key = item.BOOWorkCenterInternalID;
+           if (!acc[key]) {
+             acc[key] = item; // prendi il primo e basta
+           }
+           return acc;
+         }, {})
+       ); */
+
+      return res;
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_MFI_CR_TYPE_PLA", async (req) => {
@@ -1477,8 +1506,6 @@ module.exports = class MainService extends cds.ApplicationService {
       }
     });
 
-
-
     this.on("*", "ZZ1_Plant", async (req) => {
       // req.query.SELECT.from.ref[0] = "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_Plant";
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
@@ -1510,11 +1537,11 @@ module.exports = class MainService extends cds.ApplicationService {
           plannedOrderNumbers.push(item);
         }
       });
-      console.log("plannedOrder" + plannedOrderNumbers);
+      console.log("combplnord" + plannedOrderNumbers);
       var to_array = plannedOrderNumbers.map(number => {
         return {
           "id": fixedId, // ID fisso per ogni riga
-          "PlannedOrder": number
+          "combplnord": number
         };
       });
       // payload finale con testata e righe
@@ -1522,35 +1549,57 @@ module.exports = class MainService extends cds.ApplicationService {
         "id": fixedId, // ID fisso per la testata
         "to_array": to_array
       };
+      console.log("Payload per la POST: " + JSON.stringify(oPayload));
+      const result = await zmfp_plo_firming.tx(req).post("/header", oPayload);
+
+      console.log('Risultato della POST:', result);
+      return result
     })
 
     this.on("ChangeWorkCenter", async (req) => {
 
       const object = req.data.Payload;
 
-      var payload = {
-        "FSH_CPLND_ORD": object.CombPlOrder,
-        "MANUFACTURINGORDEROPERATION": object.Operation,
-        "MANUFACTURINGORDERSEQUENCE": object.Sequence,
-        "WORKCENTER": object.WorkCenter
-      }
+      /*   var payload = {
+          "FSH_CPLND_ORD": object.CombPlOrder,
+          "MANUFACTURINGORDEROPERATION": object.Operation,
+          "MANUFACTURINGORDERSEQUENCE": object.Sequence,
+          "WORKCENTER": object.WorkCenter
+        } */
 
       try {
+        //se WC presente faccio UPDATE altrimenti inserisco record nel CBO
+        let WRKC = await changeWorkCenter.run(
+          SELECT.from("ZZ1_MFP_WRKC_UPDATE").where({ FSH_CPLND_ORD: object.CombPlOrder })
+        );
 
-        /*const csrfRes = await changeWorkCenter.get("/ZZ1_MFP_WRKC_UPDATE", {
-            headers: { 'X-CSRF-Token': 'fetch' }
-        });
+        if (WRKC.length > 0) {
 
-        const csrfToken = csrfRes.headers['X-CSRF-Token'];*/
+          const uuid = WRKC[0].SAP_UUID;
 
-        let callCreate = await changeWorkCenter.tx(req).post("/ZZ1_MFP_WRKC_UPDATE", payload)
-        /*let callCreate = await changeWorkCenter.post("/ZZ1_MFP_WRKC_UPDATE", payload, {
-            headers: { 'X-CSRF-Token': csrfToken }
-        });*/
-        console.log("Risultato chiamata " + JSON.stringify(callCreate))
-        //return callCreate
-
-        //recupero plannedOrder
+          await changeWorkCenter.run(
+            UPDATE("ZZ1_MFP_WRKC_UPDATE")
+              .set({
+                WORKCENTER: object.WorkCenter,
+                MANUFACTURINGORDERSEQUENCE: object.Sequence,
+                MANUFACTURINGORDEROPERATION: object.Operation
+              })
+              .where({ SAP_UUID: uuid })
+          );
+          console.log("Record aggiornato");
+        }
+        else {
+          await changeWorkCenter.run(
+            INSERT.into("ZZ1_MFP_WRKC_UPDATE").entries({
+              FSH_CPLND_ORD: object.CombPlOrder,
+              MANUFACTURINGORDEROPERATION: object.Operation,
+              MANUFACTURINGORDERSEQUENCE: object.Sequence,
+              WORKCENTER: object.WorkCenter
+            })
+          );
+          console.log("Record creato");
+        }
+        //console.log(changeWorkCenter.actions);
         var plannedOrderNumbers = [];
         const fixedId = "123"; //id fisso
         const plannedOrdersCapacity = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
@@ -1589,6 +1638,9 @@ module.exports = class MainService extends cds.ApplicationService {
       } catch (error) {
 
         console.log(error.message)
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+        console.log(error.response?.headers);
         return error.message
       }
     });
@@ -1769,24 +1821,53 @@ module.exports = class MainService extends cds.ApplicationService {
       return res;
     });
 
-    this.on("*", "ZZ1_PRODUCTIONPLANT_F4", async (req) => {
-      // Cerca eventuale Symbol(original)
-      const symbols = Object.getOwnPropertySymbols(req.query);
-      const symOriginal = symbols.find(s => s.toString() === 'Symbol(original)');
+    /*  this.on("*", "ZZ1_PRODUCTIONPLANT_F4", async (req) => {
+       // Cerca eventuale Symbol(original)
+       const symbols = Object.getOwnPropertySymbols(req.query);
+       const symOriginal = symbols.find(s => s.toString() === 'Symbol(original)');
+ 
+       let select;
+ 
+       if (symOriginal && req.query[symOriginal] && req.query[symOriginal].SELECT) {
+         select = req.query[symOriginal];
+       } else {
+         select = req.query;
+       }
+       const newQuery = JSON.parse(JSON.stringify(select));
+       delete newQuery.SELECT.limit;
+       delete newQuery.SELECT.offset;
+       //delete newQuery.offset;
+       const res = await ZZ1_PRODUCTIONPLANT_F4_CDS.run(newQuery);
+       res.$count = res.length;
+       return res;
+     }); */
 
-      let select;
+    /*    this.on("*", "ZZ1_MRP_PLANT_F4", async (req) => {
+         const newQuery = JSON.parse(JSON.stringify(req.query));
+         if (newQuery.SELECT) {
+           delete newQuery.SELECT.limit;
+           delete newQuery.SELECT.offset;
+         }
+         const res = await ZZ1_MRP_PLANT_F4_CDS.run(newQuery);
+         console.log({ query: JSON.stringify(req.query), res });
+         res['$count'] = res.length;
+         return res;
+       }); */
 
-      if (symOriginal && req.query[symOriginal] && req.query[symOriginal].SELECT) {
-        select = req.query[symOriginal];
-      } else {
-        select = req.query;
+    this.on("*", "ZC_RFM_PRODUCTION_PLANT_F4", async (req) => {
+      const result = await zmfp_mrp_plant_f4.run(req.query);
+      return result;
+    });
+
+    this.on("*", "ZZ1_WORKCENTER_F4", async (req) => {
+      const newQuery = JSON.parse(JSON.stringify(req.query));
+      if (newQuery.SELECT) {
+        delete newQuery.SELECT.limit;
+        delete newQuery.SELECT.offset;
       }
-      const newQuery = JSON.parse(JSON.stringify(select));
-      delete newQuery.SELECT.limit;
-      delete newQuery.SELECT.offset;
-      //delete newQuery.offset;
-      const res = await ZZ1_PRODUCTIONPLANT_F4_CDS.run(newQuery);
-      res.$count = res.length;
+      const res = await ZZ1_WORKCENTER_F4_CDS.run(newQuery);
+      console.log({ query: JSON.stringify(req.query), res });
+      res['$count'] = res.length;
       return res;
     });
 
@@ -1797,18 +1878,6 @@ module.exports = class MainService extends cds.ApplicationService {
         delete newQuery.SELECT.offset;
       }
       const res = await ZZ1_MRPCONTROLLER_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
-      return res;
-    });
-
-    this.on("*", "ZZ1_WORKCENTER_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
-      }
-      const res = await ZZ1_WORKCENTER_F4_CDS.run(newQuery);
       console.log({ query: JSON.stringify(req.query), res });
       res['$count'] = res.length;
       return res;

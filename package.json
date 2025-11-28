@@ -70,7 +70,7 @@
           }
           }
         },
-        "[production]": {
+      "[production]": {
           "credentials": {
             "requestTimeout": 300000,
             "destination": "S4HANA",
@@ -226,6 +226,26 @@
           }
         }
       },
+      "zmfp_plo_firming": {
+        "kind": "odata-v2",
+        "model": "srv/external/zmfp_plo_firming",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata4/sap/zmfp_plo_firming/srvd/sap/zmfp_plo_firming/0001"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata4/sap/zmfp_plo_firming/srvd/sap/zmfp_plo_firming/0001"
+          }
+        }
+      },
       "ZS_RFM_ATP_PLANNED_ORDERS": {
         "kind": "odata-v2",
         "model": "srv/external/ZS_RFM_ATP_PLANNED_ORDERS",
@@ -274,7 +294,7 @@
           "credentials": {
             "requestTimeout": 300000,
             "destination": "S4HANA",            
-            "path": "/sap/opu/odata/sap/API_MATERIAL_DOCUMENT_SRV"
+            "path": "/sap/opu/odata/sap/ZZ1_MFP_WRKC_UPDATE_CDS"
           }
         },
         "[production]": {
@@ -320,6 +340,26 @@
             "requestTimeout": 300000,
             "destination": "S4HANA",            
             "path": "/sap/opu/odata4/sap/zc_rfm_atp_change_wc_deep/srvd/sap/zsd_rfm_atp_change_wc_deep/0001"
+          }
+        }
+      },
+      "zmfp_mrp_plant_f4": {
+        "kind": "odata-v4",
+        "model": "srv/external/zmfp_mrp_plant_f4",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": { 
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/zmfp_mrp_plant_f4/srvd/sap/zmfp_mrp_plant_f4/0001"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/zmfp_mrp_plant_f4/srvd/sap/zmfp_mrp_plant_f4/0001"
           }
         }
       },
@@ -374,6 +414,24 @@
             "requestTimeout": 300000,
             "destination": "S4HANA",
             "path": "/sap/opu/odata/sap/ZZ1_PRODUCTIONPLANT_F4_CDS"
+          }
+        }
+      },
+      "ZZ1_MRP_PLANT_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MRP_PLANT_F4_CDS",
+        "[hybrid]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_MRP_PLANT_F4_CDS"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_MRP_PLANT_F4_CDS"
           }
         }
       },
@@ -500,6 +558,24 @@
             "requestTimeout": 300000,
             "destination": "S4HANA",
             "path": "/sap/opu/odata/sap/ZZ1_MARA_CUSTOM_FIELDS_API_CDS"
+          }
+        }
+      },
+      "ZZ1_RFM_WRKCHARVAL_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_RFM_WRKCHARVAL_F4_CDS",
+        "[hybrid]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_RFM_WRKCHARVAL_F4_CDS"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_RFM_WRKCHARVAL_F4_CDS"
           }
         }
       }

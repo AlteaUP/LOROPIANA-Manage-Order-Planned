@@ -1,4 +1,4 @@
-/* checksum : 2bca9e77539073f5164b0e21ee1d0716 */
+/* checksum : c90d5dd3b663cb6912b2ca3acd19658b */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -1192,7 +1192,6 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
   @sap.label : 'Base Unit of Measure'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
-  @sap.display.format : 'UpperCase'
   @sap.label : 'Sedapta Priority'
   zsed_priority : String(15);
 };
@@ -1678,5 +1677,8 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.required.in.filter : 'false'
   @sap.label : 'fornitore'
   fornitore : String(70);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Work Center Text'
+  WorkCenterText : String(40);
 };
 

@@ -6,6 +6,7 @@ sap.ui.define([
 
     return {
         doChangeWorkCenter: function (oEvent) {
+            debugger
             const idTableCapacity = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_ZZ1_PLOCAPACITYCORD::LineItem::Capacity-innerTable";
             const selectedItems = this._view.byId(idTableCapacity).getSelectedItems();
             const oContext = this.getBindingContext().getObject();
@@ -20,7 +21,7 @@ sap.ui.define([
             // payload
             const payload = {
                 "Operation": objectItem.Operation,
-                "WorkCenterInternalID": objectItem.WorkCenterInternalID,
+                "WorkCenterInternalID": objectItem.BOOWorkCenterInternalID,
                 "CombinedMasterOrder": objectItem.CombinedMasterOrder,
                 "ProductionPlant": oContext.ProductionPlant,
                 "Product": oContext.Product
@@ -75,12 +76,12 @@ sap.ui.define([
                         }
 
                         table.bindAggregation("items", {
-                            path: "/ZZ1_PLOCAPACITYCORD_TEXT",
+                            path: "/ZZ1_RFM_WRKCHARVAL_F4",
                             filters: [finalFilter],
                             template: new sap.m.ColumnListItem({
                                 cells: [
-                                    new sap.m.Text({ text: "{BOOWorkCenterInternalID}" }),
-                                    new sap.m.Text({ text: "{BOOWorkCenterText}" })
+                                    new sap.m.Text({ text: "{WorkCenterInternalID}" }),
+                                    new sap.m.Text({ text: "{workcentertext}" })
                                 ]
                             }),
                             templateShareable: false

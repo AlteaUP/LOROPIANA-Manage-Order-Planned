@@ -395,7 +395,7 @@
 <Property Name="PlndOrderBaseToEntryQtyNmrtr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Numerator" sap:quickinfo="Numerator for Conversion to Base Units of Measure"/>
 <Property Name="PlndOrderBaseToEntryQtyDnmntr" Type="Edm.Decimal" Precision="5" Scale="0" sap:label="Denominator" sap:quickinfo="Denominator for conversion to base units of measure"/>
 <Property Name="BaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
-<Property Name="zsed_priority" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Sedapta Priority"/>
+<Property Name="zsed_priority" Type="Edm.String" MaxLength="15" sap:label="Sedapta Priority"/>
 </EntityType>
 <EntityType Name="ZZ1_MasterPlannedOrdersType" sap:label="Master Planned Orders" sap:content-version="1">
 <Key>
@@ -544,6 +544,7 @@
 <Property Name="BOOWorkCenterInternalID" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="Object ID"/>
 <Property Name="BOOWorkCenterText" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Work Center Text"/>
 <Property Name="fornitore" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="fornitore"/>
+<Property Name="WorkCenterText" Type="Edm.String" MaxLength="40" sap:required-in-filter="false" sap:label="Work Center Text"/>
 </EntityType>
 <Association Name="assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" sap:content-version="1">
 <End Type="ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPIType" Multiplicity="1" Role="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>

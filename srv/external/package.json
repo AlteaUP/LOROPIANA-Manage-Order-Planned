@@ -96,12 +96,28 @@
       "ZZ1_MARA_CUSTOM_FIELDS_API_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_MARA_CUSTOM_FIELDS_API_CDS"
+      },
+      "zmfp_plo_firming": {
+        "kind": "odata",
+        "model": "srv/external/zmfp_plo_firming"
+      },
+      "ZZ1_MRP_PLANT_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_MRP_PLANT_F4_CDS"
+      },
+      "zmfp_mrp_plant_f4": {
+        "kind": "odata",
+        "model": "srv/external/zmfp_mrp_plant_f4"
+      },
+      "ZZ1_RFM_WRKCHARVAL_F4_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_RFM_WRKCHARVAL_F4_CDS"
       }
     }
   },
   "dependencies": {
-    "@sap-cloud-sdk/connectivity": "^3",
-    "@sap-cloud-sdk/http-client": "^3",
-    "@sap-cloud-sdk/resilience": "^3"
+    "@sap-cloud-sdk/connectivity": "^4",
+    "@sap-cloud-sdk/http-client": "^4",
+    "@sap-cloud-sdk/resilience": "^4"
   }
 }
