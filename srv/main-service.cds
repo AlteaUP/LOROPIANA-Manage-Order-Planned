@@ -8,14 +8,14 @@ using {ZMPF_ASS_BATCH_SRV} from './external/ZMPF_ASS_BATCH_SRV';
 using {ZI_RFM_ATP_RULES_CDS} from './external/ZI_RFM_ATP_RULES_CDS';
 using {ZZ1_MFP_WRKC_UPDATE_CDS} from './external/ZZ1_MFP_WRKC_UPDATE_CDS';
 using {ZZ1_MATERIAL_F4_CDS} from './external/ZZ1_MATERIAL_F4_CDS';
-using {ZZ1_COMBPLANNEDORDER_F4_CDS} from './external/ZZ1_COMBPLANNEDORDER_F4_CDS';
-using {ZZ1_MRPCONTROLLER_F4_CDS} from './external/ZZ1_MRPCONTROLLER_F4_CDS';
-using {ZZ1_WORKCENTER_F4_CDS} from './external/ZZ1_WORKCENTER_F4_CDS';
-using {ZZ1_PRODUCTSEASON_F4_CDS} from './external/ZZ1_PRODUCTSEASON_F4_CDS';
-using {ZZ1_PLANNEDORDERTYPE_F4_CDS} from './external/ZZ1_PLANNEDORDERTYPE_F4_CDS';
 using {ZZ1_MFP_BATCHCUSTOM_CDS} from './external/ZZ1_MFP_BATCHCUSTOM_CDS';
 using {ZZ1_ALT_LAB_CDS} from './external/ZZ1_ALT_LAB_CDS';
 using {zmfp_mrp_plant_f4} from './external/zmfp_mrp_plant_f4';
+using {ZMFP_MRP_COMBINEDPLNDORDER_F4} from './external/ZMFP_MRP_COMBINEDPLNDORDER_F4';
+using {ZMFP_MRP_CONTROLLER_F4} from './external/ZMFP_MRP_CONTROLLER_F4';
+using {ZMFP_MRP_PLANNEDORDER_TYPE_F4} from './external/ZMFP_MRP_PLANNEDORDER_TYPE_F4';
+using {ZMFP_MRP_PRODUCT_SEASON_F4} from './external/ZMFP_MRP_PRODUCT_SEASON_F4';
+using {ZMFP_MRP_WORKCENTER_F4} from './external/ZMFP_MRP_WORKCENTER_F4';
 using {ZZ1_RFM_WRKCHARVAL_F4_CDS} from './external/ZZ1_RFM_WRKCHARVAL_F4_CDS';
 
 
@@ -71,15 +71,19 @@ service MainService {
 
   //ENTITY MATCH CODE FILTRI
   entity ZZ1_MATERIAL_F4                 as projection on ZZ1_MATERIAL_F4_CDS.ZZ1_MATERIAL_F4;
-  entity ZZ1_CombPlannedOrder_F4         as projection on ZZ1_COMBPLANNEDORDER_F4_CDS.ZZ1_CombPlannedOrder_F4;
- /*  entity ZZ1_PRODUCTIONPLANT_F4          as projection on ZZ1_PRODUCTIONPLANT_F4_CDS.ZZ1_PRODUCTIONPLANT_F4;
-  entity ZZ1_MRP_PLANT_F4                as projection on ZZ1_MRP_PLANT_F4_CDS.ZZ1_MRP_PLANT_F4; */
-  //servizio in v4 per matchCode plant
+  /* entity ZZ1_CombPlannedOrder_F4         as projection on ZZ1_COMBPLANNEDORDER_F4_CDS.ZZ1_CombPlannedOrder_F4; */
+  //CplndOrd
+  entity ZC_RFM_COMBPLANNEDORD_F4        as projection on ZMFP_MRP_COMBINEDPLNDORDER_F4.ZC_RFM_COMBPLANNEDORD_F4;
+  //productionPlant
   entity ZC_RFM_PRODUCTION_PLANT_F4      as projection on zmfp_mrp_plant_f4.ZC_RFM_PRODUCTION_PLANT_F4;
-  entity ZZ1_MRPCONTROLLER_F4            as projection on ZZ1_MRPCONTROLLER_F4_CDS.ZZ1_MRPCONTROLLER_F4;
-  entity ZZ1_WORKCENTER_F4               as projection on ZZ1_WORKCENTER_F4_CDS.ZZ1_WORKCENTER_F4;
-  entity ZZ1_PRODUCTSEASON_F4            as projection on ZZ1_PRODUCTSEASON_F4_CDS.ZZ1_PRODUCTSEASON_F4;
-  entity ZZ1_PLANNEDORDERTYPE_F4         as projection on ZZ1_PLANNEDORDERTYPE_F4_CDS.ZZ1_PLANNEDORDERTYPE_F4;
+  //MRPController
+  entity ZC_RFM_MRPCONTROLLER_F4         as projection on ZMFP_MRP_CONTROLLER_F4.ZC_RFM_MRPCONTROLLER_F4;
+  //PlannedOrderType
+  entity ZC_RFM_PLANNED_ORDER_TYPE_F4    as projection on ZMFP_MRP_PLANNEDORDER_TYPE_F4.ZC_RFM_PLANNED_ORDER_TYPE_F4;
+  //ProductSeason
+  entity ZC_RFM_PLO_PRODUCT_SEASON_F4    as projection on ZMFP_MRP_PRODUCT_SEASON_F4.ZC_RFM_PLO_PRODUCT_SEASON_F4;
+  //WorkCenter
+  entity ZC_RFM_WORKCENTER_F4            as projection on ZMFP_MRP_WORKCENTER_F4.ZC_RFM_WORKCENTER_F4;
 
   entity ZZ1_MFP_BATCHCUSTOM             as projection on ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOM;
 

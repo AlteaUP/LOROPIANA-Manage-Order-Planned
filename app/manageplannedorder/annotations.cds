@@ -503,7 +503,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label                   : '{i18n>CplndOrd}',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_CombPlannedOrder_F4',
+            CollectionPath: 'ZC_RFM_COMBPLANNEDORD_F4',
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: CplndOrd,
@@ -514,10 +514,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.ValueListWithFixedValues: false,
     )
 };
-
-annotate service.ZZ1_CombPlannedOrder_F4 with @(Capabilities.SearchRestrictions: {
-  Searchable: false
-});
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     ProductCollection @(
@@ -2222,7 +2218,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label                   : 'MRPController',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_MRPCONTROLLER_F4',
+            CollectionPath: 'ZC_RFM_MRPCONTROLLER_F4',
+            SearchSupported: true,
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: MRPController,
@@ -2247,7 +2244,7 @@ annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
         Common.Label                   : 'Work Center',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_WORKCENTER_F4',
+            CollectionPath: 'ZC_RFM_WORKCENTER_F4',
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: BOOWorkCenterInternalID,
@@ -2258,14 +2255,9 @@ annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
     )
 };
 
-annotate service.ZZ1_WORKCENTER_F4 with @( 
+annotate service.ZC_RFM_WORKCENTER_F4 with @( 
        UI.SelectionFields: [WorkCenterInternalID, WorkCenterText]       
 );
-
-annotate service.ZZ1_WORKCENTER_F4 with @(Capabilities.SearchRestrictions: {
-  Searchable: false
-});
-
 
 annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
     BOOWorkCenterText @Common.Label: 'BOOWorkCenterText'
@@ -2303,7 +2295,8 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label                   : 'Product Season Year',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_PRODUCTSEASON_F4',
+            CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4',
+            SearchSupported: true,
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: ProductSeasonYear,
@@ -2315,17 +2308,13 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
     )
 };
 
-annotate service.ZZ1_PRODUCTSEASON_F4 with @(Capabilities.SearchRestrictions: {
-  Searchable: false
-});
-
-
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     ProductSeason @(
         Common.Label                   : 'Product Season',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_PRODUCTSEASON_F4',
+            CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4',
+            SearchSupported: true,
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: ProductSeason,
@@ -2337,17 +2326,16 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
     )
 };
 
-annotate service.ZZ1_PRODUCTSEASON_F4 with @( 
+annotate service.ZC_RFM_PLO_PRODUCT_SEASON_F4 with @( 
        UI.SelectionFields: [ProductSeason, ProductSeasonYear]       
 );
-
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     PlannedOrderType @(
         Common.Label                   : 'Planned Order Type',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZZ1_PLANNEDORDERTYPE_F4',
+            CollectionPath: 'ZC_RFM_PLANNED_ORDER_TYPE_F4',
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: PlannedOrderType,
@@ -2358,10 +2346,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.ValueListWithFixedValues: false,
     )
 };
-
-annotate service.ZZ1_PLANNEDORDERTYPE_F4 with @(Capabilities.SearchRestrictions: {
-  Searchable: false
-});
 
 // annotate service.ZZ1_MFI_CR_TYPE_V with {
 //     Code @Common.Text : Code_Text
@@ -2392,14 +2376,14 @@ annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
     }
 };
 
-annotate service.ZZ1_MRPCONTROLLER_F4 with {
+annotate service.ZC_RFM_MRPCONTROLLER_F4 with {
     MRPController @Common.Text : {
         $value : MRPControllerName,
         ![@UI.TextArrangement] : #TextLast,
     }
 };
 
-annotate service.ZZ1_WORKCENTER_F4 with {
+annotate service.ZC_RFM_WORKCENTER_F4 with {
     WorkCenterInternalID @Common.Text : {
         $value : WorkCenterText,
         ![@UI.TextArrangement] : #TextLast,

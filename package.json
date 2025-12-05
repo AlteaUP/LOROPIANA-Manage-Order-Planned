@@ -29,6 +29,7 @@
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
     "cf-login": "cf login -a https://api.cf.eu30.hana.ondemand.com -o 'Loro Piana S.p.A._btp-development-loro-piana-82xq0cpc' -s 'DEV-SPACE-MANUFACTURING' --sso",
     "cf-login_dfr": "cf login -a https://api.cf.eu10-004.hana.ondemand.com -o 'alteaup-fashion' -s 'dev' --sso",
+    "cf-login_betty_blue": "cf login -a https://api.cf.ap10.hana.ondemand.com -o 'BETTY_BLUE SPA_8hng-hxvng0r8fzq' -s 'dev' --sso",
     "watch-plannedorder": "cds watch --open plannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-plannedordertest": "cds watch --open plannedordertest/webapp/index.html?sap-ui-xx-viewCache=false",
     "watch-combinedplannedorder": "cds watch --open combinedplannedorder/webapp/index.html?sap-ui-xx-viewCache=false",
@@ -360,6 +361,106 @@
             "requestTimeout": 300000,
             "destination": "S4HANA",            
             "path": "/sap/opu/odata4/sap/zmfp_mrp_plant_f4/srvd/sap/zmfp_mrp_plant_f4/0001"
+          }
+        }
+      },
+      "ZMFP_MRP_COMBINEDPLNDORDER_F4": {
+        "kind": "odata-v4",
+        "model": "srv/external/ZMFP_MRP_COMBINEDPLNDORDER_F4",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": { 
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_COMBINEDPLNDORDER_F4/srvd/sap/ZMFP_MRP_COMBINEDPLNDORDER_F4/0001"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_COMBINEDPLNDORDER_F4/srvd/sap/ZMFP_MRP_COMBINEDPLNDORDER_F4/0001"
+          }
+        }
+      },
+      "ZMFP_MRP_CONTROLLER_F4": {
+        "kind": "odata-v4",
+        "model": "srv/external/ZMFP_MRP_CONTROLLER_F4",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": { 
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_CONTROLLER_F4/srvd/sap/ZMFP_MRP_CONTROLLER_F4/0001"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_CONTROLLER_F4/srvd/sap/ZMFP_MRP_CONTROLLER_F4/0001"
+          }
+        }
+      },
+      "ZMFP_MRP_PLANNEDORDER_TYPE_F4": {
+        "kind": "odata-v4",
+        "model": "srv/external/ZMFP_MRP_PLANNEDORDER_TYPE_F4",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": { 
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_PLANNEDORDER_TYPE_F4/srvd/sap/ZMFP_MRP_PLANNEDORDER_TYPE_F4/0001"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_PLANNEDORDER_TYPE_F4/srvd/sap/ZMFP_MRP_PLANNEDORDER_TYPE_F4/0001"
+          }
+        }
+      },
+      "ZMFP_MRP_PRODUCT_SEASON_F4": {
+        "kind": "odata-v4",
+        "model": "srv/external/ZMFP_MRP_PRODUCT_SEASON_F4",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": { 
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_PRODUCT_SEASON_F4/srvd/sap/ZMFP_MRP_PRODUCT_SEASON_F4/0001"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_PRODUCT_SEASON_F4/srvd/sap/ZMFP_MRP_PRODUCT_SEASON_F4/0001"
+          }
+        }
+      },
+       "ZMFP_MRP_WORKCENTER_F4": {
+        "kind": "odata-v4",
+        "model": "srv/external/ZMFP_MRP_WORKCENTER_F4",
+        "csrf": true,
+        "csrfInBatch": true,
+        "[hybrid]": {
+          "credentials": { 
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_WORKCENTER_F4/srvd/sap/ZMFP_MRP_WORKCENTER_F4/0001"
+          }
+        },        
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",            
+            "path": "/sap/opu/odata4/sap/ZMFP_MRP_WORKCENTER_F4/srvd/sap/ZMFP_MRP_WORKCENTER_F4/0001"
           }
         }
       },

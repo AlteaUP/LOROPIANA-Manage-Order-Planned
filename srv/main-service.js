@@ -24,18 +24,15 @@ module.exports = class MainService extends cds.ApplicationService {
     const ButchCustService = await cds.connect.to('ZZ1_MFP_BATCHCUSTOM_CDS');
 
     const externalATPService = await cds.connect.to("ZSD_RFM_ATP_CHANGE_WC");
-
-    const ZZ1_COMBPLANNEDORDER_F4_CDS = await cds.connect.to("ZZ1_COMBPLANNEDORDER_F4_CDS");
-    const ZZ1_PRODUCTIONPLANT_F4_CDS = await cds.connect.to("ZZ1_PRODUCTIONPLANT_F4_CDS");
-    const ZZ1_MRPCONTROLLER_F4_CDS = await cds.connect.to("ZZ1_MRPCONTROLLER_F4_CDS");
-    const ZZ1_WORKCENTER_F4_CDS = await cds.connect.to("ZZ1_WORKCENTER_F4_CDS");
-    const ZZ1_PRODUCTSEASON_F4_CDS = await cds.connect.to("ZZ1_PRODUCTSEASON_F4_CDS");
-    const ZZ1_PLANNEDORDERTYPE_F4_CDS = await cds.connect.to("ZZ1_PLANNEDORDERTYPE_F4_CDS");
     const ZZ1_ALT_LAB_CDS = await cds.connect.to("ZZ1_ALT_LAB_CDS");
     const ZZ1_PLO_OPERATIONS_CDS = await cds.connect.to("ZZ1_PLO_OPERATIONS_CDS");
     const ZZ1_MARA_CUSTOM_FIELDS_API_CDS = await cds.connect.to("ZZ1_MARA_CUSTOM_FIELDS_API_CDS");
-    const ZZ1_MRP_PLANT_F4_CDS = await cds.connect.to("ZZ1_MRP_PLANT_F4_CDS");
     const zmfp_mrp_plant_f4 = await cds.connect.to("zmfp_mrp_plant_f4");
+    const ZMFP_MRP_COMBINEDPLNDORDER_F4 = await cds.connect.to("ZMFP_MRP_COMBINEDPLNDORDER_F4");
+    const ZMFP_MRP_CONTROLLER_F4 = await cds.connect.to("ZMFP_MRP_CONTROLLER_F4");
+    const ZMFP_MRP_PLANNEDORDER_TYPE_F4 = await cds.connect.to("ZMFP_MRP_PLANNEDORDER_TYPE_F4");
+    const ZMFP_MRP_PRODUCT_SEASON_F4 = await cds.connect.to("ZMFP_MRP_PRODUCT_SEASON_F4");
+    const ZMFP_MRP_WORKCENTER_F4 = await cds.connect.to("ZMFP_MRP_WORKCENTER_F4");
     const ZZ1_RFM_WRKCHARVAL_F4_CDS = await cds.connect.to("ZZ1_RFM_WRKCHARVAL_F4_CDS");
 
 
@@ -1809,18 +1806,6 @@ module.exports = class MainService extends cds.ApplicationService {
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
     });
 
-    this.on("*", "ZZ1_CombPlannedOrder_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
-      }
-      const res = await ZZ1_COMBPLANNEDORDER_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
-      return res;
-    });
-
     /*  this.on("*", "ZZ1_PRODUCTIONPLANT_F4", async (req) => {
        // Cerca eventuale Symbol(original)
        const symbols = Object.getOwnPropertySymbols(req.query);
@@ -1853,60 +1838,36 @@ module.exports = class MainService extends cds.ApplicationService {
          res['$count'] = res.length;
          return res;
        }); */
-
+    //Match code ProductionPlant
     this.on("*", "ZC_RFM_PRODUCTION_PLANT_F4", async (req) => {
       const result = await zmfp_mrp_plant_f4.run(req.query);
       return result;
     });
-
-    this.on("*", "ZZ1_WORKCENTER_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
-      }
-      const res = await ZZ1_WORKCENTER_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
-      return res;
+    //Match code CplndOrd
+    this.on("*", "ZC_RFM_COMBPLANNEDORD_F4", async (req) => {
+      const result = await ZMFP_MRP_COMBINEDPLNDORDER_F4.run(req.query);
+      return result;
     });
-
-    this.on("*", "ZZ1_MRPCONTROLLER_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
-      }
-      const res = await ZZ1_MRPCONTROLLER_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
-      return res;
+    //Match code MRPController
+    this.on("*", "ZC_RFM_MRPCONTROLLER_F4", async (req) => {
+      const result = await ZMFP_MRP_CONTROLLER_F4.run(req.query);
+      return result;
     });
-
-    this.on("*", "ZZ1_PRODUCTSEASON_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
-      }
-      const res = await ZZ1_PRODUCTSEASON_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
-      return res;
+    //Match code PlannedOrderType
+    this.on("*", "ZC_RFM_PLANNED_ORDER_TYPE_F4", async (req) => {
+      const result = await ZMFP_MRP_PLANNEDORDER_TYPE_F4.run(req.query);
+      return result;
     });
-
-    this.on("*", "ZZ1_PLANNEDORDERTYPE_F4", async (req) => {
-      const newQuery = JSON.parse(JSON.stringify(req.query));
-      if (newQuery.SELECT) {
-        delete newQuery.SELECT.limit;
-        delete newQuery.SELECT.offset;
-      }
-      const res = await ZZ1_PLANNEDORDERTYPE_F4_CDS.run(newQuery);
-      console.log({ query: JSON.stringify(req.query), res });
-      res['$count'] = res.length;
-      return res;
+    //Match code ProductSeason
+    this.on("*", "ZC_RFM_PLO_PRODUCT_SEASON_F4", async (req) => {
+      const result = await ZMFP_MRP_PRODUCT_SEASON_F4.run(req.query);
+      return result;
     });
-
+    //Match code WorkCenter
+    this.on("*", "ZC_RFM_WORKCENTER_F4", async (req) => {
+      const result = await ZMFP_MRP_WORKCENTER_F4.run(req.query);
+      return result;
+    });
     //hook per gestire icona in tab Componenti
     this.after('READ', "ZZ1_CombinedPlnOrdersAPI/to_CombinPlannedOrdersCom", async (data) => {
       const isEmptyOrN = v => v === undefined || v === null || v === '' || v === 'N';

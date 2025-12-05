@@ -394,6 +394,7 @@ sap.ui.define(
                         // sommatoria AvaibilityQty 
                         const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
                         console.log("Total Availability Quantity: ", TotAvaibilityQty);
+                        const selectedItemLength = _selectedItems.length;
 
                         _selectedItems.forEach((_item) => {
                             const item = structuredClone(_item)
@@ -401,7 +402,13 @@ sap.ui.define(
                             const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
                             // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
                             // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-                            const QTA_ASS_V = Math.min(parseInt(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
+                            let QTA_ASS_V;
+                            if (selectedItemLength === 1) {
+                                let remainingQtyNumber = Number(remainingQty);
+                                QTA_ASS_V = remainingQtyNumber;
+                            } else {
+                                QTA_ASS_V = Math.min(Number(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
+                            }
 
                             const SAP_UUID = crypto.randomUUID()
                             //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
@@ -529,14 +536,27 @@ sap.ui.define(
                         // Ricostruisco gli item originali
                         let reconstructed = selected.indices.map(i => items[i]);
 
-                        // Filtro quelli che hanno StorageLocationStock > RequiredQty
-                        const filtered = reconstructed.filter(item => Number(item.StorageLocationStock) > RequiredQty);
+                        // Filtro quelli che hanno StorageLocationStock >= RequiredQty
+                        const filtered = reconstructed.filter(
+                            item => Number(item.StorageLocationStock) >= RequiredQty
+                        );
 
-                        // Se esiste almeno un record che rispetta la condizione, prendo solo quello
-                        // altrimenti lascio la lista completa originale
-                        _selectedItems = filtered.length > 0 ? filtered : reconstructed;
+                        if (filtered.length > 1) {
+                            // Ordino in ordine crescente per StorageLocationStock
+                            filtered.sort((a, b) => Number(a.StorageLocationStock) - Number(b.StorageLocationStock));
+
+                            // Prendo solo il primo
+                            _selectedItems = [filtered[0]];
+
+                        } else if (filtered.length === 1) {
+                            _selectedItems = filtered;
+
+                        } else {
+                            _selectedItems = reconstructed;
+                        }
+
                     } else {
-                        _selectedItems = [items[selected.indices[0]]]; // solo 1 record originale
+                        _selectedItems = [items[selected.indices[0]]];
                     }
 
                     //Aggiunta codice per assegnazione 
@@ -681,7 +701,7 @@ sap.ui.define(
 
                                             var requiredQty = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRequiredQuantityA").getText()
 
-                                            sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA").setText(Number(requiredQty) - Number(sNewValue));
+                                            //sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA").setText(Number(requiredQty) - Number(sNewValue));
                                         }
                                     }),
                                     //new sap.m.Text({ text: "{BatchBySupplier}" })
@@ -690,8 +710,8 @@ sap.ui.define(
                             templateShareable: false,
                             parameters: { $$updateGroupId: 'CreatePezzeBatch' },
                         });
-                        const RemainingQty = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA");
-                        RemainingQty.setText(dialog.getModel("selected").oData.OpenQty);
+                        //const RemainingQty = sap.ui.getCore().byId("manageplannedorder.manageplannedorder::StockPage--fragmentPezze1--inputRemainingQtyA");
+                        //RemainingQty.setText(dialog.getModel("selected").oData.OpenQty);
                         const binding = table.getBinding('items');
                         binding.resetChanges();
                         const oODataModel = table.getModel();
@@ -750,6 +770,7 @@ sap.ui.define(
                             // sommatoria AvaibilityQty 
                             const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
                             console.log("Total Availability Quantity: ", TotAvaibilityQty);
+                            const selectedItemLength = _selectedItems.length;
 
                             _selectedItems.forEach((_item) => {
                                 const item = structuredClone(_item)
@@ -757,7 +778,13 @@ sap.ui.define(
                                 const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
                                 // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
                                 // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-                                const QTA_ASS_V = Math.min(parseInt(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
+                                let QTA_ASS_V;
+                                if (selectedItemLength === 1) {
+                                    let remainingQtyNumber = Number(remainingQty);
+                                    QTA_ASS_V = remainingQtyNumber;
+                                } else {
+                                    QTA_ASS_V = Math.min(Number(oContextComponent.AvailableQuantity), (oContextComponent.AvailableQuantity * (COPERTURA / 100)));
+                                }
 
                                 const SAP_UUID = crypto.randomUUID()
                                 //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata

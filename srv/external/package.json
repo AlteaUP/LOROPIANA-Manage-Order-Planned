@@ -112,6 +112,26 @@
       "ZZ1_RFM_WRKCHARVAL_F4_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_RFM_WRKCHARVAL_F4_CDS"
+      },
+      "ZMFP_MRP_COMBINEDPLNDORDER_F4": {
+        "kind": "odata",
+        "model": "srv/external/ZMFP_MRP_COMBINEDPLNDORDER_F4"
+      },
+      "ZMFP_MRP_CONTROLLER_F4": {
+        "kind": "odata",
+        "model": "srv/external/ZMFP_MRP_CONTROLLER_F4"
+      },
+      "ZMFP_MRP_PLANNEDORDER_TYPE_F4": {
+        "kind": "odata",
+        "model": "srv/external/ZMFP_MRP_PLANNEDORDER_TYPE_F4"
+      },
+      "ZMFP_MRP_PRODUCT_SEASON_F4": {
+        "kind": "odata",
+        "model": "srv/external/ZMFP_MRP_PRODUCT_SEASON_F4"
+      },
+      "ZMFP_MRP_WORKCENTER_F4": {
+        "kind": "odata",
+        "model": "srv/external/ZMFP_MRP_WORKCENTER_F4"
       }
     }
   },

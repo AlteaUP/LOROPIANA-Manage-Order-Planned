@@ -139,14 +139,14 @@ sap.ui.define([
           // Usa l'array hiddenColumns per gestire visibilità
           $lastPopover.find(".sapMSLI").each(function () {
             var sText = $(this).text(); // NO trim(), controllo esatto
-
+            let normalizedText = that.normalizeHeader(sText);
             // Se la colonna è nell'array hiddenColumns, nascondila
-            if (that.hiddenColumns.includes(sText)) { // that.hiddenColumns
+            if (that.hiddenColumns.includes(normalizedText)) { // that.hiddenColumns
               $(this).hide();
-              console.log("Nascosta colonna dal filtro:", sText);
+              console.log("Nascosta colonna dal filtro:", normalizedText);
             } else {
               $(this).show(); // Rendi visibile se non è in hiddenColumns
-              console.log("Mostrata colonna nel filtro:", sText);
+              console.log("Mostrata colonna nel filtro:", normalizedText);
             }
           });
         }
@@ -165,9 +165,15 @@ sap.ui.define([
         oButton.data("listenerAttached", true); // evita attach multipli
       }
     },
+    // funzione di normalizzazione dei nomi colonne
+    normalizeHeader: function (txt) {
+      if (txt === "InventorySpecialStockType") {
+        return "InventorySpecialStoc";
+      }
+      return txt;
+    },
     onPressSettings: function (oEvent) {
       var that = this;
-
       setTimeout(function () {
         // prendo tutti i dialog aperti
         var aDialogs = sap.m.InstanceManager.getOpenDialogs();
@@ -182,7 +188,6 @@ sap.ui.define([
               var oTable = aTables[0];
               var aItems = oTable.getItems();
               console.log(that.hiddenColumns);
-              // nascondi Batch dal tab Colonne
               aItems.forEach(oItem => {
                 let sLabel = "";
                 try {
@@ -190,20 +195,20 @@ sap.ui.define([
                 } catch (e) {
                   sLabel = "";
                 }
-
-                if (that.hiddenColumns.includes(sLabel)) {
+                let normalizedLabel = that.normalizeHeader(sLabel);
+                if (that.hiddenColumns.includes(normalizedLabel)) {
                   oItem.setVisible(false);
-                  console.log("Nascosta colonna:", sLabel);
+                  console.log("Nascosta colonna:", normalizedLabel);
                 }
               });
 
-              // nascondi/rimuovi Batch da Classifica e Raggruppa
+              // nascondi/rimuovi da Classifica e Raggruppa
               oDialog.findAggregatedObjects(true).forEach(function (oCtrl) {
                 if (oCtrl.getText) {
                   const sText = oCtrl.getText();
-
+                  let normalizedText = that.normalizeHeader(sText);
                   // Verifica se il testo della colonna è dentro hiddenColumns
-                  if (that.hiddenColumns.includes(sText)) {
+                  if (that.hiddenColumns.includes(normalizedText)) {
                     // item nelle tendine
                     if (oCtrl.isA && (
                       oCtrl.isA("sap.ui.core.Item") ||
@@ -212,7 +217,7 @@ sap.ui.define([
                       const oParent = oCtrl.getParent && oCtrl.getParent();
                       if (oParent && typeof oParent.removeItem === "function") {
                         oParent.removeItem(oCtrl);
-                        console.log("Rimossa colonna '" + sText + "' da:", oParent.getMetadata().getName());
+                        console.log("Rimossa colonna '" + normalizedText + "' da:", oParent.getMetadata().getName());
                         return;
                       }
                     }
@@ -224,7 +229,7 @@ sap.ui.define([
                     }
                     if (oHideTarget && typeof oHideTarget.setVisible === "function") {
                       oHideTarget.setVisible(false);
-                      console.log("Nascosta riga colonna:", sText);
+                      console.log("Nascosta riga colonna:", normalizedText);
                     }
                   }
                 }
@@ -328,6 +333,7 @@ sap.ui.define([
             .filter(v => v && v !== "");
 
           that.hiddenColumns = []; // reset array
+          let visibleCounter = 0;
 
           oTableStock.getColumns().forEach(col => {
             let headerText = col.getHeader().getText();
@@ -337,14 +343,34 @@ sap.ui.define([
               headerText = "InventorySpecialStoc";
             }
             if (resultFields.includes(headerText)) {
-              // Colonna autorizzata → assicurati che sia visibile
+              // Colonna autorizzata → visibile
               col.setVisible(true);
+              visibleCounter++;
             } else {
               // Colonna non autorizzata → nascondi e aggiungi a hiddenColumns
               col.setVisible(false);
               that.hiddenColumns.push(headerText);
             }
           });
+          //Se nessuna colonna è visibile → imposta Stock (0)
+          if (visibleCounter === 0) {
+            var oToolbar = oTableStock.getHeaderToolbar && oTableStock.getHeaderToolbar();
+            if (oToolbar) {
+              oToolbar.getContent().forEach(function (oCtrl) {
+                if (oCtrl.isA && oCtrl.isA("sap.m.Title") && oCtrl.getText) {
+                  var sText = oCtrl.getText();
+                  var sNewText;
+                  if (/\(\d+\)/.test(sText)) {
+                    sNewText = sText.replace(/\(\d+\)/, "(0)");
+                  } else {
+                    sNewText = sText + " (0)";
+                  }
+                  oCtrl.setText(sNewText);
+                  console.log("Titolo tabella aggiornato:", sNewText);
+                }
+              });
+            }
+          }
           oTableStock.setBusy(false);
         })
         .catch(err => {
