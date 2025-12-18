@@ -208,6 +208,15 @@
                       "header": "",
                       "width": "50px"
                     }
+                  },
+                  "actions": {
+                    "AssegnaAuto": {
+                      "press": "manageplannedorder.manageplannedorder.ext.controller.AssegnaAuto.doAssegnaAuto",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "Assegna Auto"
+                    }
                   }
                 }
               },

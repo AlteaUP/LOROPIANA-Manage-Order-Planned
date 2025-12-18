@@ -10,13 +10,50 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
             debugger;
             const that = this;
             this.oStart = true;
+            const idTableMasterPlanned = 'manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIObjectPage--fe::table::to_ZZ1_MasterPlannedOrders::LineItem::MasterPlannedOrder-innerTable';
+            const oTableMasterPlanned = sap.ui.getCore().byId(idTableMasterPlanned);
+            if (oTableMasterPlanned) {
+                oTableMasterPlanned.attachUpdateFinished(function once(oEvent) {
+                    // Aggancia una sola volta
+                    oTableMasterPlanned.detachUpdateFinished(once);
+
+                    const aRows = oTableMasterPlanned.isA("sap.m.Table")
+                        ? oTableMasterPlanned.getItems()
+                        : oTableMasterPlanned.getRows();
+
+                    aRows.forEach(row => {
+                        row.setType("Active");
+                    });
+
+                    oTableMasterPlanned.attachItemPress(function (oEvent) {
+                        debugger;
+                        // Item cliccato
+                        const oItem = oEvent.getParameter("listItem");
+                        const oContext = oItem.getBindingContext();
+                        // Valore del campo MasterPlannedOrder
+                        const FshMplndOrd = oContext.getObject().FshMplndOrd;
+
+                        // URL dinamico
+                        const url =
+                            "https://lpapps20.lp.corp:8001/sap/bc/ui2/flp#MasterPlannedOrder-manage&/C_RFM_ManageMasterPlndOrder('" +
+                            FshMplndOrd +
+                            "')";
+
+                        // Navigazione verso app standard
+                        window.open(url, "_blank");
+
+                        console.log("Item pressed:", FshMplndOrd);
+                    });
+
+                });
+            }
             this._fnUpdateFinished = async function (oEvent) {
                 const oTable = oEvent.getSource();
                 const aRows = oTable.getItems();
                 const oModel = that.getView().getModel();
                 //const oGlobalObj = this.getBindingContext().getObject();
                 // 1) Prepara le Promises: una per ciascuna riga
-                const aPromises = aRows.map(oRow => {
+/*                 const aPromises = aRows.map(oRow => {
                     const oContext = oRow.getBindingContext();
                     const item = oContext.getObject();
                     //const item = oRow.getBindingContext().getObject();
@@ -40,9 +77,9 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                         .catch(err => {
                             return { oRow, err };
                         });
-                });
+                }); */
                 // 2) Esegui TUTTE le Promises in parallelo
-                const aResults = await Promise.all(aPromises);
+   /*              const aResults = await Promise.all(aPromises);
                 // 3) Applica highlight in base ai risultati
                 aResults.forEach(({ oRow, oResult, err }) => {
                     const itm = oRow.getBindingContext().getObject();
@@ -60,8 +97,18 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                         );
                     }
 
-                });
+                }); */
                 aRows.forEach((oRow) => {
+                    const item = oRow.getBindingContext().getObject();
+                    if (item.flagHighlights === "X") {
+                        const match = parseFloat(item.CombPlanAllQty) >= parseFloat(item.RequiredQuantity);
+                        oRow.setHighlight(match ? "Success" : "Error");
+                        oRow.setHighlightText(
+                            match
+                                ? "Quantity matches"
+                                : "Quantity does not match"
+                        );
+                    }
                     const aControls = oRow.findAggregatedObjects(true, function (oControl) {
                         return true;
                     });
@@ -157,13 +204,6 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                 this._setupUpdateFinishedHandler(oTable);
             }, 150);
         },
-        /*  onItemPress: function (oEvent) {
-             debugger;
-             // Segna che stai navigando via
-             sessionStorage.setItem("navigatedAway", "true");
- 
-             // Il tuo codice di navigazione normale...
-         }, */
         _setupUpdateFinishedHandler: function (oTable) {
             debugger;
             if (oTable && this._fnUpdateFinished) {

@@ -127,7 +127,14 @@ module.exports = class MainService extends cds.ApplicationService {
       if (!cols.some(c => c.ref && c.ref[0] === 'BOOWorkCenterInternalID')) {
         req.query.SELECT.columns.push({ ref: ['BOOWorkCenterInternalID'] });
       }
-      const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      let res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query)
+      //rimuovi eventuali duplicati usando solo CombinedMasterOrder Sequence Operation SubOperation come chiave
+      const key = item =>
+        `${item.CombinedMasterOrder}::${item.Sequence}::${item.Operation}::${item.SubOperation}`;
+
+      res = Array.from(
+        new Map(res.map(item => [key(item), item])).values()
+      );
       return res;
     });
 
@@ -501,19 +508,28 @@ module.exports = class MainService extends cds.ApplicationService {
       const grouped = {};
       for (const row of res) {
         const mat = row.Material;
+        const reqQty = Number(row.RequiredQuantity || 0);
 
         if (!grouped[mat]) {
           grouped[mat] = {
             ...row,
             RequiredQuantity: 0,
             CombPlanAllQty: 0,
-            AvailableQuantity: 0
+            AvailableQuantity: 0,
+            orderDetails: []
           };
         }
 
-        grouped[mat].RequiredQuantity += Number(row.RequiredQuantity || 0);
+        grouped[mat].RequiredQuantity += reqQty;
         grouped[mat].CombPlanAllQty += Number(row.CombPlanAllQty || 0);
         grouped[mat].AvailableQuantity += Number(row.AvailableQuantity || 0);
+
+        //dettaglio ordine + materiale
+        grouped[mat].orderDetails.push({
+          CplndOrd: row.CplndOrd,
+          Material: row.Material,
+          RequiredQuantity: reqQty
+        });
       }
 
       const aggregated = Object.values(grouped);
@@ -924,6 +940,13 @@ module.exports = class MainService extends cds.ApplicationService {
           AvaibilityQty: newAvaibilityQty
         };
       });
+      finalRes = finalRes.filter(item => parseFloat(item.StorageLocationStock) !== 0);
+
+      const isZeroRecord = item =>
+        Number(item.AvaibilityQty) === 0 &&
+        Number(item.CombPlanAllQty) === 0;
+
+      finalRes.sort((a, b) => isZeroRecord(a) - isZeroRecord(b));
       // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - FINE
       finalRes['$count'] = finalRes.length.toString();
       return finalRes;
@@ -1166,7 +1189,7 @@ module.exports = class MainService extends cds.ApplicationService {
             : "";
 
           row.CombPlanAllQty = CombPlanAllQty;
-          row.TotalPlanAllQty = TotalPlanAllQty;
+          row.TotalPlanAllQty = TotalPlanAllQty.toFixed(3).toString();
           row.Scorta = Scorta;
         }
       }
@@ -1252,6 +1275,13 @@ module.exports = class MainService extends cds.ApplicationService {
           AvaibilityQty: newAvaibilityQty
         };
       });
+      finalRes = finalRes.filter(item => parseFloat(item.StorageLocationStock) !== 0);
+
+      const isZeroRecord = item =>
+        Number(item.AvaibilityQty) === 0 &&
+        Number(item.CombPlanAllQty) === 0;
+
+      finalRes.sort((a, b) => isZeroRecord(a) - isZeroRecord(b));
       // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - FINE
       finalRes['$count'] = finalRes.length.toString();
       return finalRes;
@@ -1735,6 +1765,490 @@ module.exports = class MainService extends cds.ApplicationService {
         return req.error(500, err.message);
       }
     });
+
+    //action Assegnazione automatica
+    this.on("AssegnaAuto", async (req) => {
+      const object = req.data.Payload;
+      const material = object.Material;
+      const cplndOrd = object.CplndOrd;
+
+      const where = {
+        Material: object.Material,
+        Plant: object.ProductionPlant
+      };
+
+      const stockData = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT.from("ZZ1_CombPlnOrdersStock").where(where)
+      );
+      // modifica MDB - 06/08/2025 - estraggo record selezionato da tabella Componenti - INIZIO
+      const stockByMaterial = await ZZ1_COMBPLNORDERSSTOCKAPI_CDS.run(
+        SELECT
+          .from("ZZ1_CombPlnOrdersStockAPI")
+          .columns("*")
+          .where([
+            { ref: ['Material'] }, '=', { val: material },
+            'and',
+            { ref: ['CplndOrd'] }, '=', { val: cplndOrd }
+          ])
+      );
+      // modifica MDB - 06/08/2025 - estraggo record selezionato da tabella Componenti - FINE
+      if (!Array.isArray(stockData) || stockData.length === 0) return stockData;
+
+      const PlannedCombinedOrder = cplndOrd;
+
+      // 3. Batch query for TotalProdAllQty
+      const prodAllQtyPromise = ZZ1_I_ARUN_BDBSSUMQTY_CDS.run(
+        SELECT.from('ZZ1_I_ARUN_BDBSSUMQTY_CDS')
+          .where({
+            Plant: { in: stockData.map(i => i.Plant) },
+            Material: { in: stockData.map(i => i.Material) }
+          })
+      );
+
+
+      // 4. Batch query for TotalPlanAllQty
+      const planAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
+
+      // 5. Batch query for CombPlanAllQty with the specific planned order
+      const combPlanAllQtyPromise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            //FSH_MPLO_ORD: PlannedCombinedOrder,
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
+      const combPlanAllQtyO_Promise = ZZ1_MFP_ASSIGNMENT_CDS.run(
+        SELECT.from('ZZ1_MFP_ASSIGNMENT')
+          .where({
+            FSH_MPLO_ORD: `${PlannedCombinedOrder}_O`,
+            WERKS: { in: stockData.map(i => i.Plant) },
+            MATNR: { in: stockData.map(i => i.Material) }
+          })
+      );
+      // 6. Batch query for TotalDeliveryQty
+      const deliveryQtyPromise = ZZ1_I_SUMQTYDELIVERY_T_CDS.run(
+        SELECT.from('ZZ1_I_SUMQTYDELIVERY_T')
+          .where({
+            Material: { in: stockData.map(i => i.Material) },
+            StorLoc: { in: stockData.map(i => i.StorageLocation) }
+          })
+      );
+      // modifica DL - 10/06/2025 - recupero atp
+      const atpRulesPromise = ZI_RFM_ATP_RULES_CDS.run(
+        SELECT.from('ZI_RFM_ATP_RULES')
+          .where({
+            CplndOrd: object.CplndOrd,
+            CrossPlantConfigurableProduct: object.CrossPlantConfigurableProduct,
+            Material: object.Material,
+            Plant: object.ProductionPlant,
+            StorageLocation: object.StorageLocation,
+            Batch: object.Batch,
+            BillOfMaterialItemNumber_2: object.BillOfMaterialItemNumber_2
+          })
+      );
+      // modifica DL - 10/06/2025 - recupero atp - FINE
+
+      // 7. Execute all queries in parallel
+      const [prodAllQtyData, planAllQtyDataRaw, combPlanAllQtyDataRaw, deliveryQtyData, atpRulesData, combPlanAllQtyO_Data] =
+        await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise, atpRulesPromise, combPlanAllQtyO_Promise]);
+
+      const combPlanAllQtyData = (combPlanAllQtyDataRaw || []).filter(row =>
+        !(
+          typeof row.FSH_MPLO_ORD === 'string' &&
+          row.FSH_MPLO_ORD.endsWith('_O')
+        )
+      )
+      const planAllQtyData = (planAllQtyDataRaw || []).filter(row =>
+        !(
+          typeof row.FSH_MPLO_ORD === 'string' &&
+          row.FSH_MPLO_ORD.endsWith('_O')
+        )
+      )
+      // 8. Create lookup maps for faster association
+      const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
+      const planAllQtyMap = createLookupMap(planAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
+      const combPlanAllQtyO_Map = createLookupMap(combPlanAllQtyO_Data, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+
+      // 9. Process results with maps instead of additional queries
+      var res = stockData.filter(({ InventoryStockType }) => InventoryStockType === '01').map(item => {
+        const { Plant, Material, StorageLocation, Batch } = item;
+        const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+
+        const prodItems = prodAllQtyMap[key] || [];
+        const planItems = planAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+        const combPlanItems = combPlanAllQtyMap[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+        const deliveryItems = deliveryQtyMap[`${Material}|${StorageLocation}|${Batch}`] || [];
+        const combPlanO_Items = combPlanAllQtyO_Map[`${Plant}|${Material}|${StorageLocation}|${Batch}`] || [];
+
+        const TotalProdAllQty = sumValues(prodItems, 'TotalAllocQty');
+        const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
+        const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+        const TotalDeliveryQty = sumValues(deliveryItems, 'TotDeliveryQty');
+        const Scorta = combPlanO_Items.length > 0
+          ? combPlanO_Items[0].Scorta
+          : "";
+        let StorageLocationStock = parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString();
+
+        let AvaibilityQty = (parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit) -
+          TotalProdAllQty - TotalPlanAllQty - TotalDeliveryQty).toFixed(3).toString();
+        if (AvaibilityQty < 0) AvaibilityQty = "0.000";
+        return {
+          ...item,
+          StorageLocationStock,
+          TotalProdAllQty: TotalProdAllQty.toFixed(3).toString(),
+          TotalPlanAllQty: TotalPlanAllQty.toFixed(3).toString(),
+          CombPlanAllQty: CombPlanAllQty.toFixed(3).toString(),
+          AvaibilityQty,
+          TotalInDelQty: TotalDeliveryQty.toFixed(3).toString(),
+          CustomQty: parseFloat(item.MatlWrhsStkQtyInMatlBaseUnit).toFixed(3).toString(),
+          Scorta
+        };
+      });
+
+      // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation
+      if (atpRulesData.length > 0) {
+        var atpRulesArray = JSON.parse(atpRulesData[0].atp)
+        var filteredData = res.filter(item => atpRulesArray.includes(item.StockSegment));
+
+        // sorto per valori atpRulesData
+        filteredData.sort((a, b) => atpRulesArray.indexOf(a.StockSegment) - atpRulesArray.indexOf(b.StockSegment));
+
+        // valorizzo campo StockSegmentCode
+        var result = filteredData.map(obj => ({
+          ...obj,
+          StockSegmentCode: (atpRulesArray.indexOf(obj.StockSegment)) + 1
+        }));
+
+        res = result
+      }
+      // modifica DL - 10/06/2025 - elimino record che non hanno valore atp nello stockSegmentation - FINE
+
+      // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto INIZIO
+      const operation = stockByMaterial.map(item => item.Operation_2);
+      const capacityData = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
+        SELECT
+          .from('ZZ1_PLOCAPACITYCORD')
+          .columns('*')
+          .where({
+            Operation: operation,
+            fornitore: { '!=': '' },
+            CombinedMasterOrder: cplndOrd
+          })
+      );
+      const wasEmpty = new WeakSet();
+      for (const row of res) {
+        if (!row.StorageLocation) wasEmpty.add(row);
+      }
+      const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
+      const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
+
+      const storageLocations = ['H100', 'P100', 'K100'];
+      res = res
+        // filtra StorageLocation vuoto o valido
+        .filter(row => !row.StorageLocation || storageLocations.includes(row.StorageLocation))
+        // filtra e valida Supplier
+        .filter(row => {
+          if (!row.Supplier && !row.StorageLocation) return false; // entrambi vuoti → scarta
+
+          if (row.Supplier) {
+            const paddedSupplier = row.Supplier.padStart(maxSupplierLength, '0');
+            if (!validSuppliers.includes(paddedSupplier)) return false; // non valido → scarta
+            row.Supplier = row.Supplier.replace(/^0+/, ''); // rimuove padding subito
+          }
+          return true;
+        })
+        // assegna StorageLocation = Supplier quando manca
+        .map(row => {
+          if (!row.StorageLocation && row.Supplier) {
+            row.StorageLocation = row.Supplier;
+          }
+          return row;
+        });
+      for (const row of res) {
+        if (wasEmpty.has(row) && row.StorageLocation) {
+          const { Plant, Material, StorageLocation, Batch } = row;
+
+          const key = `${Plant}|${Material}|${StorageLocation}|${Batch}`;
+
+          const planItems = planAllQtyMap[key] || [];
+          const combPlanItems = combPlanAllQtyMap[key] || [];
+          const combPlanO_Items = combPlanAllQtyO_Map[key] || [];
+
+          const CombPlanAllQty = sumValues(combPlanItems, 'QTA_ASS_V');
+          const TotalPlanAllQty = sumValues(planItems, 'QTA_ASS_V');
+          const Scorta = combPlanO_Items.length > 0
+            ? combPlanO_Items[0].Scorta
+            : "";
+
+          row.CombPlanAllQty = CombPlanAllQty;
+          row.TotalPlanAllQty = TotalPlanAllQty;
+          row.Scorta = Scorta;
+        }
+      }
+      res.forEach((rec, idx) => {
+        // Generiamo un valore univoco solo con l'indice
+        const unique = () => `_${idx}`;
+
+        rec.Material = rec.Material || unique();
+        rec.Plant = rec.Plant || unique();
+        rec.StorageLocation = rec.StorageLocation || unique();
+        rec.Batch = rec.Batch || unique();
+        rec.Supplier = rec.Supplier || unique();
+        rec.SDDocument = rec.SDDocument || unique();
+        rec.SDDocumentItem = rec.SDDocumentItem || unique();
+        rec.WBSElementInternalID = rec.WBSElementInternalID || unique();
+        rec.Customer = rec.Customer || unique();
+        rec.SpecialStockIdfgStockOwner = rec.SpecialStockIdfgStockOwner || unique();
+        rec.InventoryStockType = rec.InventoryStockType || unique();
+        rec.InventorySpecialStockType = rec.InventorySpecialStockType || unique();
+        rec.MaterialBaseUnit = rec.MaterialBaseUnit || unique();
+        rec.CostEstimate = rec.CostEstimate || unique();
+        rec.ResourceID = rec.ResourceID || unique();
+
+        // Log leggibile con nomi dei campi
+        console.log(
+          `Index: ${idx}`,
+          `Material: ${rec.Material}`,
+          `Plant: ${rec.Plant}`,
+          `StorageLocation: ${rec.StorageLocation}`,
+          `Batch: ${rec.Batch}`,
+          `Supplier: ${rec.Supplier}`,
+          `SDDocument: ${rec.SDDocument}`,
+          `SDDocumentItem: ${rec.SDDocumentItem}`,
+          `WBSElementInternalID: ${rec.WBSElementInternalID}`,
+          `Customer: ${rec.Customer}`,
+          `SpecialStockIdfgStockOwner: ${rec.SpecialStockIdfgStockOwner}`,
+          `InventoryStockType: ${rec.InventoryStockType}`,
+          `InventorySpecialStockType: ${rec.InventorySpecialStockType}`,
+          `MaterialBaseUnit: ${rec.MaterialBaseUnit}`,
+          `CostEstimate: ${rec.CostEstimate}`,
+          `ResourceID: ${rec.ResourceID}`
+        );
+      });
+
+      // modifica MDB - 06/08/2025 - filtrare record in base a fornitore e valorizzare StorageLocation vuoto FINE
+
+      // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - INIZIO
+      // raggruppamento per StorageLocation + Batch
+      let consolidatedMap = new Map();
+
+      res.forEach(item => {
+        const groupKey = `${item.StorageLocation}|${item.Batch}`;
+
+        if (!consolidatedMap.has(groupKey)) {
+          // Primo record del gruppo - mantieni tutti i campi
+          consolidatedMap.set(groupKey, {
+            ...item,  // Copia tutti i campi dal primo record
+            StorageLocationStock: parseFloat(item.StorageLocationStock)  // Converti a number per la somma
+          });
+        } else {
+          // Record successivi - somma SOLO StorageLocationStock
+          const existingRecord = consolidatedMap.get(groupKey);
+          existingRecord.StorageLocationStock += parseFloat(item.StorageLocationStock);
+        }
+      });
+
+      // Converti Map in array
+      let consolidatedRes = Array.from(consolidatedMap.values());
+
+      //Ricalcolo AvaibilityQty
+      let finalRes = consolidatedRes.map(item => {
+        // Ricalcola AvaibilityQty usando il StorageLocationStock sommato
+        let newAvaibilityQty = (item.StorageLocationStock -
+          parseFloat(item.TotalProdAllQty) -
+          parseFloat(item.TotalPlanAllQty) -
+          parseFloat(item.TotalInDelQty)).toFixed(3).toString();
+
+        if (parseFloat(newAvaibilityQty) < 0) newAvaibilityQty = "0.000";
+
+        return {
+          ...item,
+          StorageLocationStock: item.StorageLocationStock.toFixed(3).toString(), // Riconverti a string
+          AvaibilityQty: newAvaibilityQty
+        };
+      });
+      finalRes = finalRes.filter(item => parseFloat(item.StorageLocationStock) !== 0);
+
+      const isZeroRecord = item =>
+        Number(item.AvaibilityQty) === 0 &&
+        Number(item.CombPlanAllQty) === 0;
+
+      finalRes.sort((a, b) => isZeroRecord(a) - isZeroRecord(b));
+      // modifica MDB - 16/09/2025 - sommare StorageLocationStock a parità di StorageLocation e batch e riassegnare AvaibilityQty con StorageLocationStock - FINE
+      finalRes['$count'] = finalRes.length.toString();
+
+      //raggruppamento per assegnazione automatica
+      const items = [];
+      let _selectedItems = [];
+
+      for (let i = 0; i < finalRes.length; i++) {
+        const item = finalRes[i];
+        //Escludi i record con AvaibilityQty === 0 e CombPlanAllQty === 0
+        const AvaibilityQty = parseFloat(item.AvaibilityQty);
+        const CombPlanAllQty = parseFloat(item.CombPlanAllQty);
+
+        // Se ENTRAMBI sono zero → salta questo record
+        if (AvaibilityQty === 0 && CombPlanAllQty === 0) {
+          continue; // salta il push
+        }
+
+        items.push(item);
+      }
+
+      let RequiredQty = Number(object.RequiredQuantity);
+
+      const grouped = Object.values(
+        items.reduce((acc, item, index) => {
+          const key = `${item.BatchBySupplier}_${item.StorageLocation}`;
+
+          if (!acc[key]) {
+            acc[key] = {
+              BatchBySupplier: item.BatchBySupplier,
+              StorageLocation: item.StorageLocation,
+              StorageLocationStock: 0,
+              indices: [] // salvo gli indici degli elementi originali
+            };
+          }
+
+          acc[key].StorageLocationStock += Number(item.StorageLocationStock) || 0;
+          acc[key].indices.push(index);
+
+          return acc;
+        }, {})
+      );
+
+      // 2. Trovo il record col valore più piccolo > RequiredQty
+      const selected = grouped
+        .filter(g => Number(g.StorageLocationStock) > RequiredQty)
+        .sort((a, b) => Number(a.StorageLocationStock) - Number(b.StorageLocationStock))[0];
+
+      if (selected) {
+        // 3. Se contiene più di un indice → era un aggregato
+        if (selected.indices.length > 1) {
+
+          _selectedItems = selected.indices.map(i => items[i]);
+
+        } else {
+
+          // Caso singolo
+          _selectedItems = [items[selected.indices[0]]];
+
+        }
+        //Aggiunta codice per assegnazione 
+        let TotCombPlanAllQty = 0;
+        let OpenQty = 0;
+        for (let i = 0; i < _selectedItems.length; i++) {
+          const oObj = _selectedItems[i]
+          TotCombPlanAllQty += parseInt(oObj.CombPlanAllQty)
+        }
+
+        OpenQty = object.RequiredQuantity - TotCombPlanAllQty;
+        const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
+        const selectedItemLength = _selectedItems.length;
+        //controllo se ci sono assegnazioni per l'ordine
+        const existingAssignment = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+          SELECT.from("ZZ1_MFP_ASSIGNMENT").where({
+            FSH_MPLO_ORD: cplndOrd,
+            MATNR: material
+          })
+        );
+        // somma delle quantità già assegnate (0 se array vuoto)
+        const assignedQty = existingAssignment.reduce(
+          (sum, row) => sum + Number(row.QTA_ASS_V ?? 0),
+          0
+        );
+
+        // quantità residua
+        const remainingQty = RequiredQty - assignedQty;
+
+        // controllo
+        if (remainingQty <= 0) {
+          return "SKIPPED";
+        }
+
+        const insertPromises = _selectedItems.map(async (_item) => {
+          const item = structuredClone(_item);
+
+          const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+
+          let QTA_ASS_V;
+          if (selectedItemLength === 1) {
+            QTA_ASS_V = remainingQty;
+          } else {
+            QTA_ASS_V = Math.min(
+              Number(object.AvailableQuantity),
+              (object.AvailableQuantity * (COPERTURA / 100))
+            );
+          }
+
+          const SAP_UUID = crypto.randomUUID();
+
+          if (item.InventorySpecialStockType?.startsWith('_')) {
+            item.InventorySpecialStockType = '';
+          }
+          if (item.SpecialStock?.startsWith('_')) {
+            item.SpecialStock = '';
+          }
+
+          const newCreate = {
+            SAP_UUID,
+            WERKS: item.Plant,
+            LGORT: item.StorageLocation || "X",
+            FSH_MPLO_ORD: object.CplndOrd,
+            BAGNI: item.dye_lot || "X",
+            MATNR: item.Material,
+            CHARG: item.Batch,
+            QTA_ASS_V: QTA_ASS_V.toFixed(3).toString(),
+            FABB_TOT_V: item.AvaibilityQty || 0,
+            COPERTURA,
+            SORT: 0,
+            StockSegment: item.StockSegment,
+            SAP_CreatedDateTime: new Date(),
+            SAP_CreatedByUser: "LASPATAS",
+            SAP_LastChangedDateTime: new Date(),
+            SAP_LastChangedByUser: "LASPATAS",
+            BatchBySupplier: item.BatchBySupplier,
+            SpecialStock: item.InventorySpecialStockType,
+            SaldoScorta: false,
+            Scorta: ""
+          };
+
+          const existing = await ZZ1_MFP_ASSIGNMENT_CDS.run(
+            SELECT.from("ZZ1_MFP_ASSIGNMENT").where({
+              FSH_MPLO_ORD: newCreate.FSH_MPLO_ORD,
+              CHARG: newCreate.CHARG,
+              LGORT: newCreate.LGORT
+            })
+          );
+
+          if (existing.length > 0) {
+            return; // skip
+          }
+
+          return ZZ1_MFP_ASSIGNMENT_CDS.run(
+            INSERT.into("ZZ1_MFP_ASSIGNMENT").entries(newCreate)
+          );
+        });
+
+        await Promise.all(insertPromises);
+        
+        return "ASSIGNED";
+        
+      } else {
+         return "SKIPPED";
+      }
+
+    });
+
     //action per gestire highlights in tab Componenti
     this.on("ReadBatchCust", async req => {
       try {

@@ -58,8 +58,21 @@ type AltLabType            : {
   Operation : String(4);
   WorkCenterInternalID : String(8);
   CombinedMasterOrder : String(12);
-  ProductionPlant : String(4); // Represents the production plant identifier, limited to 4 characters.
+  ProductionPlant : String(4);
   Product : String(40);
+  AvailableQuantity: Decimal(16, 3);
+}
+
+type AssegnaAutoType            : {
+  Material : String(40);
+  RequiredQuantity : Decimal(14, 3);
+  ProductionPlant : String(4);
+  CplndOrd : String(12);
+  StorageLocation: String(4);
+  Batch: String(10);
+  CrossPlantConfigurableProduct: String(40);
+  BillOfMaterialItemNumber_2: String(4);
+  AvailableQuantity: Decimal(16, 3);
 }
 
 service MainService {
@@ -299,6 +312,8 @@ service MainService {
   action AltLabAction(Payload: AltLabType)                 returns array of ZZ1_ALT_LAB;
 
   action Fissazione(Payload: FissazioneType)                 returns String;
+
+  action AssegnaAuto(Payload: AssegnaAutoType)                 returns String;
 
 //action GetComponentsForOrders(orders: array of String)       returns many ZZ1_CombinPlannedOrdersCom;
 }

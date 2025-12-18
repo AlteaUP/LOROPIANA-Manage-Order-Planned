@@ -382,36 +382,18 @@ sap.ui.define([
         .filter(g => Number(g.StorageLocationStock) > RequiredQty)
         .sort((a, b) => Number(a.StorageLocationStock) - Number(b.StorageLocationStock))[0];
 
-
       if (selected) {
         // 3. Se contiene più di un indice → era un aggregato
         if (selected.indices.length > 1) {
-          // Ricostruisco gli item originali
-          let reconstructed = selected.indices.map(i => items[i]);
 
-          // Filtro quelli che hanno StorageLocationStock >= RequiredQty
-          const filtered = reconstructed.filter(
-            item => Number(item.StorageLocationStock) >= RequiredQty
-          );
-
-          if (filtered.length > 1) {
-            // Ordino in ordine crescente per StorageLocationStock
-            filtered.sort((a, b) => Number(a.StorageLocationStock) - Number(b.StorageLocationStock));
-
-            // Prendo solo il primo
-            _selectedItems = [filtered[0]];
-
-          } else if (filtered.length === 1) {
-            _selectedItems = filtered;
-
-          } else {
-            _selectedItems = reconstructed;
-          }
+          _selectedItems = selected.indices.map(i => items[i]);
 
         } else {
-          _selectedItems = [items[selected.indices[0]]];
-        }
 
+          // Caso singolo
+          _selectedItems = [items[selected.indices[0]]];
+
+        }
         //Aggiunta codice per assegnazione 
         let TotCombPlanAllQty = 0;
         let OpenQty = 0;

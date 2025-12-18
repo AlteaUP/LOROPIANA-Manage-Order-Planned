@@ -580,7 +580,8 @@ sap.ui.define([
           BusyIndicator.hide();
         });
       }.bind(this)).catch((e) => {
-        MessageToast.show("Do Assemble cancelled. " + JSON.stringify(e));
+        MessageToast.show("Do Assemble cancelled. ");
+        sap.ui.getCore().byId('fragmentPezze--_IDGenDialogPezze').close();
       });
     },
     onCloseDialog: function (oEvent) {

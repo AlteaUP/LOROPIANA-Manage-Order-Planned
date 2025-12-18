@@ -1758,7 +1758,7 @@ annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
     {
         $Type: 'UI.DataField',
         Value: AvaibilityQty,
-        Label: 'Avaibility Qty'
+        Label: 'Availability Qty'
     },
     {
         $Type: 'UI.DataField',
@@ -1996,7 +1996,7 @@ annotate service.ZZ1_CombPlnOrdersStockClone with @(UI.LineItem #Stock: [
     {
         $Type: 'UI.DataField',
         Value: AvaibilityQty,
-        Label: 'Avaibility Qty'
+        Label: 'Availability Qty'
     },
 
     {

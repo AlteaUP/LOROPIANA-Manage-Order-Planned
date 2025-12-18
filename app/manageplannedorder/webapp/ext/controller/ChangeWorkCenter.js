@@ -75,9 +75,22 @@ sap.ui.define([
                             finalFilter = new sap.ui.model.Filter({ filters, and: false });
                         }
 
+                        // filtro su plant
+                        const plantFilter = new sap.ui.model.Filter(
+                            "plant",
+                            sap.ui.model.FilterOperator.EQ,
+                            oContext.ProductionPlant
+                        );
+
+                        // filtro finale (fornitore AND plant)
+                        const combinedFilter = new sap.ui.model.Filter({
+                            filters: [finalFilter, plantFilter],
+                            and: true
+                        });
+
                         table.bindAggregation("items", {
                             path: "/ZZ1_RFM_WRKCHARVAL_F4",
-                            filters: [finalFilter],
+                            filters: [combinedFilter],
                             template: new sap.m.ColumnListItem({
                                 cells: [
                                     new sap.m.Text({ text: "{WorkCenterInternalID}" }),

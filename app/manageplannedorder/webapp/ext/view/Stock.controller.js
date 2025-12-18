@@ -533,32 +533,15 @@ sap.ui.define(
                 if (selected) {
                     // 3. Se contiene più di un indice → era un aggregato
                     if (selected.indices.length > 1) {
-                        // Ricostruisco gli item originali
-                        let reconstructed = selected.indices.map(i => items[i]);
 
-                        // Filtro quelli che hanno StorageLocationStock >= RequiredQty
-                        const filtered = reconstructed.filter(
-                            item => Number(item.StorageLocationStock) >= RequiredQty
-                        );
-
-                        if (filtered.length > 1) {
-                            // Ordino in ordine crescente per StorageLocationStock
-                            filtered.sort((a, b) => Number(a.StorageLocationStock) - Number(b.StorageLocationStock));
-
-                            // Prendo solo il primo
-                            _selectedItems = [filtered[0]];
-
-                        } else if (filtered.length === 1) {
-                            _selectedItems = filtered;
-
-                        } else {
-                            _selectedItems = reconstructed;
-                        }
+                        _selectedItems = selected.indices.map(i => items[i]);
 
                     } else {
-                        _selectedItems = [items[selected.indices[0]]];
-                    }
 
+                        // Caso singolo
+                        _selectedItems = [items[selected.indices[0]]];
+
+                    }
                     //Aggiunta codice per assegnazione 
                     let TotCombPlanAllQty = 0;
                     let OpenQty = 0;
@@ -858,107 +841,127 @@ sap.ui.define(
             },
             pressDisassegna: async function (oEvent) {
                 debugger
-                const oContextOrders = JSON.parse(sessionStorage.getItem("selectedContextsOrders") || "[]"); //ordine selezionato
-                const oContextComponent = JSON.parse(sessionStorage.getItem("selectedContextComponent") || "[]"); //componente selezionato
-                const oModel = this.getOwnerComponent().getModel();
+                sap.ui.core.BusyIndicator.show(0);
+                await Promise.resolve();
 
-                const oList = oModel.bindList("/ZZ1_MFP_ASSIGNMENT");
-                const filterCombined = new sap.ui.model.Filter({
-                    filters: (oContextOrders || [])
-                        .filter(o => o.CplndOrd)
-                        .map(o =>
+                try {
+                    const oContextOrders = JSON.parse(sessionStorage.getItem("selectedContextsOrders") || "[]"); //ordine selezionato
+                    const oContextComponent = JSON.parse(sessionStorage.getItem("selectedContextComponent") || "[]"); //componente selezionato
+                    const oModel = this.getOwnerComponent().getModel();
+
+                    const oList = oModel.bindList("/ZZ1_MFP_ASSIGNMENT");
+                    const materialOrders = (oContextComponent.orderDetails || [])
+                        .map(o => o.CplndOrd);
+                    const filterCombined = new sap.ui.model.Filter({
+                        filters: materialOrders.map(ord =>
                             new sap.ui.model.Filter({
                                 filters: [
                                     new sap.ui.model.Filter(
                                         "FSH_MPLO_ORD",
                                         sap.ui.model.FilterOperator.Contains,
-                                        o.CplndOrd
+                                        ord
                                     ),
                                     new sap.ui.model.Filter(
                                         "FSH_MPLO_ORD",
                                         sap.ui.model.FilterOperator.Contains,
-                                        `${o.CplndOrd}_O`
+                                        `${ord}_O`
                                     )
                                 ],
-                                and: false // OR tra i due filtri
+                                and: false
                             })
                         ),
-                    and: false // OR tra tutti gli ordini
-                });
-                const filterMatnr = new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, oContextComponent.Material)
-                oList.filter([filterCombined, filterMatnr]);
-
-                //BusyIndicator.show(0);
-                var pContexts = await oList.requestContexts(0, 20)
-                var aContexts = pContexts.map(oContext => oContext)
-                const iTotalToDisassemble = aContexts.length;
-
-                if (!aContexts.length) {
-                    MessageToast.show("No items to disassemble.");
-                    BusyIndicator.hide(0);
-                    return;
-                }
-
-                // modifica DL - 29/07/2025 - disassegno solo record selezionati
-                const oMacroTable = this.byId("TableStock");
-                const oInnerTable = oMacroTable.getMDCTable()._oTable;
-                const selectedItems = oInnerTable.getSelectedItems();
-                if (selectedItems.length > 0) {
-                    var batchSelected = []
-                    // creo array partite selezionate
-                    for (var i = 0; i < selectedItems.length; i++) {
-                        batchSelected.push(selectedItems[i].getBindingContext().getObject().Batch)
-                    }
-                    // elimino da aContexts quello che non è stato selezionato
-                    var aContextsToKeep = aContexts.filter(function (oContext) {
-                        const oData = oContext.getObject(); console.log(oData);
-                        return batchSelected.includes(oData.CHARG);
+                        and: false
                     });
-                    aContexts = aContextsToKeep
+                    const filterMatnr = new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, oContextComponent.Material)
+                    oList.filter([filterCombined, filterMatnr]);
+
+                    //BusyIndicator.show(0);
+                    var pContexts = await oList.requestContexts(0, 20)
+                    var aContexts = pContexts.map(oContext => oContext)
                     const iTotalToDisassemble = aContexts.length;
-                }
-                // modifica DL - 29/07/2025 - disassegno solo record selezionati - FINE
-                try {
-                    await this.showMessageConfirm(`Disassemble (${iTotalToDisassemble})`)
+
+                    if (!aContexts.length) {
+                        MessageToast.show("No items to disassemble.");
+                        //BusyIndicator.hide(0);
+                        sap.ui.core.BusyIndicator.hide();
+                        return;
+                    }
+
+                    // modifica DL - 29/07/2025 - disassegno solo record selezionati
+                    const oMacroTable = this.byId("TableStock");
+                    const oInnerTable = oMacroTable.getMDCTable()._oTable;
+                    const selectedItems = oInnerTable.getSelectedItems();
+                    if (selectedItems.length > 0) {
+                        var batchSelected = []
+                        // creo array partite selezionate
+                        for (var i = 0; i < selectedItems.length; i++) {
+                            batchSelected.push(selectedItems[i].getBindingContext().getObject().Batch)
+                        }
+                        // elimino da aContexts quello che non è stato selezionato
+                        var aContextsToKeep = aContexts.filter(function (oContext) {
+                            const oData = oContext.getObject(); console.log(oData);
+                            return batchSelected.includes(oData.CHARG);
+                        });
+                        aContexts = aContextsToKeep
+                        const iTotalToDisassemble = aContexts.length;
+                    }
+                    // modifica DL - 29/07/2025 - disassegno solo record selezionati - FINE
+                    try {
+                        await this.showMessageConfirm(`Disassemble (${iTotalToDisassemble})`)
+                    } catch (error) {
+                        MessageToast.show("Disassemble cancelled.");
+                        //BusyIndicator.hide(0);
+                        sap.ui.core.BusyIndicator.hide();
+                        return;
+                    }
+
+                    const sGroupId = 'DisassemblePezzeBatch';
+                    aContexts.forEach(function (oContext) {
+                        oContext.delete(sGroupId)
+                    });
+
+                    const oData = await oModel.submitBatch(sGroupId)
+                    //BusyIndicator.hide(0);
+                    oList.refresh();
+
+                    let hasMore = true;
+                    let batchIndex = 1;
+
+                    while (hasMore) {
+                        const contexts = await oList.requestContexts(0, 20);
+
+                        if (!contexts.length) {
+                            hasMore = false;
+                            break;
+                        }
+
+                        const sGroup = `DisassemblePezzeBatch_${batchIndex++}`;
+                        contexts.forEach(ctx => ctx.delete(sGroup));
+                        await oModel.submitBatch(sGroup);
+
+                        oList.refresh();
+                    }
+
+                    const oStockTable = this.byId("TableStock").getMDCTable()._oTable;
+                    oStockTable.refreshItems();
+                    oStockTable.getBinding("items").refresh();
+                    oStockTable.removeSelections();
                 } catch (error) {
-                    MessageToast.show("Disassemble cancelled.");
-                    BusyIndicator.hide(0);
-                    return;
+                    if (error !== "cancel") {
+                        console.error("Disassemble error:", error);
+                        MessageToast.show("Disassemble failed.");
+                    }
+                } finally {
+                    sap.ui.core.BusyIndicator.hide();
+                    MessageToast.show("Disassemble completed successfully.");
                 }
-
-                const sGroupId = 'DisassemblePezzeBatch';
-                aContexts.forEach(function (oContext) {
-                    oContext.delete(sGroupId)
-                });
-
-                const oData = await oModel.submitBatch(sGroupId)
-                BusyIndicator.hide(0);
-                oList.refresh();
-
-                // SECONDO GIRO AUTOMATICO
-                var pContexts2 = await oList.requestContexts(0, 20);
-                var aContexts2 = pContexts2.map(o => o);
-
-                if (aContexts2.length > 0) {
-                    const sGroupSecond = 'DisassemblePezzeBatch2';
-                    aContexts2.forEach(ctx => ctx.delete(sGroupSecond));
-                    await oModel.submitBatch(sGroupSecond);
-                }
-
-                // REFRESH UI
-                oList.refresh();
-                const oStockTable = this.byId("TableStock").getMDCTable()._oTable;
-                oStockTable.refreshItems();
-                oStockTable.getBinding("items").refresh();
-                oStockTable.removeSelections();
-
-                MessageToast.show("Disassemble completed successfully.");
-                BusyIndicator.hide(0)
+                //BusyIndicator.hide(0)
             },
             pressDoAssign: function (oEvent) {
                 debugger
                 var that = this
                 const oContextOrders = JSON.parse(sessionStorage.getItem("selectedContextsOrders") || "[]"); //ordine selezionato
+                const oContextComponent = JSON.parse(sessionStorage.getItem("selectedContextComponent") || "[]"); //componente selezionato
                 const oModel = this.getOwnerComponent().getModel();
                 const oTable = that.getView().byId('fragmentPezze1--selectedItemsTable1');
                 const binding = oTable.getBinding('items');
@@ -980,13 +983,21 @@ sap.ui.define(
                     .map(ctx => ({ ctx, obj: ctx.getObject() }))
                     .filter(r => r.obj && r.obj._origProposedQty !== undefined);
 
-                const ordersCount = oContextOrders.length;
+                const orderDetails = oContextComponent.orderDetails || [];
+
+                // array ordini effettivi
+                const materialOrders = orderDetails.map(o => ({
+                    CplndOrd: o.CplndOrd,
+                    RequiredQuantity: Number(o.RequiredQuantity || 0)
+                }));
+
+                const ordersCount = materialOrders.length;
                 if (ordersCount === 0) {
                     console.log("Nessun ordine selezionato, nessuno split eseguito");
                     return;
                 }
 
-                console.log("Ordini selezionati:", oContextOrders);
+                console.log("Ordini selezionati:", oContextComponent.orderDetails[0].CplndOrd);
                 console.log("Righe valide da splittare:", validRows);
 
                 const sumQtyUser = validRows.reduce(
@@ -1105,7 +1116,7 @@ sap.ui.define(
 
                         // Surplus su ordine più piccolo
                         const smallestOrder = Math.min(
-                            ...oContextOrders.map(o => Number(o.CplndOrd))
+                            ...materialOrders.map(o => Number(o.CplndOrd))
                         );
                         const surplusKey = smallestOrder + "_O";
 
@@ -1151,23 +1162,41 @@ sap.ui.define(
                     const usedQty = Number(obj.QTA_ASS_V || 0);
                     if (usedQty <= 0) return;
 
-                    const qtyPerOrder = (usedQty / ordersCount).toFixed(3);
-                    console.log(
-                        `Split finale batch ${obj.CHARG} → ${ordersCount} righe da ${qtyPerOrder}`
+                    //totale required del materiale (somma delle required per ordine)
+                    const totalRequired = materialOrders.reduce(
+                        (acc, o) => acc + o.RequiredQuantity,
+                        0
                     );
 
-                    // prima riga per il primo ordine
-                    ctx.setProperty("QTA_ASS_V", qtyPerOrder);
-                    ctx.setProperty("FSH_MPLO_ORD", oContextOrders[0].CplndOrd);
+                    if (totalRequired <= 0) {
+                        MessageToast.show("Required totale non valida");
+                        return;
+                    }
 
-                    // gemelli per gli altri ordini
-                    for (let i = 1; i < ordersCount; i++) {
-                        const ord = oContextOrders[i].CplndOrd;
+                    console.log(
+                        `Split proporzionale batch ${obj.CHARG} su ${ordersCount} ordini`
+                    );
+
+                    //PRIMA riga → primo ordine
+                    const firstOrder = materialOrders[0];
+                    const firstQty = (
+                        usedQty * firstOrder.RequiredQuantity / totalRequired
+                    ).toFixed(3);
+
+                    ctx.setProperty("QTA_ASS_V", firstQty);
+                    ctx.setProperty("FSH_MPLO_ORD", firstOrder.CplndOrd);
+
+                    for (let i = 1; i < materialOrders.length; i++) {
+                        const ord = materialOrders[i];
+
+                        const qty = (
+                            usedQty * ord.RequiredQuantity / totalRequired
+                        ).toFixed(3);
 
                         const twin = structuredClone(obj);
-                        twin.QTA_ASS_V = qtyPerOrder;
+                        twin.QTA_ASS_V = qty;
                         twin.SAP_UUID = crypto.randomUUID();
-                        twin.FSH_MPLO_ORD = ord;
+                        twin.FSH_MPLO_ORD = ord.CplndOrd;
 
                         Object.keys(twin).forEach(k => {
                             if (k.startsWith("to_") || typeof twin[k] === "object") {
@@ -1175,7 +1204,7 @@ sap.ui.define(
                             }
                         });
 
-                        console.log("CREATE gemello:", twin);
+                        console.log("CREATE gemello proporzionale:", twin);
                         binding.create(twin, false, false, false);
                     }
                 });
@@ -1224,8 +1253,8 @@ sap.ui.define(
                         sap.ui.core.BusyIndicator.hide();
                     });
                 }.bind(this)).catch((e) => {
-                    console.warn("showMessageConfirm rejected:", e);
-                    MessageToast.show("Do Assemble cancelled. " + JSON.stringify(e));
+                    MessageToast.show("Do Assemble cancelled. ");
+                    this._oDialogPezze.close();
                 });
             },
             pressWhereUsed: function (oEvent) {
