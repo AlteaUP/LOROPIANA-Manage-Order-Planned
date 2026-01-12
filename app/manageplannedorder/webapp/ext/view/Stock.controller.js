@@ -845,6 +845,7 @@ sap.ui.define(
                 await Promise.resolve();
 
                 try {
+                    let disassembleDone = false;
                     const oContextOrders = JSON.parse(sessionStorage.getItem("selectedContextsOrders") || "[]"); //ordine selezionato
                     const oContextComponent = JSON.parse(sessionStorage.getItem("selectedContextComponent") || "[]"); //componente selezionato
                     const oModel = this.getOwnerComponent().getModel();
@@ -946,6 +947,8 @@ sap.ui.define(
                     oStockTable.refreshItems();
                     oStockTable.getBinding("items").refresh();
                     oStockTable.removeSelections();
+
+                    disassembleDone = true;
                 } catch (error) {
                     if (error !== "cancel") {
                         console.error("Disassemble error:", error);
@@ -953,7 +956,9 @@ sap.ui.define(
                     }
                 } finally {
                     sap.ui.core.BusyIndicator.hide();
-                    MessageToast.show("Disassemble completed successfully.");
+                    if (disassembleDone) {
+                        MessageToast.show("Disassemble completed successfully.");
+                    }
                 }
                 //BusyIndicator.hide(0)
             },

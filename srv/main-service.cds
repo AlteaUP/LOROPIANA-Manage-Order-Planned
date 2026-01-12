@@ -75,6 +75,18 @@ type AssegnaAutoType            : {
   AvailableQuantity: Decimal(16, 3);
 }
 
+type AssegnaAutoAggType            : {
+  Material : String(40);
+  RequiredQuantity : Decimal(14, 3);
+  ProductionPlant : String(4);
+  StorageLocation: String(4);
+  Batch: String(10);
+  CrossPlantConfigurableProduct: String(40);
+  BillOfMaterialItemNumber_2: String(4);
+  AvailableQuantity: Decimal(16, 3);
+  orderDetails : array of String(12);
+}
+
 service MainService {
 
   entity ZZ1_Plant                       as projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant;
@@ -314,6 +326,8 @@ service MainService {
   action Fissazione(Payload: FissazioneType)                 returns String;
 
   action AssegnaAuto(Payload: AssegnaAutoType)                 returns String;
+
+  action AssegnaAutoAgg(Payload: AssegnaAutoAggType)                 returns String;
 
 //action GetComponentsForOrders(orders: array of String)       returns many ZZ1_CombinPlannedOrdersCom;
 }

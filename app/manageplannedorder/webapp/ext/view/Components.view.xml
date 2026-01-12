@@ -4,8 +4,17 @@
         <VBox id="_IDGenVBox">
             <macros:FilterBar metaPath="/ZZ1_CombinPlannedOrdersComClone/@com.sap.vocabularies.UI.v1.SelectionFields#tableMacro" id="orderComponentFilter" visible="false"/>
             <macros:Table id="TableComponents" metaPath="/ZZ1_CombinPlannedOrdersComClone/@com.sap.vocabularies.UI.v1.LineItem#Components" filterBar="orderComponentFilter">
-             </macros:Table>
-            </VBox>       
+             <macros:actions>
+                    <table:Action
+                        id="assegnaAutoAgg"
+                        press=".assegnaAutoAgg"
+                        text="Assegna Auto"
+                        placement="After"
+                        key="assAuto"
+                    />
+                </macros:actions>
+            </macros:Table>
+        </VBox>       
         </content>
     </Page>
 </mvc:View> 

@@ -49,7 +49,7 @@ sap.ui.define(
                 debugger
                 const oFilterBar = this.byId("orderComponentFilter");
                 const oMacroTable = this.byId("TableComponents");
-                    //nascondo action delete
+                //nascondo action delete
                 const oMDCTable = oMacroTable.getMDCTable();
                 const aActions = oMDCTable.getActions()
                 aActions.forEach((oAction) => {
@@ -231,6 +231,76 @@ sap.ui.define(
                     `BillOfMaterialItemNumber_2='${oData.BillOfMaterialItemNumber_2}'`
                 );
             },
+            assegnaAutoAgg: async function (oEvent) {
+                debugger;
+                sap.ui.core.BusyIndicator.show(0);
+                await Promise.resolve();
+                const oMacroTable = this.byId("TableComponents");
+                const oContextItems = oMacroTable.getRowBinding().getContexts();
+                const oModel = this.getModel();
+
+                //estraggo solo i record abilitati per l'assegnazione automatica
+                const _items = [];
+                for (let i = 0; i < oContextItems.length; i++) {
+                    const item = oContextItems[i].getObject();
+                    if (item.IconActive) {
+                        //svuoto Batch per problema chiavi
+                        item.Batch = "";
+                        _items.push(item);
+                    }
+                }
+
+                const aPromises = _items.map(item => {
+
+                    const payload = {
+                        "Material": item.Material,
+                        "RequiredQuantity": item.RequiredQuantity,
+                        "ProductionPlant": item.Plant,
+                        "orderDetails": item.orderDetails.map(d => ({
+                            CplndOrd: d.CplndOrd,
+                            Material: d.Material,
+                            RequiredQuantity: d.RequiredQuantity
+                        })),
+                        "AvailableQuantity": item.AvailableQuantity,
+                        "StorageLocation": item.StorageLocation,
+                        "Batch": item.Batch,
+                        "CrossPlantConfigurableProduct": item.CrossPlantConfigurableProduct,
+                        "BillOfMaterialItemNumber_2": item.BillOfMaterialItemNumber_2
+                    }
+                    const oCtx = oModel.bindContext("/AssegnaAutoAgg(...)");
+
+                    oCtx.setParameter("Payload", payload);
+
+                    return oCtx.execute().then(() => oCtx.getBoundContext().getObject());
+                });
+                // 2) Esegui TUTTE le Promises in parallelo
+                try {
+                    await Promise.all(aPromises);
+                    sap.ui.core.BusyIndicator.hide();
+                    const results = await Promise.all(aPromises);
+                    const anyAssigned = results.some(r => r?.value === "ASSIGNED");
+
+                        if (anyAssigned) {
+                           sap.m.MessageToast.show("Assegnazione automatica completata");
+                       } else {
+                           sap.m.MessageBox.warning("Nessuna assegnazione effettuata");
+                       } 
+
+                    // refresh pagina
+                    const oBinding = oMacroTable.getRowBinding();
+                    if (oBinding) {
+                        oBinding.refresh();
+                    }
+
+                } catch (oError) {
+                    const message =
+                        oError?.message ||
+                        oError?.error?.message ||
+                        "Errore durante l'assegnazione automatica";
+
+                    sap.m.MessageBox.error(message);
+                }
+            }
             /*   onSearchChange: function (oEvent) {
                   debugger
                   const sQuery = oEvent.getParameter("newValue") || oEvent.getParameter("query");
