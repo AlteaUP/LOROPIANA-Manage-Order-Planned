@@ -53,51 +53,51 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                 const oModel = that.getView().getModel();
                 //const oGlobalObj = this.getBindingContext().getObject();
                 // 1) Prepara le Promises: una per ciascuna riga
-/*                 const aPromises = aRows.map(oRow => {
-                    const oContext = oRow.getBindingContext();
-                    const item = oContext.getObject();
-                    //const item = oRow.getBindingContext().getObject();
-                    // Reset visuale
-                    oRow.setHighlight("None");
-                    oRow.setHighlightText("");
-                    // Payload per l’action
-                    const payload = {
-                        'Material': item.Material,
-                        'Gruppo_merce': item.ProductGroup,
-                        'Plant': item.Plant
-                    };
-
-                    const oCtx = oModel.bindContext("/ReadBatchCust(...)");
-                    oCtx.setParameter("Payload", payload);
-                    return oCtx.execute()
-                        .then(() => {
-                            const oResult = oCtx.getBoundContext().getObject();
-                            return { oRow, oResult };
-                        })
-                        .catch(err => {
-                            return { oRow, err };
-                        });
-                }); */
+                /*                 const aPromises = aRows.map(oRow => {
+                                    const oContext = oRow.getBindingContext();
+                                    const item = oContext.getObject();
+                                    //const item = oRow.getBindingContext().getObject();
+                                    // Reset visuale
+                                    oRow.setHighlight("None");
+                                    oRow.setHighlightText("");
+                                    // Payload per l’action
+                                    const payload = {
+                                        'Material': item.Material,
+                                        'Gruppo_merce': item.ProductGroup,
+                                        'Plant': item.Plant
+                                    };
+                
+                                    const oCtx = oModel.bindContext("/ReadBatchCust(...)");
+                                    oCtx.setParameter("Payload", payload);
+                                    return oCtx.execute()
+                                        .then(() => {
+                                            const oResult = oCtx.getBoundContext().getObject();
+                                            return { oRow, oResult };
+                                        })
+                                        .catch(err => {
+                                            return { oRow, err };
+                                        });
+                                }); */
                 // 2) Esegui TUTTE le Promises in parallelo
-   /*              const aResults = await Promise.all(aPromises);
-                // 3) Applica highlight in base ai risultati
-                aResults.forEach(({ oRow, oResult, err }) => {
-                    const itm = oRow.getBindingContext().getObject();
-                    if (err) {
-                        MessageToast.show(err.message || err.value);
-                        return;
-                    }
-                    if (oResult.Mandassign === true) {
-                        const match = parseFloat(itm.CombPlanAllQty) >= parseFloat(itm.RequiredQuantity);
-                        oRow.setHighlight(match ? "Success" : "Error");
-                        oRow.setHighlightText(
-                            match
-                                ? "Quantity matches"
-                                : "Quantity does not match"
-                        );
-                    }
-
-                }); */
+                /*              const aResults = await Promise.all(aPromises);
+                             // 3) Applica highlight in base ai risultati
+                             aResults.forEach(({ oRow, oResult, err }) => {
+                                 const itm = oRow.getBindingContext().getObject();
+                                 if (err) {
+                                     MessageToast.show(err.message || err.value);
+                                     return;
+                                 }
+                                 if (oResult.Mandassign === true) {
+                                     const match = parseFloat(itm.CombPlanAllQty) >= parseFloat(itm.RequiredQuantity);
+                                     oRow.setHighlight(match ? "Success" : "Error");
+                                     oRow.setHighlightText(
+                                         match
+                                             ? "Quantity matches"
+                                             : "Quantity does not match"
+                                     );
+                                 }
+             
+                             }); */
                 aRows.forEach((oRow) => {
                     const item = oRow.getBindingContext().getObject();
                     if (item.flagHighlights === "X") {
@@ -241,7 +241,15 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                 return;
             }
             const oBjWorkCenter = selectedItemWorkCenter[0].getBindingContext().getObject();
+            const lifnr = oBjWorkCenter.fornitore;             // "0000002040"
+            const oAmountModel = sap.ui.getCore().getModel("lifnrAmounts");
+            const amountData = oAmountModel
+                ? oAmountModel.getProperty("/" + lifnr)
+                : null;
             var workCenterSelected = oBjWorkCenter.WorkCenterInternalID;
+
+            const amountValue = amountData ? amountData.value : null;
+            const amountCurrency = amountData ? amountData.currency : null;
 
             //recupero record selezionato tabella Capacity
             const oBjRecordCapacity = sap.ui.getCore().byId(idTabCapacity).getSelectedItems();
@@ -254,7 +262,9 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
                 "CombPlOrder": combPlOrder,
                 "Operation": selectedRecordCapacity.Operation,
                 "Sequence": Sequence,
-                "WorkCenter": workCenterSelected
+                "WorkCenter": workCenterSelected,
+                "PRICE_V": amountValue,
+                "PRICE_C": amountCurrency
             }
 
             const oModel = this.getView().getModel();

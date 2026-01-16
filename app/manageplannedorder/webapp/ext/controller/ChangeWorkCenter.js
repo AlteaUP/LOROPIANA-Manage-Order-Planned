@@ -54,12 +54,38 @@ sap.ui.define([
 
                 const oCtx = oModel.bindContext("/AltLabAction(...)");
                 oCtx.setParameter("Payload", payload);
-
+                var that = this;
                 oCtx.execute()
                     .then(() => {
                         const oResult = oCtx.getBoundContext().getObject();
                         const records = oResult.value || [];
+                        const lifnrAmountMap = {};
 
+                        records.forEach(r => {
+                            if (!r.LIFNR) return;
+
+                            const lifnrPadded = r.LIFNR.toString().padStart(10, "0");
+
+                            // componi i due campi separati
+                            const currency = r.VFPRC_ELEMENT_AMOUNT_C || "";
+                            const value = r.VFPRC_ELEMENT_AMOUNT_V || "";
+
+                            // nel modello salvo un oggetto con value e currency
+                            lifnrAmountMap[lifnrPadded] = {
+                                value: value,
+                                currency: currency
+                            };
+                        });
+
+                        // salva il modello condiviso nel Component
+                        let oAmountModel = sap.ui.getCore().getModel("lifnrAmounts");
+                        if (!oAmountModel) {
+                            oAmountModel = new sap.ui.model.json.JSONModel();
+                            sap.ui.getCore().setModel(oAmountModel, "lifnrAmounts");
+                        }
+
+                        oAmountModel.setData({});
+                        oAmountModel.setData(lifnrAmountMap);
                         const lifnrList = records
                             .map(r => r.LIFNR)
                             .filter(Boolean)
@@ -91,6 +117,9 @@ sap.ui.define([
                         table.bindAggregation("items", {
                             path: "/ZZ1_RFM_WRKCHARVAL_F4",
                             filters: [combinedFilter],
+                            parameters: {
+                                $select: "WorkCenterInternalID,workcentertext,plant,fornitore"
+                            },
                             template: new sap.m.ColumnListItem({
                                 cells: [
                                     new sap.m.Text({ text: "{WorkCenterInternalID}" }),

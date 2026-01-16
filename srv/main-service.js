@@ -43,9 +43,9 @@ module.exports = class MainService extends cds.ApplicationService {
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
       const cols = req.query.SELECT.columns || [];
-      if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
+     /*  if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
         req.query.SELECT.columns.push({ ref: ['ConfirmedQuantity_V'] });
-      }
+      } */
       if (!cols.some(c => c.ref && c.ref[0] === 'BillOfOperationsGroup')) {
         req.query.SELECT.columns.push({ ref: ['BillOfOperationsGroup'] });
       }
@@ -86,26 +86,26 @@ module.exports = class MainService extends cds.ApplicationService {
       const processed = records.map(item => {
         const total = Number(item.PlannedTotalQtyInBaseUnit) || 0;
         const committed = Number(item.PlndOrderCommittedQty) || 0;
-        const confirmed = Number(item.ConfirmedQuantity_V) || 0;
+        //const confirmed = Number(item.ConfirmedQuantity_V) || 0;
 
         let committed_percent = total ? (committed / total) * 100 : 0;
-        let confirmed_percent = total ? (confirmed / total) * 100 : 0;
+        //let confirmed_percent = total ? (confirmed / total) * 100 : 0;
 
         const committed_criticality =
           committed_percent === 100 ? 3 : (committed_percent > 0 ? 2 : 1);
-        const confirmed_criticality =
-          confirmed_percent === 100 ? 3 : (confirmed_percent > 0 ? 2 : 1);
+/*         const confirmed_criticality =
+          confirmed_percent === 100 ? 3 : (confirmed_percent > 0 ? 2 : 1); */
 
 
         if (committed_percent === 0) committed_percent = 100;
-        if (confirmed_percent === 0) confirmed_percent = 100;
+        //if (confirmed_percent === 0) confirmed_percent = 100;
 
         return {
           ...item,
           committed_percent,
           committed_criticality,
-          confirmed_percent,
-          confirmed_criticality
+          //confirmed_percent,
+          //confirmed_criticality
         };
       });
 
@@ -1624,7 +1624,9 @@ module.exports = class MainService extends cds.ApplicationService {
               .set({
                 WORKCENTER: object.WorkCenter,
                 MANUFACTURINGORDERSEQUENCE: object.Sequence,
-                MANUFACTURINGORDEROPERATION: object.Operation
+                MANUFACTURINGORDEROPERATION: object.Operation,
+                PRICE_V: object.PRICE_V,
+                PRICE_C: object.PRICE_C
               })
               .where({ SAP_UUID: uuid })
           );
@@ -1636,7 +1638,9 @@ module.exports = class MainService extends cds.ApplicationService {
               FSH_CPLND_ORD: object.CombPlOrder,
               MANUFACTURINGORDEROPERATION: object.Operation,
               MANUFACTURINGORDERSEQUENCE: object.Sequence,
-              WORKCENTER: object.WorkCenter
+              WORKCENTER: object.WorkCenter,
+              PRICE_V: object.PRICE_V,
+              PRICE_C: object.PRICE_C
             })
           );
           console.log("Record creato");
@@ -2163,11 +2167,11 @@ module.exports = class MainService extends cds.ApplicationService {
         let OpenQty = 0;
         for (let i = 0; i < _selectedItems.length; i++) {
           const oObj = _selectedItems[i]
-          TotCombPlanAllQty += parseInt(oObj.CombPlanAllQty)
+          TotCombPlanAllQty += parseFloat(oObj.CombPlanAllQty)
         }
 
         OpenQty = object.RequiredQuantity - TotCombPlanAllQty;
-        const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
+        const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseFloat(item.AvaibilityQty || 0), 0);
         const selectedItemLength = _selectedItems.length;
         //controllo se ci sono assegnazioni per l'ordine
         const existingAssignment = await ZZ1_MFP_ASSIGNMENT_CDS.run(
@@ -2193,7 +2197,12 @@ module.exports = class MainService extends cds.ApplicationService {
         const insertPromises = _selectedItems.map(async (_item) => {
           const item = structuredClone(_item);
 
-          const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+          const qty = parseFloat(item.AvaibilityQty);
+          const tot = parseFloat(TotAvaibilityQty);
+
+          const COPERTURA = tot > 0
+            ? Math.round((qty / tot) * 100)
+            : 0;
 
           let QTA_ASS_V;
           if (selectedItemLength === 1) {
@@ -2647,11 +2656,11 @@ module.exports = class MainService extends cds.ApplicationService {
       let TotCombPlanAllQty = 0;
       for (let i = 0; i < _selectedItems.length; i++) {
         const oObj = _selectedItems[i];
-        TotCombPlanAllQty += parseInt(oObj.CombPlanAllQty);
+        TotCombPlanAllQty += parseFloat(oObj.CombPlanAllQty);
       }
 
       const TotAvaibilityQty = _selectedItems.reduce(
-        (acc, item) => acc + parseInt(item.AvaibilityQty || 0),
+        (acc, item) => acc + parseFloat(item.AvaibilityQty || 0),
         0
       );
       const selectedItemLength = _selectedItems.length;
@@ -2697,9 +2706,12 @@ module.exports = class MainService extends cds.ApplicationService {
         const insertPromises = _selectedItems.map(async (_item) => {
           const item = structuredClone(_item);
 
-          const COPERTURA = Math.round(
-            (parseInt(item.AvaibilityQty) / TotAvaibilityQty) * 100
-          );
+          const qty = parseFloat(item.AvaibilityQty);
+          const tot = parseFloat(TotAvaibilityQty);
+
+          const COPERTURA = tot > 0
+            ? Math.round((qty / tot) * 100)
+            : 0;
 
           let QTA_ASS_V;
           if (selectedItemLength === 1) {

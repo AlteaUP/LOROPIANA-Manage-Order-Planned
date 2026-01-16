@@ -1,4 +1,4 @@
-/* checksum : c90d5dd3b663cb6912b2ca3acd19658b */
+/* checksum : 71cbbf97558d813efedbb7957dc5df1b */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -694,14 +694,6 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.label : 'Stock Segment'
   StockSegment : String(40);
   @sap.required.in.filter : 'false'
-  @sap.unit : 'ConfirmedQuantity_U'
-  @sap.label : 'Confirmed Quantity Value'
-  ConfirmedQuantity_V : Decimal(15, 3);
-  @sap.required.in.filter : 'false'
-  @sap.label : 'Confirmed Quantity UoM'
-  @sap.semantics : 'unit-of-measure'
-  ConfirmedQuantity_U : String(3);
-  @sap.required.in.filter : 'false'
   @sap.label : 'Assign From Other Segments'
   @sap.quickinfo : 'Data element for domain BOOLE: TRUE (=''X'') and FALSE (='' '')'
   AssignFromOtherSegments : Boolean;
@@ -709,6 +701,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Latest Component Production Date'
   LatestCompProductionDate : Date;
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Status Sedapta'
+  @sap.quickinfo : 'Text of length 15'
+  StatusSedapta : String(15);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_I_PLANNEDORDER : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
@@ -1192,6 +1188,9 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
   @sap.label : 'Base Unit of Measure'
   @sap.semantics : 'unit-of-measure'
   BaseUnit : String(3);
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Work Center ID'
+  WorkCenterInternalID : String(8);
   @sap.label : 'Sedapta Priority'
   zsed_priority : String(15);
 };
@@ -1456,22 +1455,18 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlWrhsStkQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Stock Quantity'
   MatlWrhsStkQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlCnsmpnQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Consumption Quantity'
   MatlCnsmpnQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkIncrQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Stock Increase Quantity'
   MatlStkIncrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkDecrQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Stock Decrease Quantity'
   MatlStkDecrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.label : 'choice'
