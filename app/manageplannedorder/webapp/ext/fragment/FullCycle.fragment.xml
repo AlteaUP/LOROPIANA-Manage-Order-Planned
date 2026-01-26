@@ -1,0 +1,15 @@
+<core:FragmentDefinition
+  xmlns:core="sap.ui.core"
+  xmlns="sap.m">
+
+  <HBox id="_IDGenHBox1" alignItems="Center" renderType="Bare">
+    <CheckBox id="_IDGenCheckBox"
+      text="Sì"
+      select="onFullCycleSelect" />
+
+    <CheckBox id="_IDGenCheckBox1"
+      text="No"
+      select="onFullCycleSelect" />
+  </HBox>
+
+</core:FragmentDefinition>

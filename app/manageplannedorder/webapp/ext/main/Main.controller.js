@@ -8,8 +8,9 @@ sap.ui.define(
         "sap/m/MessageToast",
         "sap/ui/core/Fragment",
         "sap/ui/core/BusyIndicator",
+        "sap/ui/mdc/condition/Condition"
     ],
-    function (PageController, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, BusyIndicator) {
+    function (PageController, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, BusyIndicator, Condition) {
         'use strict';
 
         return PageController.extend('manageplannedorder.manageplannedorder.ext.main.Main', {
@@ -203,7 +204,7 @@ sap.ui.define(
                 const contexts = binding.getContexts();
 
                 const rows = contexts
-                    .map(ctx => ({ ctx, obj: ctx.getObject() })); 
+                    .map(ctx => ({ ctx, obj: ctx.getObject() }));
 
                 const oMainTable = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--TableCombined-content');
                 const oMainTableBinding = oMainTable._oTable.getBinding('items')
@@ -254,6 +255,68 @@ sap.ui.define(
             },
             onRowPress: function (oEvn) {
 
+            },
+            _findMdcFilterBar: function () {
+                const a = this.getView().findAggregatedObjects(true, (c) => c.isA && c.isA("sap.ui.mdc.FilterBar"));
+                return a && a.length ? a[0] : null;
+            },
+
+            _getConditions: function (oFB) {
+                if (oFB.getFilterConditions) return oFB.getFilterConditions();
+                if (oFB.getConditions) return oFB.getConditions();
+                return {};
+            },
+
+            _setConditions: function (oFB, mCond) {
+                if (oFB.setFilterConditions) return oFB.setFilterConditions(mCond);
+                if (oFB.setConditions) return oFB.setConditions(mCond);
+            },
+            //gestione filtro fullCycle
+            onFullCycleSelect: function (oEvent) {
+                debugger;
+                const oClicked = oEvent.getSource();
+                const bSelected = oEvent.getParameter("selected");
+                const sText = oClicked.getText(); // "Sì" / "No"
+
+                const aItems = oClicked.getParent().getItems();
+                const oYes = aItems.find(i => i.getText && i.getText() === "Sì");
+                const oNo = aItems.find(i => i.getText && i.getText() === "No");
+
+                if (bSelected) {
+                    if (sText === "Sì" && oNo) oNo.setSelected(false);
+                    if (sText === "No" && oYes) oYes.setSelected(false);
+                }
+
+                const bYes = oYes ? oYes.getSelected() : false;
+                const bNo = oNo ? oNo.getSelected() : false;
+
+                let sVal = "";
+                if (bYes) sVal = "Y";
+                else if (bNo) sVal = "N";
+
+                // FilterBar FE
+                //const oView = this.getView();
+                const oFB = this._findMdcFilterBar();
+                if (!oFB) {
+                    console.error("MDC FilterBar non trovata");
+                    return;
+                }
+
+                const mCond = this._getConditions(oFB);
+
+                if (!sVal) {
+                    delete mCond.FullCycleFilter;
+                } else {
+                    mCond.FullCycleFilter = [{
+                        operator: "EQ",
+                        values: [sVal],
+                        validated: "NotValidated"
+                    }];
+                }
+
+                this._setConditions(oFB, mCond);
+
+                console.log("COND KEYS:", Object.keys(this._getConditions(oFB)));
             }
         });
     }

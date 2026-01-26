@@ -679,6 +679,24 @@
             "path": "/sap/opu/odata/sap/ZZ1_RFM_WRKCHARVAL_F4_CDS"
           }
         }
+      },
+       "ZMF_PLPO_PLAS_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZMF_PLPO_PLAS_CDS",
+        "[hybrid]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZMF_PLPO_PLAS_CDS"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZMF_PLPO_PLAS_CDS"
+          }
+        }
       }
     }
   },

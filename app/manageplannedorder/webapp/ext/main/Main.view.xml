@@ -1,36 +1,26 @@
-<mvc:View
-    xmlns:core="sap.ui.core"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:macros="sap.fe.macros"
-    xmlns:table="sap.fe.macros.table"
-    xmlns:html="http://www.w3.org/1999/xhtml"
-    controllerName="manageplannedorder.manageplannedorder.ext.main.Main"
->
-    <Page
-        id="Main"
-        title="{i18n>MainTitle}"
-    >
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros" xmlns:fb="sap.fe.macros.filterBar" xmlns:table="sap.fe.macros.table" xmlns:html="http://www.w3.org/1999/xhtml" controllerName="manageplannedorder.manageplannedorder.ext.main.Main">
+    <Page id="Main" title="{i18n&gt;MainTitle}">
         <content>
             <!-- <VBox id="VBOX"> -->
-            <macros:FilterBar
-                id="FilterBar"
-                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro"
-            />
+            <macros:FilterBar id="FilterBar" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro">
+                <macros:filterFields>
+                 <fb:FilterField
+                   key="FullCycle"
+                   id="Full"
+                   label="FullCycle"
+                   anchor="PlannedOrderType"
+                   placement="After"
+                   property="FullCycleFilter">
+             
+                   <core:Fragment fragmentName="manageplannedorder.manageplannedorder.ext.fragment.FullCycle" type="XML"/>
+                 </fb:FilterField>
+                </macros:filterFields>          
+            </macros:FilterBar>
             <!-- icon tab bar -->
             <!-- <IconTabBar id="idIconTabBarInlineMode" headerMode="Inline" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding">
                     <items>
                         <IconTabFilter id="idIconTabFilterCombined" text="Combined" key="combined"> -->
-            <macros:Table
-                id="TableCombined"
-                rowCount="20"
-                metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro"
-                filterBar="FilterBar"
-                header="Combined"
-                selectionMode="ForceMulti"
-                type="ResponsiveTable"
-                variantManagement="Control"
-            >
+            <macros:Table id="TableCombined" rowCount="20" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.LineItem#tableMacro" filterBar="FilterBar" header="Combined" selectionMode="ForceMulti" type="ResponsiveTable" variantManagement="Control">
                 <!-- <macros:rowCount>
                     <macros:RowCount
                         id="RowCount"
@@ -39,27 +29,9 @@
                     />
                 </macros:rowCount> -->
                 <macros:actions>
-                    <table:Action
-                        id="fragment"
-                        press=".pressFragment"
-                        text="Crea Commesse"
-                        placement="After"
-                        key="act1"
-                    />
-                    <table:Action
-                        id="componentBtn"
-                        text="Componenti"
-                        press=".pressComponenti"
-                        placement="Before"
-                        key="act2"
-                    />
-                    <table:Action
-                        id="fissazioneBtn"
-                        text="Fissazione"
-                        press=".pressFissazione"
-                        placement="Before"
-                        key="act3"
-                    />
+                    <table:Action id="fragment" press=".pressFragment" text="Crea Commesse" placement="After" key="act1"/>
+                    <table:Action id="componentBtn" text="Componenti" press=".pressComponenti" placement="Before" key="act2"/>
+                    <table:Action id="fissazioneBtn" text="Fissazione" press=".pressFissazione" placement="Before" key="act3"/>
                     <!-- requiresSelection="true" -->
                 </macros:actions>
                 <!-- <rowCount /> -->
