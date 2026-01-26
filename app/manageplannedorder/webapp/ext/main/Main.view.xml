@@ -2,8 +2,8 @@
     <Page id="Main" title="{i18n&gt;MainTitle}">
         <content>
             <!-- <VBox id="VBOX"> -->
-        <!--     <macros:FilterBar id="FilterBar" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro">
-                <macros:filterFields>
+             <macros:FilterBar id="FilterBar" metaPath="/ZZ1_CombinedPlnOrdersAPI/@com.sap.vocabularies.UI.v1.SelectionFields#filterBarMacro">
+         <!--        <macros:filterFields>
                  <fb:FilterField
                    key="FullCycle"
                    id="Full"
@@ -14,8 +14,8 @@
              
                    <core:Fragment fragmentName="manageplannedorder.manageplannedorder.ext.fragment.FullCycle" type="XML"/>
                  </fb:FilterField>
-                </macros:filterFields>          
-            </macros:FilterBar> -->
+                </macros:filterFields>  -->         
+            </macros:FilterBar>
             <!-- icon tab bar -->
             <!-- <IconTabBar id="idIconTabBarInlineMode" headerMode="Inline" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding">
                     <items>
