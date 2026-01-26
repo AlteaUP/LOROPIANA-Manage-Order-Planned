@@ -149,7 +149,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type: 'UI.DataField',
             Value: RequirementQuantityInBaseUnit,
             Label: '{i18n>RequirementQuantityInBase}',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
@@ -165,19 +164,16 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type: 'UI.DataField',
             Value: PlannedOrderOpeningDate,
             Label: '{i18n>PlannedOrderOpeningDate}',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: PlndOrderTotalCmtmtDate,
             Label: '{i18n>PlndOrderTotalCmtmt}',
-            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: ZZ1_MFI_CRORDER_PERSON_PLA,
             Label: '{i18n>PersonalizzationOrderNumber}',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
@@ -213,171 +209,142 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type: 'UI.DataField',
             Value: BillOfMaterialStatus,
             Label: 'BillOfMaterialStatus',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialVariant,
             Label: 'BillOfMaterialVariant',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialVariantUsage,
             Label: 'BillOfMaterialVariantUsage',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialVersion,
             Label: 'BillOfMaterialVersion',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperations,
             Label: 'BillOfOperations',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperationsGroup,
             Label: 'BillOfOperationsGroup',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperationsType,
             Label: 'BillOfOperationsType',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperationsVariant,
             Label: 'BillOfOperationsVariant',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: committed_criticality,
             Label: 'committed_criticality',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: committed_percent,
             Label: 'committed_percent',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: LastChangeDate,
             Label: 'LastChangeDate',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: MaterialProcurementCategory,
             Label: 'MaterialProcurementCategory',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: MaterialProcurementType,
             Label: 'MaterialProcurementType',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: MRPArea,
             Label: 'MRPArea',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: MRPController,
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: MRPPlant,
             Label: 'MRPPlant',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: PlannedOrderCategory,
             Label: 'PlannedOrderCategory',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: PlannedOrderType,
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: PlndOrderBaseToEntryQtyDnmntr,
             Label: 'PlndOrderBaseToEntryQtyDnmntr',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: PlndOrderBaseToEntryQtyNmrtr,
             Label: 'PlndOrderBaseToEntryQtyNmrtr',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: Product,
             Label: 'Product',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: ProductCollection,
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionEndDate,
             Label: 'ProductionEndDate',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionPlant,
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionStartDate,
             Label: 'ProductionStartDate',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionSupervisor,
             Label: 'ProductionSupervisor',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionVersion,
             Label: 'ProductionVersion',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: QuantityWithdrawnInBaseUnit,
             Label: 'QuantityWithdrawnInBaseUnit',
-            ![@UI.Hidden],
         },
         {
             $Type: 'UI.DataField',
             Value: StorageLocation,
             Label: 'StorageLocation',
-            ![@UI.Hidden],
         },
     ],
     UI.DataPoint #ProductionPlant              : {
@@ -2388,4 +2355,3 @@ annotate service.ZC_RFM_WORKCENTER_F4 with {
         ![@UI.TextArrangement] : #TextLast,
     }
 };
-

@@ -17,6 +17,7 @@ using {ZMFP_MRP_PLANNEDORDER_TYPE_F4} from './external/ZMFP_MRP_PLANNEDORDER_TYP
 using {ZMFP_MRP_PRODUCT_SEASON_F4} from './external/ZMFP_MRP_PRODUCT_SEASON_F4';
 using {ZMFP_MRP_WORKCENTER_F4} from './external/ZMFP_MRP_WORKCENTER_F4';
 using {ZZ1_RFM_WRKCHARVAL_F4_CDS} from './external/ZZ1_RFM_WRKCHARVAL_F4_CDS';
+//using {ZMF_PLPO_PLAS_CDS} from './external/ZMF_PLPO_PLAS_CDS';
 
 
 // using {ZS_RFM_ATP_PLANNED_ORDERS} from './external/ZS_RFM_ATP_PLANNED_ORDERS';
@@ -115,6 +116,8 @@ service MainService {
   entity ZZ1_MFP_BATCHCUSTOM             as projection on ZZ1_MFP_BATCHCUSTOM_CDS.ZZ1_MFP_BATCHCUSTOM;
 
   entity ZZ1_RFM_WRKCHARVAL_F4           as projection on ZZ1_RFM_WRKCHARVAL_F4_CDS.ZZ1_RFM_WRKCHARVAL_F4;
+
+  //entity ZMF_PLPO_PLAS                   as projection on ZMF_PLPO_PLAS_CDS.ZMF_PLPO_PLAS;
 
   // COMPONENTS
   entity ZZ1_CombinPlannedOrdersCom      as
@@ -223,7 +226,7 @@ service MainService {
       null as confirmed_criticality  : Integer,
       null as confirmed_percent      : Integer,
       null as zsed_priority          : String(15),
-      null as PlannedOrderBOMIsFixed : Boolean,
+      null as PlannedOrderBOMIsFixed : Boolean, 
       // master planned orders
       to_ZZ1_MasterPlannedOrders     : Composition of many ZZ1_MasterPlannedOrders
                                          on CplndOrd = $self.CplndOrd,

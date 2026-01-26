@@ -34,6 +34,7 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZMFP_MRP_PRODUCT_SEASON_F4 = await cds.connect.to("ZMFP_MRP_PRODUCT_SEASON_F4");
     const ZMFP_MRP_WORKCENTER_F4 = await cds.connect.to("ZMFP_MRP_WORKCENTER_F4");
     const ZZ1_RFM_WRKCHARVAL_F4_CDS = await cds.connect.to("ZZ1_RFM_WRKCHARVAL_F4_CDS");
+    //const ZMF_PLPO_PLAS_CDS = await cds.connect.to("ZMF_PLPO_PLAS_CDS");
 
 
 
@@ -42,10 +43,40 @@ module.exports = class MainService extends cds.ApplicationService {
 
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
+      let fullCycleVal = null;
+      const w = req.query?.SELECT?.where;
+      //se presente estraggo valore di fullCycle e lo elimino da where 
+      if (Array.isArray(w)) {
+        for (let i = 0; i < w.length - 2; i++) {
+
+          const isFull =
+            w[i]?.func === "tolower" &&
+            w[i].args?.[0]?.ref?.[0] === "FullCycleFilter" &&
+            w[i + 1] === "=" &&
+            w[i + 2]?.func === "tolower" &&
+            "val" in (w[i + 2].args?.[0] || {});
+
+          if (isFull) {
+            fullCycleVal = String(w[i + 2].args[0].val).toUpperCase(); // 'Y' | 'N'
+            // rimuovi eventuale AND/OR vicino
+            if (w[i + 3] === "and" || w[i + 3] === "or") {
+              w.splice(i, 4); // rimuove filtro(3) + and/or dopo
+            }
+            else if (w[i - 1] === "and" || w[i - 1] === "or") {
+              w.splice(i - 1, 4);
+            }
+            else {
+              w.splice(i, 3);
+            }
+
+            break;
+          }
+        }
+      }
       const cols = req.query.SELECT.columns || [];
-     /*  if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
-        req.query.SELECT.columns.push({ ref: ['ConfirmedQuantity_V'] });
-      } */
+      /*  if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
+         req.query.SELECT.columns.push({ ref: ['ConfirmedQuantity_V'] });
+       } */
       if (!cols.some(c => c.ref && c.ref[0] === 'BillOfOperationsGroup')) {
         req.query.SELECT.columns.push({ ref: ['BillOfOperationsGroup'] });
       }
@@ -62,7 +93,7 @@ module.exports = class MainService extends cds.ApplicationService {
       if (keys.length) {
         const childRows = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
           SELECT.from('ZZ1_I_PLANNEDORDER')
-            .columns(['CplndOrd', 'zsed_priority', 'PlannedOrderBOMIsFixed'])
+            .columns(['CplndOrd', 'zsed_priority', 'PlannedOrderBOMIsFixed', 'BillOfOperations', 'BillOfOperationsGroup'])
             .where({ CplndOrd: { in: keys } })
         );
 
@@ -71,7 +102,9 @@ module.exports = class MainService extends cds.ApplicationService {
           if (!childByKey.has(row.CplndOrd)) {
             childByKey.set(row.CplndOrd, {
               zsed_priority: row.zsed_priority ?? null,
-              PlannedOrderBOMIsFixed: row.PlannedOrderBOMIsFixed ?? null
+              PlannedOrderBOMIsFixed: row.PlannedOrderBOMIsFixed ?? null,
+              BillOfOperations: row.BillOfOperations ?? null,         // PLNAL
+              BillOfOperationsGroup: row.BillOfOperationsGroup ?? null // PLNNR
             });
           }
         }
@@ -81,8 +114,65 @@ module.exports = class MainService extends cds.ApplicationService {
         const child = childByKey.get(rec.CplndOrd);
         rec.zsed_priority = child?.zsed_priority ?? null;
         rec.PlannedOrderBOMIsFixed = child?.PlannedOrderBOMIsFixed ?? null;
+        rec._plnal = child?.BillOfOperations ?? null;
+        rec._plnnr = child?.BillOfOperationsGroup ?? null;
       }
+      //filtro se presente valore fullCycle 
+      if (fullCycleVal === "Y" || fullCycleVal === "N") {
 
+        // raccogli coppie uniche
+        const pairs = [];
+        const seen = new Set();
+
+        for (const r of records) {
+          if (!r._plnnr || !r._plnal) continue;
+
+          const k = `${r._plnnr}||${r._plnal}`;
+          if (!seen.has(k)) {
+            seen.add(k);
+            pairs.push({ PLNNR: r._plnnr, PLNAL: r._plnal });
+          }
+        }
+
+        let fullSet = new Set();
+
+        if (pairs.length) {
+          const xpr = [];
+          pairs.forEach((p, i) => {
+            if (i > 0) xpr.push("or");
+            xpr.push(
+              { ref: ["PLNNR"] }, "=", { val: p.PLNNR },
+              "and",
+              { ref: ["PLNAL"] }, "=", { val: p.PLNAL }
+            );
+          });
+
+          const hits = await ZMF_PLPO_PLAS_CDS.run(
+            SELECT.from("ZMF_PLPO_PLAS")
+              .columns(["PLNNR", "PLNAL"])
+              .where(xpr)
+          );
+
+          for (const h of hits || []) {
+            fullSet.add(`${h.PLNNR}||${h.PLNAL}`);
+          }
+        }
+
+        // filtro finale
+        const filtered = records.filter(r => {
+          const hasMatch =
+            r._plnnr && r._plnal && fullSet.has(`${r._plnnr}||${r._plnal}`);
+
+          return fullCycleVal === "Y" ? hasMatch : !hasMatch;
+        });
+
+        if (filtered.length === 0) {
+          return Array.isArray(res) ? [] : null;
+        }
+
+        records.length = 0;
+        records.push(...filtered);
+      }
       const processed = records.map(item => {
         const total = Number(item.PlannedTotalQtyInBaseUnit) || 0;
         const committed = Number(item.PlndOrderCommittedQty) || 0;
@@ -93,8 +183,8 @@ module.exports = class MainService extends cds.ApplicationService {
 
         const committed_criticality =
           committed_percent === 100 ? 3 : (committed_percent > 0 ? 2 : 1);
-/*         const confirmed_criticality =
-          confirmed_percent === 100 ? 3 : (confirmed_percent > 0 ? 2 : 1); */
+        /*         const confirmed_criticality =
+                  confirmed_percent === 100 ? 3 : (confirmed_percent > 0 ? 2 : 1); */
 
 
         if (committed_percent === 0) committed_percent = 100;

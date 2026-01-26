@@ -1,4 +1,4 @@
-/* checksum : 71cbbf97558d813efedbb7957dc5df1b */
+/* checksum : ed2a1caad927cc1b82d85018b7f26b18 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -705,6 +705,9 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.label : 'Status Sedapta'
   @sap.quickinfo : 'Text of length 15'
   StatusSedapta : String(15);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'FullCycleFilter'
+  FullCycleFilter : String(1);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_I_PLANNEDORDER : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
