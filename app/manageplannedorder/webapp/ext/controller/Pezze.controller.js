@@ -327,6 +327,10 @@ sap.ui.define([
           var oResult = oCtx.getBoundContext().getObject();
           console.log(oResult);
 
+          //Prendo il valore del campo "id"
+          const sId = oResult.ID_Criterio;
+          sessionStorage.setItem("myRecordId", sId);
+
           const resultFields = Object.keys(oResult)
             .filter(k => k.startsWith("Campo"))
             .map(k => oResult[k])

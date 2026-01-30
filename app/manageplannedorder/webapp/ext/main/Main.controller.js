@@ -290,9 +290,9 @@ sap.ui.define(
                 const bYes = oYes ? oYes.getSelected() : false;
                 const bNo = oNo ? oNo.getSelected() : false;
 
-                let sVal = "";
-                if (bYes) sVal = "Y";
-                else if (bNo) sVal = "N";
+                let bVal; // undefined | true | false
+                if (bYes) bVal = true;
+                else if (bNo) bVal = false;
 
                 // FilterBar FE
                 //const oView = this.getView();
@@ -304,12 +304,12 @@ sap.ui.define(
 
                 const mCond = this._getConditions(oFB);
 
-                if (!sVal) {
+                if (bVal === undefined) {
                     delete mCond.FullCycleFilter;
                 } else {
                     mCond.FullCycleFilter = [{
                         operator: "EQ",
-                        values: [sVal],
+                        values: [bVal], // true o false
                         validated: "NotValidated"
                     }];
                 }

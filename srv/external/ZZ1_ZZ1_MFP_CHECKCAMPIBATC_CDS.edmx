@@ -1,0 +1,225 @@
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+</edmx:Reference>
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
+<edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+</edmx:Reference>
+<edmx:DataServices m:DataServiceVersion="2.0">
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS" xml:lang="en" sap:schema-version="1">
+<EntityType Name="ZZ1_MFP_ID_CRITERICHECType" sap:label="ZZ1_MFP_ID_CriteriCheck" sap:content-version="1">
+<Key>
+<PropertyRef Name="SAP_UUID"/>
+</Key>
+<Property Name="SAP_UUID" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
+<Property Name="ID_Criterio" Type="Edm.String" MaxLength="10" sap:label="ID Criterio"/>
+<Property Name="SAP_Description" Type="Edm.String" MaxLength="80" sap:label="Description"/>
+</EntityType>
+<EntityType Name="ZZ1_TIPOCHECKType" sap:label="ZZ1_TIPOCHECK" sap:content-version="1">
+<Key>
+<PropertyRef Name="Code"/>
+</Key>
+<Property Name="Code" Type="Edm.String" Nullable="false" MaxLength="2" sap:text="Description" sap:label="Code"/>
+<Property Name="Description" Type="Edm.String" MaxLength="60" sap:label="Description"/>
+</EntityType>
+<EntityType Name="ZZ1_VH_MFP_ID_CRITERICHECType" sap:label="ZZ1_MFP_ID_CriteriCheck" sap:content-version="1">
+<Key>
+<PropertyRef Name="ID_Criterio"/>
+</Key>
+<Property Name="ID_Criterio" Type="Edm.String" Nullable="false" MaxLength="10" sap:text="SAP_Description" sap:label="ID Criterio"/>
+<Property Name="SAP_Description" Type="Edm.String" MaxLength="80" sap:label="Description"/>
+<Property Name="sap_uuid" Type="Edm.Guid" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
+</EntityType>
+<EntityType Name="ZZ1_ZZ1_MFP_CHECKCAMPIBATCType" sap:label="ZZ1_MFP_CheckCampiBatch" sap:content-version="1">
+<Key>
+<PropertyRef Name="SAP_UUID"/>
+</Key>
+<Property Name="SAP_UUID" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
+<Property Name="ID_Criterio" Type="Edm.String" MaxLength="10" sap:text="ID_Criterio_Text" sap:label="ID_Criterio" sap:value-list="standard"/>
+<Property Name="ID_Criterio_Text" Type="Edm.String" MaxLength="80" sap:label="Description" sap:creatable="false" sap:updatable="false"/>
+<Property Name="CheckCampo" Type="Edm.String" MaxLength="20" sap:label="CheckCampo"/>
+<Property Name="TipoCheck" Type="Edm.String" MaxLength="2" sap:text="TipoCheck_Text" sap:label="TipoCheck" sap:value-list="standard"/>
+<Property Name="TipoCheck_Text" Type="Edm.String" MaxLength="60" sap:label="Description" sap:creatable="false" sap:updatable="false"/>
+<NavigationProperty Name="to_ID_Criterio" Relationship="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.assoc_B423B56836E957B667EC8CD4DFF9E21A" FromRole="FromRole_assoc_B423B56836E957B667EC8CD4DFF9E21A" ToRole="ToRole_assoc_B423B56836E957B667EC8CD4DFF9E21A"/>
+<NavigationProperty Name="to_TipoCheck" Relationship="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.assoc_C6E7900E08EACDFDD98335E342FEE49A" FromRole="FromRole_assoc_C6E7900E08EACDFDD98335E342FEE49A" ToRole="ToRole_assoc_C6E7900E08EACDFDD98335E342FEE49A"/>
+<NavigationProperty Name="to__ID_Criterio" Relationship="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.assoc_54A1AF75B25C73C81B7E6586E928D885" FromRole="FromRole_assoc_54A1AF75B25C73C81B7E6586E928D885" ToRole="ToRole_assoc_54A1AF75B25C73C81B7E6586E928D885"/>
+</EntityType>
+<Association Name="assoc_C6E7900E08EACDFDD98335E342FEE49A" sap:content-version="1">
+<End Type="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType" Multiplicity="1" Role="FromRole_assoc_C6E7900E08EACDFDD98335E342FEE49A"/>
+<End Type="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_TIPOCHECKType" Multiplicity="0..1" Role="ToRole_assoc_C6E7900E08EACDFDD98335E342FEE49A"/>
+<ReferentialConstraint>
+<Principal Role="ToRole_assoc_C6E7900E08EACDFDD98335E342FEE49A">
+<PropertyRef Name="Code"/>
+</Principal>
+<Dependent Role="FromRole_assoc_C6E7900E08EACDFDD98335E342FEE49A">
+<PropertyRef Name="TipoCheck"/>
+</Dependent>
+</ReferentialConstraint>
+</Association>
+<Association Name="assoc_54A1AF75B25C73C81B7E6586E928D885" sap:content-version="1">
+<End Type="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType" Multiplicity="1" Role="FromRole_assoc_54A1AF75B25C73C81B7E6586E928D885"/>
+<End Type="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_VH_MFP_ID_CRITERICHECType" Multiplicity="0..1" Role="ToRole_assoc_54A1AF75B25C73C81B7E6586E928D885"/>
+</Association>
+<Association Name="assoc_B423B56836E957B667EC8CD4DFF9E21A" sap:content-version="1">
+<End Type="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType" Multiplicity="1" Role="FromRole_assoc_B423B56836E957B667EC8CD4DFF9E21A"/>
+<End Type="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_MFP_ID_CRITERICHECType" Multiplicity="0..1" Role="ToRole_assoc_B423B56836E957B667EC8CD4DFF9E21A"/>
+</Association>
+<EntityContainer Name="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+<EntitySet Name="ZZ1_MFP_ID_CRITERICHEC" EntityType="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_MFP_ID_CRITERICHECType" sap:searchable="true" sap:content-version="1"/>
+<EntitySet Name="ZZ1_TIPOCHECK" EntityType="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_TIPOCHECKType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+<EntitySet Name="ZZ1_VH_MFP_ID_CRITERICHEC" EntityType="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_VH_MFP_ID_CRITERICHECType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+<EntitySet Name="ZZ1_ZZ1_MFP_CHECKCAMPIBATC" EntityType="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType" sap:searchable="true" sap:content-version="1"/>
+<AssociationSet Name="assoc_54A1AF75B25C73C81B7E6586E928D885" Association="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.assoc_54A1AF75B25C73C81B7E6586E928D885" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_ZZ1_MFP_CHECKCAMPIBATC" Role="FromRole_assoc_54A1AF75B25C73C81B7E6586E928D885"/>
+<End EntitySet="ZZ1_VH_MFP_ID_CRITERICHEC" Role="ToRole_assoc_54A1AF75B25C73C81B7E6586E928D885"/>
+</AssociationSet>
+<AssociationSet Name="assoc_C6E7900E08EACDFDD98335E342FEE49A" Association="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.assoc_C6E7900E08EACDFDD98335E342FEE49A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_ZZ1_MFP_CHECKCAMPIBATC" Role="FromRole_assoc_C6E7900E08EACDFDD98335E342FEE49A"/>
+<End EntitySet="ZZ1_TIPOCHECK" Role="ToRole_assoc_C6E7900E08EACDFDD98335E342FEE49A"/>
+</AssociationSet>
+<AssociationSet Name="assoc_B423B56836E957B667EC8CD4DFF9E21A" Association="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.assoc_B423B56836E957B667EC8CD4DFF9E21A" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+<End EntitySet="ZZ1_ZZ1_MFP_CHECKCAMPIBATC" Role="FromRole_assoc_B423B56836E957B667EC8CD4DFF9E21A"/>
+<End EntitySet="ZZ1_MFP_ID_CRITERICHEC" Role="ToRole_assoc_B423B56836E957B667EC8CD4DFF9E21A"/>
+</AssociationSet>
+<FunctionImport Name="ZZ1_MFP_ID_CRITERICHECSap_upsert" ReturnType="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_MFP_ID_CRITERICHECType" EntitySet="ZZ1_MFP_ID_CRITERICHEC" m:HttpMethod="POST">
+<Parameter Name="ID_Criterio" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Text of length 10"/>
+<Parameter Name="SAP_Description" Type="Edm.String" Mode="In" MaxLength="80" sap:label="Text of length 80"/>
+</FunctionImport>
+<FunctionImport Name="ZZ1_ZZ1_MFP_CHECKCAMPIBATCSap_upsert" ReturnType="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType" EntitySet="ZZ1_ZZ1_MFP_CHECKCAMPIBATC" m:HttpMethod="POST">
+<Parameter Name="ID_Criterio" Type="Edm.String" Mode="In" MaxLength="10" sap:label="Text of length 10"/>
+<Parameter Name="CheckCampo" Type="Edm.String" Mode="In" MaxLength="20" sap:label="Text of length 20"/>
+<Parameter Name="TipoCheck" Type="Edm.String" Mode="In" MaxLength="2" sap:label="GENERATED: Value of code list ZZ1_TIPOCHECK"/>
+</FunctionImport>
+</EntityContainer>
+<Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.SchemaVersion" String="1.0.0"/>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType/ID_Criterio">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="ZZ1_MFP_ID_CriteriCheck"/>
+<PropertyValue Property="CollectionPath" String="ZZ1_VH_MFP_ID_CRITERICHEC"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="ID_Criterio"/>
+<PropertyValue Property="ValueListProperty" String="ID_Criterio"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="SAP_Description"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType/TipoCheck">
+<Annotation Term="Common.ValueList">
+<Record>
+<PropertyValue Property="Label" String="ZZ1_TIPOCHECK"/>
+<PropertyValue Property="CollectionPath" String="ZZ1_TIPOCHECK"/>
+<PropertyValue Property="SearchSupported" Bool="true"/>
+<PropertyValue Property="Parameters">
+<Collection>
+<Record Type="Common.ValueListParameterInOut">
+<PropertyValue Property="LocalDataProperty" PropertyPath="TipoCheck"/>
+<PropertyValue Property="ValueListProperty" String="Code"/>
+</Record>
+<Record Type="Common.ValueListParameterDisplayOnly">
+<PropertyValue Property="ValueListProperty" String="Description"/>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS_Entities">
+<Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_MFP_ID_CRITERICHECType/ID_Criterio">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_VH_MFP_ID_CRITERICHECType/ID_Criterio">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType/CheckCampo">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS_Entities/ZZ1_ZZ1_MFP_CHECKCAMPIBATC">
+<Annotation Term="Capabilities.NavigationRestrictions">
+<Record>
+<PropertyValue Property="RestrictedProperties">
+<Collection>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_ID_Criterio"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="true"/>
+</Record>
+</PropertyValue>
+</Record>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to_TipoCheck"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+<Record>
+<PropertyValue Property="NavigationProperty" NavigationPropertyPath="to__ID_Criterio"/>
+<PropertyValue Property="InsertRestrictions">
+<Record>
+<PropertyValue Property="Insertable" Bool="false"/>
+</Record>
+</PropertyValue>
+</Record>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_MFP_ID_CRITERICHECType">
+<Annotation Term="Common.SemanticKey">
+<Collection>
+<PropertyPath>ID_Criterio</PropertyPath>
+</Collection>
+</Annotation>
+</Annotations>
+<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATCType">
+<Annotation Term="Common.SemanticKey">
+<Collection>
+<PropertyPath>CheckCampo</PropertyPath>
+<PropertyPath>ID_Criterio</PropertyPath>
+</Collection>
+</Annotation>
+</Annotations>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="self" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS/$metadata"/>
+<atom:link xmlns:atom="http://www.w3.org/2005/Atom" rel="latest-version" href="http://lpapps20.lp.corp:8000/sap/opu/odata/sap/ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS/$metadata"/>
+</Schema>
+</edmx:DataServices>
+</edmx:Edmx>

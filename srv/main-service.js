@@ -34,6 +34,8 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZMFP_MRP_PRODUCT_SEASON_F4 = await cds.connect.to("ZMFP_MRP_PRODUCT_SEASON_F4");
     const ZMFP_MRP_WORKCENTER_F4 = await cds.connect.to("ZMFP_MRP_WORKCENTER_F4");
     const ZZ1_RFM_WRKCHARVAL_F4_CDS = await cds.connect.to("ZZ1_RFM_WRKCHARVAL_F4_CDS");
+    const ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS = await cds.connect.to("ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS");
+    const ZZ1_STORAGE_LOCATION_CDS = await cds.connect.to("ZZ1_STORAGE_LOCATION_CDS");
     //const ZMF_PLPO_PLAS_CDS = await cds.connect.to("ZMF_PLPO_PLAS_CDS");
 
 
@@ -44,34 +46,33 @@ module.exports = class MainService extends cds.ApplicationService {
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
       let fullCycleVal = null;
-      const w = req.query?.SELECT?.where;
-      //se presente estraggo valore di fullCycle e lo elimino da where 
-      if (Array.isArray(w)) {
-        for (let i = 0; i < w.length - 2; i++) {
+      const where = req.query?.SELECT?.where;
 
-          const isFull =
-            w[i]?.func === "tolower" &&
-            w[i].args?.[0]?.ref?.[0] === "FullCycleFilter" &&
-            w[i + 1] === "=" &&
-            w[i + 2]?.func === "tolower" &&
-            "val" in (w[i + 2].args?.[0] || {});
+      if (Array.isArray(where)) {
+        for (let i = 0; i <= where.length - 3; i++) {
+          if (
+            where[i]?.ref?.[0] === "FullCycleFilter" &&
+            where[i + 1] === "=" &&
+            typeof where[i + 2]?.val === "boolean"
+          ) {
+            fullCycleVal = where[i + 2].val; // true | false
 
-          if (isFull) {
-            fullCycleVal = String(w[i + 2].args[0].val).toUpperCase(); // 'Y' | 'N'
-            // rimuovi eventuale AND/OR vicino
-            if (w[i + 3] === "and" || w[i + 3] === "or") {
-              w.splice(i, 4); // rimuove filtro(3) + and/or dopo
+
+            // rimuove anche AND / OR adiacente
+            if (where[i + 3] === "and" || where[i + 3] === "or") {
+              where.splice(i, 4);
+            } else if (where[i - 1] === "and" || where[i - 1] === "or") {
+              where.splice(i - 1, 4);
+            } else {
+              where.splice(i, 3);
             }
-            else if (w[i - 1] === "and" || w[i - 1] === "or") {
-              w.splice(i - 1, 4);
-            }
-            else {
-              w.splice(i, 3);
-            }
+
 
             break;
           }
         }
+
+        if (where.length === 0) delete req.query.SELECT.where;
       }
       const cols = req.query.SELECT.columns || [];
       /*  if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
@@ -79,6 +80,10 @@ module.exports = class MainService extends cds.ApplicationService {
        } */
       if (!cols.some(c => c.ref && c.ref[0] === 'BillOfOperationsGroup')) {
         req.query.SELECT.columns.push({ ref: ['BillOfOperationsGroup'] });
+      }
+
+      if (!cols.some(c => c.ref && c.ref[0] === 'FullCycle')) {
+        req.query.SELECT.columns.push({ ref: ['FullCycle'] });
       }
 
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
@@ -93,7 +98,7 @@ module.exports = class MainService extends cds.ApplicationService {
       if (keys.length) {
         const childRows = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(
           SELECT.from('ZZ1_I_PLANNEDORDER')
-            .columns(['CplndOrd', 'zsed_priority', 'PlannedOrderBOMIsFixed', 'BillOfOperations', 'BillOfOperationsGroup'])
+            .columns(['CplndOrd', 'zsed_priority', 'PlannedOrderBOMIsFixed'])
             .where({ CplndOrd: { in: keys } })
         );
 
@@ -102,9 +107,7 @@ module.exports = class MainService extends cds.ApplicationService {
           if (!childByKey.has(row.CplndOrd)) {
             childByKey.set(row.CplndOrd, {
               zsed_priority: row.zsed_priority ?? null,
-              PlannedOrderBOMIsFixed: row.PlannedOrderBOMIsFixed ?? null,
-              BillOfOperations: row.BillOfOperations ?? null,         // PLNAL
-              BillOfOperationsGroup: row.BillOfOperationsGroup ?? null // PLNNR
+              PlannedOrderBOMIsFixed: row.PlannedOrderBOMIsFixed ?? null
             });
           }
         }
@@ -114,61 +117,19 @@ module.exports = class MainService extends cds.ApplicationService {
         const child = childByKey.get(rec.CplndOrd);
         rec.zsed_priority = child?.zsed_priority ?? null;
         rec.PlannedOrderBOMIsFixed = child?.PlannedOrderBOMIsFixed ?? null;
-        rec._plnal = child?.BillOfOperations ?? null;
-        rec._plnnr = child?.BillOfOperationsGroup ?? null;
       }
       //filtro se presente valore fullCycle 
-      if (fullCycleVal === "Y" || fullCycleVal === "N") {
-
-        // raccogli coppie uniche
-        const pairs = [];
-        const seen = new Set();
-
-        for (const r of records) {
-          if (!r._plnnr || !r._plnal) continue;
-
-          const k = `${r._plnnr}||${r._plnal}`;
-          if (!seen.has(k)) {
-            seen.add(k);
-            pairs.push({ PLNNR: r._plnnr, PLNAL: r._plnal });
-          }
-        }
-
-        let fullSet = new Set();
-
-        if (pairs.length) {
-          const xpr = [];
-          pairs.forEach((p, i) => {
-            if (i > 0) xpr.push("or");
-            xpr.push(
-              { ref: ["PLNNR"] }, "=", { val: p.PLNNR },
-              "and",
-              { ref: ["PLNAL"] }, "=", { val: p.PLNAL }
-            );
-          });
-
-          const hits = await ZMF_PLPO_PLAS_CDS.run(
-            SELECT.from("ZMF_PLPO_PLAS")
-              .columns(["PLNNR", "PLNAL"])
-              .where(xpr)
-          );
-
-          for (const h of hits || []) {
-            fullSet.add(`${h.PLNNR}||${h.PLNAL}`);
-          }
-        }
-
-        // filtro finale
+      if (fullCycleVal === true || fullCycleVal === false) {
         const filtered = records.filter(r => {
-          const hasMatch =
-            r._plnnr && r._plnal && fullSet.has(`${r._plnnr}||${r._plnal}`);
-
-          return fullCycleVal === "Y" ? hasMatch : !hasMatch;
+          const isFullCycle = r.FullCycle === "FULLCYCLE";
+          return fullCycleVal ? isFullCycle : !isFullCycle;
         });
+
 
         if (filtered.length === 0) {
           return Array.isArray(res) ? [] : null;
         }
+
 
         records.length = 0;
         records.push(...filtered);
@@ -920,7 +881,13 @@ module.exports = class MainService extends cds.ApplicationService {
       const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
       const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
 
-      const storageLocations = ['H100', 'P100', 'K100'];
+      //recupero storageLocation da CBO
+      const storageLocationsData = await ZZ1_STORAGE_LOCATION_CDS.run(
+        SELECT
+          .from('ZZ1_STORAGE_LOCATION')
+          .columns('STORAGELOCATION')
+          .where({ PLANT: parentKeys.Plant, }));
+      const storageLocations = storageLocationsData.map(item => item.STORAGELOCATION);
       res = res
         // filtra StorageLocation vuoto o valido
         .filter(row => !row.StorageLocation || storageLocations.includes(row.StorageLocation))
@@ -1255,7 +1222,13 @@ module.exports = class MainService extends cds.ApplicationService {
       const validSuppliers = [...new Set(capacityData.map(c => c.fornitore))];
       const maxSupplierLength = Math.max(...validSuppliers.map(s => s.length));
 
-      const storageLocations = ['H100', 'P100', 'K100'];
+      //recupero storageLocation da CBO
+      const storageLocationsData = await ZZ1_STORAGE_LOCATION_CDS.run(
+        SELECT
+          .from('ZZ1_STORAGE_LOCATION')
+          .columns('STORAGELOCATION')
+          .where({ PLANT: req.params.at(-1).Plant }));
+      const storageLocations = storageLocationsData.map(item => item.STORAGELOCATION);
       res = res
         // filtra StorageLocation vuoto o valido
         .filter(row => !row.StorageLocation || storageLocations.includes(row.StorageLocation))
@@ -3001,6 +2974,11 @@ module.exports = class MainService extends cds.ApplicationService {
     //Match code WorkCenter
     this.on("*", "ZC_RFM_WORKCENTER_F4", async (req) => {
       const result = await ZMFP_MRP_WORKCENTER_F4.run(req.query);
+      return result;
+    });
+
+    this.on("*", "ZZ1_ZZ1_MFP_CHECKCAMPIBATC", async (req) => {
+      const result = await ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.run(req.query);
       return result;
     });
     //hook per gestire icona in tab Componenti

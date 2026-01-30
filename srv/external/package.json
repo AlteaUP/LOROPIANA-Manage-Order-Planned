@@ -132,6 +132,14 @@
       "ZMFP_MRP_WORKCENTER_F4": {
         "kind": "odata",
         "model": "srv/external/ZMFP_MRP_WORKCENTER_F4"
+      },
+      "ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS"
+      },
+      "ZZ1_STORAGE_LOCATION_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_STORAGE_LOCATION_CDS"
       }
     }
   },

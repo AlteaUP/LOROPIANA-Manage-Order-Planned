@@ -1,4 +1,4 @@
-/* checksum : ed2a1caad927cc1b82d85018b7f26b18 */
+/* checksum : 3fa173fecdfa1bdac143f60ff9cdb458 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -707,7 +707,12 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   StatusSedapta : String(15);
   @sap.required.in.filter : 'false'
   @sap.label : 'FullCycleFilter'
-  FullCycleFilter : String(1);
+  @sap.quickinfo : 'Truth Value: True/False'
+  FullCycleFilter : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Material Group'
+  FullCycle : String(9);
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_I_PLANNEDORDER : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
@@ -1196,6 +1201,8 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
   WorkCenterInternalID : String(8);
   @sap.label : 'Sedapta Priority'
   zsed_priority : String(15);
+  @sap.label : 'Order Personalization'
+  zcrorder_person : String(20);
 };
 
 @cds.external : true

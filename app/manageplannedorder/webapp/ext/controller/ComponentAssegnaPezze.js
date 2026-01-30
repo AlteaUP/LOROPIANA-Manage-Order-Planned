@@ -23,305 +23,445 @@ sap.ui.define([
         }
       ));
     },
-    doAssegnaPezze: function (oEvent) {
+    doAssegnaPezze: async function (oEvent) {
       debugger;
+      //recupero id cbo BATCHCUSTOM
+      const sId = sessionStorage.getItem("myRecordId");
       this._bSaldoScorta = false;
       const model = new JSONModel()
       const id = "manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPI_to_CombinPlannedOrdersComObjectPage--fe::table::to_ZZ1_CombPlnOrdersStock::LineItem::Stock-innerTable"
       const obj = this.getBindingContext().getObject()
       const selectedItems = this._view.byId(id).getSelectedItems()
+      const items = this._view.byId(id).getItems()
       const oModel = this._controller.getOwnerComponent().getModel()
       const _selectedItems = []
-      // In testata aggiungere il total  Comb Plan All qty delle righe selezionate 
-      let TotCombPlanAllQty = 0;
-      // In testata mettere un nuovo campo Open qty che rappresenta la differenza tra la Required Quantity 
-      // - il totale Comb Plan All (quello di tutte le righe non di solo quelle selezionate) 
-      // - la Quantity to Assign delle righe presente nel pop up.
-      let OpenQty = 0;
-      for (let i = 0; i < selectedItems.length; i++) {
-        const oObj = selectedItems[i].getBindingContext().getObject()
-        TotCombPlanAllQty += parseInt(oObj.CombPlanAllQty)
-        _selectedItems.push(oObj)
+      //recupero criteri
+      const aCriterio = [];
+
+      //modifica MDB - controllo criteri batch - 28/01/2026 - INIZIO
+      try {
+        // Filter: ID_Criterio eq sId
+        const oFilter = new sap.ui.model.Filter({
+          path: "ID_Criterio",
+          operator: sap.ui.model.FilterOperator.EQ,
+          value1: sId
+        });
+
+        // bindList sull'entity set (projection esposta)
+        const oListBinding = oModel.bindList("/ZZ1_ZZ1_MFP_CHECKCAMPIBATC", null, null, [oFilter]);
+
+        const aContexts = await oListBinding.requestContexts(0, 1000);
+
+        aContexts.forEach(oCtx => {
+          const oObj = oCtx.getObject();
+          aCriterio.push({
+            CheckCampo: oObj.CheckCampo,
+            TipoCheck: oObj.TipoCheck
+          });
+        });
+
+      } catch (e) {
+        console.error("Errore lettura ZZ1_ZZ1_MFP_CHECKCAMPIBATC:", e);
       }
 
-      OpenQty = obj.RequiredQuantity - TotCombPlanAllQty;
+      const aCheckFields = aCriterio.map(c => c.CheckCampo);
+      const sBatchField = "Batch";
+      const isEmpty = v => v == null || v === "";
 
+      //assigned (Success) raggruppati per batch
+      const mByBatch = {};
+      items.forEach(oItem => {
+        if (oItem.getHighlight() !== "Success") return;
 
-      model.setData({
-        ...obj,
-        TotalPlanAllQty: TotCombPlanAllQty.toFixed(3).toString(),
-        OpenQty: OpenQty.toFixed(3).toString(),
-        selectedItems: _selectedItems
-      })
+        const oObj = oItem.getBindingContext().getObject();
+        const sBatch = oObj[sBatchField];
+        if (!sBatch) return;
 
-      this._controller.getView().setModel(model, 'selectedPezze');
+        if (!mByBatch[sBatch]) mByBatch[sBatch] = { [sBatchField]: sBatch };
 
-      if (this._fragmentPezze) {
-        this._fragmentPezze.then(function (dialog) {
-          if (dialog) {
-            dialog.destroy();
+        aCheckFields.forEach(f => {
+          if (Object.prototype.hasOwnProperty.call(oObj, f)) {
+            mByBatch[sBatch][f] = oObj[f];
           }
         });
-      }
-
-      // Ricrea sempre
-      this._fragmentPezze = this.loadFragment({
-        id: "fragmentPezze",
-        name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
-        controller: this._controller
       });
 
-      /*    if (!this._fragmentPezze) {
-           this._fragmentPezze = this.loadFragment({
-             id: "fragmentPezze",
-             name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
-             controller: this._controller
-           });
-         } */
+      const assigned = Object.values(mByBatch);
 
-      this._fragmentPezze.then(function (dialog) {
-        dialog.setModel(model, 'selected');
-        dialog.setModel(oModel);
-        //flag per verificare se è stato fatto il submit
-        dialog.getModel('selected').setProperty('/submitCompleted', false);
-        // Handler per quando il dialog viene chiuso
-        dialog.attachAfterClose(function () {
-          const binding = table.getBinding('items');
-          const selectedModel = dialog.getModel('selected');
-          const submitCompleted = selectedModel?.getProperty('/submitCompleted');
-          const oStockTable = this._view.byId(id);
-          const highlightModel = this._controller.getOwnerComponent().getModel("highlight");
+      // ---- selectedGrouped raggruppati per batch
+      const selectedGrouped = Object.values(
+        selectedItems.reduce((acc, oItem) => {
+          const oObj = oItem.getBindingContext().getObject();
+          const b = oObj[sBatchField];
+          if (!b) return acc;
 
-          if (binding) {
-            if (!submitCompleted) {
-              binding.resetChanges();
-            }
-          }
+          if (!acc[b]) acc[b] = { [sBatchField]: b };
 
-          if (highlightModel && !submitCompleted) {
-            highlightModel.setProperty('/assignedRecords', []);
-            oStockTable.removeSelections();
-          }
-          //braso quantità rimanente
-          sap.ui.getCore()
-            .byId("fragmentPezze--inputRemainingQty")
-            .setText("");
-        }.bind(this));
-        const table = dialog.getContent().at(-1);
-
-        var oCheckBox = new sap.m.CheckBox({
-          text: "Saldo/Scorta",
-          selected: this._bSaldoScorta,
-          select: function (oEvent) {
-            debugger;
-            var bChecked = oEvent.getSource().getSelected();
-            this._bSaldoScorta = bChecked;
-
-            // AGGIORNA TUTTI I CONTEXT NEL BINDING (OData V4)
-            const contexts = table.getBinding('items').getContexts();
-            contexts.forEach(context => {
-              context.setProperty("SaldoScorta", bChecked);
-            });
-
-            console.log("Flag set to:", this._bSaldoScorta, typeof this._bSaldoScorta);
-          }.bind(this)
-        });
-        var oCheckboxContainer = new sap.m.HBox({
-          justifyContent: "End",
-          items: [oCheckBox],
-        });
-        dialog.addContent(oCheckboxContainer);
-        /*         this._oCheckBox = oCheckBox;
-                this._oCheckBox.setSelected(this._bSaldoScorta) */
-
-
-        table.bindAggregation('items', {
-          path: '/ZZ1_MFP_ASSIGNMENT',
-          filters: [
-            new sap.ui.model.Filter({
-              filters: [
-                new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
-                new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.StartsWith, obj.CplndOrd + "_O")
-              ],
-              and: false // OR → mostra sia originali che surplus
-            }),
-            new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
-          ],
-          template: new sap.m.ColumnListItem({
-            highlight: {
-              parts: ['SAP_UUID', 'highlight>/assignedRecords'],
-              formatter: function (uuid, assignedRecords) {
-                return assignedRecords?.includes(uuid) ? "Success" : "None";
-              }
-            },
-            cells: [
-              new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
-              new sap.m.Text({ text: "{StockSegment}" }),
-              new sap.m.Text({ text: "{SpecialStock}" }),
-              new sap.m.Text({ text: "{BatchBySupplier}" }),
-              new sap.m.Text({ text: "{LGORT}" }),
-              new sap.m.Text({ text: "{FABB_TOT_V}" }),
-              new sap.m.Text({ text: "{COPERTURA}" }),
-              new sap.m.Text({ text: "{Scorta}" }),
-              //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
-              new sap.m.Input({
-                value: "{QTA_ASS_V}", change: function (oEvent) {
-                  var oInput = oEvent.getSource();
-                  var sNewValue = sap.ui.getCore().byId(oInput.getId()).getValue();
-                  sNewValue = sNewValue.toString().replace(",", ".")
-
-                  var remainingQty = sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
-                  var requiredQty = sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
-
-                  //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
-
-                  // Esempio: aggiornare un'altra proprietà
-                  // oContext.getModel().setProperty(oContext.getPath() + "/SomeField", sNewValue);
-                }
-              }),
-              //new sap.m.Text({ text: "{BatchBySupplier}" })
-            ]
-          }),
-          templateShareable: false,
-          parameters: { $$updateGroupId: 'CreatePezzeBatch' },
-        });
-
-        // modifica DL - aggiungo campo con quantità rimamente
-        //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(dialog.getModel("selected").oData.OpenQty);
-        // modifica DL - aggiungo campo con quantità rimamente - FINE
-
-        const binding = table.getBinding('items');
-        binding.resetChanges();
-        const oODataModel = table.getModel();
-        binding.attachDataReceived(async function () {
-          //se il submit è stato completato chiudere
-          const submitCompleted = dialog.getModel('selected').getProperty('/submitCompleted');
-          if (submitCompleted) {
-            console.log("Submit già completato, non ricreo i record");
-            return;
-          }
-          await binding.requestContexts(0, 1);
-
-          const oComponent = this._controller.getOwnerComponent();
-          let highlightModel = oComponent.getModel('highlight');
-
-          if (!highlightModel) {
-            highlightModel = new sap.ui.model.json.JSONModel({ assignedRecords: [] });
-            oComponent.setModel(highlightModel, 'highlight');
-          }
-
-          const alreadyAssigned = binding.getContexts()
-            .filter(ctx => !ctx.isTransient())
-            .map(ctx => ctx.getObject())
-            .filter(obj => obj && obj.SAP_UUID)
-            .map(obj => obj.SAP_UUID);
-
-          const assignedObjects = binding.getContexts()
-            .filter(ctx => !ctx.isTransient())
-            .map(ctx => ctx.getObject())
-            .filter(obj =>
-              obj &&
-              obj.SAP_UUID &&
-              obj.Scorta !== "X"
-            );
-
-          const assignedQty = assignedObjects.reduce((acc, obj) => {
-            return acc + (Number(obj.QTA_ASS_V) || 0);
-          }, 0);
-
-          const requiredQty = Number(
-            sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
-          );
-
-          // Remaining Qty deve considerare SOLO gli originali
-          const remainingQty = (requiredQty - assignedQty).toFixed(3);
-
-          sap.ui.getCore()
-            .byId("fragmentPezze--inputRemainingQty")
-            .setText(remainingQty);
-
-          console.log("RemainingQty aggiornata:", remainingQty);
-
-          //Highlight SOLO quelli già assegnati in backend
-          highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
-
-          // sommatoria AvaibilityQty 
-          const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
-          console.log("Total Availability Quantity: ", TotAvaibilityQty);
-          const selectedItemLength = _selectedItems.length;
-
-          _selectedItems.forEach((_item) => {
-            const item = structuredClone(_item)
-            // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
-            const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
-            // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
-            // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
-            let QTA_ASS_V;
-            if (selectedItemLength === 1) {
-              let remainingQtyNumber = Number(remainingQty);
-              QTA_ASS_V = remainingQtyNumber;
-            } else {
-              QTA_ASS_V = Math.min(Number(obj.AvailableQuantity), (obj.AvailableQuantity * (COPERTURA / 100)));
-            }
-
-            const SAP_UUID = crypto.randomUUID()
-            //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
-            if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
-              item.InventorySpecialStockType = '';
-            }
-            //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
-            if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
-              item.SpecialStock = '';
-            }
-
-            const newCreate = structuredClone({
-              "SAP_UUID": SAP_UUID,
-              "WERKS": item.Plant,
-              "LGORT": item.StorageLocation || "X",
-              "FSH_MPLO_ORD": obj.CplndOrd,
-              "BAGNI": item.dye_lot || "X",
-              "MATNR": item.Material,
-              "CHARG": item.Batch,
-              "Bagno": item.dye_lot,
-              //"BatchBySupplier": 12345,
-              "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
-              "QTA_ASS_U": "",
-              "QTA_ASS_U_Text": "",
-              "FABB_TOT_V": item.AvaibilityQty || 0,
-              "FABB_TOT_U": "",
-              "FABB_TOT_U_Text": "",
-              "COPERTURA": COPERTURA,
-              //"COPERTURA_EDITABLE": COPERTURA,
-              "SORT": 0,
-              "StockSegment": item.StockSegment,
-              "SAP_CreatedDateTime": new Date(),
-              "SAP_CreatedByUser": "LASPATAS",
-              "SAP_CreatedByUser_Text": "",
-              "SAP_LastChangedDateTime": new Date(),
-              "SAP_LastChangedByUser": "LASPATAS",
-              "SAP_LastChangedByUser_Text": "X",
-              "BatchBySupplier": item.BatchBySupplier,
-              "SpecialStock": item.InventorySpecialStockType,
-              "SaldoScorta": !!this._bSaldoScorta,
-              "Scorta": ""
-            })
-            newCreate._origProposedQty = QTA_ASS_V;
-            const isPresent = binding.getContexts().some(context =>
-              context.getObject().CHARG === _item.Batch &&
-              context.getObject().LGORT === _item.StorageLocation
-            );
-            if (!isPresent) {
-              console.warn("Combined planned order is not present in binding.");
-              binding.create(newCreate, false, false, false);
-            } else {
-              console.log("Combined planned order is present in binding.");
+          aCheckFields.forEach(f => {
+            if (Object.prototype.hasOwnProperty.call(oObj, f)) {
+              acc[b][f] = oObj[f];
             }
           });
-          // binding.refresh(true);
-          table.invalidate(); // Forza il rendering della tabella
+
+          return acc;
+        }, {})
+      );
+
+      const proceed = () => {
+        // In testata aggiungere il total  Comb Plan All qty delle righe selezionate 
+        let TotCombPlanAllQty = 0;
+        // In testata mettere un nuovo campo Open qty che rappresenta la differenza tra la Required Quantity 
+        // - il totale Comb Plan All (quello di tutte le righe non di solo quelle selezionate) 
+        // - la Quantity to Assign delle righe presente nel pop up.
+        let OpenQty = 0;
+        for (let i = 0; i < selectedItems.length; i++) {
+          const oObj = selectedItems[i].getBindingContext().getObject()
+          TotCombPlanAllQty += parseInt(oObj.CombPlanAllQty)
+          _selectedItems.push(oObj)
+        }
+
+        OpenQty = obj.RequiredQuantity - TotCombPlanAllQty;
+
+        model.setData({
+          ...obj,
+          TotalPlanAllQty: TotCombPlanAllQty.toFixed(3).toString(),
+          OpenQty: OpenQty.toFixed(3).toString(),
+          selectedItems: _selectedItems
+        })
+
+        this._controller.getView().setModel(model, 'selectedPezze');
+
+        if (this._fragmentPezze) {
+          this._fragmentPezze.then(function (dialog) {
+            if (dialog) {
+              dialog.destroy();
+            }
+          });
+        }
+
+        // Ricrea sempre
+        this._fragmentPezze = this.loadFragment({
+          id: "fragmentPezze",
+          name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
+          controller: this._controller
+        });
+
+        /*    if (!this._fragmentPezze) {
+             this._fragmentPezze = this.loadFragment({
+               id: "fragmentPezze",
+               name: "manageplannedorder.manageplannedorder.ext.fragment.Pezze",
+               controller: this._controller
+             });
+           } */
+
+        this._fragmentPezze.then(function (dialog) {
+          dialog.setModel(model, 'selected');
+          dialog.setModel(oModel);
+          //flag per verificare se è stato fatto il submit
+          dialog.getModel('selected').setProperty('/submitCompleted', false);
+          // Handler per quando il dialog viene chiuso
+          dialog.attachAfterClose(function () {
+            const binding = table.getBinding('items');
+            const selectedModel = dialog.getModel('selected');
+            const submitCompleted = selectedModel?.getProperty('/submitCompleted');
+            const oStockTable = this._view.byId(id);
+            const highlightModel = this._controller.getOwnerComponent().getModel("highlight");
+
+            if (binding) {
+              if (!submitCompleted) {
+                binding.resetChanges();
+              }
+            }
+
+            if (highlightModel && !submitCompleted) {
+              highlightModel.setProperty('/assignedRecords', []);
+              oStockTable.removeSelections();
+            }
+            //braso quantità rimanente
+            sap.ui.getCore()
+              .byId("fragmentPezze--inputRemainingQty")
+              .setText("");
+          }.bind(this));
+          const table = dialog.getContent().at(-1);
+
+          var oCheckBox = new sap.m.CheckBox({
+            text: "Saldo/Scorta",
+            selected: this._bSaldoScorta,
+            select: function (oEvent) {
+              debugger;
+              var bChecked = oEvent.getSource().getSelected();
+              this._bSaldoScorta = bChecked;
+
+              // AGGIORNA TUTTI I CONTEXT NEL BINDING (OData V4)
+              const contexts = table.getBinding('items').getContexts();
+              contexts.forEach(context => {
+                context.setProperty("SaldoScorta", bChecked);
+              });
+
+              console.log("Flag set to:", this._bSaldoScorta, typeof this._bSaldoScorta);
+            }.bind(this)
+          });
+          var oCheckboxContainer = new sap.m.HBox({
+            justifyContent: "End",
+            items: [oCheckBox],
+          });
+          dialog.addContent(oCheckboxContainer);
+          /*         this._oCheckBox = oCheckBox;
+                  this._oCheckBox.setSelected(this._bSaldoScorta) */
+
+
+          table.bindAggregation('items', {
+            path: '/ZZ1_MFP_ASSIGNMENT',
+            filters: [
+              new sap.ui.model.Filter({
+                filters: [
+                  new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.EQ, obj.CplndOrd),
+                  new sap.ui.model.Filter("FSH_MPLO_ORD", sap.ui.model.FilterOperator.StartsWith, obj.CplndOrd + "_O")
+                ],
+                and: false // OR → mostra sia originali che surplus
+              }),
+              new sap.ui.model.Filter("MATNR", sap.ui.model.FilterOperator.EQ, obj.Material)
+            ],
+            template: new sap.m.ColumnListItem({
+              highlight: {
+                parts: ['SAP_UUID', 'highlight>/assignedRecords'],
+                formatter: function (uuid, assignedRecords) {
+                  return assignedRecords?.includes(uuid) ? "Success" : "None";
+                }
+              },
+              cells: [
+                new sap.m.ObjectIdentifier({ title: "{CHARG}" }),
+                new sap.m.Text({ text: "{StockSegment}" }),
+                new sap.m.Text({ text: "{SpecialStock}" }),
+                new sap.m.Text({ text: "{BatchBySupplier}" }),
+                new sap.m.Text({ text: "{LGORT}" }),
+                new sap.m.Text({ text: "{FABB_TOT_V}" }),
+                new sap.m.Text({ text: "{COPERTURA}" }),
+                new sap.m.Text({ text: "{Scorta}" }),
+                //new sap.m.Input({ value: "{COPERTURA_EDITABLE}" }),
+                new sap.m.Input({
+                  value: "{QTA_ASS_V}", change: function (oEvent) {
+                    var oInput = oEvent.getSource();
+                    var sNewValue = sap.ui.getCore().byId(oInput.getId()).getValue();
+                    sNewValue = sNewValue.toString().replace(",", ".")
+
+                    var remainingQty = sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").getText()
+                    var requiredQty = sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
+
+                    //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(Number(requiredQty) - Number(sNewValue))
+
+                    // Esempio: aggiornare un'altra proprietà
+                    // oContext.getModel().setProperty(oContext.getPath() + "/SomeField", sNewValue);
+                  }
+                }),
+                //new sap.m.Text({ text: "{BatchBySupplier}" })
+              ]
+            }),
+            templateShareable: false,
+            parameters: { $$updateGroupId: 'CreatePezzeBatch' },
+          });
+
+          // modifica DL - aggiungo campo con quantità rimamente
+          //sap.ui.getCore().byId("fragmentPezze--inputRemainingQty").setText(dialog.getModel("selected").oData.OpenQty);
+          // modifica DL - aggiungo campo con quantità rimamente - FINE
+
+          const binding = table.getBinding('items');
+          binding.resetChanges();
+          const oODataModel = table.getModel();
+          binding.attachDataReceived(async function () {
+            //se il submit è stato completato chiudere
+            const submitCompleted = dialog.getModel('selected').getProperty('/submitCompleted');
+            if (submitCompleted) {
+              console.log("Submit già completato, non ricreo i record");
+              return;
+            }
+            await binding.requestContexts(0, 1);
+
+            const oComponent = this._controller.getOwnerComponent();
+            let highlightModel = oComponent.getModel('highlight');
+
+            if (!highlightModel) {
+              highlightModel = new sap.ui.model.json.JSONModel({ assignedRecords: [] });
+              oComponent.setModel(highlightModel, 'highlight');
+            }
+
+            const alreadyAssigned = binding.getContexts()
+              .filter(ctx => !ctx.isTransient())
+              .map(ctx => ctx.getObject())
+              .filter(obj => obj && obj.SAP_UUID)
+              .map(obj => obj.SAP_UUID);
+
+            const assignedObjects = binding.getContexts()
+              .filter(ctx => !ctx.isTransient())
+              .map(ctx => ctx.getObject())
+              .filter(obj =>
+                obj &&
+                obj.SAP_UUID &&
+                obj.Scorta !== "X"
+              );
+
+            const assignedQty = assignedObjects.reduce((acc, obj) => {
+              return acc + (Number(obj.QTA_ASS_V) || 0);
+            }, 0);
+
+            const requiredQty = Number(
+              sap.ui.getCore().byId("fragmentPezze--inputRequiredQuantity").getText()
+            );
+
+            // Remaining Qty deve considerare SOLO gli originali
+            const remainingQty = (requiredQty - assignedQty).toFixed(3);
+
+            sap.ui.getCore()
+              .byId("fragmentPezze--inputRemainingQty")
+              .setText(remainingQty);
+
+            console.log("RemainingQty aggiornata:", remainingQty);
+
+            //Highlight SOLO quelli già assegnati in backend
+            highlightModel.setProperty('/assignedRecords', [...new Set(alreadyAssigned)]);
+
+            // sommatoria AvaibilityQty 
+            const TotAvaibilityQty = _selectedItems.reduce((acc, item) => acc + parseInt(item.AvaibilityQty || 0), 0);
+            console.log("Total Availability Quantity: ", TotAvaibilityQty);
+            const selectedItemLength = _selectedItems.length;
+
+            _selectedItems.forEach((_item) => {
+              const item = structuredClone(_item)
+              // Aggiungere in riga la colonna % Coverage rappresenta (Avaibility Quantity di riga / totale delle Avaibility Quantiy delle righe selezionate) * 100
+              const COPERTURA = Math.round(parseInt(item.AvaibilityQty) / TotAvaibilityQty * 100);
+              // Il campo Quantity to Assign deve essere modificabile a mano e deve seguire il seguente algoritmo: 
+              // total Avaibility qty * la percentuale di copertura del punto precedente, presentare il minore tra questa operazione e la Available Quantity di riga.
+              let QTA_ASS_V;
+              if (selectedItemLength === 1) {
+                let remainingQtyNumber = Number(remainingQty);
+                QTA_ASS_V = remainingQtyNumber;
+              } else {
+                QTA_ASS_V = Math.min(Number(obj.AvailableQuantity), (obj.AvailableQuantity * (COPERTURA / 100)));
+              }
+
+              const SAP_UUID = crypto.randomUUID()
+              //controllo su InventorySpecialStockType - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+              if (item.InventorySpecialStockType && item.InventorySpecialStockType.startsWith('_')) {
+                item.InventorySpecialStockType = '';
+              }
+              //controllo su SpecialStock - se ha l'identificativo riportarlo a stringa vuota altrimenti fallisce la chiamata
+              if (item.SpecialStock && item.SpecialStock.startsWith('_')) {
+                item.SpecialStock = '';
+              }
+
+              const newCreate = structuredClone({
+                "SAP_UUID": SAP_UUID,
+                "WERKS": item.Plant,
+                "LGORT": item.StorageLocation || "X",
+                "FSH_MPLO_ORD": obj.CplndOrd,
+                "BAGNI": item.dye_lot || "X",
+                "MATNR": item.Material,
+                "CHARG": item.Batch,
+                "Bagno": item.dye_lot,
+                //"BatchBySupplier": 12345,
+                "QTA_ASS_V": QTA_ASS_V.toFixed(3).toString(),
+                "QTA_ASS_U": "",
+                "QTA_ASS_U_Text": "",
+                "FABB_TOT_V": item.AvaibilityQty || 0,
+                "FABB_TOT_U": "",
+                "FABB_TOT_U_Text": "",
+                "COPERTURA": COPERTURA,
+                //"COPERTURA_EDITABLE": COPERTURA,
+                "SORT": 0,
+                "StockSegment": item.StockSegment,
+                "SAP_CreatedDateTime": new Date(),
+                "SAP_CreatedByUser": "LASPATAS",
+                "SAP_CreatedByUser_Text": "",
+                "SAP_LastChangedDateTime": new Date(),
+                "SAP_LastChangedByUser": "LASPATAS",
+                "SAP_LastChangedByUser_Text": "X",
+                "BatchBySupplier": item.BatchBySupplier,
+                "SpecialStock": item.InventorySpecialStockType,
+                "SaldoScorta": !!this._bSaldoScorta,
+                "Scorta": ""
+              })
+              newCreate._origProposedQty = QTA_ASS_V;
+              const isPresent = binding.getContexts().some(context =>
+                context.getObject().CHARG === _item.Batch &&
+                context.getObject().LGORT === _item.StorageLocation
+              );
+              if (!isPresent) {
+                console.warn("Combined planned order is not present in binding.");
+                binding.create(newCreate, false, false, false);
+              } else {
+                console.log("Combined planned order is present in binding.");
+              }
+            });
+            // binding.refresh(true);
+            table.invalidate(); // Forza il rendering della tabella
+          }.bind(this));
+          dialog.open();
         }.bind(this));
-        dialog.open();
-      }.bind(this));
+      };
+
+      if (assigned.length > 0 || (assigned.length === 0 && selectedGrouped.length > 1)) {
+
+        const allBatches = Object.values(
+          [...selectedGrouped, ...assigned].reduce((acc, r) => {
+            const b = r[sBatchField];
+            if (b) acc[b] = r;
+            return acc;
+          }, {})
+        );
+
+        const check = (tipo) =>
+          aCriterio
+            .filter(c => c.TipoCheck === tipo)
+            .map(c => {
+              const f = c.CheckCampo;
+
+              const distinct = [...new Set(
+                allBatches
+                  .map(r => r[f])
+                  .filter(v => !isEmpty(v))
+                  .map(v => (typeof v === "string" ? v.trim() : String(v)))
+              )];
+
+
+              return distinct.length > 1
+                ? { Campo: f, Tipo: tipo, ValoriDiversi: distinct }
+                : null;
+            })
+            .filter(Boolean);
+
+
+        const errors = check("E");
+        if (errors.length) {
+          sap.m.MessageBox.error("Non è possibile procedere con l’assegnazione", {
+            title: "Errore di coerenza"
+          });
+          return;
+        }
+
+        const warnings = check("W");
+        if (warnings.length) {
+          sap.m.MessageBox.warning(
+            "Sono presenti incoerenze. Vuoi continuare comunque?",
+            {
+              title: "Attenzione",
+              actions: [sap.m.MessageBox.Action.YES, sap.m.MessageBox.Action.NO],
+              emphasizedAction: sap.m.MessageBox.Action.NO,
+              onClose: function (oAction) {
+                if (oAction === sap.m.MessageBox.Action.YES) {
+                  proceed();
+                }
+                // NO -> non faccio nulla
+              }.bind(this)
+            }
+          );
+          return; // importantissimo: blocco qui
+        }
+        //nessun errore e nessun warning -> continuo normale
+        proceed();
+        return;
+      }
+      //modifica MDB - controllo criteri batch - 28/01/2026 - FINE
+      proceed();
     },
     AssegnaAuto: function (oEvent) {
       debugger;
@@ -744,7 +884,6 @@ sap.ui.define([
       } else {
         MessageToast.show("Disassemble failed.");
       }
-
     },
     doWhereUsed: function (oEvent) {
       // sap.m.MessageToast.show("Custom handler invoked. [WHERE USED]");
