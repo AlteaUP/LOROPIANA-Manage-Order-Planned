@@ -31,7 +31,7 @@ sap.ui.define(
                     }
                 ));
             },
-            pressFragment: function (e) {
+            pressFragment: async function (e) {
                 debugger;
                 const idTable = e.getParameter('id').split('::').slice(0, -2).join("::")
                 const oTable = sap.ui.getCore().byId(idTable)._oTable;
@@ -42,87 +42,152 @@ sap.ui.define(
                     MessageToast.show("Select at least one item");
                     return;
                 }
+
+                const cplndOrds = [];
                 const oModel = this.getOwnerComponent().getModel()
-                const _selectedItems = []
+                let _selectedItems = []
                 for (let i = 0; i < selectedItems.length; i++) {
                     const oObj = selectedItems[i].getBindingContext().getObject()
                     _selectedItems.push(oObj)
+                    cplndOrds.push(oObj.CplndOrd)
                 }
-                const model = new JSONModel()
-                model.setData({ TypeOrder: 'Z300', selectedItems: _selectedItems })
+                //gestione blocco conversione
+                const proceed = () => {
+                    const model = new JSONModel()
+                    model.setData({ TypeOrder: 'Z300', selectedItems: _selectedItems })
 
-                if (!this._fragmentConvert) {
-                    this._fragmentConvert = this.loadFragment({
-                        id: "fragmentConverti",
-                        name: "manageplannedorder.manageplannedorder.ext.fragment.Converti",
-                        controller: this
-                    });
-                }
-
-                this._fragmentConvert.then(function (dialog) {
-                    dialog.setModel(model, 'selected');
-                    dialog.setModel(oModel)
-                    const tabella = dialog.getContent().at(-1);
-
-                    const filters = []
-                    _selectedItems.forEach((item) => {
-                        if (!item) return;
-                        const filter = new Filter("FSH_CPLND_ORD", FilterOperator.EQ, item.CplndOrd)
-                        filters.push(filter)
-                    })
-
-                    tabella.bindAggregation('items', {
-                        path: '/ConvertPLO',
-                        filters,
-                        template: new sap.m.ColumnListItem({
-                            cells: [
-                                new sap.m.ObjectIdentifier({
-                                    title: "{FSH_CPLND_ORD}"
-                                }),
-                                new sap.m.ObjectIdentifier({
-                                    title: "{CrossPlantConfigurableProduct}"
-                                }),
-                                new sap.m.Text({
-                                    text: "{AUART}"
-                                }),
-                                new sap.m.Input({
-                                    value: "{TOT_QTY}"
-                                }),
-                                new sap.m.ObjectIdentifier({
-                                    title: "{PlannedTotalQtyInBaseUnit}"
-                                }),
-                                new sap.m.Text({
-                                    text: "{UNIT}"
-                                })
-                            ]
-                        }),
-                        parameters: { $$updateGroupId: 'CreateConvertPLO' },
-                    });
-
-                    const binding = tabella.getBinding('items');
-                    binding.resetChanges()
-
-                    _selectedItems.forEach((item) => {
-                        binding.create({
-                            FSH_CPLND_ORD: item.CplndOrd,
-                            AUART: "Z300",
-                            TOT_QTY: item.PlndOrderCommittedQty.toString(), //  33,
-                            UNIT: "EA",
-                            PlannedTotalQtyInBaseUnit: item.PlannedTotalQtyInBaseUnit,
-                            CrossPlantConfigurableProduct: item.CrossPlantConfigurableProduct,
+                    if (!this._fragmentConvert) {
+                        this._fragmentConvert = this.loadFragment({
+                            id: "fragmentConverti",
+                            name: "manageplannedorder.manageplannedorder.ext.fragment.Converti",
+                            controller: this
                         });
-                    });
+                    }
 
-                    dialog.attachEventOnce('afterOpen', function () {
-                        const oInput = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--inputTypeOrder');
-                        if (oInput) {
-                            oInput.focus();
-                            oInput.attachLiveChange(this.onTypeOrderLiveChange.bind(this));
-                        }
+                    this._fragmentConvert.then(function (dialog) {
+                        dialog.setModel(model, 'selected');
+                        dialog.setModel(oModel)
+                        const tabella = dialog.getContent().at(-1);
+
+                        const filters = []
+                        _selectedItems.forEach((item) => {
+                            if (!item) return;
+                            const filter = new Filter("FSH_CPLND_ORD", FilterOperator.EQ, item.CplndOrd)
+                            filters.push(filter)
+                        })
+
+                        tabella.bindAggregation('items', {
+                            path: '/ConvertPLO',
+                            filters,
+                            template: new sap.m.ColumnListItem({
+                                cells: [
+                                    new sap.m.ObjectIdentifier({
+                                        title: "{FSH_CPLND_ORD}"
+                                    }),
+                                    new sap.m.ObjectIdentifier({
+                                        title: "{CrossPlantConfigurableProduct}"
+                                    }),
+                                    new sap.m.Text({
+                                        text: "{AUART}"
+                                    }),
+                                    new sap.m.Input({
+                                        value: "{TOT_QTY}"
+                                    }),
+                                    new sap.m.ObjectIdentifier({
+                                        title: "{PlannedTotalQtyInBaseUnit}"
+                                    }),
+                                    new sap.m.Text({
+                                        text: "{UNIT}"
+                                    })
+                                ]
+                            }),
+                            parameters: { $$updateGroupId: 'CreateConvertPLO' },
+                        });
+
+                        const binding = tabella.getBinding('items');
+                        binding.resetChanges()
+
+                        _selectedItems.forEach((item) => {
+                            binding.create({
+                                FSH_CPLND_ORD: item.CplndOrd,
+                                AUART: "Z300",
+                                TOT_QTY: item.PlndOrderCommittedQty.toString(), //  33,
+                                UNIT: "EA",
+                                PlannedTotalQtyInBaseUnit: item.PlannedTotalQtyInBaseUnit,
+                                CrossPlantConfigurableProduct: item.CrossPlantConfigurableProduct,
+                            });
+                        });
+
+                        dialog.attachEventOnce('afterOpen', function () {
+                            const oInput = sap.ui.getCore().byId('manageplannedorder.manageplannedorder::ZZ1_CombinedPlnOrdersAPIMain--fragmentPezze--inputTypeOrder');
+                            if (oInput) {
+                                oInput.focus();
+                                oInput.attachLiveChange(this.onTypeOrderLiveChange.bind(this));
+                            }
+                        }.bind(this));
+
+                        dialog.open();
                     }.bind(this));
+                };
+                const aValues = [...new Set(cplndOrds)].filter(Boolean);
+                let aInvalidCplndOrd = [];
+                try {
+                    const aFilters = aValues.map(v =>
+                        new sap.ui.model.Filter("CplndOrd", sap.ui.model.FilterOperator.EQ, v)
+                    );
 
-                    dialog.open();
-                }.bind(this));
+                    const oListBinding = oModel.bindList(
+                        "/ZZ1_I_PLANNEDORDER",
+                        null,
+                        null,
+                        aFilters,
+                        { $select: "hasstandardprice,CplndOrd" }
+                    );
+
+                    const aContexts = await oListBinding.requestContexts(0, 1000);
+
+                    aInvalidCplndOrd = [
+                        ...new Set(
+                            aContexts
+                                .map(c => c.getObject())
+                                .filter(o => o?.hasstandardprice === false)
+                                .map(o => o.CplndOrd)
+                        )
+                    ];
+
+                } catch (e) {
+                    console.error("Errore lettura ZZ1_I_PLANNEDORDER:", e);
+                }
+
+                _selectedItems = _selectedItems.filter(oItem =>
+                    !aInvalidCplndOrd.includes(oItem.CplndOrd)
+                );
+
+                if (aInvalidCplndOrd.length > 0) {
+
+                    const sCommesse = aInvalidCplndOrd.join(", ");
+
+                    sap.m.MessageBox.warning(
+                        `Commessa/e ${sCommesse} bloccata/e per materiale senza costo standard`,
+                        {
+                            actions: [sap.m.MessageBox.Action.OK],
+                            emphasizedAction: sap.m.MessageBox.Action.OK,
+
+                            onClose: () => {
+                                //Se non resta nulla → esco
+                                if (_selectedItems.length === 0) {
+                                    return;
+                                }
+                                proceed();;
+                            }
+                        }
+                    );
+
+                    return;
+                }else {
+                    proceed();
+                }
+
             },
             pressComponenti: async function (e) {
                 debugger

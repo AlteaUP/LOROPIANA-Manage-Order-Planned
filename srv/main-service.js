@@ -78,12 +78,20 @@ module.exports = class MainService extends cds.ApplicationService {
       /*  if (!cols.some(c => c.ref && c.ref[0] === 'ConfirmedQuantity_V')) {
          req.query.SELECT.columns.push({ ref: ['ConfirmedQuantity_V'] });
        } */
-      if (!cols.some(c => c.ref && c.ref[0] === 'BillOfOperationsGroup')) {
-        req.query.SELECT.columns.push({ ref: ['BillOfOperationsGroup'] });
-      }
+      const requiredCols = [
+        'BillOfOperationsGroup',
+        'FullCycle',
+        'ConversionSedapta'
+      ];
 
-      if (!cols.some(c => c.ref && c.ref[0] === 'FullCycle')) {
-        req.query.SELECT.columns.push({ ref: ['FullCycle'] });
+      const missingCols = requiredCols.filter(
+        col => !cols.some(c => c.ref && c.ref[0] === col)
+      );
+
+      if (missingCols.length) {
+        missingCols.forEach(col => {
+          req.query.SELECT.columns.push({ ref: [col] });
+        });
       }
 
       const res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
@@ -151,10 +159,15 @@ module.exports = class MainService extends cds.ApplicationService {
         if (committed_percent === 0) committed_percent = 100;
         //if (confirmed_percent === 0) confirmed_percent = 100;
 
+        //gestione campo coversione Sedapta
+        let Sedapta_indicator = "";
+        let Sedapta_criticality = item.ConversionSedapta ? 3 : 0;
         return {
           ...item,
           committed_percent,
           committed_criticality,
+          Sedapta_criticality,
+          Sedapta_indicator
           //confirmed_percent,
           //confirmed_criticality
         };
@@ -171,6 +184,18 @@ module.exports = class MainService extends cds.ApplicationService {
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_CombinPlannedOrdersCom", async (req) => {
 
       return ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+    });
+
+    this.on("*", "ZZ1_I_PLANNEDORDER", async (req) => {
+
+      let res =  await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+
+      const key = item => item.PlannedOrder;
+      res = Array.from(
+        new Map(res.map(item => [key(item), item])).values()
+      );
+      
+      return res;
     });
 
     this.on("*", "ZZ1_CombinedPlnOrdersAPI/to_ZZ1_PLOCAPACITYCORD", async (req) => {

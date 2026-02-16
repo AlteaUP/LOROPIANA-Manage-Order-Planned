@@ -227,6 +227,8 @@ service MainService {
       null as committed_criticality  : Integer,
       null as committed_percent      : Integer,
       null as confirmed_criticality  : Integer,
+      null as Sedapta_criticality    : Integer,
+      null as Sedapta_indicator      : String,
       null as confirmed_percent      : Integer,
       null as zsed_priority          : String(15),
       null as PlannedOrderBOMIsFixed : Boolean, 

@@ -97,6 +97,14 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
         },
+        {
+            $Type       : 'UI.DataField',
+            Value       : Sedapta_indicator,
+            Criticality : Sedapta_criticality,
+            Label       : 'Conversione SedApta',
+            ![@HTML5.CssDefaults]: {width: '5rem',
+            },
+        },
 /*         {
             $Type                : 'UI.DataFieldForAnnotation',
             Target               : '@UI.Chart#radialChartConfirmed',
@@ -177,12 +185,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         },
         {
             $Type: 'UI.DataField',
-            Value: to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterInternalID,
+            Value: to_ZZ1_PLOCAPACITYCORD_TEXT.WorkCenterInternalID,
             Label: '{i18n>WorkCenterInternalId}',
         },
         {
             $Type: 'UI.DataField',
-            Value: to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterText,
+            Value: to_ZZ1_PLOCAPACITYCORD_TEXT.WorkCenterText,
             Label: '{i18n>WorkCenterText}',
         },
         {

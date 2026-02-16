@@ -1,4 +1,4 @@
-/* checksum : 3fa173fecdfa1bdac143f60ff9cdb458 */
+/* checksum : c7e5610e119b736fd214087897b54278 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -713,6 +713,10 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Material Group'
   FullCycle : String(9);
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Conversion Sedapta'
+  @sap.quickinfo : 'Data element for domain BOOLE: TRUE (=''X'') and FALSE (='' '')'
+  ConversionSedapta : Boolean;
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_I_PLANNEDORDER : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
@@ -1203,6 +1207,9 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {
   zsed_priority : String(15);
   @sap.label : 'Order Personalization'
   zcrorder_person : String(20);
+  @sap.label : 'Current CostEstimate'
+  @sap.quickinfo : 'Standard Cost Estimate for Current Period'
+  hasstandardprice : Boolean;
 };
 
 @cds.external : true

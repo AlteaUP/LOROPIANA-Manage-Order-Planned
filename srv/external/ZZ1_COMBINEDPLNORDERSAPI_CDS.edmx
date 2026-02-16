@@ -245,6 +245,7 @@
 <Property Name="StatusSedapta" Type="Edm.String" MaxLength="15" sap:required-in-filter="false" sap:label="Status Sedapta" sap:quickinfo="Text of length 15"/>
 <Property Name="FullCycleFilter" Type="Edm.Boolean" sap:required-in-filter="false" sap:label="FullCycleFilter" sap:quickinfo="Truth Value: True/False"/>
 <Property Name="FullCycle" Type="Edm.String" MaxLength="9" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Material Group"/>
+<Property Name="ConversionSedapta" Type="Edm.Boolean" sap:required-in-filter="false" sap:label="Conversion Sedapta" sap:quickinfo="Data element for domain BOOLE: TRUE (='X') and FALSE (=' ')"/>
 <NavigationProperty Name="to_ZZ1_CombinPlannedOrdersCom" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" FromRole="FromRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B" ToRole="ToRole_assoc_0E1F6A60698CBFA85C707C3AFE8B8F1B"/>
 <NavigationProperty Name="to_ZZ1_I_PLANNEDORDER" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_0493A6E43C2D7A6727B9155A12B7A709" FromRole="FromRole_assoc_0493A6E43C2D7A6727B9155A12B7A709" ToRole="ToRole_assoc_0493A6E43C2D7A6727B9155A12B7A709"/>
 <NavigationProperty Name="to_ZZ1_MasterPlannedOrders" Relationship="ZZ1_COMBINEDPLNORDERSAPI_CDS.assoc_14452F1BDEBB4D010D6E121B05303A09" FromRole="FromRole_assoc_14452F1BDEBB4D010D6E121B05303A09" ToRole="ToRole_assoc_14452F1BDEBB4D010D6E121B05303A09"/>
@@ -399,6 +400,7 @@
 <Property Name="WorkCenterInternalID" Type="Edm.String" MaxLength="8" sap:display-format="NonNegative" sap:label="Work Center ID"/>
 <Property Name="zsed_priority" Type="Edm.String" MaxLength="15" sap:label="Sedapta Priority"/>
 <Property Name="zcrorder_person" Type="Edm.String" MaxLength="20" sap:label="Order Personalization"/>
+<Property Name="hasstandardprice" Type="Edm.Boolean" sap:label="Current CostEstimate" sap:quickinfo="Standard Cost Estimate for Current Period"/>
 </EntityType>
 <EntityType Name="ZZ1_MasterPlannedOrdersType" sap:label="Master Planned Orders" sap:content-version="1">
 <Key>

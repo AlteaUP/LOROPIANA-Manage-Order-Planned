@@ -454,7 +454,7 @@ sap.ui.define([
               }.bind(this)
             }
           );
-          return; // importantissimo: blocco qui
+          return;
         }
         //nessun errore e nessun warning -> continuo normale
         proceed();
