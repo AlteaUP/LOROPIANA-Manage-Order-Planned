@@ -36,6 +36,7 @@ module.exports = class MainService extends cds.ApplicationService {
     const ZZ1_RFM_WRKCHARVAL_F4_CDS = await cds.connect.to("ZZ1_RFM_WRKCHARVAL_F4_CDS");
     const ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS = await cds.connect.to("ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS");
     const ZZ1_STORAGE_LOCATION_CDS = await cds.connect.to("ZZ1_STORAGE_LOCATION_CDS");
+    const ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS = await cds.connect.to("ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS");
     //const ZMF_PLPO_PLAS_CDS = await cds.connect.to("ZMF_PLPO_PLAS_CDS");
 
 
@@ -188,13 +189,13 @@ module.exports = class MainService extends cds.ApplicationService {
 
     this.on("*", "ZZ1_I_PLANNEDORDER", async (req) => {
 
-      let res =  await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
+      let res = await ZZ1_COMBINEDPLNORDERSAPI_CDS.run(req.query);
 
       const key = item => item.PlannedOrder;
       res = Array.from(
         new Map(res.map(item => [key(item), item])).values()
       );
-      
+
       return res;
     });
 
@@ -2992,9 +2993,26 @@ module.exports = class MainService extends cds.ApplicationService {
       return result;
     });
     //Match code ProductSeason
-    this.on("*", "ZC_RFM_PLO_PRODUCT_SEASON_F4", async (req) => {
+    this.on("*", "ZC_RFM_PLO_PRODUCT_SEASON_F4_season", async (req) => {
       const result = await ZMFP_MRP_PRODUCT_SEASON_F4.run(req.query);
-      return result;
+      const unique = [...new Set(
+        result
+          .map(r => r.ProductSeason)
+          .filter(v => v != null && v !== "")
+      )];
+
+      return unique.map(v => ({ ProductSeason: v }));
+    });
+    //Match code ProductSeasonYear
+    this.on("*", "ZC_RFM_PLO_PRODUCT_SEASON_F4_year", async (req) => {
+      const result = await ZMFP_MRP_PRODUCT_SEASON_F4.run(req.query);
+      const unique = [...new Set(
+        result
+          .map(r => r.ProductSeasonYear)
+          .filter(v => v != null && v !== "")
+      )];
+
+      return unique.map(v => ({ ProductSeasonYear: v }));
     });
     //Match code WorkCenter
     this.on("*", "ZC_RFM_WORKCENTER_F4", async (req) => {
@@ -3004,6 +3022,11 @@ module.exports = class MainService extends cds.ApplicationService {
 
     this.on("*", "ZZ1_ZZ1_MFP_CHECKCAMPIBATC", async (req) => {
       const result = await ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.run(req.query);
+      return result;
+    });
+
+    this.on("*", "ZZ1_ZMFG_SEGMENT_DOCTYPE", async (req) => {
+      const result = await ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS.run(req.query);
       return result;
     });
     //hook per gestire icona in tab Componenti

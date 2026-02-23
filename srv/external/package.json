@@ -140,6 +140,10 @@
       "ZZ1_STORAGE_LOCATION_CDS": {
         "kind": "odata-v2",
         "model": "srv/external/ZZ1_STORAGE_LOCATION_CDS"
+      },
+      "ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS"
       }
     }
   },

@@ -2269,7 +2269,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label                   : 'Product Season Year',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4',
+            CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4_year',
             SearchSupported: true,
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
@@ -2287,7 +2287,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
         Common.Label                   : 'Product Season',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4',
+            CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4_season',
             SearchSupported: true,
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
@@ -2300,9 +2300,9 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
     )
 };
 
-annotate service.ZC_RFM_PLO_PRODUCT_SEASON_F4 with @( 
+/* annotate service.ZC_RFM_PLO_PRODUCT_SEASON_F4 with @( 
        UI.SelectionFields: [ProductSeason, ProductSeasonYear]       
-);
+); */
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     PlannedOrderType @(

@@ -33,6 +33,9 @@ sap.ui.define(
             },
             pressFragment: async function (e) {
                 debugger;
+                sap.ui.core.BusyIndicator.show(0);
+                this.noSegment = false;
+                const oModel = this.getOwnerComponent().getModel()
                 const idTable = e.getParameter('id').split('::').slice(0, -2).join("::")
                 const oTable = sap.ui.getCore().byId(idTable)._oTable;
                 // remove latest element
@@ -40,21 +43,76 @@ sap.ui.define(
                 const selectedItems = oTable.getSelectedItems()
                 if (selectedItems.length === 0) {
                     MessageToast.show("Select at least one item");
+                    sap.ui.core.BusyIndicator.hide();
                     return;
+                }
+                //recupero AUART da CBO dedicato
+                const aSegments = [...new Set(
+                    selectedItems
+                        .map(r => r.getBindingContext().getObject().StockSegment)
+                        .filter(Boolean)
+                )];
+
+                const Filter = sap.ui.model.Filter;
+                const FO = sap.ui.model.FilterOperator;
+                const mCplndOrdToDoctype = new Map();
+
+                if (aSegments.length) {
+                    //filtro OR su ZMFG-zsegment
+                    const aOrFilters = aSegments.map(seg => new Filter({
+                        path: "zsegment",
+                        operator: FO.EQ,
+                        value1: seg
+                    }));
+
+                    const oFilter = new Filter({ filters: aOrFilters, and: false });
+
+                    //leggo ZMFG una volta
+                    const oListBinding = oModel.bindList(
+                        "/ZZ1_ZMFG_SEGMENT_DOCTYPE",                   // <-- entity set/value help corretto
+                        null,
+                        null,
+                        [oFilter],
+                        { $select: "zsegment,zdoctype" }
+                    );
+
+                    const aCtx = await oListBinding.requestContexts(0, 1000); // o aSegments.length se 1:1
+                    const aRows = aCtx.map(c => c.getObject());
+
+                    //mappa segment -> doctype (se ci sono duplicati per zsegment, qui prende l'ultimo)
+                    const mSegmentToDoctype = new Map(
+                        aRows.map(r => [r.zsegment, r.zdoctype])
+                    );
+
+                    selectedItems.forEach(item => {
+                        const o = item.getBindingContext().getObject();
+                        const docType = mSegmentToDoctype.get(o.StockSegment) ?? "Z300";
+                        mCplndOrdToDoctype.set(o.CplndOrd, docType);
+                    });
+                    //valorizzo il campo tecnico su ogni record (usando CplndOrd come chiave)
+                    selectedItems.forEach(item => {
+                        const o = item.getBindingContext().getObject();
+                        o.sAuart = mCplndOrdToDoctype.get(o.CplndOrd) ?? "Z300";
+                        console.log("subito dopo set:", o.sAuart);
+                    });
+
+                } else {
+                    // nessun segmento valorizzato: default su tutte le righe
+                    this.noSegment = true;
                 }
 
                 const cplndOrds = [];
-                const oModel = this.getOwnerComponent().getModel()
                 let _selectedItems = []
                 for (let i = 0; i < selectedItems.length; i++) {
-                    const oObj = selectedItems[i].getBindingContext().getObject()
-                    _selectedItems.push(oObj)
+                    const oObj = selectedItems[i].getBindingContext().getObject();
+                    const sAuart = this.noSegment ? "Z300" : (mCplndOrdToDoctype.get(oObj.CplndOrd) ?? "Z300");
+                    _selectedItems.push({ ...oObj, sAuart });
                     cplndOrds.push(oObj.CplndOrd)
                 }
-                //gestione blocco conversione
+
                 const proceed = () => {
-                    const model = new JSONModel()
-                    model.setData({ TypeOrder: 'Z300', selectedItems: _selectedItems })
+                 /*    const model = new JSONModel()
+                    model.setData({ TypeOrder: 'Z300', selectedItems: _selectedItems }) */
 
                     if (!this._fragmentConvert) {
                         this._fragmentConvert = this.loadFragment({
@@ -65,7 +123,7 @@ sap.ui.define(
                     }
 
                     this._fragmentConvert.then(function (dialog) {
-                        dialog.setModel(model, 'selected');
+                        /* dialog.setModel(model, 'selected'); */
                         dialog.setModel(oModel)
                         const tabella = dialog.getContent().at(-1);
 
@@ -110,7 +168,7 @@ sap.ui.define(
                         _selectedItems.forEach((item) => {
                             binding.create({
                                 FSH_CPLND_ORD: item.CplndOrd,
-                                AUART: "Z300",
+                                AUART: item.sAuart,
                                 TOT_QTY: item.PlndOrderCommittedQty.toString(), //  33,
                                 UNIT: "EA",
                                 PlannedTotalQtyInBaseUnit: item.PlannedTotalQtyInBaseUnit,
@@ -129,6 +187,8 @@ sap.ui.define(
                         dialog.open();
                     }.bind(this));
                 };
+
+                //gestione blocco conversione
                 const aValues = [...new Set(cplndOrds)].filter(Boolean);
                 let aInvalidCplndOrd = [];
                 try {
@@ -159,9 +219,9 @@ sap.ui.define(
                     console.error("Errore lettura ZZ1_I_PLANNEDORDER:", e);
                 }
 
-                _selectedItems = _selectedItems.filter(oItem =>
+                /* _selectedItems = _selectedItems.filter(oItem =>
                     !aInvalidCplndOrd.includes(oItem.CplndOrd)
-                );
+                ); */
 
                 if (aInvalidCplndOrd.length > 0) {
 
@@ -174,17 +234,19 @@ sap.ui.define(
                             emphasizedAction: sap.m.MessageBox.Action.OK,
 
                             onClose: () => {
+                                sap.ui.core.BusyIndicator.hide();
                                 //Se non resta nulla → esco
-                                if (_selectedItems.length === 0) {
-                                    return;
-                                }
+                                /*  if (_selectedItems.length === 0) {
+                                     return;
+                                 } */
                                 proceed();;
                             }
                         }
                     );
-
+                    sap.ui.core.BusyIndicator.hide();
                     return;
-                }else {
+                } else {
+                    sap.ui.core.BusyIndicator.hide();
                     proceed();
                 }
 
@@ -325,13 +387,11 @@ sap.ui.define(
                 const a = this.getView().findAggregatedObjects(true, (c) => c.isA && c.isA("sap.ui.mdc.FilterBar"));
                 return a && a.length ? a[0] : null;
             },
-
             _getConditions: function (oFB) {
                 if (oFB.getFilterConditions) return oFB.getFilterConditions();
                 if (oFB.getConditions) return oFB.getConditions();
                 return {};
             },
-
             _setConditions: function (oFB, mCond) {
                 if (oFB.setFilterConditions) return oFB.setFilterConditions(mCond);
                 if (oFB.setConditions) return oFB.setConditions(mCond);

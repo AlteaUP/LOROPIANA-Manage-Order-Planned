@@ -18,6 +18,7 @@ using {ZMFP_MRP_PRODUCT_SEASON_F4} from './external/ZMFP_MRP_PRODUCT_SEASON_F4';
 using {ZMFP_MRP_WORKCENTER_F4} from './external/ZMFP_MRP_WORKCENTER_F4';
 using {ZZ1_RFM_WRKCHARVAL_F4_CDS} from './external/ZZ1_RFM_WRKCHARVAL_F4_CDS';
 using {ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS} from './external/ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS';
+using {ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS} from './external/ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS';
 //using {ZMF_PLPO_PLAS_CDS} from './external/ZMF_PLPO_PLAS_CDS';
 
 
@@ -109,8 +110,14 @@ service MainService {
   entity ZC_RFM_MRPCONTROLLER_F4         as projection on ZMFP_MRP_CONTROLLER_F4.ZC_RFM_MRPCONTROLLER_F4;
   //PlannedOrderType
   entity ZC_RFM_PLANNED_ORDER_TYPE_F4    as projection on ZMFP_MRP_PLANNEDORDER_TYPE_F4.ZC_RFM_PLANNED_ORDER_TYPE_F4;
+  //ProductSeasonYear
+  entity ZC_RFM_PLO_PRODUCT_SEASON_F4_year    as projection on ZMFP_MRP_PRODUCT_SEASON_F4.ZC_RFM_PLO_PRODUCT_SEASON_F4 {
+    key ProductSeasonYear
+  };
   //ProductSeason
-  entity ZC_RFM_PLO_PRODUCT_SEASON_F4    as projection on ZMFP_MRP_PRODUCT_SEASON_F4.ZC_RFM_PLO_PRODUCT_SEASON_F4;
+  entity ZC_RFM_PLO_PRODUCT_SEASON_F4_season    as projection on ZMFP_MRP_PRODUCT_SEASON_F4.ZC_RFM_PLO_PRODUCT_SEASON_F4 {
+    key ProductSeason
+  };
   //WorkCenter
   entity ZC_RFM_WORKCENTER_F4            as projection on ZMFP_MRP_WORKCENTER_F4.ZC_RFM_WORKCENTER_F4;
 
@@ -119,6 +126,8 @@ service MainService {
   entity ZZ1_RFM_WRKCHARVAL_F4           as projection on ZZ1_RFM_WRKCHARVAL_F4_CDS.ZZ1_RFM_WRKCHARVAL_F4;
 
   entity ZZ1_ZZ1_MFP_CHECKCAMPIBATC      as projection on ZZ1_ZZ1_MFP_CHECKCAMPIBATC_CDS.ZZ1_ZZ1_MFP_CHECKCAMPIBATC;
+
+  entity ZZ1_ZMFG_SEGMENT_DOCTYPE        as projection on ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS.ZZ1_ZMFG_SEGMENT_DOCTYPE;
 
   //entity ZMF_PLPO_PLAS                   as projection on ZMF_PLPO_PLAS_CDS.ZMF_PLPO_PLAS;
 

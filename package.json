@@ -733,6 +733,24 @@
             "path": "/sap/opu/odata/sap/ZMF_PLPO_PLAS_CDS"
           }
         }
+      },
+      "ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS",
+        "[hybrid]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "requestTimeout": 300000,
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/ZZ1_ZMFG_SEGMENT_DOCTYPE_CDS"
+          }
+        }
       }
     }
   },

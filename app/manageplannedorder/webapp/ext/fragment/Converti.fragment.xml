@@ -33,15 +33,15 @@
                 singleContainerFullSize="false"
                 layout="ColumnLayout"
             >
-                <Label
+             <!--    <Label
                     id="labelTypeOrder"
                     text="Type Order"
-                />
-                <Input
+                /> -->
+               <!--  <Input
                     id="inputTypeOrder"
                     value="{selected>/TypeOrder}"
                     maxLength="4"
-                />
+                /> -->
             </form:SimpleForm>
 
             <Table id="selectedItemsTableCombined">
