@@ -188,7 +188,7 @@ sap.ui.define(
                     }.bind(this));
                 };
 
-                //gestione blocco conversione
+                //gestione blocco conversione - INIZIO
                 const aValues = [...new Set(cplndOrds)].filter(Boolean);
                 let aInvalidCplndOrd = [];
                 try {
@@ -219,10 +219,6 @@ sap.ui.define(
                     console.error("Errore lettura ZZ1_I_PLANNEDORDER:", e);
                 }
 
-                /* _selectedItems = _selectedItems.filter(oItem =>
-                    !aInvalidCplndOrd.includes(oItem.CplndOrd)
-                ); */
-
                 if (aInvalidCplndOrd.length > 0) {
 
                     const sCommesse = aInvalidCplndOrd.join(", ");
@@ -249,6 +245,7 @@ sap.ui.define(
                     sap.ui.core.BusyIndicator.hide();
                     proceed();
                 }
+                //gestione blocco conversione - FINE
 
             },
             pressComponenti: async function (e) {
