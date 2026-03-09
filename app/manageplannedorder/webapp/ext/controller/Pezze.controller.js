@@ -417,6 +417,19 @@ sap.ui.define([
         .map(ctx => ({ ctx, obj: ctx.getObject() }))
         .filter(r => r.obj && r.obj.Scorta !== "X" && r.obj._origProposedQty !== undefined);
 
+      // Controllo quantità
+      const hasInvalidQty = rows.some(r => {
+        const qtaAss = Number(r.obj.QTA_ASS_V);
+        const fabbTot = Number(r.obj.FABB_TOT_V);
+
+        return qtaAss === 0 || qtaAss > fabbTot;
+      });
+
+      if (hasInvalidQty) {
+        sap.m.MessageToast.show("quantità non consentite");
+        return;
+      }
+
       const sumQtyUser = rows.reduce((acc, r) => acc + Number(r.obj.QTA_ASS_V), 0);
       const saldoScortaEnabled = rows.some(r => r.obj.SaldoScorta === true);
 

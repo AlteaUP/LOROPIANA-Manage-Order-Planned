@@ -1159,6 +1159,19 @@ sap.ui.define(
                     .map(ctx => ({ ctx, obj: ctx.getObject() }))
                     .filter(r => r.obj && r.obj._origProposedQty !== undefined);
 
+                // Controllo quantità
+                const hasInvalidQty = validRows.some(r => {
+                    const qtaAss = Number(r.obj.QTA_ASS_V);
+                    const fabbTot = Number(r.obj.FABB_TOT_V);
+
+                    return qtaAss === 0 || qtaAss > fabbTot;
+                });
+
+                if (hasInvalidQty) {
+                    sap.m.MessageToast.show("quantità non consentite");
+                    return;
+                }
+
                 const orderDetails = oContextComponent.orderDetails || [];
 
                 // array ordini effettivi
@@ -1501,6 +1514,9 @@ sap.ui.define(
                                 }),
                                 new sap.m.Text({
                                     text: "{MRPController}"
+                                }),
+                                new sap.m.Text({
+                                    text: "{MRPControllerName}"
                                 }),
                                 new sap.m.Text({
                                     text: "{CrossPlantConfigurableProduct}"

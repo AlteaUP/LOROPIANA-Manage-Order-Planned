@@ -286,6 +286,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type: 'UI.DataField',
             Value: MRPController,
+            Label: '{i18n>MrpController}'
         },
         {
             $Type: 'UI.DataField',
@@ -2189,7 +2190,7 @@ annotate service.ZZ1_PLOCAPACITYCORD with {
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     MRPController @(
-        Common.Label                   : 'MRPController',
+        Common.Label                   : '{i18n>MRPController}',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
             CollectionPath: 'ZC_RFM_MRPCONTROLLER_F4',
@@ -2199,11 +2200,15 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
                 LocalDataProperty: MRPController,
                 ValueListProperty: 'MRPController',
             },
-             {
+            {
+                $Type            : ' Common.ValueListParameterDisplayOnly',
+                ValueListProperty: 'MRPControllerName',
+            },
+            {
                 $Type            : 'Common.ValueListParameterIn', 
                 LocalDataProperty: ProductionPlant, 
                 ValueListProperty: 'Plant',
-             }],
+            }]
         },
         Common.ValueListWithFixedValues: false,
     )
@@ -2350,12 +2355,17 @@ annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
     }
 };
 
-annotate service.ZC_RFM_MRPCONTROLLER_F4 with {
+/* annotate service.ZC_RFM_MRPCONTROLLER_F4 with {
     MRPController @Common.Text : {
         $value : MRPControllerName,
         ![@UI.TextArrangement] : #TextLast,
     }
-};
+}; */
+
+annotate service.ZC_RFM_MRPCONTROLLER_F4 with {
+    MRPController @Common.Label: '{i18n>MRPControllerNM}';
+    MRPControllerName @Common.Label: '{i18n>MRPControllerName}';
+}
 
 annotate service.ZC_RFM_WORKCENTER_F4 with {
     WorkCenterInternalID @Common.Text : {

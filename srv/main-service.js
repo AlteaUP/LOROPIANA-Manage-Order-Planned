@@ -613,7 +613,7 @@ module.exports = class MainService extends cds.ApplicationService {
         grouped[mat].orderDetails.push({
           CplndOrd: row.CplndOrd,
           Material: row.Material,
-          RequiredQuantity: reqQty
+          RequiredQuantity: reqQty.toFixed(3).toString()
         });
       }
 
@@ -631,6 +631,7 @@ module.exports = class MainService extends cds.ApplicationService {
 
         item.TotalPlanAllQty = TotalPlanAllQty.toFixed(3);
         item.CombPlanAllQty = CombPlanAllQty.toFixed(3);
+        item.RequiredQuantity = Number(item.RequiredQuantity).toFixed(3);
 
         let chart_percent = Math.round(parseFloat(item.AvailableQuantity) / parseFloat(item.RequiredQuantity) * 100);
         let chart_criticality;
@@ -665,8 +666,6 @@ module.exports = class MainService extends cds.ApplicationService {
       aggregated.sort((a, b) => parseFloat(a.priority) - parseFloat(b.priority));
 
       aggregated.forEach(g => {
-        g.RequiredQuantity = String(g.RequiredQuantity);
-        g.CombPlanAllQty = String(g.CombPlanAllQty);
         g.AvailableQuantity = String(g.AvailableQuantity);
       });
 

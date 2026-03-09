@@ -932,6 +932,9 @@ sap.ui.define([
                 text: "{MRPController}"
               }),
               new sap.m.Text({
+                text: "{MRPControllerName}"
+              }),
+              new sap.m.Text({
                 text: "{CrossPlantConfigurableProduct}"
               }),
               new sap.m.Text({

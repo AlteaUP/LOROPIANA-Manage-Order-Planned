@@ -100,6 +100,12 @@
                             text="MRPController"
                         />
                     </Column>
+                    <Column id="columnMRPControllerNameWhereUsedA">
+                        <Text
+                            id="textMRPControllerNameWhereUsedA"
+                            text="MRPController Name"
+                        />
+                    </Column>
                     <Column id="columnCrossPlantConfigurableProductWhereUsedA">
                         <Text
                             id="textCrossPlantConfigurableProductWhereUsedA"
