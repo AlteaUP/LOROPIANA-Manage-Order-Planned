@@ -1460,21 +1460,6 @@ annotate service.ZZ1_CombinPlannedOrdersComClone with @(
             Value : ProductGroup,
             Label : 'Product Group',
         },
- /*         {
-            $Type : 'UI.DataField',
-            Value : ZZProj,
-            Label : '{i18n>zzproj}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : ZZColor,
-            Label : '{i18n>zzcolor}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : ZZTaglia,
-            Label : '{i18n>ZZTaglia}',
-        }, */
         {
             $Type: 'UI.DataField',
             Value: Batch,
