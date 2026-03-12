@@ -141,11 +141,15 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type : 'UI.DataField',
             Value : zzproj,
             Label : '{i18n>zzproj}',
+            ![@HTML5.CssDefaults]       : {width: '7rem',
+            }
         },
         {
             $Type : 'UI.DataField',
             Value : zzcolor,
             Label : '{i18n>zzcolor}',
+            ![@HTML5.CssDefaults]       : {width: '7rem',
+            }
         },
         {
             $Type : 'UI.DataField',
