@@ -1,32 +1,32 @@
 <edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData" Version="1.0">
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
 </edmx:Reference>
-<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2F…">
+<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Uri="http://lpapps20.lp.corp:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='LOCAL')/$value">
 <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
 </edmx:Reference>
 <edmx:DataServices m:DataServiceVersion="2.0">
@@ -65,10 +65,10 @@
 <Property Name="CostEstimate" Type="Edm.String" Nullable="false" MaxLength="12" sap:display-format="NonNegative" sap:required-in-filter="false" sap:label="ProdCostEst.No." sap:quickinfo="Cost Estimate Number - Product Costing"/>
 <Property Name="ResourceID" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Resource Name" sap:quickinfo="Resource Name (Stock Identifier)"/>
 <Property Name="CompanyCode" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Company Code"/>
-<Property Name="MatlWrhsStkQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlWrhsStkQtyInMatlBaseUnit" sap:quickinfo="Stock Quantity"/>
-<Property Name="MatlCnsmpnQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlCnsmpnQtyInMatlBaseUnit" sap:quickinfo="Consumption Quantity"/>
-<Property Name="MatlStkIncrQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlStkIncrQtyInMatlBaseUnit" sap:quickinfo="Stock Increase Quantity"/>
-<Property Name="MatlStkDecrQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlStkDecrQtyInMatlBaseUnit" sap:quickinfo="Stock Decrease Quantity"/>
+<Property Name="MatlWrhsStkQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlWrhsStkQtyInMatlBaseUnit"/>
+<Property Name="MatlCnsmpnQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlCnsmpnQtyInMatlBaseUnit"/>
+<Property Name="MatlStkIncrQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlStkIncrQtyInMatlBaseUnit"/>
+<Property Name="MatlStkDecrQtyInMatlBaseUnit" Type="Edm.Decimal" Precision="31" Scale="14" sap:required-in-filter="false" sap:unit="MaterialBaseUnit" sap:label="MatlStkDecrQtyInMatlBaseUnit"/>
 <Property Name="choice" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="choice"/>
 <Property Name="dye_lot" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="dye_lot"/>
 <Property Name="GROSS_LENGHT" Type="Edm.String" MaxLength="70" sap:required-in-filter="false" sap:label="GROSS_LENGHT"/>
@@ -121,6 +121,11 @@
 <Property Name="FreeDefinedIndicator1" Type="Edm.Boolean" sap:required-in-filter="false" sap:label="User field indicator" sap:quickinfo="User-defined field: Indicator for reports"/>
 <Property Name="ProductTheme" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Theme" sap:quickinfo="Fashion Theme"/>
 <Property Name="zzbusi" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Business"/>
+<Property Name="ZZColor" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Color"/>
+<Property Name="ZZProj" Type="Edm.String" MaxLength="7" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Proj Code"/>
+<Property Name="ZZProjDesc" Type="Edm.String" MaxLength="50" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Proj Description"/>
+<Property Name="ZZTaglia" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Size Grid"/>
+<Property Name="ZZTagliaDesc" Type="Edm.String" MaxLength="5" sap:display-format="UpperCase" sap:required-in-filter="false" sap:label="Size"/>
 <NavigationProperty Name="to_ZZ1_CombPlnOrdersStock" Relationship="ZZ1_COMBPLNORDERSSTOCKAPI_CDS.assoc_D849BEF3EA1D621CBBBB905E9A13C008" FromRole="FromRole_assoc_D849BEF3EA1D621CBBBB905E9A13C008" ToRole="ToRole_assoc_D849BEF3EA1D621CBBBB905E9A13C008"/>
 </EntityType>
 <Association Name="assoc_D849BEF3EA1D621CBBBB905E9A13C008" sap:content-version="1">

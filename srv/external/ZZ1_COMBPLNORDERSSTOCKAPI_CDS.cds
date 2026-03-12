@@ -1,4 +1,4 @@
-/* checksum : c134f55c54972f452be2ab6a47c4a479 */
+/* checksum : 0d16b513511251e7c08a7f933cc0b994 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -90,22 +90,18 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlWrhsStkQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Stock Quantity'
   MatlWrhsStkQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlCnsmpnQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Consumption Quantity'
   MatlCnsmpnQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkIncrQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Stock Increase Quantity'
   MatlStkIncrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.unit : 'MaterialBaseUnit'
   @sap.label : 'MatlStkDecrQtyInMatlBaseUnit'
-  @sap.quickinfo : 'Stock Decrease Quantity'
   MatlStkDecrQtyInMatlBaseUnit : Decimal(31, 14);
   @sap.required.in.filter : 'false'
   @sap.label : 'choice'
@@ -275,6 +271,26 @@ entity ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStockAPI {
   @sap.required.in.filter : 'false'
   @sap.label : 'Business'
   zzbusi : String(2);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Color'
+  ZZColor : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Proj Code'
+  ZZProj : String(7);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Proj Description'
+  ZZProjDesc : String(50);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Size Grid'
+  ZZTaglia : String(6);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Size'
+  ZZTagliaDesc : String(5);
   to_ZZ1_CombPlnOrdersStock : Association to many ZZ1_COMBPLNORDERSSTOCKAPI_CDS.ZZ1_CombPlnOrdersStock {  };
 };
 

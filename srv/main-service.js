@@ -42,7 +42,19 @@ module.exports = class MainService extends cds.ApplicationService {
 
 
 
+    function removeToLower(where) {
+      for (let i = 0; i < where.length; i++) {
+        const token = where[i];
 
+        if (token?.func === 'tolower' && token.args?.length) {
+          where[i] = token.args[0];
+        }
+
+        if (Array.isArray(token)) {
+          removeToLower(token);
+        }
+      }
+    }
 
     // ZZ1_CombinedPlnOrdersAPI - Start
     this.on("*", "ZZ1_CombinedPlnOrdersAPI", async (req) => {
@@ -50,6 +62,8 @@ module.exports = class MainService extends cds.ApplicationService {
       const where = req.query?.SELECT?.where;
 
       if (Array.isArray(where)) {
+        //rimuovo tolower se presente nel where
+        removeToLower(where);
         for (let i = 0; i <= where.length - 3; i++) {
           if (
             where[i]?.ref?.[0] === "FullCycleFilter" &&
@@ -67,7 +81,12 @@ module.exports = class MainService extends cds.ApplicationService {
             } else {
               where.splice(i, 3);
             }
-
+ 
+            //se presente rimuovo tolower
+          /*   const token = where[i];
+            if (token && token.func === 'tolower' && token.args?.length) {
+              where[i] = token.args[0]; // rimuove il tolower
+            } */
 
             break;
           }
@@ -81,8 +100,7 @@ module.exports = class MainService extends cds.ApplicationService {
        } */
       const requiredCols = [
         'BillOfOperationsGroup',
-        'FullCycle',
-        'ConversionSedapta'
+        'FullCycle'
       ];
 
       const missingCols = requiredCols.filter(
@@ -143,6 +161,22 @@ module.exports = class MainService extends cds.ApplicationService {
         records.length = 0;
         records.push(...filtered);
       }
+      //recupero zzproj e zzcolor da tabella Mara
+      var crossPlantConfigurableProduct = records[0].CrossPlantConfigurableProduct;
+
+      var maraCustomFields = await ZZ1_MARA_CUSTOM_FIELDS_API_CDS.run(
+        SELECT.from('ZZ1_MARA_CUSTOM_FIELDS_API')
+          .columns(['zzproj', 'zzcolor'])
+          .where({ Product: crossPlantConfigurableProduct })
+      );
+
+      if (maraCustomFields.length > 0) {
+        for (const rec of records) {
+          rec.zzproj = maraCustomFields[0].zzproj ?? "";
+          rec.zzcolor = maraCustomFields[0].zzcolor ?? "";
+        }
+      }
+
       const processed = records.map(item => {
         const total = Number(item.PlannedTotalQtyInBaseUnit) || 0;
         const committed = Number(item.PlndOrderCommittedQty) || 0;
@@ -161,18 +195,19 @@ module.exports = class MainService extends cds.ApplicationService {
         //if (confirmed_percent === 0) confirmed_percent = 100;
 
         //gestione campo coversione Sedapta
-        let Sedapta_indicator = "";
-        let Sedapta_criticality = item.ConversionSedapta ? 3 : 0;
+        //let Sedapta_indicator = "";
+        //let Sedapta_criticality = item.ConversionSedapta ? 3 : 0;
         return {
           ...item,
           committed_percent,
           committed_criticality,
-          Sedapta_criticality,
-          Sedapta_indicator
+          //Sedapta_criticality,
+          //Sedapta_indicator
           //confirmed_percent,
           //confirmed_criticality
         };
       });
+      //const unique = [...new Map(processed.map(r => [r.CplndOrd, r])).values()];
 
       return Array.isArray(res) ? processed : processed[0];
     });
@@ -2973,6 +3008,18 @@ module.exports = class MainService extends cds.ApplicationService {
        }); */
     //Match code ProductionPlant
     this.on("*", "ZC_RFM_PRODUCTION_PLANT_F4", async (req) => {
+      const PlantData = await ZZ1_STORAGE_LOCATION_CDS.run(
+        SELECT.from('ZZ1_STORAGE_LOCATION').columns('PLANT')
+      );
+      const aPlants = [...new Set(
+        PlantData.map(x => x.PLANT).filter(Boolean)
+      )];
+
+      if (aPlants.length === 0) {
+        return [];
+      }
+      req.query.where('Plant in', aPlants);
+
       const result = await zmfp_mrp_plant_f4.run(req.query);
       return result;
     });

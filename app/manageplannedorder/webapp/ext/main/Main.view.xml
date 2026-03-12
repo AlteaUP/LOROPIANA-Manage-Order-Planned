@@ -8,7 +8,7 @@
                    key="FullCycleFilter"
                    id="Full"
                    label="FullCycle"
-                   anchor="PlannedOrderType"
+                   anchor="ProductSeason"
                    placement="After"
                    property="FullCycleFilter">
              

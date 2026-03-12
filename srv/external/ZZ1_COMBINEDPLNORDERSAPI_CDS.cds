@@ -1,4 +1,4 @@
-/* checksum : c7e5610e119b736fd214087897b54278 */
+/* checksum : 8ff71fb713881cc5af96891d36ecc9ba */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -480,6 +480,151 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_Supplier_VH {
 @sap.deletable : 'false'
 @sap.searchable : 'true'
 @sap.content.version : '1'
+@sap.label : 'Unit of Measure'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_UnitOfMeasure {
+  @sap.text : 'UnitOfMeasure_Text'
+  @sap.label : 'Unit of Measure'
+  @sap.semantics : 'unit-of-measure'
+  key UnitOfMeasure : String(3) not null;
+  @sap.label : 'Meas. Unit Text'
+  @sap.quickinfo : 'Unit of Measurement Text (Maximum 30 Characters)'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  UnitOfMeasure_Text : String(30);
+  @sap.label : 'Internal SAP Code'
+  @sap.quickinfo : 'Unit of Measurement, Internal SAP Code (No Conversion)'
+  UnitOfMeasureSAPCode : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'to_ISOCode/UnitOfMeasureISOCode_Text'
+  @sap.label : 'ISO Code'
+  @sap.quickinfo : 'ISO Code for Unit of Measurement'
+  @sap.value.list : 'standard'
+  UnitOfMeasureISOCode : String(3);
+  @sap.label : 'Primary code'
+  @sap.quickinfo : 'Selection field for conversion from ISO code to int. code'
+  IsPrimaryUnitForISOCode : Boolean;
+  @sap.label : 'Decimal Rounding'
+  @sap.quickinfo : 'No. of decimal places for rounding'
+  UnitOfMeasureNumberOfDecimals : Integer;
+  @sap.label : 'Commercial Unit'
+  @sap.quickinfo : 'Commercial measurement unit ID'
+  UnitOfMeasureIsCommercial : Boolean;
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'to_Dimension/UnitOfMeasureDimension_Text'
+  @sap.label : 'Dimension'
+  @sap.quickinfo : 'Dimension key'
+  @sap.value.list : 'standard'
+  UnitOfMeasureDimension : String(6);
+  @sap.label : 'Numerator'
+  @sap.quickinfo : 'Numerator for conversion to SI unit'
+  SIUnitCnvrsnRateNumerator : Integer;
+  @sap.label : 'Denominator'
+  @sap.quickinfo : 'Denominator for conversion into SI unit'
+  SIUnitCnvrsnRateDenominator : Integer;
+  @sap.label : 'Exponent'
+  @sap.quickinfo : 'base ten exponent for conversion to SI unit'
+  SIUnitCnvrsnRateExponent : Integer;
+  @sap.label : 'Additive constant'
+  @sap.quickinfo : 'Additive constant for conversion to SI unit'
+  SIUnitCnvrsnAdditiveValue : Decimal(9, 6);
+  @sap.label : 'Exp. 10 Floating Pt'
+  @sap.quickinfo : 'Exponent of 10 for Floating Point Format'
+  UnitOfMeasureDspExponent : Integer;
+  @sap.label : 'Decimal Places'
+  @sap.quickinfo : 'Number of Decimal Places for Number Display'
+  UnitOfMeasureDspNmbrOfDcmls : Integer;
+  @sap.unit : 'UnitOfMeasureTemperatureUnit'
+  @sap.label : 'Temperature'
+  UnitOfMeasureTemperature : Double;
+  @sap.label : 'Temperature unit'
+  @sap.semantics : 'unit-of-measure'
+  UnitOfMeasureTemperatureUnit : String(3);
+  @sap.unit : 'UnitOfMeasurePressureUnit'
+  @sap.label : 'Pressure Value'
+  UnitOfMeasurePressure : Double;
+  @sap.label : 'Unit of Pressure'
+  @sap.semantics : 'unit-of-measure'
+  UnitOfMeasurePressureUnit : String(3);
+  to_Dimension : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_UnitOfMeasureDimension {  };
+  to_ISOCode : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_UnitOfMeasureISOCode {  };
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '1'
+@sap.label : 'Unit of Measure Dimension'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_UnitOfMeasureDimension {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'UnitOfMeasureDimension_Text'
+  @sap.label : 'Dimension'
+  @sap.quickinfo : 'Dimension key'
+  key UnitOfMeasureDimension : String(6) not null;
+  @sap.label : 'Dimension Text'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  UnitOfMeasureDimension_Text : String(20);
+  @sap.label : 'Length'
+  @sap.quickinfo : 'Length exponent'
+  LengthExponent : Integer;
+  @sap.label : 'Mass'
+  @sap.quickinfo : 'Mass exponent'
+  MassExponent : Integer;
+  @sap.label : 'Time'
+  @sap.quickinfo : 'Current exponent'
+  TimeExponent : Integer;
+  @sap.label : 'elec. current'
+  @sap.quickinfo : 'Electric current exponent'
+  ElectricCurrentExponent : Integer;
+  @sap.label : 'Temperature'
+  @sap.quickinfo : 'Temperature exponent'
+  TemperatureExponent : Integer;
+  @sap.label : 'Mole quantity'
+  @sap.quickinfo : 'Mole quantity exponent'
+  MoleQuantityExponent : Integer;
+  @sap.label : 'Luminous intensity'
+  @sap.quickinfo : 'Luminosity exponent'
+  LuminosityExponent : Integer;
+  @sap.label : 'SI unit'
+  @sap.semantics : 'unit-of-measure'
+  UnitOFMeasureSiUnit : String(3);
+  @sap.label : 'Temperature-Depend.'
+  @sap.quickinfo : 'Indicator: Dimension has Unit with Temperature Specification'
+  HasUnitsWithTemperatureSpec : Boolean;
+  @sap.label : 'Pressure-Dependent'
+  @sap.quickinfo : 'Indicator: Dimension has Units with Pressure Specification'
+  HasUnitsWithPressureSpec : Boolean;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '1'
+@sap.label : 'Unit of Measure ISO Code'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_UnitOfMeasureISOCode {
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'UnitOfMeasureISOCode_Text'
+  @sap.label : 'ISO Code'
+  @sap.quickinfo : 'ISO Code for Unit of Measurement'
+  key UnitOfMeasureISOCode : String(3) not null;
+  @sap.label : 'ISO code'
+  @sap.quickinfo : 'ISO codes for measurement unit names'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  UnitOfMeasureISOCode_Text : String(25);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.searchable : 'true'
+@sap.content.version : '1'
 @sap.label : 'Work Center'
 @sap.value.list : 'true'
 entity ZZ1_COMBINEDPLNORDERSAPI_CDS.I_WorkCenterStdVH {
@@ -717,10 +862,15 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
   @sap.label : 'Conversion Sedapta'
   @sap.quickinfo : 'Data element for domain BOOLE: TRUE (=''X'') and FALSE (='' '')'
   ConversionSedapta : Boolean;
+  @sap.display.format : 'Date'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Latest Critical Component Date'
+  LatestCriticalComponentDate : Date;
   to_ZZ1_CombinPlannedOrdersCom : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {  };
   to_ZZ1_I_PLANNEDORDER : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_I_PLANNEDORDER {  };
   to_ZZ1_MasterPlannedOrders : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MasterPlannedOrders {  };
   to_ZZ1_MFI_CR_TYPE_PLA : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {  };
+  to_ZZ1_MFI_SEDAPTA_CPLO_QTY : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_SEDAPTA_CPLO_QTY {  };
   to_ZZ1_PlannedOrdersCapacity : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCapacity {  };
   to_ZZ1_PlannedOrdersCompChar : Association to many ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PlannedOrdersCompChar {  };
   to_ZZ1_Plant : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_Plant {  };
@@ -851,6 +1001,26 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinPlannedOrdersCom {
   @sap.label : 'Theme'
   @sap.quickinfo : 'Fashion Theme'
   ProductTheme : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Color'
+  ZZColor : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Proj Code'
+  ZZProj : String(7);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Proj Description'
+  ZZProjDesc : String(50);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Size Grid'
+  ZZTaglia : String(6);
+  @sap.display.format : 'UpperCase'
+  @sap.required.in.filter : 'false'
+  @sap.label : 'Size'
+  ZZTagliaDesc : String(5);
   to_StorageLocation : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_StorageLocation {  };
 };
 
@@ -1274,6 +1444,55 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_CR_TYPE_V {
 
 @cds.external : true
 @cds.persistence.skip : true
+@sap.searchable : 'true'
+@sap.content.version : '1'
+@sap.label : 'ZZ1_MFI_SEDAPTA_COMBPLO_CONF_QTY'
+entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_SEDAPTA_CPLO_QTY {
+  @sap.label : 'UUID'
+  @sap.quickinfo : '16 Byte UUID in 16 Bytes (Raw Format)'
+  key SAP_UUID : UUID not null;
+  @sap.label : 'Dyn. Action Control'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Action001_ac : Boolean;
+  @sap.label : 'PL Sedapta'
+  PLSedapta : String(20);
+  @sap.label : 'Combined Planned Order'
+  CombinedPlannedOrder : String(12);
+  @sap.unit : 'ConfirmedQuantity_U'
+  @sap.label : 'Confirmed Quantity'
+  ConfirmedQuantity_V : Decimal(15, 3);
+  @sap.text : 'ConfirmedQuantity_U_Text'
+  @sap.label : 'Confirmed Quantity'
+  @sap.value.list : 'standard'
+  @sap.semantics : 'unit-of-measure'
+  ConfirmedQuantity_U : String(3);
+  @sap.label : 'Meas. Unit Text'
+  @sap.quickinfo : 'Unit of Measurement Text (Maximum 30 Characters)'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  ConfirmedQuantity_U_Text : String(30);
+  @sap.label : 'Assign From Other Segments'
+  AssignFromOtherSegments : Boolean;
+  @sap.display.format : 'Date'
+  @sap.label : 'Latest Component Production Date'
+  LatestCompProductionDate : Date;
+  @sap.label : 'Status Sedapta'
+  StatusSedapta : String(15);
+  @sap.label : 'Conversion Sedapta'
+  ConversionSedapta : Boolean;
+  @sap.display.format : 'Date'
+  @sap.label : 'Latest Critical Component Date'
+  LatestCriticalComponentDate : Date;
+  to_ConfirmedQuantity : Association to ZZ1_COMBINEDPLNORDERSAPI_CDS.I_UnitOfMeasure {  };
+} actions {
+  action ZZ1_MFI_SEDAPTA_CPLO_QTYAction001() returns ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_SEDAPTA_CPLO_QTY;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
 @sap.creatable : 'false'
 @sap.updatable : 'false'
 @sap.deletable : 'false'
@@ -1693,4 +1912,28 @@ entity ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_PLOCAPACITYCORD {
   @sap.label : 'Work Center Text'
   WorkCenterText : String(40);
 };
+
+@cds.external : true
+action ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_SEDAPTA_CPLO_QTYSap_upsert(
+  @sap.label : 'Text of length 20'
+  PLSedapta : String(20),
+  @sap.label : 'Text of length 12'
+  CombinedPlannedOrder : String(12),
+  @sap.label : 'Confirmed Quantity'
+  ConfirmedQuantity_V : Decimal(15, 3),
+  @sap.label : 'Confirmed Quantity'
+  ConfirmedQuantity_U : String(3),
+  @sap.label : 'TRUE'
+  AssignFromOtherSegments : Boolean,
+  @sap.label : 'Latest Component Production Date'
+  @sap.display.format : 'Date'
+  LatestCompProductionDate : Date,
+  @sap.label : 'Text of length 15'
+  StatusSedapta : String(15),
+  @sap.label : 'TRUE'
+  ConversionSedapta : Boolean,
+  @sap.label : 'Latest Critical Component Date'
+  @sap.display.format : 'Date'
+  LatestCriticalComponentDate : Date
+) returns ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_MFI_SEDAPTA_CPLO_QTY;
 

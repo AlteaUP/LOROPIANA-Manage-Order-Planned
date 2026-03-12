@@ -8,7 +8,6 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         to_ZZ1_PLOCAPACITYCORD_TEXT.BOOWorkCenterInternalID,
         ProductSeasonYear,
         ProductSeason,
-        PlannedOrderType,
     ],
     UI.DataPoint #radialChart                  : {
         Value      : committed_percent,
@@ -46,14 +45,14 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type                : 'UI.DataField',
             Value                : ProductSeasonYear,
-            Label                : '{i18n>SeasonYear}',
+            Label                : '{i18n>ProductSeasonYear}',
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
         },
         {
             $Type                : 'UI.DataField',
             Value                : ProductSeason,
-            Label                : '{i18n>Season}',
+            Label                : '{i18n>ProductSeason}',
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
         },
@@ -70,6 +69,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             Label                : '{i18n>OrderType}',
             ![@HTML5.CssDefaults]: {width: '8rem',
             },
+            ![@UI.Hidden]
         },
         {
             $Type                : 'UI.DataField',
@@ -88,7 +88,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type: 'UI.DataField',
             Value: ProductDescription,
-            Label: 'Product Description',
+            Label: '{i18n>ProductDescription}',
         },
         {
             $Type                : 'UI.DataFieldForAnnotation',
@@ -97,14 +97,14 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
         },
-        {
+     /*    {
             $Type       : 'UI.DataField',
             Value       : Sedapta_indicator,
             Criticality : Sedapta_criticality,
             Label       : 'Conversione SedApta',
             ![@HTML5.CssDefaults]: {width: '5rem',
             },
-        },
+        }, */
 /*         {
             $Type                : 'UI.DataFieldForAnnotation',
             Target               : '@UI.Chart#radialChartConfirmed',
@@ -115,27 +115,42 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
         {
             $Type : 'UI.DataField',
             Value : StatusSedapta,
-            Label : 'Status SedApta',
+            Label : '{i18n>StatusSedapta}',
         },
         {
             $Type : 'UI.DataField',
             Value : LatestCompProductionDate,
-            Label : 'Ultimo Comp SedApta',
+            Label : '{i18n>LatestCompProductionDate}',
         },
         {
             $Type : 'UI.DataField',
             Value : AssignFromOtherSegments,
-            Label : 'Assign Other Segments',
+            Label : '{i18n>AssignFromOtherSegments}',
         },
         {
             $Type : 'UI.DataField',
             Value : zsed_priority,
-            Label : 'SedApta priority',
+            Label : '{i18n>zsed_priority}',
         },
         {
             $Type : 'UI.DataField',
             Value : PlannedOrderBOMIsFixed,
-            Label : 'Fissazione',
+            Label : '{i18n>PlannedOrderBOMIsFixed}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : zzproj,
+            Label : '{i18n>zzproj}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : zzcolor,
+            Label : '{i18n>zzcolor}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : LatestCriticalComponentDate,
+            Label : '{i18n>LatestCriticalComponentDate}',
         },
         {
             $Type                            : 'UI.DataField',
@@ -202,86 +217,101 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type: 'UI.DataField',
             Value: to_ZZ1_MFI_CR_TYPE_PLA.Code_Text,
             Label: 'Code_Text',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: to_ZZ1_MFI_CR_TYPE_PLA.Code,
             Label: 'Code',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: StockSegment,
-            Label: 'StockSegment',
+            Label: '{i18n>StockSegment}',
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialStatus,
             Label: 'BillOfMaterialStatus',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialVariant,
             Label: 'BillOfMaterialVariant',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialVariantUsage,
             Label: 'BillOfMaterialVariantUsage',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfMaterialVersion,
             Label: 'BillOfMaterialVersion',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperations,
             Label: 'BillOfOperations',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperationsGroup,
             Label: 'BillOfOperationsGroup',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperationsType,
             Label: 'BillOfOperationsType',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: BillOfOperationsVariant,
             Label: 'BillOfOperationsVariant',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: committed_criticality,
             Label: 'committed_criticality',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: committed_percent,
             Label: 'committed_percent',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: LastChangeDate,
-            Label: 'LastChangeDate',
+            Label: '{i18n>LastChangeDate}',
         },
         {
             $Type: 'UI.DataField',
             Value: MaterialProcurementCategory,
             Label: 'MaterialProcurementCategory',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: MaterialProcurementType,
             Label: 'MaterialProcurementType',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: MRPArea,
             Label: 'MRPArea',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
@@ -292,68 +322,84 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
             $Type: 'UI.DataField',
             Value: MRPPlant,
             Label: 'MRPPlant',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: PlannedOrderCategory,
-            Label: 'PlannedOrderCategory',
+            Label: '{i18n>PlannedOrderCategory}',
         },
         {
             $Type: 'UI.DataField',
             Value: PlannedOrderType,
+            Label: '{i18n>PlannedOrderType}'
         },
         {
             $Type: 'UI.DataField',
             Value: PlndOrderBaseToEntryQtyDnmntr,
             Label: 'PlndOrderBaseToEntryQtyDnmntr',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: PlndOrderBaseToEntryQtyNmrtr,
             Label: 'PlndOrderBaseToEntryQtyNmrtr',
+            ![@UI.Hidden]
         },
         {
             $Type: 'UI.DataField',
             Value: Product,
-            Label: 'Product',
+            Label: '{i18n>Product}',
         },
         {
             $Type: 'UI.DataField',
             Value: ProductCollection,
+            Label: '{i18n>ProductCollection}'
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionEndDate,
-            Label: 'ProductionEndDate',
+            Label: '{i18n>ProductionEndDate}',
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionPlant,
+            Label: '{i18n>ProductionPlant}'
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionStartDate,
-            Label: 'ProductionStartDate',
+            Label: '{i18n>ProductionStartDate}',
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionSupervisor,
-            Label: 'ProductionSupervisor',
+            Label: '{i18n>ProductionSupervisor}',
         },
         {
             $Type: 'UI.DataField',
             Value: ProductionVersion,
-            Label: 'ProductionVersion',
+            Label: '{i18n>ProductionVersion}',
         },
         {
             $Type: 'UI.DataField',
             Value: QuantityWithdrawnInBaseUnit,
-            Label: 'QuantityWithdrawnInBaseUnit',
+            Label: '{i18n>QuantityWithdrawnInBaseUnit}',
         },
         {
             $Type: 'UI.DataField',
             Value: StorageLocation,
-            Label: 'StorageLocation',
+            Label: '{i18n>StorageLocation}',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: committed_criticality,
+            ![@UI.Hidden]
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: committed_percent,
+            ![@UI.Hidden]
         },
     ],
     UI.DataPoint #ProductionPlant              : {
@@ -464,12 +510,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with @(
     UI.DataPoint #Material                     : {
         $Type: 'UI.DataPointType',
         Value: Product,
-        Title: 'Product',
+        Title: '{i18n>Product}',
     },
     UI.DataPoint #CrossPlantConfigurableProduct: {
         $Type: 'UI.DataPointType',
         Value: CrossPlantConfigurableProduct,
-        Title: 'CrossPlantConfigurableProduct',
+        Title: '{i18n>CrossPlantConfigurableProduct}',
     },
 );
 
@@ -518,6 +564,10 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
                 $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: ProductionPlant,
                 ValueListProperty: 'Plant',
+            },
+            {
+                $Type            : 'Common.ValueListParameterDisplayOnly',
+                ValueListProperty: 'PlantName',
             }, ],
             Label         : 'Plant',
         },
@@ -755,12 +805,12 @@ annotate service.ZZ1_PlannedOrdersAPI with @(UI.LineItem #tableMacro: [
     {
         $Type: 'UI.DataField',
         Value: ProductSeason,
-        Label: 'ProductSeason',
+        Label: '{i18n>ProductSeason}',
     },
     {
         $Type: 'UI.DataField',
         Value: ProductSeasonYear,
-        Label: 'ProductSeasonYear',
+        Label: '{i18n>ProductSeasonYear}',
     },
     {
         $Type: 'UI.DataField',
@@ -915,7 +965,7 @@ annotate service.ZZ1_CombinPlannedOrdersCom with @(
         {
             $Type: 'UI.DataField',
             Value: ProductDescription,
-            Label: '{i18n>Productdescription}',
+            Label: '{i18n>ProductDescription}',
         },
         {
             $Type: 'UI.DataField',
@@ -1406,6 +1456,21 @@ annotate service.ZZ1_CombinPlannedOrdersComClone with @(
             Value : ProductGroup,
             Label : 'Product Group',
         },
+ /*         {
+            $Type : 'UI.DataField',
+            Value : ZZProj,
+            Label : '{i18n>zzproj}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ZZColor,
+            Label : '{i18n>zzcolor}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : ZZTaglia,
+            Label : '{i18n>ZZTaglia}',
+        }, */
         {
             $Type: 'UI.DataField',
             Value: Batch,
@@ -2220,7 +2285,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {};
 
 annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
     BOOWorkCenterInternalID @(
-        Common.Label                   : 'Work Center',
+        Common.Label                   : '{i18n>BOOWorkCenterInternalID}',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
             CollectionPath: 'ZC_RFM_WORKCENTER_F4',
@@ -2271,7 +2336,7 @@ annotate service.ZZ1_PLOCAPACITYCORD_TEXT with {
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     ProductSeasonYear @(
-        Common.Label                   : 'Product Season Year',
+        Common.Label                   : '{i18n>ProductSeasonYear}',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
             CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4_year',
@@ -2289,7 +2354,7 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
 
 annotate service.ZZ1_CombinedPlnOrdersAPI with {
     ProductSeason @(
-        Common.Label                   : 'Product Season',
+        Common.Label                   : '{i18n>ProductSeason}',
         Common.ValueList               : {
             $Type         : 'Common.ValueListType',
             CollectionPath: 'ZC_RFM_PLO_PRODUCT_SEASON_F4_season',
@@ -2348,12 +2413,12 @@ annotate service.ZZ1_CombinedPlnOrdersAPI with {
 annotate service.ZZ1_MFI_CR_TYPE_V with {
     Code @Common.Text: Code_Text
 };
-annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
+/* annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
     Plant @Common.Text : {
         $value : PlantName,
         ![@UI.TextArrangement] : #TextLast,
     }
-};
+}; */
 
 /* annotate service.ZC_RFM_MRPCONTROLLER_F4 with {
     MRPController @Common.Text : {
@@ -2361,6 +2426,10 @@ annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
         ![@UI.TextArrangement] : #TextLast,
     }
 }; */
+
+annotate service.ZC_RFM_PRODUCTION_PLANT_F4 with {
+   PlantName @Common.Label: '{i18n>PlantName}';
+}
 
 annotate service.ZC_RFM_MRPCONTROLLER_F4 with {
     MRPController @Common.Label: '{i18n>MRPControllerNM}';
@@ -2372,4 +2441,11 @@ annotate service.ZC_RFM_WORKCENTER_F4 with {
         $value : WorkCenterText,
         ![@UI.TextArrangement] : #TextLast,
     }
+};
+
+//gestione annotations filtri 
+annotate service.ZZ1_CombinedPlnOrdersAPI with {
+    committed_criticality @UI.HiddenFilter: true;
+    committed_percent     @UI.HiddenFilter: true;
+    StockSegment          @Common.Label   : '{i18n>StockSegment}';
 };

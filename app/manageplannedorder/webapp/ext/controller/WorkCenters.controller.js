@@ -35,7 +35,7 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension', "sap/m/MessageToast",], fu
 
                         // URL dinamico
                         const url =
-                            "https://lpapps20.lp.corp:8001/sap/bc/ui2/flp#MasterPlannedOrder-manage&/C_RFM_ManageMasterPlndOrder('" +
+                            "https://lpapptst.lp.corp:8001/sap/bc/ui2/flp#MasterPlannedOrder-manage&/C_RFM_ManageMasterPlndOrder('" +
                             FshMplndOrd +
                             "')";
 

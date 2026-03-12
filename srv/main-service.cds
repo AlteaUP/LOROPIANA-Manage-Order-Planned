@@ -228,6 +228,8 @@ service MainService {
   }
   entity ZZ1_CombinedPlnOrdersAPI        as
     projection on ZZ1_COMBINEDPLNORDERSAPI_CDS.ZZ1_CombinedPlnOrdersAPI {
+      key CplndOrd                 : String(12),
+      key CrossPlantConfigurableProduct : String(40),
       *,
       // cast(PlannedTotalQtyInBaseUnit as Integer) as ZPlannedTotalQtyInBaseUnit,
       // cast(PlndOrderCommittedQty as Integer) as ZPlndOrderCommittedQty,
@@ -235,12 +237,18 @@ service MainService {
       // null as PlndOrderCommittedQty : Integer,
       null as committed_criticality  : Integer,
       null as committed_percent      : Integer,
+      @UI.Hidden: true
       null as confirmed_criticality  : Integer,
+      @UI.Hidden: true
       null as Sedapta_criticality    : Integer,
+      @UI.Hidden: true
       null as Sedapta_indicator      : String,
+      @UI.Hidden: true
       null as confirmed_percent      : Integer,
       null as zsed_priority          : String(15),
-      null as PlannedOrderBOMIsFixed : Boolean, 
+      null as PlannedOrderBOMIsFixed : Boolean,
+      null as zzproj                 : String,
+      null as zzcolor                : String,
       // master planned orders
       to_ZZ1_MasterPlannedOrders     : Composition of many ZZ1_MasterPlannedOrders
                                          on CplndOrd = $self.CplndOrd,
