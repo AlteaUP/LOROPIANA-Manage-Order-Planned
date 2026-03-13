@@ -81,12 +81,12 @@ module.exports = class MainService extends cds.ApplicationService {
             } else {
               where.splice(i, 3);
             }
- 
+
             //se presente rimuovo tolower
-          /*   const token = where[i];
-            if (token && token.func === 'tolower' && token.args?.length) {
-              where[i] = token.args[0]; // rimuove il tolower
-            } */
+            /*   const token = where[i];
+              if (token && token.func === 'tolower' && token.args?.length) {
+                where[i] = token.args[0]; // rimuove il tolower
+              } */
 
             break;
           }
@@ -181,6 +181,16 @@ module.exports = class MainService extends cds.ApplicationService {
         const total = Number(item.PlannedTotalQtyInBaseUnit) || 0;
         const committed = Number(item.PlndOrderCommittedQty) || 0;
         //const confirmed = Number(item.ConfirmedQuantity_V) || 0;
+        
+        const statoSedapta = Number(item.StatusSedapta);
+        const statusMap = {
+          0: "Non lanciabile",
+          1: "Completamente lanciabile",
+          0.66: "Parzialmente lanciabile (entro LT)",
+          0.33: "Parzialmente lanciabile (oltre LT)"
+        };
+
+        item.StatusSedapta = statusMap[statoSedapta] ?? item.StatusSedapta;
 
         let committed_percent = total ? (committed / total) * 100 : 0;
         //let confirmed_percent = total ? (confirmed / total) * 100 : 0;
