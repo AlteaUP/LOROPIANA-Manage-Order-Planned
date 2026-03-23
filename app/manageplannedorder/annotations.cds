@@ -1782,7 +1782,9 @@ annotate service.ZZ1_CombPlnOrdersStock with @(UI.LineItem #Stock: [
     {
         $Type: 'UI.DataField',
         Value: Scorta,
-        Label: 'Scorta'
+        Label: 'Scorta',
+        ![@HTML5.CssDefaults]: {width: '5rem',
+        },
     },
     {
         $Type: 'UI.DataField',
@@ -2020,7 +2022,9 @@ annotate service.ZZ1_CombPlnOrdersStockClone with @(UI.LineItem #Stock: [
     {
         $Type: 'UI.DataField',
         Value: Scorta,
-        Label: 'Scorta'
+        Label: 'Scorta',
+        ![@HTML5.CssDefaults]: {width: '5rem',
+        },
     },
     {
         $Type: 'UI.DataField',

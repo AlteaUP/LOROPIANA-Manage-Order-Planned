@@ -297,7 +297,7 @@ sap.ui.define([
               .filter(obj =>
                 obj &&
                 obj.SAP_UUID &&
-                obj.Scorta !== "X"
+                (obj.Scorta ?? "").trim() === ""
               );
 
             const assignedQty = assignedObjects.reduce((acc, obj) => {
@@ -704,7 +704,7 @@ sap.ui.define([
               .filter(obj =>
                 obj &&
                 obj.SAP_UUID &&
-                obj.Scorta !== "X"
+                (obj.Scorta ?? "").trim() === ""
               );
 
             const assignedQty = assignedObjects.reduce((acc, obj) => {

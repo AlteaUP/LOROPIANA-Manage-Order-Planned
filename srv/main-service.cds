@@ -207,7 +207,7 @@ service MainService {
       null as chart_percent        : Integer,
       null as chart_criticality    : Integer,
       null as StockSegmentCode     : String,
-      null as Scorta               : String(1)
+      null as Scorta               : String
     };
 
 
@@ -308,7 +308,7 @@ service MainService {
       null as chart_percent        : Integer,
       null as chart_criticality    : Integer,
       null as StockSegmentCode     : String,
-      null as Scorta               : String(1)
+      null as Scorta               : String
     };
 
   entity ZI_RFM_ATP_RULES                as projection on ZI_RFM_ATP_RULES_CDS.ZI_RFM_ATP_RULES;

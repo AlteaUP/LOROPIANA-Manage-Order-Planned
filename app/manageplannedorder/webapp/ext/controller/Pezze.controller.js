@@ -415,7 +415,7 @@ sap.ui.define([
 
       const rows = contexts
         .map(ctx => ({ ctx, obj: ctx.getObject() }))
-        .filter(r => r.obj && r.obj.Scorta !== "X" && r.obj._origProposedQty !== undefined);
+        .filter(r => r.obj &&  (r.obj.Scorta ?? "").trim() === "" && r.obj._origProposedQty !== undefined);
 
       // Controllo quantità
       const hasInvalidQty = rows.some(r => {
@@ -520,7 +520,7 @@ sap.ui.define([
           const newRec = structuredClone(surplusObjSource);
           newRec.QTA_ASS_V = surplus;
           newRec.SAP_UUID = crypto.randomUUID();
-          newRec.Scorta = "X";
+          newRec.Scorta = Number(surplus ?? 0).toFixed(3);
           newRec.FSH_MPLO_ORD = surplusObjSource.FSH_MPLO_ORD + "_O";
 
           Object.keys(newRec).forEach(k => {
@@ -542,7 +542,7 @@ sap.ui.define([
           if (!obj) return;
 
           // Cancello solo surplus già salvati (SAP_UUID) con qty = 0
-          if (obj.Scorta === "X" && Number(obj.QTA_ASS_V) === 0 && !!obj.SAP_UUID) {
+          if ((obj.Scorta ?? "").trim() !== "" && Number(obj.QTA_ASS_V) === 0 && !!obj.SAP_UUID) {
             console.log("DELETE surplus con qty zero:", obj.CHARG, obj.SAP_UUID);
 
             try {

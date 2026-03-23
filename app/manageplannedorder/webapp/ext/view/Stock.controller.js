@@ -472,7 +472,7 @@ sap.ui.define(
                                 .filter(obj =>
                                     obj &&
                                     obj.SAP_UUID &&
-                                    obj.Scorta !== "X"
+                                    (obj.Scorta ?? "").trim() === ""
                                 );
 
                             const assignedQty = assignedObjects.reduce((acc, obj) => {
@@ -898,7 +898,7 @@ sap.ui.define(
                                 .filter(obj =>
                                     obj &&
                                     obj.SAP_UUID &&
-                                    obj.Scorta !== "X"
+                                    (obj.Scorta ?? "").trim() === ""
                                 );
 
                             const assignedQty = assignedObjects.reduce((acc, obj) => {
@@ -1259,7 +1259,7 @@ sap.ui.define(
                             const surplusRec = structuredClone(surplusObjSource);
                             surplusRec.QTA_ASS_V = surplus;
                             surplusRec.SAP_UUID = crypto.randomUUID();
-                            surplusRec.Scorta = "X";
+                            surplusRec.Scorta = Number(surplus ?? 0).toFixed(3);
                             surplusRec.FSH_MPLO_ORD = surplusKey;
 
                             Object.keys(surplusRec).forEach(k => {
@@ -1329,7 +1329,7 @@ sap.ui.define(
                             const surplusRec = structuredClone(surplusObjSource);
                             surplusRec.QTA_ASS_V = surplus;
                             surplusRec.SAP_UUID = crypto.randomUUID();
-                            surplusRec.Scorta = "X";
+                            surplusRec.Scorta = Number(surplus ?? 0).toFixed(3);
                             surplusRec.FSH_MPLO_ORD = surplusKey;
 
                             Object.keys(surplusRec).forEach(k => {

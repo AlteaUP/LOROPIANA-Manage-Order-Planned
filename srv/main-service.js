@@ -865,15 +865,15 @@ module.exports = class MainService extends cds.ApplicationService {
           row.FSH_MPLO_ORD.endsWith('_O')
         )
       )
-      const planAllQtyData = (planAllQtyDataRaw || []).filter(row =>
+  /*     const planAllQtyData = (planAllQtyDataRaw || []).filter(row =>
         !(
           typeof row.FSH_MPLO_ORD === 'string' &&
           row.FSH_MPLO_ORD.endsWith('_O')
         )
-      )
+      ) */
       // 8. Create lookup maps for faster association
       const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
-      const planAllQtyMap = createLookupMap(planAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const planAllQtyMap = createLookupMap(planAllQtyDataRaw, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
       const combPlanAllQtyO_Map = createLookupMap(combPlanAllQtyO_Data, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
@@ -1206,15 +1206,15 @@ module.exports = class MainService extends cds.ApplicationService {
       // 7. Execute all queries in parallel
       const [prodAllQtyData, planAllQtyDataRaw, combPlanAllQtyData, deliveryQtyData, atpRulesData, combPlanAllQtyO_Data] =
         await Promise.all([prodAllQtyPromise, planAllQtyPromise, combPlanAllQtyPromise, deliveryQtyPromise, atpRulesPromise, combPlanAllQtyO_Promise]);
-      const planAllQtyData = (planAllQtyDataRaw || []).filter(row =>
+   /*    const planAllQtyData = (planAllQtyDataRaw || []).filter(row =>
         !(
           typeof row.FSH_MPLO_ORD === 'string' &&
           row.FSH_MPLO_ORD.endsWith('_O')
         )
-      )
+      ) */
       // 8. Create lookup maps for faster association
       const prodAllQtyMap = createLookupMap(prodAllQtyData, 'Plant', 'Material', 'StorageLocation', 'Batch');
-      const planAllQtyMap = createLookupMap(planAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
+      const planAllQtyMap = createLookupMap(planAllQtyDataRaw, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const combPlanAllQtyMap = createLookupMap(combPlanAllQtyData, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
       const deliveryQtyMap = createLookupMap(deliveryQtyData, 'Material', 'StorLoc', 'Batch');
       const combPlanAllQtyO_Map = createLookupMap(combPlanAllQtyO_Data, 'WERKS', 'MATNR', 'LGORT', 'CHARG');
